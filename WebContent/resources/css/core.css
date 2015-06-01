@@ -1,4 +1,17 @@
 @CHARSET "UTF-8";
+.loader {
+	width: 32px;
+	height: 32px;
+	font-size: 32px;
+}
+#loader {
+	position: fixed;
+	left: 50%;
+	top: 50%;
+	margin-left: -16px;
+	margin-top: -16px;
+	z-index: 99999;
+}
 /*header头部分开始*/
 header {
 	height: 48px;
@@ -330,7 +343,22 @@ body{
 	margin:10px auto 0;
 	border:1px solid #E5E5E5;
 	background-color:#F9F9F9;
- }
+}
+.loading #page-main {
+	position: relative;
+	margin: 0 auto;
+	background: none;
+	border: 0 none;
+}
+.loading #page-main .loader {
+	position: absolute;
+	left: 50%; top: 20%;
+	margin-left: -16px;
+	margin-top: -16px;
+	width: 32px;
+	height: 32px;
+	font-size: 32px;
+}
 
 /*宽度小于1200px时内容区域全屏显示*/
 @media (max-width: 1200px){
@@ -345,10 +373,13 @@ body{
 }
 
 #page-main > .page-content{
-	margin-left:13.125%;
+	margin: 0;
 	padding:0 15px;
-	border-left:1px solid #E5E5E5;
 	background:#fff;
+}
+#page-main > aside + .page-content {
+	margin-left:13.125%;
+	border-left:1px solid #E5E5E5;
 }
 #page-main > .page-content > .page-header{
 	height:42px;
