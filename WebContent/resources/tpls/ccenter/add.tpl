@@ -26,6 +26,7 @@
 									
 								</div>
 							</div>
+							<input type="hidden" class="wizard-form-control" id="image-id" name="image-id">
 						</div>
 					</div>
 				</div>
@@ -45,7 +46,7 @@
 						<div class="form-group">
 							<label for="server-name" class="control-label col-sm-3"><span>* </span>虚拟数据中心：</label>
 							<div class="col-sm-7 col-sm">
-								<select  class="wizard-form-control select select-vdc">
+								<select name="select-vdc"  class="wizard-form-control select select-vdc">
 								</select>
 							</div>
 						</div>
@@ -55,7 +56,7 @@
 						<div class="form-group">
 							<label for="server-name" class="control-label col-sm-3"><span>* </span>可用域：</label>
 							<div class="col-sm-7 col-sm">
-								<select class="wizard-form-control select select-available-zone">
+								<select name="select-available-zone"   class="wizard-form-control select select-available-zone">
 								  <option>input-section1</option>
 								  <option>input-section2</option>
 								  <option>input-section3</option>
@@ -70,11 +71,11 @@
 						<div class="form-group">
 							<label for="server-name" class="control-label col-sm-3"><span>* </span>云主机规格：</label>
 							<div class="col-sm-7 col-sm">
-				                    <select  class="wizard-form-control select select-specs" tabindex="5">
+				                    <select name="select-specs"  class="wizard-form-control select select-specs" tabindex="5">
 				                    </select>
 							</div>
 							<div class="col-sm-2 col-sm config-detail-info">
-								<i data-toggle="popver" class="fa fa-info-circle"></i>
+								<i data-toggle="popover" class="fa fa-info-circle"></i>
 							</div>
 						</div>
 					</div>
@@ -85,7 +86,7 @@
 							<label for="server-name" class="control-label col-sm-3"><span>* </span>云主机数量：</label>
 							<div class="col-sm-7 col-sm">
 								<div class="spinbox" data-initialize="spinbox" id="setVmNums">
-								  <input type="text" style="height:35px;" value="1" class="wizard-form-control input-mini spinbox-input">
+								  <input type="text" name="vm-nums" style="height:35px;" value="1" class="wizard-form-control input-mini spinbox-input">
 								  <div class="spinbox-buttons btn-group btn-group-vertical">
 								    <button type="button" class="btn btn-default spinbox-up btn-xs">
 								      <span class="glyphicon glyphicon-chevron-up"></span><span class="sr-only">Increase</span>
@@ -103,22 +104,7 @@
 					<div class="wizard-input-section">
 						<div class="form-group">
 							<label for="server-name" class="control-label col-sm-3">配额：</label>
-							<div class="col-sm-7 col-sm">
-								<div class="progress">
-								  <div class="progress-bar" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: 60%;">
-								    60%
-								  </div>
-								</div>
-								<div class="progress">
-								  <div class="progress-bar progress-bar-info" role="progressbar" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100" style="width: 20%">
-								    <span class="sr-only">20% Complete</span>
-								  </div>
-								</div>
-								<div class="progress">
-								  <div class="progress-bar progress-bar-danger" role="progressbar" aria-valuenow="80" aria-valuemin="0" aria-valuemax="100" style="width: 80%">
-								    <span class="sr-only">80% Complete (danger)</span>
-								  </div>
-								</div>
+							<div class="col-sm-8 col-sm quotas">
 							</div>
 						</div>
 					</div>
@@ -152,22 +138,23 @@
 								<div class="list-group">
 								</div>
 							</div>
+							<input type="hidden" class="wizard-form-control" id="chosen-network" name="chosen-network">
 						</div>
 					</div>
 					
 					<div class="wizard-input-section">
 						<div class="form-group">
-							<label for="network-name" class="control-label col-sm-2"><span>* </span>网卡名称：</label>
+							<label for="network-card-name" class="control-label col-sm-2"><span>* </span>网卡名称：</label>
 							<div class="col-sm-7 col-sm">
-								<input type="text" class="wizard-form-control" id="network-name" name="network-name" placeholder="网卡名称">
+								<input type="text" class="wizard-form-control" name="network-card-name" placeholder="网卡名称">
 							</div>
 						</div>
 					</div>
 					<div class="wizard-input-section">
 						<div class="form-group">
-							<label for="sub-network" class="control-label col-sm-2"><span>* </span>指定子网：</label>
+							<label for="select-sub-network" class="control-label col-sm-2"><span>* </span>指定子网：</label>
 							<div class="col-sm-7 col-sm">
-								<select class="wizard-form-control">
+								<select name="select-sub-network" class="wizard-form-control select">
 								  <option>默认子网</option>
 								  <option>input-section2</option>
 								  <option>input-section3</option>
@@ -179,9 +166,9 @@
 					</div>
 					<div class="wizard-input-section">
 						<div class="form-group">
-							<label for="network-ip" class="control-label col-sm-2"><span>* </span>指定IP：</label>
+							<label for="select-net-ip" class="control-label col-sm-2"><span>* </span>指定IP：</label>
 							<div class="col-sm-7 col-sm">
-								<select class="wizard-form-control">
+								<select name="select-net-ip" class="wizard-form-control select ">
 								  <option>DHCP默认</option>
 								  <option>172.168.1.2</option>
 								  <option>172.168.1.3</option>
