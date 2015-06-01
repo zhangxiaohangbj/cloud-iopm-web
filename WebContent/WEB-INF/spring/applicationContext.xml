@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans 
+	default-init-method="initialize" default-destroy-method="destroy"
+	xmlns="http://www.springframework.org/schema/beans"
+	xmlns:security="http://www.springframework.org/schema/security"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xmlns:util="http://www.springframework.org/schema/util"
+	xmlns:cache="http://www.springframework.org/schema/cache"
+	xsi:schemaLocation="
+		http://www.springframework.org/schema/beans
+		http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+		http://www.springframework.org/schema/security
+		http://www.springframework.org/schema/security/spring-security-3.0.xsd
+		http://www.springframework.org/schema/context
+		http://www.springframework.org/schema/context/spring-context-3.0.xsd
+		http://www.springframework.org/schema/mvc 
+		http://www.springframework.org/schema/mvc/spring-mvc-3.0.xsd
+		http://www.springframework.org/schema/util 
+		http://www.springframework.org/schema/util/spring-util-3.0.xsd
+		http://www.springframework.org/schema/cache 
+		http://www.springframework.org/schema/cache/spring-cache-3.1.xsd">
+		
+	<bean id="springContextHolder" class="org.springside.modules.utils.spring.SpringContextHolder" lazy-init="false"/>
+	<!-- 定义受环境影响易变的变量 -->
+	<bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+		<property name="systemPropertiesModeName" value="SYSTEM_PROPERTIES_MODE_OVERRIDE" />
+		<property name="ignoreResourceNotFound" value="true" />
+		<property name="locations">
+			<list>
+				<value>classpath*:/application.properties</value>
+				<!-- 数据源配置 -->
+				<value>classpath*:/dataSource.properties</value>
+			</list>
+		</property>
+	</bean>
+	
+		
+	<util:properties id="appProps" location="classpath:application.properties"></util:properties>
+	
+	<!-- 
+		Enable annotation-based configuration. companyService and industryService 
+		(used in the Company Manager sample) are configured using annotations. 
+		Open CompanyDAO.java and IndustryDAO.java for details. 
+	-->
+	<context:annotation-config />
+	
+	<context:component-scan base-package="com.inspur.cloud.**.service,com.inspur.cloud.**.dao,com.inspur.cloud.**.controller,com.inspur.cloudframework.**.controller,com.inspur.cloudframework.**.service,com.inspur.cloudframework.**.dao" >
+	</context:component-scan>
+	
+	<!-- use dateFormat property to set java.util.Date's format -->
+	<bean id="objectMapper" class="com.inspur.luckfly.json.jackson.map.CustomObjectMapper"></bean>
+	<bean id="requestMappingHandlerMapping" class="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping" ></bean> 
+	<bean id="jackson2Converter" class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter"><!-- com.inspur.luckfly.json.jackson.http.converter. -->
+		<property name="objectMapper" ref="objectMapper"></property>
+	</bean>
+	
+    <bean id="requestMappingHandlerAdapter"  class="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter" >
+		<property name="messageConverters">
+			<list> 
+				<ref bean="jackson2Converter"/>
+				<bean class="org.springframework.http.converter.xml.MarshallingHttpMessageConverter">
+				    <constructor-arg> 
+				        <bean class="org.springframework.oxm.xstream.XStreamMarshaller">
+                           <property name="streamDriver" >
+                               <bean class="com.thoughtworks.xstream.io.xml.DomDriver"/>
+                           </property>
+                            
+                           <property name="autodetectAnnotations" ><value>true</value></property>
+                           <!-- <property name="annotatedClasses">
+                               <list>
+                                   
+                               </list>
+                           </property>
+                            -->
+				        </bean>
+				    </constructor-arg>
+				</bean>  
+				<bean class="org.springframework.http.converter.FormHttpMessageConverter"/>
+				<bean class="org.springframework.http.converter.BufferedImageHttpMessageConverter"/>
+				<bean class="org.springframework.http.converter.ByteArrayHttpMessageConverter"/>
+				<bean class="org.springframework.http.converter.StringHttpMessageConverter"/>
+				<bean class="org.springframework.http.converter.ResourceHttpMessageConverter"/>
+				
+			</list>
+		</property>
+		<property name="customArgumentResolvers">
+			<list>
+				<bean class="com.inspur.cloudframework.spring.web.servlet.mvc.method.annotation.RequestResponseBodyMethodProcessor">
+					<constructor-arg >
+						<list>
+							<ref bean="jackson2Converter"/>
+						</list>
+					</constructor-arg>
+					<property name="objectMapper" ref="objectMapper"></property>
+				</bean>
+			</list>
+		</property>
+    </bean>
+    
+	<bean id="uuidGenerator" class="com.inspur.persistence.id.UUIdGenerator"></bean>
+	
+	
+	<!-- cloudframework-persistence相关配置 -->
+	<bean id="ctx" class="com.inspur.persistence.context.GroovyContext" lazy-init="false" init-method="init">
+		<property name="idGenerator" ref="uuidGenerator"/>
+		<property name="escape" value="`"></property>
+	</bean>
+	<bean id="sqlPool" class="com.inspur.persistence.query.storage.GroovyStatementPool">
+		<property name="ctx" ref="ctx" />
+	</bean>
+	<bean id="storage" class="com.inspur.persistence.query.storage.Storage" init-method="config">
+		<!-- <property name="resource">
+			<value>resource path</value>
+		</property> -->
+		<property name="cache" value="true" />
+		<property name="capacity" value="200" />
+		<property name="pool" ref="sqlPool" />
+		<property name="ctx" ref="ctx" />
+		<property name="parser" ref="sqlParser" />
+	</bean>
+	<bean id="sqlParser" class="com.inspur.persistence.query.parser.SqlParser">
+	</bean>
+	<!-- JDBC Dao 配置start -->
+	<bean id="queryManager" class="com.inspur.cloudframework.persistence.query.QueryManager">
+		<property name="dataSource" ref="dataSource"/>
+		<property name="ctx" ref="ctx"/>
+		<property name="storage" ref="storage"/>
+	</bean>
+	
+	<bean id="persistenceManager" class="com.inspur.cloudframework.persistence.PersistenceManager">
+		<property name="dataSource" ref="dataSource"/>
+		<property name="ctx" ref="ctx"/>
+		<property name="qm" ref="queryManager"/>
+	</bean>
+	
+	<bean id="simpleDao" class="com.inspur.cloudframework.persistence.orm.SimpleJdbcDao">
+		<property name="queryManager" ref="queryManager"/>
+		<property name="persistenceManager" ref="persistenceManager"/>
+	</bean>
+	<!-- JDBC Dao 配置end -->
+	
+	
+	<!-- Required so swagger-springmvc can access spring's RequestMappingHandlerMapping  -->
+	<!--  
+	<bean class="springfox.documentation.swagger.configuration.SwaggerCommonConfiguration" />
+	<bean class="springfox.documentation.spring.web.DocumentationCache" />
+	<mvc:annotation-driven/>
+	-->
+	<bean class="com.inspur.cloud.api.SwaggerConfiguration" />
+	
+</beans>

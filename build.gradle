@@ -1,0 +1,115 @@
+
+buildscript {
+	repositories {
+		maven {
+			url repositoriesUrl
+		}
+	}
+	configurations.all {
+		resolutionStrategy {
+			cacheChangingModulesFor 0, 'seconds'
+			//cacheDynamicVersionsFor 0, 'seconds'
+		}
+	}
+}
+apply plugin: 'groovy'
+apply plugin: 'maven'
+apply plugin: 'war'
+apply plugin: 'eclipse-wtp'
+apply from: 'gradle/scripts/wtp-eclipse.gradle'
+apply from: 'gradle/scripts/web-common.gradle'
+
+webAppDirName = 'WebContent' //The name of the web application source directory, relative to the project directory.
+
+[compileJava, compileTestJava, compileGroovy]*.options*.encoding = sourceEncoding
+
+sourceCompatibility = JavaVersion.VERSION_1_7
+targetCompatibility = JavaVersion.VERSION_1_7
+ext{
+	ext.springVersion = '4.0.5.RELEASE'
+}
+
+configurations {
+	//compile.exclude module: 'servlet-api'
+	all*.exclude group: 'org.mortbay.jetty', module: 'servlet-api'
+	all*.exclude group: 'org.mortbay.jetty', module: 'servlet-api-2.5'
+	all*.exclude group: 'jdom', module: 'jdom'
+	all*.exclude module: 'geronimo-servlet_2.5_spec'
+	all*.exclude group: 'org.mortbay.jetty', module: 'jsp-2.1'
+	all*.exclude group: 'javax.xml.stream', module: 'stax-api'
+	all*.exclude group: 'xpp3', module: 'xpp3_min'
+	all*.exclude group: 'tomcat', module: 'jasper-compiler'
+	all*.exclude group: 'tomcat', module: 'jasper-runtime'
+	
+	updater
+}
+artifacts {
+	archives war
+}
+dependencies {
+	
+	compile("org.codehaus.groovy:groovy:2.4.3")
+	compile("com.inspur.cloudframework:jackson-extends:2.5.3-SNAPSHOT")
+	compile("com.inspur.cloudframework:persistence:2.0.0-SNAPSHOT")
+	compile("com.inspur.cloudframework:spring-side:4.0.0-SNAPSHOT")
+	compile("com.thoughtworks.xstream:xstream:1.4.2")
+	
+	runtime("commons-fileupload:commons-fileupload:1.2.2")
+	
+	
+    //spring
+	compile("org.springframework:spring-jdbc:$springVersion")
+	compile("org.springframework:spring-orm:$springVersion")
+	compile("org.springframework:spring-oxm:$springVersion")
+	
+	//yfjs-lib
+	compile("com.inspur.iop:yfjs:0.1-SNAPSHOT")
+	
+	//mysql
+	runtime("mysql:mysql-connector-java:5.0.3")
+	runtime("xerces:xercesImpl:2.9.1")
+	runtime("xml-apis:xml-apis:2.0.2")
+	runtime("org.springframework:spring-context-support:$springVersion")
+	runtime("bsh:bsh:2.0b4")
+	runtime("javax.servlet:jstl:1.2")
+	runtime("org.springframework.security:spring-security-acl:3.2.4.RELEASE")
+	runtime("org.springframework.security:spring-security-config:3.2.4.RELEASE")
+	runtime("org.springframework.security:spring-security-taglibs:3.2.4.RELEASE")
+	runtime("taglibs:standard:1.1.2")
+	runtime("org.slf4j:slf4j-log4j12:1.6.4")
+	runtime("com.ibm.icu:icu4j:3.4.4")
+	
+	
+	//rest api
+	runtime "com.inspur.cloudframework:cloud-rest-api:1.2.0-SNAPSHOT"
+	runtime "com.inspur.cloudframework:cloud-rest-api-example:1.2.0-SNAPSHOT"
+	
+//	runtime "com.inspur.cloud:cloud-vm:1.2.0-SNAPSHOT"
+	
+	//
+	runtime("com.inspur.cloud:cloud-storage:1.2.0-SNAPSHOT")
+	
+	
+}
+
+ext.excludeRegexs = []
+war {
+	baseName jarBaseName
+	
+	classpath = configurations.runtime
+	manifest {
+		attributes("DisableIBMJAXWSEngine" : true)
+		attributes("Version" : version)
+		attributes("Class-Path" : "")
+		attributes("date" : new Date())
+	}
+	
+	classpath = classpath.filter { File file ->
+		!isExcludeJar(file.name)
+	}
+	webInf {
+		into('classes') {
+			from "${buildDir}/classes/main","${buildDir}/resources/main"
+		}
+	}
+}

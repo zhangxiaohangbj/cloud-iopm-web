@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns="http://www.springframework.org/schema/beans"
+	xsi:schemaLocation="
+        http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-3.0.xsd
+        http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
+
+	<!-- DispatcherServlet Context: defines this servlet's request-processing infrastructure -->
+	
+	<!-- Enables the Spring MVC @Controller programming model -->
+	<!-- <mvc:annotation-driven  /> -->
+
+	<mvc:view-controller path="/" view-name="index"/>
+	<mvc:view-controller path="/auth/commons/error" view-name="auth/commons/error"/>
+	<mvc:view-controller path="/tab-blank" view-name="tab-blank"/>
+
+	<mvc:resources mapping="/iop/**/*.html" location="/iop/" />
+	
+	<mvc:resources mapping="swagger-ui.html" location="classpath:/META-INF/resources/" />
+	<mvc:resources mapping="/webjars/**" location="classpath:/META-INF/resources/webjars/" />
+
+
+	<!-- Handles HTTP GET requests for /resources/** by efficiently serving up static resources in the ${webappRoot}/resources/ directory -->
+	<mvc:resources mapping="/resources/lib/**" location="/,classpath:META-INF/yfjs/lib/" />
+	<mvc:resources mapping="/resources/**" location="/resources/" />
+
+	<!-- <bean id="freemarkerConfiguration" class="org.springframework.beans.factory.config.PropertiesFactoryBean">
+		<property name="location" value="classpath:freemarker.properties" />
+	</bean>
+	
+	<bean id="freemarkerConfig" class="org.springframework.web.servlet.view.freemarker.FreeMarkerConfigurer">
+		<property name="defaultEncoding" value="UTF-8" />
+      	<property name="templateLoaderPath" value="/WEB-INF/ftl/"/>
+      	<property name="freemarkerVariables">
+	        <map>
+	          	<entry key="xml_escape" value-ref="fmXmlEscape"/>
+	        </map>
+      	</property>
+      	<property name="freemarkerSettings" ref="freemarkerConfiguration"/>
+    </bean>
+    
+    <bean id="fmXmlEscape" class="freemarker.template.utility.XmlEscape"/>
+	 -->
+	<bean class="org.springframework.web.servlet.view.ContentNegotiatingViewResolver">
+		<property name="defaultContentType" value="application/json" /> 
+		<property name="contentNegotiationManager">
+			<bean class="org.springframework.web.accept.ContentNegotiationManagerFactoryBean">
+				<property name="mediaTypes">
+					<props>
+						<prop key="html">application/x-www-form-urlencoded</prop>
+						<prop key="json">application/json</prop>
+						<prop key="xml">application/xml</prop>
+						<prop key="jsonp">application/x-javascript</prop>
+					</props>
+				</property>
+			</bean>
+		</property>
+		<property name="viewResolvers">
+			<list>
+                <!-- <bean class="org.springframework.web.servlet.view.freemarker.FreeMarkerViewResolver">
+                  <property name="cache" value="true"/>
+                  <property name="prefix" value="/WEB-INF/ftl"/>
+                  <property name="suffix" value=".ftl"/>
+                  <property name="exposeSpringMacroHelpers" value="true"/>
+                </bean> -->
+                
+			<bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+				<property name="viewClass" value="org.springframework.web.servlet.view.JstlView" />
+				<property name="prefix" value="/views/" />
+				<property name="suffix" value=".jsp" />
+				<property name="exposedContextBeanNames">
+			        <list><value>appProps</value></list>
+			    </property>
+				</bean>						
+			</list>
+		</property>
+		<property name="defaultViews">
+			<list>
+				<bean class="org.springframework.web.servlet.view.json.MappingJackson2JsonView">
+					<property name="objectMapper" ref="objectMapper"></property>
+					<property name="modelKey" value="data"></property>
+					<property name="extractValueFromSingleKeyModel" value="true"></property>
+				</bean>
+				<bean class="com.inspur.cloudframework.spring.web.servlet.view.javascript.XJavascriptView">
+					<property name="objectMapper" ref="objectMapper"></property>
+					<property name="contentType" value="application/x-javascript" />
+				</bean>
+				<bean class="org.springframework.web.servlet.view.xml.MarshallingView">
+			        <property name="marshaller">
+			            <bean id="xStreamMarshaller" class="org.springframework.oxm.xstream.XStreamMarshaller" >			              
+			            	<property name="autodetectAnnotations" value="true"/>
+			            </bean>
+			        </property>
+                    <property name="contentType" value="application/xml" />			        
+			    </bean> 				
+			</list>
+		</property>
+	</bean>
+
+	<!-- Resolves views selected for rendering by @Controllers to .jsp resources in the /WEB-INF/views directory -->
+	<!-- <bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+		<property name="prefix" value="/WEB-INF/views/" />
+		<property name="suffix" value=".jsp" />
+	</bean> -->
+	
+	<!-- Imports user-defined @Controller beans that process client requests -->
+	<!-- <import resource="controllers.xml" /> -->
+
+	<!-- Only needed because we require fileupload in the org.springframework.samples.mvc.fileupload package	  -->
+	<bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver" />
+
+	
+</beans>

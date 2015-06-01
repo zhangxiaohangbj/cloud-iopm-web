@@ -1,0 +1,40 @@
+{
+    "data": [
+        {
+            "name" : "Tiger Nixon",
+            "os_type":"Linux_centeros",
+            "inner_ip": "192.168.100.4",
+            "float_ip": "10.65.25.66",
+            "os_conf": "4GB | 2CPU | 40GB",
+            "active_status" : "actived",
+            "available_zone": "WDK1",
+            "vdc":"service",
+            "power_status":"on",
+            "run_time":"2天14小时"
+        },
+        {
+            "name" : "Tiger Nixon",
+            "os_type":"Linux_centeros",
+            "inner_ip": "192.168.100.4",
+            "float_ip": "10.65.25.66",
+            "os_conf": "4GB | 2CPU | 40GB",
+            "active_status" : "wait",
+            "available_zone": "WDK2",
+            "vdc":"service",
+            "power_status":"running",
+            "run_time":"1天3小时"
+        },
+        {
+            "name" : "Tiger Nixon",
+            "os_type":"Linux_centeros",
+            "inner_ip": "192.168.100.4",
+            "float_ip": "10.65.25.66",
+            "os_conf": "4GB | 2CPU | 40GB",
+            "active_status" : "actived",
+            "available_zone": "WDK1",
+            "vdc":"service",
+            "power_status":"running",
+            "run_time":"16小时"
+        }
+    ]
+}

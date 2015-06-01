@@ -1,0 +1,267 @@
+@CHARSET "UTF-8";
+
+@media screen and (-webkit-min-device-pixel-ratio: 0){
+	.select {
+		background: url(img/form.png) no-repeat -60px 0;
+		-webkit-appearance: none;
+		appearance: none;
+		background-position: right -69px;
+		padding: 0 25px 0 10px;
+		border: 1px solid #e2e7ea;
+		
+	}
+	.select:hover {
+		background-position: right -31px;
+		border: 1px solid #00afc8;
+	}
+}
+select, textarea, input[type="text"], input[type="password"], input[type="datetime"], input[type="datetime-local"], input[type="date"], input[type="month"], input[type="time"], input[type="week"], input[type="number"], input[type="email"], input[type="url"], input[type="search"], input[type="tel"], input[type="color"], .uneditable-input {
+	display: inline-block;
+	height: 32px;
+	padding: 4px 10px;
+	margin-bottom: 0;
+	font-size: 12px;
+	line-height: 22px;
+	color: #252f3d;
+	-webkit-border-radius: 2px;
+	-moz-border-radius: 2px;
+	border-radius: 2px;
+	vertical-align: middle;
+	box-sizing: border-box;
+	-moz-box-sizing: border-box;
+}
+textarea, input[type="text"], input[type="password"], input[type="datetime"], input[type="datetime-local"], input[type="date"], input[type="month"], input[type="time"], input[type="week"], input[type="number"], input[type="email"], input[type="url"], input[type="search"], input[type="tel"], input[type="color"], .uneditable-input {
+	background-color: #fff;
+	border: 1px solid #e2e7ea;
+}
+input:not([type]):hover, input[type="text"]:hover, textarea:hover, input:not([type]):focus, input[type="text"]:focus, textarea:focus {
+	border: 1px #00afc8 solid;
+}
+input[disabled], select[disabled], textarea[disabled], input[readonly], select[readonly], textarea[readonly] {
+	background-color: #f8fafc;
+	color: #b8c5ce;
+	border-color: #e7ebee!important;
+	cursor: not-allowed;
+}
+ .modal-content{
+ 	border-radius:0;
+ 	background-color:#F5F5F5;
+ 	font-size:13px;
+ }
+ .wizard-nav-item .already-visited .active, .wizard-nav-list li.active>a{
+ 	background-color:#36b3df;
+ }
+ .wizard-header{
+ 	padding: 5px 15px;
+ }
+ .wizard-header h3{
+ 	font-size: 15px;
+ 	font-weight:normal;
+ 	line-height:30px;
+ }
+ .modal-header .close{
+ 	margin-top:4px;
+ }
+ .wizard-nav-list>li>a{
+ 	padding-left:30px;
+ }
+ .wizard-steps{
+ 	width:18%;
+ }
+ .wizard-cards{
+ 	background-color:#FFF;
+ 	overflow:hidden;
+ 	margin-left:18%;
+ }
+ .wizard-card-container{
+ 	margin-left:0;
+ 	/* float:right; */
+ 	padding:10px;
+ 	overflow-x:hidden;
+ 	overflow-y:auto;
+ }
+ .wizard-error, .wizard-failure, .wizard-success, .wizard-loading, .wizard-card{
+ 	height:100%;
+ 	padding:10px;
+ 	overflow-x:hidden;
+ 	border-top:none;
+ }
+ .wizard-card h3{
+ 	display:none;
+ }
+ .wizard-card .wizard-card-content,
+ .wizard-card .wizard-card-desc{
+ 	margin:0;
+ 	padding:0;
+ }
+ .wizard-card .wizard-card-desc p{
+ 	line-height:1.5em;
+ 	padding:30px 10px;
+ 	color:#7C7B7B;
+ }
+ .wizard-card .wizard-card-content{
+ 	min-height:300px;
+ 	border-right:1px solid #E5E5E5;
+ }
+ .wizard-input-section div.form-group .wizard-form-control{
+ 	border-radius:0;
+ 	height:30px;
+ 	width:100%;
+ 	padding:0 8px;
+ 	outline: none;
+ 	background-color: #fff;
+ 	
+ }
+ .wizard-input-section div.form-group textarea.wizard-form-control{
+ 	height:auto;
+ }
+.wizard-input-section div.form-group label{
+	padding:5px 0 0 0 ;
+	font-weight:normal;
+}
+.wizard-card[data-cardname=networks] .wizard-input-section div.form-group label,
+.wizard-card[data-cardname=security] .wizard-input-section div.form-group label{
+	width:18%;
+}
+.wizard-card[data-cardname=senior] .wizard-input-section div.form-group label{
+	width:20%;
+}
+.wizard-input-section div.form-group label span{
+	color:red;
+}
+
+.wizard-input-section div.form-group .col-sm{
+	padding-left:2px;
+}
+.wizard-input-section div.form-group .config-detail-info{
+	height:30px;
+	line-height:30px;
+}
+.wizard-input-section div.form-group .popver-tips{
+	width:150px;
+	font-size:12px;
+}
+.wizard-input-section div.form-group .list-group-item{
+	padding:5px;
+	position:relative;
+}
+.wizard-input-section div.form-group .list-group-item i.fa{
+	display:none;
+	position:absolute;
+	right:0;
+	top:8px;
+}
+.nav-pills>li>a{
+	border-radius :0;
+	background:#eee;
+	padding:5px 18px;
+	margin-right:3px;
+	color:#838080;
+}
+.nav-pills>li>a:hover{
+	background:#E5E4E4;
+}
+.wizard-input-section div.form-group .list-group-item span{
+	color:#939090;
+}
+.wizard-card[data-cardname=security] .wizard-input-section div.security-group label{
+	width:60%;
+	display:block;
+}
+.wizard-card[data-cardname=security] .nav-pills>li>a{
+	padding:5px 40px;
+	margin:0 15px;
+}
+.wizard-card[data-cardname=basci] .nav-pills>li>a{
+	
+}
+.wizard-input-section .login-info{
+	margin-top:20px;
+}
+.wizard-input-section .login-info > div{
+	margin:20px 0;
+}
+.wizard-input-section .login-info label{
+	text-align:right;
+	margin-right:15px;
+}
+.nav-pills>li.active>a{
+	background-color:#36b3df;
+}
+.nav-pills>li.active>a:focus, .nav-pills>li.active>a:hover{
+	background-color:#25A5D2;
+}
+.wizard-input-section div.form-group .image-list{
+	padding-top:15px;
+}
+.wizard-input-section div.form-group .image-list .btn {
+	font-weight: normal;
+	vertical-align: middle;
+	cursor: pointer;
+	white-space: nowrap;
+	padding: 8px;
+	font-size: 12px;
+	border-radius: 2px;
+	color: #5b6775;
+	background-color: #ecf0f2;
+	border-color: #ecf0f2;
+	margin-bottom: 10px;
+	padding-left: 16px;
+	width: 350px;
+	text-align: left;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+.wizard-input-section div.form-group .image-list .btn:hover{
+	color: #5b6775;
+	background-color: #D1EFFA;
+	border-color: #D1EFFA;
+}
+.wizard-input-section div.form-group .image-list .selected{
+	color: #252f3d;
+	background-color: #5ACDF5;
+	border-color: #5ACDF5;
+}
+.wizard-input-section div.form-group .image-list .selected:hover{
+	color: #252f3d;
+	background-color: #3EC1EF;
+	border-color: #3EC1EF;
+}
+.wizard-progress-container .progress-bar{
+	background-color:#31b0d5;
+}
+.wizard-nav-list>li.already-visited>a.wizard-nav-link{
+	color:#3B473B;
+}
+.wizard-nav-container .wizard-nav-list>li.actived>a.wizard-nav-link{
+	color:#fff;
+}
+.wizard-footer{
+	margin-bottom:20px;
+}
+.wizard-footer .wizard-buttons-container .btn{
+	padding:4px 12px;
+	border-radius:0;
+	margin-right:10px;
+	font-size:13px;
+}
+.wizard-footer .btn-group-single .btn-primary,
+.wizard-footer .btn-group-single .btn-success{
+	background-color:#36B3DF;
+	border-color:#36B3DF;
+}
+.wizard-footer .btn-group-single .btn-primary:hover,
+.wizard-footer .btn-group-single .btn-success:hover{
+	background-color:#3AADD5;
+	border-color:#3AADD5;
+}
+
+ .wizard-buttons-container{
+	padding:10px 20px;
+}
+.chosen-container-active .chosen-choices, 
+.chosen-container-active .chosen-single,
+ .chosen-container-active.chosen-with-drop .chosen-single{
+ 	outline:none;
+ 	box-shadow:0;
+ }
