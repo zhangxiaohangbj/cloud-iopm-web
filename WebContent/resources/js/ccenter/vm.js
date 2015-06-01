@@ -1,13 +1,14 @@
-define(function(){
+define(['Initializer'],function(Initializer){
 	var init = function(){
+		var def = $.Deferred();
 		PubView.activeSideBar(2);	//左侧导航选中
 		$('.page-content').addClass("loading");
 		//需要修改为真实数据源
-		require(['template','text!'+PubVars.contextPath+'/resources/tpls/ccenter/vm.tpl'],function(template,tpl){
+		require(['template','text!'+PubView.root+'/resources/tpls/ccenter/vm.tpl'],function(template,tpl){
 			try{
 				//取云主机列表
 				$.ajax({
-				    url: PubVars.contextPath+'/resources/data/arrays.txt',// 跳转到 action    
+				    url: PubView.root+'/resources/data/arrays.txt',// 跳转到 action    
 				    data:{
 				    	//type : type
 				    },    
@@ -19,18 +20,21 @@ define(function(){
 							$('.page-content').html(render(data));
 							//bind events
 					    	 bindEvent();
+					    	 def.resolve(true);
 						}else{
 							$('.page-content').html('<p class="error-tips text-danger">数据已全部加载</p>');
+							def.resolve(false);
 						}
 				    }
 				});
 				
 			}catch(e){
 				$('.page-content').html('<p class="error-tips text-danger">数据解析出错，请稍后再试…</p>');
+				def.resolve(false);
 			}
 			
 		});
-		
+		return def.promise();
 	}
 	var bindEvent = function(){
 		//页面渲染完后进行各种事件的绑定
@@ -81,13 +85,14 @@ define(function(){
 	    });
 	    //增加按钮
 	    $(document).on("click","span.btn-add",function(){
-	    	require(['text!'+PubVars.contextPath+'/resources/tpls/ccenter/add.tpl','bs/wizard'],function(html){
-	    			require(['css!'+PubVars.contextPath+'/resources/css/wizard.css'],function(){
+	    	require(['text!./tpls/ccenter/add.tpl','bs/modal','bs/wizard'],function(html,Dialog){
+	    			require(['css!'+PubView.root+'/resources/css/wizard.css'],function(){
 	    				//维护当前select的值以及云主机数量，为更新配额以及vdc相关的数据用
 	    				var currentChosenObj = {
-	    						vdc: null,
+	    						vdc: null,	//当前vdc
 	    						az: null,
-	    						specs: null,
+	    						specs: null,	//当前选中规格
+	    						prevSpecs: null,//上一个选中规格
 	    						nums: 1
 	    				}
 	    				
@@ -116,7 +121,7 @@ define(function(){
 		    				//镜像获取方法
 		    				var initImage = function(type){
 		    					$.ajax({
-			    				    url: PubVars.contextPath+'/resources/data/arrays.txt',// 跳转到 action    
+			    				    url: PubView.root+'/resources/data/arrays.txt',// 跳转到 action    
 			    				    data:{
 			    				    	type : type
 			    				    },    
@@ -139,7 +144,7 @@ define(function(){
 		    					//是管理员用户则获取所有的vdc
 		    					if(true){
 		    						$.ajax({
-		    	    				    url: PubVars.contextPath+'/resources/data/arrays.txt',// 跳转到 action    
+		    	    				    url: PubView.root+'/resources/data/arrays.txt',// 跳转到 action    
 		    	    				    data:{ 
 		    	    				    },    
 		    	    				   // type:'POST',    
@@ -168,29 +173,35 @@ define(function(){
 		    					}
 		    				};
 		    				//根据vdc获取可用域数据
-		    				var initAvailableZone = function(vdc_id){
-		    					$.ajax({
-	    	    				    url: PubVars.contextPath+'/resources/data/arrays.txt',// 跳转到 action    
-	    	    				    data:{ 
-	    	    				    	vdc_id : vdc_id
-	    	    				    },
-	    	    				   // type:'POST',    
-	    	    				    dataType:'json',    
-	    	    				    success:function(data){
-	    	    				    	var html = '<option>input-section1</option>'+
-				    	    				    	'<option>input-section2</option>'+
-				    	    				    	'<option>input-section3</option>'+
-				    	    				    	'<option>input-section4</option>';
-	    	    				    	$('select.select-available-zone').html(html);
-	    	    				    	//同步currentChosenObj
-	    	    				    	currentChosenObj.az = $('select.select-available-zone').children('option:selected');
-	    	    				    }
-	    	    				});
+		    				var initAvailableZone = function(){
+		    					var vdc_id = currentChosenObj.vdc.val() || $('select.select-vdc').children('option:selected').val();
+		    					if(vdc_id){
+		    						$.ajax({
+		    	    				    url: PubView.root+'/resources/data/arrays.txt',// 跳转到 action    
+		    	    				    data:{ 
+		    	    				    	vdc_id : vdc_id
+		    	    				    },
+		    	    				   // type:'POST',    
+		    	    				    dataType:'json',    
+		    	    				    success:function(data){
+		    	    				    	var html = '<option>input-section1</option>'+
+					    	    				    	'<option>input-section2</option>'+
+					    	    				    	'<option>input-section3</option>'+
+					    	    				    	'<option>input-section4</option>';
+		    	    				    	$('select.select-available-zone').html(html);
+		    	    				    	//同步currentChosenObj
+		    	    				    	currentChosenObj.az = $('select.select-available-zone').children('option:selected');
+		    	    				    }
+		    	    				});
+		    					}else{
+		    						Dialog.info('尚未选择所属vdc','error');
+		    					}
+		    					
 		    				};
 		    				//云主机规格
 		    				var initVmSpecs = function(cb){
 		    					$.ajax({
-	    	    				    url: PubVars.contextPath+'/resources/data/arrays.txt',// 跳转到 action    
+	    	    				    url: PubView.root+'/resources/data/arrays.txt',// 跳转到 action    
 	    	    				    data:{ 
 	    	    				    	//vdc_id : vdc_id
 	    	    				    },
@@ -215,7 +226,7 @@ define(function(){
 									                 '</optgroup>';
 	    	    				    	$('select.select-specs').html(html);
 	    	    				    	//同步currentChosenObj
-	    	    				    	currentChosenObj.specs = $('select.select-specs').children('option:selected');
+	    	    				    	currentChosenObj.specs = $('select.select-specs').find('option:selected');
 	    	    				    	//云主机规格数据加载完成后绑定事件
 	    	    				    	EventsBind.specsChange();
 	    	    				    	cb && typeof cb === 'function' && cb();
@@ -223,8 +234,8 @@ define(function(){
 	    	    				});
 		    				};
 		    				//init云主机规格的详细信息popver
-		    				var initPopver = function(current){
-		    					current = current || $('select.select-specs').find('option:selected');
+		    				var initPopver = function(){
+		    					var current = currentChosenObj.specs || $('select.select-specs').find('option:selected');
 		    					var	rootDisk = current.attr('data-root-disk'),
 		    						tmpDisk = current.attr('data-tmp-disk'),
 		    						memory = current.attr('data-memory'),
@@ -248,11 +259,11 @@ define(function(){
 		    				};
 		    				//vdc的可用配额
 		    				var initQuotos = function(vdc_id){
-		    					vdc_id = vdc_id || $('select.select-vdc').children('option:selected').val();
+		    					vdc_id = vdc_id || currentChosenObj.vdc.val() || $('select.select-vdc').find('option:selected').val();
 		    					if(vdc_id){
 		    						$.ajax({
-		    	    				    url: PubVars.contextPath+'/resources/data/arrays.txt',// 跳转到 action    
-		    	    				    data:{ 
+		    	    				    url: PubView.root+'/resources/data/arrays.txt',// 跳转到 action    
+		    	    				    data:{
 		    	    				    	vdc_id : vdc_id
 		    	    				    },
 		    	    				   // type:'POST',    
@@ -274,12 +285,13 @@ define(function(){
 		    	    				    	};
 		    	    				    	
 		    	    				    	//当前配额 等于 当前vdc下总配额 减去  当前选中规格的额度
-		    	    				    	var current = $('select.select-specs').find('option:selected');
+		    	    				    	var current = currentChosenObj.specs;//$('select.select-specs').find('option:selected');
+		    	    				    	//debugger;
 		    	    				    	if(current.length){
 		    	    				    		var current_core = parseInt(current.attr('data-core')),
 		    	    				    			current_memory = parseInt(current.attr('data-memory'));
-		    	    				    		quotas.core.used = parseInt(quotas.core.used) - current_core;
-			    	    				    	quotas.memory.used = parseInt(quotas.memory.used) - current_memory;
+		    	    				    		quotas.core.used = parseInt(quotas.core.used) + current_core;
+			    	    				    	quotas.memory.used = parseInt(quotas.memory.used) + current_memory;
 		    	    				    	};
 		    	    				    	//生成html数据
 		    	    				    	var rateCore = Math.round((parseInt(quotas.core.used)/parseInt(quotas.core.total))*100),
@@ -328,14 +340,15 @@ define(function(){
 		    	    				    }
 		    	    				});
 		    					}else{
-		    						alert("尚未选择虚拟数据中心");
+		    						Dialog.info('尚未选择vdc','error');
 		    					}
 		    					
 		    				};
 		    				//根据vdc可用网络信息
-		    				var initAvailableNetWorks = function(vdc_id){
+		    				var initAvailableNetWorks = function(){
+		    					var vdc_id = currentChosenObj.vdc.val() || $('select.select-vdc').children('option:selected').val();
 		    					$.ajax({
-	    	    				    url: PubVars.contextPath+'/resources/data/arrays.txt',// 跳转到 action    
+	    	    				    url: PubView.root+'/resources/data/arrays.txt',// 跳转到 action    
 	    	    				    data:{ 
 	    	    				    	vdc_id : vdc_id
 	    	    				    },
@@ -367,7 +380,44 @@ define(function(){
 	    	    				    }
 	    	    				});
 		    				};
-		    				
+		    				//更新配额值,nums为当前虚机个数
+		    				var updateQuota = function(nums){
+		    					var current = currentChosenObj.specs;
+		    					//重新计算配额值
+								var core = parseInt(current.attr('data-core')),
+									$core = $('div.core-quota'),
+									$core_info = $core.find('.progress-info'),
+									$core_pb = $core.find('.progress-bar'),
+									memory = parseInt(current.attr('data-memory')),
+									$memory = $('div.memory-quota'),
+									$memory_info = $memory.find('.progress-info'),
+									$memory_pb = $memory.find('.progress-bar');
+								//切换之前的数据//更新core
+								var oCore = parseInt(currentChosenObj.prevSpecs.attr('data-core'));
+								var coreTotal = parseInt($core_info.attr('data-all')),
+									coreUsed = parseInt($core_info.attr('data-used'));
+								//现在的使用值
+								coreUsed = coreUsed + core - oCore;
+								var coreUseRate = Math.round(coreUsed/coreTotal*100);
+								$core_pb.width(coreUseRate+"%");
+								$core_pb.attr('aria-valuenow',coreUseRate);
+								$core_pb.html(coreUseRate+'%');
+								$core_info.attr('data-used',coreUsed);
+								$core_info.find('span.quota-desc').html(coreTotal+'个中的'+coreUsed+'已使用');
+								//更新memory
+								var oMemory = parseInt(currentChosenObj.prevSpecs.attr('data-memory'));
+								var memoryTotal = parseInt($memory_info.attr('data-all')),
+									memoryUsed = parseInt($memory_info.attr('data-used'));
+								//现在的使用值
+								memoryUsed = memoryUsed + memory - oMemory;
+								var memoryUseRate = Math.round(memoryUsed/memoryTotal*100);
+								$memory_pb.width(memoryUseRate+"%");
+								$memory_pb.attr('aria-valuenow',memoryUseRate);
+								$memory_pb.html(memoryUseRate+'%');
+								$memory_info.attr('data-used',memoryUsed);
+								$memory_info.find('span.quota-desc').html(memoryTotal+'个中的'+memoryUsed+'已使用');
+									
+		    				}
 		    				return {
 		    					initImage : initImage,
 		    					initVdc : initVdc,
@@ -375,6 +425,7 @@ define(function(){
 		    					initVmSpecs : initVmSpecs,
 		    					initPopver : initPopver,
 		    					initQuotos : initQuotos,
+		    					updateQuota : updateQuota,
 		    					initAvailableNetWorks : initAvailableNetWorks
 		    				}
 		    			})();
@@ -386,10 +437,9 @@ define(function(){
 	    					//载入vdc,完成之后回调方法中去初始化可用域以及可用网络的数据
 	    					DataIniter.initVdc(function(){
 	    						//数据中心数据得到后，去加载可用域的数据以及可用网络的数据
-		    					var cur_vdc = $('select.select-vdc').children('option:selected').val();
-		    					DataIniter.initAvailableZone(cur_vdc);
+		    					DataIniter.initAvailableZone();
 		    					//可用网络
-		    					DataIniter.initAvailableNetWorks(cur_vdc);
+		    					DataIniter.initAvailableNetWorks();
 	    					});
 	    					//初始化云主机规格,完成后去绑定popver提示
 	    					DataIniter.initVmSpecs(function(){
@@ -432,32 +482,32 @@ define(function(){
 	    						//vdc切换，需要加载可用域 可用网络，配额的数据
 	    						vdcChange : function(){
 	    							$('select.select-vdc').change(function(){
-	    		    					var current = $(this).children('option:selected').val();
+	    		    					var current = $(this).children('option:selected');
+	    		    					//同步currentChosenObj
+	    	    				    	currentChosenObj.vdc = current;
 	    		    					//重新加载可用域的数据
-			    				    	DataIniter.initAvailableZone(current);
+			    				    	DataIniter.initAvailableZone();
 			    				    	//重新加载配额数据
-			    				    	DataIniter.initQuotos(current);
+			    				    	DataIniter.initQuotos();
 			    				    	//重新获取可用网络数据
-			    				    	DataIniter.initAvailableNetWorks(current);
+			    				    	DataIniter.initAvailableNetWorks();
+			    				    	
 	    		    				});
 	    						},
 	    						//规格change
 	    						specsChange : function(){
 	    							$('select.select-specs').change(function(){
+	    								//debugger
 	    								var current = $(this).find('option:selected');
+	    								//同步currentChosenObj
+	    								currentChosenObj.prevSpecs = currentChosenObj.specs;
+	    	    				    	currentChosenObj.specs = current;
 	    								//重新加载详细信息提示
-	    								DataIniter.initPopver(current);
-	    								//重新计算配额值
-	    								var core = parseInt(current.attr('data-core')),
-	    									memory = parseInt(current.attr('data-memory')),
-	    									$core = $('div.core-quota'),
-	    									$memory = $('div.memory-quota');
-	    								//更新core
-	    								//var width = parseInt($core)
-	    								//$core.width($core.)
+	    								DataIniter.initPopver();
+	    								DataIniter.updateQuota(1);
+	    								
 	    							})
 	    						}
-	    						
 	    				}
 		    			
 	    				//spinbox

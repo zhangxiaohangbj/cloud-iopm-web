@@ -296,7 +296,7 @@ require([
     var navPrimaryItems = [
         {
             text: '首页',
-            link: 'javascript:;'
+            link: '#'
         },
         {
             text: '基础环境',
