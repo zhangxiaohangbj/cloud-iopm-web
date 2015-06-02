@@ -85,8 +85,8 @@
 						<div class="form-group">
 							<label for="server-name" class="control-label col-sm-3"><span>* </span>云主机数量：</label>
 							<div class="col-sm-7 col-sm">
-								<div class="spinbox" data-initialize="spinbox" id="setVmNums">
-								  <input type="text" name="vm-nums" style="height:35px;" value="1" class="wizard-form-control input-mini spinbox-input">
+								<div class="spinbox"  id="setVmNums">
+								  <input type="text" name="vm-nums" style="height:35px;"  class="wizard-form-control input-mini spinbox-input">
 								  <div class="spinbox-buttons btn-group btn-group-vertical">
 								    <button type="button" class="btn btn-default spinbox-up btn-xs">
 								      <span class="glyphicon glyphicon-chevron-up"></span><span class="sr-only">Increase</span>
@@ -135,7 +135,7 @@
 						<div class="form-group">
 							<label for="chosen-network" class="control-label col-sm-2"><span>* </span>已选网络：</label>
 							<div class="col-sm-9 col-sm">
-								<div class="list-group">
+								<div class="list-group chosen-network">
 								</div>
 							</div>
 							<input type="hidden" class="wizard-form-control" id="chosen-network" name="chosen-network">

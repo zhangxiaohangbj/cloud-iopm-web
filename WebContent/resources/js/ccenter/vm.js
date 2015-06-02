@@ -4,7 +4,7 @@ define(['Initializer'],function(Initializer){
 		PubView.activeSideBar(2);	//左侧导航选中
 		$('.page-content').addClass("loading");
 		//需要修改为真实数据源
-		require(['template','text!'+PubView.root+'/resources/tpls/ccenter/vm.tpl'],function(template,tpl){
+		require(['template','text!'+PubView.root+'/resources/tpls/ccenter/vm.html'],function(template,tpl){
 			try{
 				//取云主机列表
 				$.ajax({
@@ -85,7 +85,7 @@ define(['Initializer'],function(Initializer){
 	    });
 	    //增加按钮
 	    $(document).on("click","span.btn-add",function(){
-	    	require(['text!./tpls/ccenter/add.tpl','bs/modal','bs/wizard'],function(html,Dialog){
+	    	require(['text!./tpls/ccenter/add.html','bs/modal','bs/wizard'],function(html,Dialog){
 	    			require(['css!'+PubView.root+'/resources/css/wizard.css'],function(){
 	    				//维护当前select的值以及云主机数量，为更新配额以及vdc相关的数据用
 	    				var currentChosenObj = {
@@ -93,7 +93,8 @@ define(['Initializer'],function(Initializer){
 	    						az: null,
 	    						specs: null,	//当前选中规格
 	    						prevSpecs: null,//上一个选中规格
-	    						nums: 1
+	    						prevNums:null,	//上一个虚机数量
+	    						nums: 1	//当前虚机数量
 	    				}
 	    				
 	    				if($('#create-server-wizard').length == 0){
@@ -286,7 +287,6 @@ define(['Initializer'],function(Initializer){
 		    	    				    	
 		    	    				    	//当前配额 等于 当前vdc下总配额 减去  当前选中规格的额度
 		    	    				    	var current = currentChosenObj.specs;//$('select.select-specs').find('option:selected');
-		    	    				    	//debugger;
 		    	    				    	if(current.length){
 		    	    				    		var current_core = parseInt(current.attr('data-core')),
 		    	    				    			current_memory = parseInt(current.attr('data-memory'));
@@ -300,10 +300,10 @@ define(['Initializer'],function(Initializer){
 		    	    				    		styleCore = rateCore <= 30 ? 'progress-bar-success' : rateCore >= 80 ? 'progress-bar-danger' : 'progress-bar-info';
 		    	    				    		styleMemory = rateMemory <= 30 ? 'progress-bar-success' : rateMemory >= 80 ? 'progress-bar-danger' : 'progress-bar-info';
 		    	    				    		styleNums = rateNums <= 30 ? 'progress-bar-success' : rateNums >= 80 ? 'progress-bar-danger' : 'progress-bar-info';
-		    	    				    	var html = '<div class="core-quota">'+
+		    	    				    	var html = '<div data="core"  class="specs">'+
 															'<div class="progress-info clearfix" data-all="'+quotas.core.total+'" data-used="'+quotas.core.used+'">'+
 															  	'<span class="quota-key">虚拟内核数量</span>'+
-															  	'<span  class="quota-desc">'+quotas.core.total+'个中的'+quotas.core.used+'个已使用</span>'+
+															  	'<span  class="quota-desc">'+quotas.core.total+'中的'+quotas.core.used+'个已使用</span>'+
 															'</div>'+
 															'<div class="progress">'+
 																'<div class="progress-bar '+styleCore+'" role="progressbar" aria-valuenow="'+rateCore+'" aria-valuemin="0" aria-valuemax="100" style="width: '+rateCore+'%;">'+
@@ -312,7 +312,7 @@ define(['Initializer'],function(Initializer){
 															'</div>'+
 														'</div>'+
 														
-														'<div class="memory-quota">'+
+														'<div data="memory" class="specs">'+
 															'<div class="progress-info clearfix" data-all="'+quotas.memory.total+'" data-used="'+quotas.memory.used+'">'+
 															  	'<span class="quota-key">内存总计</span>'+
 															  	'<span  class="quota-desc">'+quotas.memory.total+'中的'+quotas.memory.used+'已使用</span>'+
@@ -324,7 +324,7 @@ define(['Initializer'],function(Initializer){
 															'</div>'+
 														'</div>'+
 														
-														'<div class="vm-nums-quota">'+
+														'<div data="nums" class="nums">'+
 															'<div class="progress-info clearfix" data-all="'+quotas.nums.total+'" data-used="'+quotas.nums.used+'">'+
 															  	'<span class="quota-key">云主机数量</span>'+
 															  	'<span  class="quota-desc">'+quotas.nums.total+'中的'+quotas.nums.used+'已使用</span>'+
@@ -340,7 +340,7 @@ define(['Initializer'],function(Initializer){
 		    	    				    }
 		    	    				});
 		    					}else{
-		    						Dialog.info('尚未选择vdc','error');
+		    						//Dialog.info('尚未选择vdc','error');
 		    					}
 		    					
 		    				};
@@ -355,69 +355,86 @@ define(['Initializer'],function(Initializer){
 	    	    				   // type:'POST',    
 	    	    				    dataType:'json',    
 	    	    				    success:function(data){
-	    	    				    	var html = '<a href="#" class="list-group-item">'+
+	    	    				    	var html = '<a href="javascript:void(0);" data-index="1" class="list-group-item">'+
 														  'private (<span>58c41046-408e-b959-d63147471b</span>)'+
 														  '<i class="fa fa-plus-circle fa-fw"></i>'+
 													  '</a>'+
-													  '<a href="#" class="list-group-item">'+
+													  '<a href="javascript:void(0);" data-index="2"  class="list-group-item">'+
 														  'facilisis (<span>58c41046-408e-b959-d63147471b</span>)'+
 														  '<i class="fa fa-plus-circle fa-fw"></i>'+
 													 '</a>'+
-													  '<a href="#" class="list-group-item">'+
+													  '<a href="javascript:void(0);" data-index="3"  class="list-group-item">'+
 														  'risus (<span>58c41046-408e-b959-d63147471b</span>)'+
 														  '<i class="fa fa-plus-circle fa-fw"></i>'+
 													  '</a>'+
-													  '<a href="#" class="list-group-item">'+
+													  '<a href="javascript:void(0);" data-index="4"  class="list-group-item">'+
 													  'consectr (<span>58c41046-408e-b959-d63147471b</span>)'+
 													  '<i class="fa fa-plus-circle fa-fw"></i>'+
 													  '</a>';
 	    	    				    	$('div.available-network').html(html);
-	    	    				    	$('.list-group-item').hover(function(){
-	    	    		    				$(this).find('.fa').show();
-	    	    		    			},function(){
-	    	    		    				$(this).find('.fa').hide();
-	    	    		    			})
+	    	    				    	EventsBind.networkChosen();
 	    	    				    }
 	    	    				});
 		    				};
-		    				//更新配额值,nums为当前虚机个数
-		    				var updateQuota = function(nums){
-		    					var current = currentChosenObj.specs;
-		    					//重新计算配额值
-								var core = parseInt(current.attr('data-core')),
-									$core = $('div.core-quota'),
-									$core_info = $core.find('.progress-info'),
-									$core_pb = $core.find('.progress-bar'),
-									memory = parseInt(current.attr('data-memory')),
-									$memory = $('div.memory-quota'),
-									$memory_info = $memory.find('.progress-info'),
-									$memory_pb = $memory.find('.progress-bar');
-								//切换之前的数据//更新core
-								var oCore = parseInt(currentChosenObj.prevSpecs.attr('data-core'));
-								var coreTotal = parseInt($core_info.attr('data-all')),
-									coreUsed = parseInt($core_info.attr('data-used'));
-								//现在的使用值
-								coreUsed = coreUsed + core - oCore;
-								var coreUseRate = Math.round(coreUsed/coreTotal*100);
-								$core_pb.width(coreUseRate+"%");
-								$core_pb.attr('aria-valuenow',coreUseRate);
-								$core_pb.html(coreUseRate+'%');
-								$core_info.attr('data-used',coreUsed);
-								$core_info.find('span.quota-desc').html(coreTotal+'个中的'+coreUsed+'已使用');
-								//更新memory
-								var oMemory = parseInt(currentChosenObj.prevSpecs.attr('data-memory'));
-								var memoryTotal = parseInt($memory_info.attr('data-all')),
-									memoryUsed = parseInt($memory_info.attr('data-used'));
-								//现在的使用值
-								memoryUsed = memoryUsed + memory - oMemory;
-								var memoryUseRate = Math.round(memoryUsed/memoryTotal*100);
-								$memory_pb.width(memoryUseRate+"%");
-								$memory_pb.attr('aria-valuenow',memoryUseRate);
-								$memory_pb.html(memoryUseRate+'%');
-								$memory_info.attr('data-used',memoryUsed);
-								$memory_info.find('span.quota-desc').html(memoryTotal+'个中的'+memoryUsed+'已使用');
-									
-		    				}
+		    				var updateQuotaSpecs = function(change){
+		    					if(change == 0){
+		    						return;
+		    					}
+		    					$('div.quotas').children('.specs').each(function(){
+		    						var key = $(this).attr('data'),
+		    							info = $(this).find('.progress-info'),
+		    							progressBar = $(this).find('.progress-bar'),
+		    							total = parseInt(info.attr('data-all')),
+		    							used = parseInt(info.attr('data-used')),
+		    							oData = currentChosenObj.prevSpecs ? parseInt(currentChosenObj.prevSpecs.attr('data-'+key)): 0;
+		    							nData = parseInt(currentChosenObj.specs.attr('data-'+key)) || 0;
+	    							//切换后的使用值
+		    						used = used + (change != null ? change*(nData - oData) : currentChosenObj.nums*(nData - oData));
+		    						//使用率
+		    						var useRate = Math.round(used/total*100);
+		    						if(useRate <= 100){
+		    							//更新dom内容-info
+			    						info.attr('data-used',used);
+			    						info.find('span.quota-desc').html(total+'中的'+used+'已使用');
+			    						//更新进度条
+			    						progressBar.width(useRate+"%");
+			    						progressBar.attr('aria-valuenow',useRate);
+			    						progressBar.html(useRate+'%');
+		    						}else{
+		    							//Dialog.info('超出配额','error');
+		    							var key = $(this).find('.quota-key').html();
+		    							alert(key+"超出配额");
+		    						}
+		    						
+		    					})
+		    				};
+		    				//更新配额值,内存  内核数和虚机数
+		    				var updateQuotaNums = function(){
+		    					var $this = $('div.quotas').children('.nums');
+		    						key = $this.attr('data'),
+	    							info = $this.find('.progress-info'),
+	    							progressBar = $this.find('.progress-bar'),
+	    							total = parseInt(info.attr('data-all')),
+	    							used = parseInt(info.attr('data-used')),
+	    							oData = parseInt(currentChosenObj.prevNums) || 0;
+	    							nData = parseInt(currentChosenObj.nums) || 0;
+	    						used = used + nData - oData;
+		    						//更新vm个数，需要计算占用的core和memory
+	    						var useRate = Math.round(used/total*100);
+	    						if(useRate <= 100){
+	    							//更新dom内容-info
+		    						info.attr('data-used',used);
+		    						info.find('span.quota-desc').html(total+'中的'+used+'已使用');
+		    						//更新进度条
+		    						progressBar.width(useRate+"%");
+		    						progressBar.attr('aria-valuenow',useRate);
+		    						progressBar.html(useRate+'%');
+		    						this.updateQuotaSpecs(nData - oData);
+	    						}else{
+	    							//Dialog.info('超出配额','error');
+	    							alert("超出配额");
+	    						}
+		    				};
 		    				return {
 		    					initImage : initImage,
 		    					initVdc : initVdc,
@@ -425,7 +442,8 @@ define(['Initializer'],function(Initializer){
 		    					initVmSpecs : initVmSpecs,
 		    					initPopver : initPopver,
 		    					initQuotos : initQuotos,
-		    					updateQuota : updateQuota,
+		    					updateQuotaSpecs : updateQuotaSpecs,
+		    					updateQuotaNums : updateQuotaNums,
 		    					initAvailableNetWorks : initAvailableNetWorks
 		    				}
 		    			})();
@@ -477,6 +495,14 @@ define(['Initializer'],function(Initializer){
 	    			    					min: 1,
 	    			    					max: 5
 	    			    				});
+	    			    				$('#setVmNums').on('changed.bs.spinbox', function () {
+	    			    					//第一次会执行两次，待解决
+	    			    					//同步currentChosenObj
+		    								currentChosenObj.prevNums = currentChosenObj.nums;
+		    	    				    	currentChosenObj.nums = $(this).spinbox('value');
+		    	    				    	//更新配额信息
+		    								DataIniter.updateQuotaNums();
+			    						})
 	    			    			})
 	    						},
 	    						//vdc切换，需要加载可用域 可用网络，配额的数据
@@ -497,23 +523,49 @@ define(['Initializer'],function(Initializer){
 	    						//规格change
 	    						specsChange : function(){
 	    							$('select.select-specs').change(function(){
-	    								//debugger
 	    								var current = $(this).find('option:selected');
 	    								//同步currentChosenObj
 	    								currentChosenObj.prevSpecs = currentChosenObj.specs;
 	    	    				    	currentChosenObj.specs = current;
 	    								//重新加载详细信息提示
 	    								DataIniter.initPopver();
-	    								DataIniter.updateQuota(1);
+	    								DataIniter.updateQuotaSpecs();
 	    								
+	    							})
+	    						},
+	    						//可用网络选择事件
+	    						networkChosen : function(){
+	    							//滑过出现添加图标
+	    							$(document).on("mouseover mouseout","a.list-group-item",function(event){
+	    								if(event.type == "mouseover"){
+	    									$(this).find('.fa').show();
+	    								 }else if(event.type == "mouseout"){
+	    									 $(this).find('.fa').hide();
+	    								 }
+	    							})
+	    							//选择可用网络绑定点击事件
+	    							wizard.el.find(".available-network .list-group-item").click(function(){
+	    								if("true" != $(this).attr('has-chosen')){
+	    									var clone = $(this).clone();
+	    									clone.find('i').removeClass('fa-plus-circle').addClass('fa-minus-circle').css('display','none');
+		    								wizard.el.find('.chosen-network').append(clone);
+		    								$(this).attr('has-chosen',"true");
+	    								}else{
+	    									alert('已选择');
+	    								}
+	    							});
+	    							//删除已选网络点击事件
+	    							$(document).on("click",".chosen-network a.list-group-item i",function(event){
+	    								var index = $(this).parent().attr('data-index');
+	    								wizard.el.find(".available-network a[data-index="+index+"]").attr("has-chosen","false");
+	    								$(this).parent().remove();
 	    							})
 	    						}
 	    				}
-		    			
 	    				//spinbox
 	    				EventsBind.VmNumsSpinbox();
-	    				
 		    			
+	    				
 		    			$('input[type="checkbox"],input[type="radio"]').iCheck({
 					    	checkboxClass: "icheckbox-info",
 					        radioClass: "iradio-info"
