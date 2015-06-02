@@ -248,12 +248,18 @@ define('Initializer', ['bs/modal'], function(Modal) {
         //加载控制器,并默认执行init初始化
         loadctrl: function(ctrl){
             Modal.loader();
+            var onLoad = function() {
+                Modal.loader('remove');
+            };
             //路由后页面载入入口
             require(ctrl, function(o){
                 if(o && ('init' in o)){
-                    o.init().done(function(flag) {
-                        Modal.loader('remove');
-                    });
+                    var initRes = o.init();
+                    if(PubView.utils.isObject(initRes) && initRes.done) {
+                        initRes.done(onLoad);
+                    } else {
+                        onLoad();
+                    }
                 }
             });
             return this;
@@ -280,6 +286,7 @@ define('Initializer', ['bs/modal'], function(Modal) {
     return {
         init: loadInit,
         router: router,
+        getHash: _getHash,
         resize: resizeContent,
         adjustContentLeft: adjustContentLeft,
         initDataTable: initDataTable,
@@ -292,7 +299,6 @@ require([
     'Initializer',
     'bs/popover'
 ], function(Initializer, Modal) {
-    var navPrimaryCurIndex = 1;
     var navPrimaryItems = [
         {
             text: '首页',
@@ -319,6 +325,16 @@ require([
             link: '#'
         }
     ];
+    var navPrimaryCurIndex = function() {
+        var hash = Initializer.getHash(), regExp = new RegExp(hash+"$", "i");
+        for (var i=0; i<navPrimaryItems.length; i++) {
+            var navItem = navPrimaryItems[i];
+            if(navItem.link && regExp.test(navItem.link)) {
+                return i + 1;
+            }
+        }
+        return 1;
+    }();
     var sideBarItems = [
         null,
         null,
@@ -484,11 +500,11 @@ require([
             return item;
         };
         var dataMap = {};
-        for(var i in navPrimaryItems) {
+        for(var i=0; i<navPrimaryItems.length; i++) {
             var sideBarItem = sideBarItems[i];
             if(sideBarItem) {
                 var item = navPrimaryItems[i];
-                dataMap[i] = initItemsLink(item.link, sideBarItem);
+                dataMap[i+1] = initItemsLink(item.link, sideBarItem);
                 item = null;
             }
             sideBarItem = null;
@@ -496,6 +512,18 @@ require([
         return dataMap;
     }();
 
+    // 注册路由规则
+    with(Initializer.router){
+        when("^#?(!.*)?$", ['js/index']);
+        when("^#ccenter(!.*)?$", ['js/ccenter/vm']);
+        when("^#ccenter/vm(!.*)?$", ['js/ccenter/vm']);
+        when("^#ccenter/storage(!.*)?$", ['js/ccenter/storage']);
+        //otherwise(['js/ccenter/vm']);
+    }
+    // 初始化
+    Initializer.init();
+
+    // 设置公共header和侧边栏
     PubView({
         header: {
             data: {
@@ -547,8 +575,8 @@ require([
                 $(document).on("click", 'header nav>ul>li', function() {
                     var index = parseInt($(this).attr('index'));
                     PubView.activeHeader(index, 1);
-                    if(sideBarDataMap[index-1]) {
-                        PubView.renderSideBar({ data: sideBarDataMap[index-1] });
+                    if(sideBarDataMap[index]) {
+                        PubView.renderSideBar({ data: sideBarDataMap[index] });
                     } else {
                         PubView.renderSideBar(null);
                     }
@@ -566,12 +594,5 @@ require([
         }()
     });
 
-    with(Initializer.router){
-        when("^#?(!.*)?$", ['js/index']);
-        when("^#ccenter(!.*)?$", ['js/ccenter/vm']);
-        when("^#ccenter/vm(!.*)?$", ['js/ccenter/vm']);
-        when("^#ccenter/storage(!.*)?$", ['js/ccenter/storage']);
-        //otherwise(['js/ccenter/vm']);
-    }
-    Initializer.init();
+    Initializer.resize();
 });
