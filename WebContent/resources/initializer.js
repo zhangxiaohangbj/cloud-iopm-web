@@ -368,7 +368,7 @@ define('Common', ['PubView', 'bs/modal', 'json', 'template', 'jq/dataTables', 'b
             if(!PubView.utils.isPlainObject(data)) {
                 data = $.extend({}, {list: data}, defaults);
             } else {
-                data = $.extend({}, data, defaults);
+                data = $.extend({}, defaults, data);
             }
             var inHtml = this.template('ui-select', data);
             try {
