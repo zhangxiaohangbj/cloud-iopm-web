@@ -1,4 +1,5 @@
-define(['Initializer'],function(Initializer){
+define(['Initializer','bs/modal'],function(Initializer,Dialog){
+	Dialog.danger('sssssssss');
 	var init = function(){
 		var def = $.Deferred();
 		PubView.activeSideBar(2);	//左侧导航选中
@@ -376,6 +377,7 @@ define(['Initializer'],function(Initializer){
 	    	    				    }
 	    	    				});
 		    				};
+		    				//更新配额信息：内存和内核数
 		    				var updateQuotaSpecs = function(change){
 		    					if(change == 0){
 		    						return;
@@ -403,12 +405,12 @@ define(['Initializer'],function(Initializer){
 		    						}else{
 		    							//Dialog.info('超出配额','error');
 		    							var key = $(this).find('.quota-key').html();
-		    							alert(key+"超出配额");
+		    							//Dialog.info(key+"超出配额",'error');
 		    						}
 		    						
 		    					})
 		    				};
-		    				//更新配额值,内存  内核数和虚机数
+		    				//更新配额值,虚机数
 		    				var updateQuotaNums = function(){
 		    					var $this = $('div.quotas').children('.nums');
 		    						key = $this.attr('data'),
@@ -435,6 +437,26 @@ define(['Initializer'],function(Initializer){
 	    							alert("超出配额");
 	    						}
 		    				};
+		    				//载入安全组
+		    				var initSecurityGroup = function(){
+		    					var vdc_id = currentChosenObj.vdc.val() || $('select.select-vdc').children('option:selected').val();
+		    					$.ajax({
+	    	    				    url: PubView.root+'/resources/data/arrays.txt',// 跳转到 action    
+	    	    				    data:{ 
+	    	    				    	vdc_id : vdc_id
+	    	    				    },
+	    	    				   // type:'POST',    
+	    	    				    dataType:'json',    
+	    	    				    success:function(data){
+	    	    				    	var html = '<label><input type="checkbox" class="selectAll"> Security Group1</label>'+
+			    									'<label><input type="checkbox" class="selectAll"> Security Group2</label>'+
+			    									'<label><input type="checkbox" class="selectAll"> Security Group3</label>'+
+			    									'<label><input type="checkbox" class="selectAll"> Security Group4</label>';
+	    	    				    	$('div.security-group').html(html);
+	    	    				    	EventsBind.initCheckBox();
+	    	    				    }
+	    	    				});
+		    				}
 		    				return {
 		    					initImage : initImage,
 		    					initVdc : initVdc,
@@ -444,6 +466,7 @@ define(['Initializer'],function(Initializer){
 		    					initQuotos : initQuotos,
 		    					updateQuotaSpecs : updateQuotaSpecs,
 		    					updateQuotaNums : updateQuotaNums,
+		    					initSecurityGroup : initSecurityGroup,
 		    					initAvailableNetWorks : initAvailableNetWorks
 		    				}
 		    			})();
@@ -458,6 +481,8 @@ define(['Initializer'],function(Initializer){
 		    					DataIniter.initAvailableZone();
 		    					//可用网络
 		    					DataIniter.initAvailableNetWorks();
+		    					//安全组
+		    					DataIniter.initSecurityGroup();
 	    					});
 	    					//初始化云主机规格,完成后去绑定popver提示
 	    					DataIniter.initVmSpecs(function(){
@@ -466,8 +491,7 @@ define(['Initializer'],function(Initializer){
 	    				    	//载入规格详细信息提示popver
 	    				    	DataIniter.initPopver();
 	    					});
-	    					
-	    				},500);
+	    				},200);
 	    				
 	    				var EventsBind = {
 	    						//基本信息所需事件
@@ -570,24 +594,38 @@ define(['Initializer'],function(Initializer){
 		    								$('select[name=select-net-ip]').prop('disabled',true);
 	    								}
 	    							})
+	    						},
+	    						//访问安全事件
+	    						securitySetting : function(){
+	    							wizard.el.find('ul.security-type a').click(function(){
+	    			    				$(this).parent().siblings('.active').removeClass('active');
+	    			    				$(this).parent().addClass('active');
+	    			    				var name = $(this).html(),dataType = $(this).attr('data-type'),
+	    			    					pwdCon = $(this).parents('.security-type:first').next();
+	    			    				pwdCon.find('label[for=login-key]').html(name+':');
+	    			    				pwdCon.find('div[data-for='+dataType+']').siblings('div').hide();
+	    			    				pwdCon.find('div[data-for='+dataType+']').show();
+	    							})
+	    						},
+	    						//初始化安全组的绑定checkbox
+	    						initCheckBox : function(){
+	    							$('input[type="checkbox"],input[type="radio"]').iCheck({
+	    						    	checkboxClass: "icheckbox-info",
+	    						        radioClass: "iradio-info"
+	    						    })
 	    						}
 	    				}
 	    				//spinbox
 	    				EventsBind.VmNumsSpinbox();
-		    			
+	    				EventsBind.securitySetting();
 	    				
-		    			$('input[type="checkbox"],input[type="radio"]').iCheck({
-					    	checkboxClass: "icheckbox-info",
-					        radioClass: "iradio-info"
-					    })
-		    			
 
 		    			wizard.on('closed', function() {
 		    				$('div.wizard').remove();
 		    				$('div.modal-backdrop').remove();
 		    			});
 
-		    			/*wizard.on("submit", function(wizard) {
+		    			wizard.on("submit", function(wizard) {
 		    				var submit = {
 		    					"hostname": $("#new-server-fqdn").val()
 		    				};
@@ -604,7 +642,7 @@ define(['Initializer'],function(Initializer){
 		    					wizard.showSubmitCard("success");
 		    					wizard.updateProgressBar(0);
 		    				}, 2000);
-		    			});*/
+		    			});
 		    			
 		    			wizard.el.find(".wizard-success .im-done").click(function() {
 		    				$('div.wizard').remove();

@@ -197,9 +197,9 @@
 						<div class="form-group">
 							<label for="login" class="control-label col-sm-2"><span>* </span>登陆信息：</label>
 							<div class="col-sm-9 col-sm">
-								<ul class="nav nav-pills">
-								  <li class="active"><a href="javascript:void(0)"  data-image="image">密钥</a></li>
-								  <li><a href="javascript:void(0)"  data-image="snapshot">密码</a></li>
+								<ul class="nav nav-pills security-type">
+								  <li class="active"><a href="javascript:void(0)"  data-type="secret-key">密钥</a></li>
+								  <li><a href="javascript:void(0)"  data-type="password">密码</a></li>
 								</ul>
 								<div class="login-info">
 									<div class="usr clearfix">
@@ -210,8 +210,12 @@
 					                </div>
 					                <div class="pwd clearfix">
 					                  <label  class="col-sm-2" for="login-key">密钥: </label>
-					                  <input type="password" class="input-pwd hide" placeholder="请输入密码">
-					                  <span class="text-danger" style="line-height:30px;">暂无密钥, <a href="javascript:;"> 创建密钥</a></span>
+					                  <div data-for="secret-key" class="col-sm-9 col-sm">
+						                  <span class="text-danger" style="line-height:30px;">暂无密钥, <a href="javascript:;"> 创建密钥</a></span>
+					                  </div>
+					                  <div data-for="password"  class="col-sm-9 col-sm" style="display:none">
+						                  <input type="password" name="login-pwd" class="wizard-form-control" placeholder="请输入密码">
+					                  </div>
 					                </div>
 								</div>
 							</div>
@@ -222,10 +226,6 @@
 						<div class="form-group">
 							<label class="control-label col-sm-2"><span>* </span>安全组：</label>
 							<div class="col-sm-9  security-group">
-								<label><input type="checkbox" class="selectAll"> Security Group1</label>
-								<label><input type="checkbox" class="selectAll"> Security Group2</label>
-								<label><input type="checkbox" class="selectAll"> Security Group3</label>
-								<label><input type="checkbox" class="selectAll"> Security Group4</label>
 							</div>
 						</div>
 					</div>
@@ -250,7 +250,7 @@
 					
 					<div class="wizard-input-section">
 						<div class="form-group">
-							<label for="scripts" class="control-label col-sm-2"><span>* </span>上传：</label>
+							<label  class="control-label col-sm-2"><span>* </span>上传：</label>
 							<div class="col-sm-9 col-sm">
 								<button type="button" class="btn btn-info">上传脚本</button>
 							</div>
@@ -259,14 +259,14 @@
 					
 					<div class="wizard-input-section">
 						<div class="form-group">
-							<label for="scripts" class="control-label col-sm-2"><span>* </span>磁盘分区：</label>
+							<label  class="control-label col-sm-2"><span>* </span>磁盘分区：</label>
 							<div class="col-sm-9 col-sm">
 								<label>
 		                            <input name="radio-auto"  class="icheck-success" value="auto" type="radio">
 		                            	自动
 	                        	</label>
 	                        	<label>
-		                            <input name="radio-non-auto"  class="icheck-success" value="non-auto" type="radio">
+		                            <input name="radio-auto"  class="icheck-success" value="non-auto" type="radio">
 		                            	手动
 	                        	</label>
 							</div>
