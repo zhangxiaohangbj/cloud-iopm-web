@@ -227,9 +227,9 @@ define('Common', ['PubView', 'bs/modal', 'json', 'template', 'jq/dataTables', 'b
                     }
                     var doRender = function(data) {
                         if(PubView.utils.isArray(data)) {
-                            data = {list: data};
+                            data = $.extend({}, {list: data});
                         } else if(!PubView.utils.isPlainObject(data)) {
-                            data = {data: data};
+                            data = $.extend({}, {data: data});
                         }
                         require(['text!'+_tplUrl], function(tplText) {
                             try{
@@ -272,9 +272,9 @@ define('Common', ['PubView', 'bs/modal', 'json', 'template', 'jq/dataTables', 'b
                     if(PubView.utils.isFunction(data)) {
                         callback = data;
                     } else if(PubView.utils.isArray(data)) {
-                        data = {list: data};
+                        data = $.extend({}, {list: data});
                     } else if(!PubView.utils.isPlainObject(data)) {
-                        data = {data: data};
+                        data = $.extend({}, {data: data});
                     }
                     var inHtml;
                     if(/^[_a-z][a-z\-_0-9]*$/i.test(tplId)) {
