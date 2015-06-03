@@ -23,7 +23,6 @@
 								  <li><a  href="javascript:void(0)" data-image="disksnap">云硬盘快照</a></li>
 								</ul>
 								<div class="image-list">
-									
 								</div>
 							</div>
 							<input type="hidden" class="wizard-form-control" id="image-id" name="image-id">
@@ -44,7 +43,7 @@
 				<div class="wizard-card-content col-sm-8">
 					<div class="wizard-input-section">
 						<div class="form-group">
-							<label for="server-name" class="control-label col-sm-3"><span>* </span>虚拟数据中心：</label>
+							<label for="select-vdc" class="control-label col-sm-3"><span>* </span>虚拟数据中心：</label>
 							<div class="col-sm-7 col-sm">
 								<select name="select-vdc"  class="wizard-form-control select select-vdc">
 								</select>
@@ -54,14 +53,9 @@
 					
 					<div class="wizard-input-section">
 						<div class="form-group">
-							<label for="server-name" class="control-label col-sm-3"><span>* </span>可用域：</label>
+							<label for="select-available-zone" class="control-label col-sm-3"><span>* </span>可用域：</label>
 							<div class="col-sm-7 col-sm">
 								<select name="select-available-zone"   class="wizard-form-control select select-available-zone">
-								  <option>input-section1</option>
-								  <option>input-section2</option>
-								  <option>input-section3</option>
-								  <option>input-section4</option>
-								  <option>input-section5</option>
 								</select>
 							</div>
 						</div>
@@ -69,7 +63,7 @@
 					
 					<div class="wizard-input-section">
 						<div class="form-group">
-							<label for="server-name" class="control-label col-sm-3"><span>* </span>云主机规格：</label>
+							<label for="select-specs" class="control-label col-sm-3"><span>* </span>云主机规格：</label>
 							<div class="col-sm-7 col-sm">
 				                    <select name="select-specs"  class="wizard-form-control select select-specs" tabindex="5">
 				                    </select>
@@ -83,7 +77,7 @@
 					
 					<div class="wizard-input-section">
 						<div class="form-group">
-							<label for="server-name" class="control-label col-sm-3"><span>* </span>云主机数量：</label>
+							<label for="vm-nums" class="control-label col-sm-3"><span>* </span>云主机数量：</label>
 							<div class="col-sm-7 col-sm">
 								<div class="spinbox"  id="setVmNums">
 								  <input type="text" name="vm-nums" style="height:35px;"  class="wizard-form-control input-mini spinbox-input">
@@ -103,7 +97,7 @@
 					
 					<div class="wizard-input-section">
 						<div class="form-group">
-							<label for="server-name" class="control-label col-sm-3">配额：</label>
+							<label for="" class="control-label col-sm-3">配额：</label>
 							<div class="col-sm-8 col-sm quotas">
 							</div>
 						</div>

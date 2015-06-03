@@ -84,7 +84,7 @@ dependencies {
 	runtime "com.inspur.cloudframework:cloud-rest-api:1.2.0-SNAPSHOT"
 	runtime "com.inspur.cloudframework:cloud-rest-api-example:1.2.0-SNAPSHOT"
 	
-//	runtime "com.inspur.cloud:cloud-vm:1.2.0-SNAPSHOT"
+	runtime "com.inspur.cloud:cloud-vm:1.2.0-SNAPSHOT"
 	
 	//
 	runtime("com.inspur.cloud:cloud-storage:1.2.0-SNAPSHOT")

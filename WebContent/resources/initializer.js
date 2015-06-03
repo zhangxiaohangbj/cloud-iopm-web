@@ -323,6 +323,7 @@ define('Common', ['PubView', 'bs/modal', 'json', 'template', 'jq/dataTables', 'b
                         headers: this.headers,
                         dataType: 'json',
                         error: function(xhr, status) {
+                        	debugger
                             Modal.danger("Sorry, there was a problem!");
                         }
                     };
