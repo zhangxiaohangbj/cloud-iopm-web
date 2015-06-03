@@ -280,7 +280,8 @@ define('Common', ['PubView', 'bs/modal', 'json', 'template', 'jq/dataTables', 'b
                     if(/^[_a-z][a-z\-_0-9]*$/i.test(tplId)) {
                         inHtml = template(tplId, data);
                     } else {
-                        inHtml = template.compile(tplId).render(data);
+                        var render = template.compile(tplId);
+                        inHtml = render(data);
                     }
                     if(PubView.utils.isFunction(callback)) {
                         callback(inHtml);
@@ -360,6 +361,25 @@ define('Common', ['PubView', 'bs/modal', 'json', 'template', 'jq/dataTables', 'b
                 } else {
                     return PubView.root;
                 }
+            }
+        },
+        uiSelect: function(data, appendToEl) {
+            var defaults = {className: "form-control"};
+            if(!PubView.utils.isPlainObject(data)) {
+                data = $.extend({}, {list: data}, defaults);
+            } else {
+                data = $.extend({}, data, defaults);
+            }
+            var inHtml = this.template('ui-select', data);
+            try {
+                if(appendToEl) {
+                    if(!PubView.utils.is$(appendToEl)) {
+                        appendToEl = $(appendToEl);
+                    }
+                    appendToEl.append(inHtml);
+                }
+            } catch (e) {
+                return inHtml;
             }
         }
     };
