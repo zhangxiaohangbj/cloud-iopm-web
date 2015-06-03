@@ -5,15 +5,27 @@ define(['Common'],function(Common){
 			Common.resolve(true);
 			var inHtml = Common.uiSelect({
 				name: 'xxxx',
+				attrs: {
+					'data-xxx': 'xxx'
+				},
 				list: [
 					{
-						value: 1245
+						value: 1245,
+						attrs: {
+							'data-xxx': 'xxx'
+						}
 					},
 					{
 						label: "12364",
+						attrs: {
+							'data-xxx': 'xxx'
+						},
 						list: [
 							{
-								value: 56789
+								value: 56789,
+								attrs: {
+									'data-xxx': 'xxx'
+								}
 							}
 						]
 					}
