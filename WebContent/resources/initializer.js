@@ -378,9 +378,8 @@ define('Common', ['PubView', 'bs/modal', 'json', 'template', 'jq/dataTables', 'b
                     }
                     appendToEl.append(inHtml);
                 }
-            } catch (e) {
-                return inHtml;
-            }
+            } catch (e) { }
+            return inHtml;
         }
     };
 });
