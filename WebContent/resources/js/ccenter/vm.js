@@ -1,5 +1,4 @@
 define(['Initializer','bs/modal'],function(Initializer,Dialog){
-	Dialog.danger('sssssssss');
 	var init = function(){
 		var def = $.Deferred();
 		PubView.activeSideBar(2);	//左侧导航选中
