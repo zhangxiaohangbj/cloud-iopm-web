@@ -34,7 +34,7 @@ textarea, input[type="text"], input[type="password"], input[type="datetime"], in
 	background-color: #fff;
 	border: 1px solid #e2e7ea;
 }
-input:not([type]):hover, input[type="text"]:hover, textarea:hover, input:not([type]):focus, input[type="text"]:focus, textarea:focus {
+input:not([type]):hover, input[type="text"]:hover,input[type="password"]:hover, textarea:hover, input:not([type]):focus, input[type="text"]:focus, textarea:focus {
 	border: 1px #00afc8 solid;
 }
 input[disabled], select[disabled], textarea[disabled], input[readonly], select[readonly], textarea[readonly] {

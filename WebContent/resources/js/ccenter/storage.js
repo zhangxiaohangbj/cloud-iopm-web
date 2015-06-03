@@ -3,7 +3,7 @@ define(function(){
 		PubView.activeSideBar(1, 2);	//左侧导航选中
 		$('.page-content').addClass("loading");
 		//需要修改为真实数据源
-		require(['template','text!'+PubVars.contextPath+'/resources/data/arrays.txt','text!'+PubVars.contextPath+'/resources/tpls/ccenter/storage.tpl'],function(template,data,tpl){
+		require(['template','text!'+PubVars.contextPath+'/resources/data/arrays.txt','text!'+PubVars.contextPath+'/resources/tpls/ccenter/storage.html'],function(template,data,tpl){
 			try{
 				if(data){
 					data = JSON.parse(data);

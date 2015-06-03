@@ -18,7 +18,7 @@ define('Common', ['PubView', 'bs/modal', 'json', 'template', 'jq/dataTables', 'b
         //路由表
         table: {
             path: [],
-                ctrl:[]
+            ctrl:[]
         },
         //注册路由
         when: function(path, ctrl){
