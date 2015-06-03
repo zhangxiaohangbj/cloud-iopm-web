@@ -106,6 +106,13 @@ define('Common', ['PubView', 'bs/modal', 'json', 'template', 'jq/dataTables', 'b
         $pageContent: null,
         getHash: _getHash,
         init: function(){
+            var that = this;
+            // 注册到template公共方法中
+            template.helper('uiSelect', function(data) {
+                var inHtml = that.uiSelect(data);
+                return inHtml;
+            });
+            // 初始化页面结构
             $(document.body).removeClass("loading").append(
                 '<div id="page-main" class="clearfix">'+
                     '<div class="page-content clearfix"></div>'+

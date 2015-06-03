@@ -1,9 +1,8 @@
 define(['Common'],function(Common){
 	var init = function(){
 		Common.Deferred();
-		Common.render('tpls/index.html', function() {
-			Common.resolve(true);
-			var inHtml = Common.uiSelect({
+		Common.render('tpls/index.html', {
+			iSelectData: {
 				name: 'xxxx',
 				attrs: {
 					'data-xxx': 'xxx'
@@ -30,7 +29,10 @@ define(['Common'],function(Common){
 						]
 					}
 				]
-			}, Common.$pageContent);
+			}
+		}, function() {
+			Common.resolve(true);
+			var inHtml = Common.uiSelect();
 		});
 	};
 	return {
