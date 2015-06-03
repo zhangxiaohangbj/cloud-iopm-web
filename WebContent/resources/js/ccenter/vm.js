@@ -550,6 +550,10 @@ define(['Initializer'],function(Initializer){
 	    									clone.find('i').removeClass('fa-plus-circle').addClass('fa-minus-circle').css('display','none');
 		    								wizard.el.find('.chosen-network').append(clone);
 		    								$(this).attr('has-chosen',"true");
+		    								//网卡 指定子网和指定ip置为可用,先挨个执行，需添加共用方法，ReviewDom(['.class','#ddd'],'css-key','css-value')
+		    								$('input[name=network-card-name]').prop('disabled',false);
+		    								$('select[name=select-sub-network]').prop('disabled',false);
+		    								$('select[name=select-net-ip]').prop('disabled',false);
 	    								}else{
 	    									alert('已选择');
 	    								}
@@ -559,6 +563,12 @@ define(['Initializer'],function(Initializer){
 	    								var index = $(this).parent().attr('data-index');
 	    								wizard.el.find(".available-network a[data-index="+index+"]").attr("has-chosen","false");
 	    								$(this).parent().remove();
+	    								//如果没有已选，则网卡 指定子网和指定ip置为disabled
+	    								if(wizard.el.find('.chosen-network').children().length == 0){
+	    									$('input[name=network-card-name]').prop('disabled',true);
+		    								$('select[name=select-sub-network]').prop('disabled',true);
+		    								$('select[name=select-net-ip]').prop('disabled',true);
+	    								}
 	    							})
 	    						}
 	    				}
