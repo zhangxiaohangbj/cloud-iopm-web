@@ -477,7 +477,7 @@ define(['Common','bs/modal','bs/wizard','bs/tooltip','jq/form/validator','jq/for
 	    	                action: function(dialog) {
 	    	                	Common.xhr.ajax('/resources/data/arrays.txt',function(data){
 	    	                		if(data){
-	    	                			dialog.success("保存成功");
+	    	                			dialog.alert("保存成功");
 	    	                			dialog.close();
 									}else{
 										dialog.danger("保存失败");
@@ -513,7 +513,7 @@ define(['Common','bs/modal','bs/wizard','bs/tooltip','jq/form/validator','jq/for
 		    	                action: function(dialog) {
 		    	                	Common.xhr.ajax('/resources/data/arrays.txt',function(data){
 		    	                		if(data){
-		    	                			dialog.success("保存成功");
+		    	                			dialog.alert("保存成功");
 								    		dialog.close();
 										}else{
 											dialog.danger("保存失败");
@@ -536,12 +536,7 @@ define(['Common','bs/modal','bs/wizard','bs/tooltip','jq/form/validator','jq/for
 	    		
 	    		require(['template','text!'+PubVars.contextPath+'/resources/tpls/ccenter/vmdetail.html'],function(template,tpl){
 	    			//初始化云主机规格,完成后去绑定popver提示
-					DataIniter.initVmSpecs(function(){
-						//执行配额的初始化操作,因为需要在配额中减去当前规格所需的资源，所以在此初始化配额
-				    	DataIniter.initQuotos();
-				    	//载入规格详细信息提示popver
-				    	DataIniter.initPopver();
-					});
+	    			DataIniter.initQuotos();
 	    		});
 	    	}
 	    };
@@ -551,48 +546,36 @@ define(['Common','bs/modal','bs/wizard','bs/tooltip','jq/form/validator','jq/for
 	    });
 	    //编辑安全组
 	    $("ul.dropdown-menu a.editSecurity").on("click",function(){
+	    	require(['css!'+PubView.rqBaseUrl+'/css/vmDialog.css']);
 	    	EditData.EditVmSecurity($(this).attr("data"),function(){
 	    		//右移按钮
-	    		$("span.btn-add-security").on("click",function(){
-	    			var securityName = $("select[name='allSecurity']").val();
-	    			if(securityName != null){
-	    			$("select[name='allSecurity'] option:selected").remove();
-	    			/* var strArr = securityName.split(",");
-	    			for(var i=0;i<strArr.length;i++){
-	    				alert(111);
-	    			} */
-	    			$("select[name='choosedSecurity']").append('<option value="'+securityName+'">'+securityName+'</option>');
-	    			}else{
-	    				Dialog.warning("请选择正确的安全组");
-	    			}
+	    		$("#edit_vm_security .security-left").on("dblclick",function(){
+	    			$(this).remove();
+	    			$("ul[name='choosedSecurity']").append('<li class="p3"><span class="security-left">'+$(this).html()+'</span></li>');
 	    		});
 	    		//左移按钮
-	    		$("span.btn-remove-security").on("click",function(){
-	    			var securityName = $("select[name='choosedSecurity']").val();
-	    			if(securityName != null){
-	    				$("select[name='choosedSecurity'] option:selected").remove();
-	    				$("select[name='allSecurity']").append('<option value="'+securityName+'">'+securityName+'</option>');
-	    			}else{
-	    				Dialog.warning("请选择正确的安全组");
-	    			}
+	    		$("#edit_vm_security .security-right").on("dblclick",function(){
+	    			$(this).remove();
+	    			$("ul[name='allSecurity']").append('<li class="p3"><span class="security-left">'+$(this).html()+'</span></li>');
 	    		});
 	    		//筛选按钮
-	    		$(document).on("click","span.btn-choose",function(){
-	    			var obj = $(this);
-	    			Common.xhr.ajax('/resources/data/arrays.txt',function(data){
-	    				if(data){
-				    		var text = "";
-				    		var res = data.data;
-				    		for(var i = 0;i<res.length;i++){
-				    			text+="<option value="+res[i].id+">"+res[i].id+"</option>";
-				    		}
-				    		obj.parent().next().html(text);
-						}else{
-							Dialog.warning("筛选失败");
-						}
-	    			})
-	    			
-	    		});
+//	    		$("#edit_vm_security input.form-control").each(function(){
+//	    			var obj = $(this);
+//		    			
+//		    			Common.xhr.ajax('/resources/data/arrays.txt',function(data){
+//		    				if(data){
+//					    		var text = "";
+//					    		var res = data.data;
+//					    		for(var i = 0;i<res.length;i++){
+//					    			text+="<option value="+res[i].id+">"+res[i].id+"</option>";
+//					    		}
+//					    		obj.parent().next().html(text);
+//							}else{
+//								Dialog.warning("筛选失败");
+//							}
+//		    			});
+//		    			
+//	    		})
 	    	});
     		
 	    });

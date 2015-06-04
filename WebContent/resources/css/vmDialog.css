@@ -1,0 +1,20 @@
+div.select-list{
+	padding: 8px;
+	border: 1px solid #ccc;
+	background-color: #fff;
+	height: 150px;
+	overflow-y: scroll;
+}
+.modal-dialog ul{
+	padding-left: 0;
+}
+.modal-dialog ul li{
+	list-style: none;
+}
+.modal-dialog ul li:HOVER{
+	background-color: #428bca;
+	color: #fff;
+}
+.modal-dialog li.p3{
+	padding: 3px;
+}
