@@ -492,6 +492,139 @@ define(['Common','bs/modal','bs/wizard','bs/tooltip'],function(Common,Dialog){
     			
 			});
 	    });
+	    
+	  //更多按钮
+	    var EditData = {
+	    		//编辑云主机名称弹框
+	    	EditVmName : function(name){
+	    		Dialog.show({
+	    	            title: '编辑云主机',
+	    	            message: '<form class="form-horizontal"><div class="form-group"><label for="server-name" class="control-label col-sm-2">'+
+	    	            		'<span style="color: red;">* </span>名称：</label><div class="col-sm-7 col-sm">'+
+								'<input type="text" class="wizard-form-control" id="server-name" name="server-name" value="'+name+'"></div></div></form>',
+	    	            buttons: [{
+	    	                label: '保存',
+	    	                action: function(dialog) {
+	    	                	Common.xhr.ajax('/resources/data/arrays.txt',function(data){
+	    	                		if(data){
+	    	                			dialog.success("保存成功");
+							    		dialog.close();
+									}else{
+										dialog.danger("保存失败");
+									}
+								})
+	    	                }
+	    	            }, {
+	    	                label: '取消',
+	    	                action: function(dialog) {
+	    	                    dialog.close();
+	    	                }
+	    	            }]
+	    	        });
+	    	},
+	    	//编辑安全组弹框
+	    	EditVmSecurity : function(id,cb){
+				//取云主机列表
+				Common.xhr.ajax('/resources/data/arrays.txt',function(data){
+					
+			    	//生成html数据
+					Common.render(true,'tpls/ccenter/security.html',data,function(html){
+						Dialog.show({
+		    	            title: '编辑安全组',
+		    	            message: html,
+		    	            nl2br: false,
+		    	            buttons: [{
+		    	                label: '保存',
+		    	                action: function(dialog) {
+		    	                	Common.xhr.ajax('/resources/data/arrays.txt',function(data){
+		    	                		if(data){
+		    	                			dialog.success("保存成功");
+								    		dialog.close();
+										}else{
+											dialog.danger("保存失败");
+										}
+		    	                	});
+		    	                }
+		    	            }, {
+		    	                label: '取消',
+		    	                action: function(dialog) {
+		    	                    dialog.close();
+		    	                }
+		    	            }],
+		    	            onshown : cb  //Modal show后回调
+		    	        });
+					});
+				})
+	    	},
+	    	//编辑虚拟机大小弹框
+	    	EditVmType : function(id){
+	    		
+	    		require(['template','text!'+PubVars.contextPath+'/resources/tpls/ccenter/vmdetail.html'],function(template,tpl){
+	    			//初始化云主机规格,完成后去绑定popver提示
+					DataIniter.initVmSpecs(function(){
+						//执行配额的初始化操作,因为需要在配额中减去当前规格所需的资源，所以在此初始化配额
+				    	DataIniter.initQuotos();
+				    	//载入规格详细信息提示popver
+				    	DataIniter.initPopver();
+					});
+	    		});
+	    	}
+	    };
+	    //修改云主机名称
+	    $(document).on("click","ul.dropdown-menu a.editName",function(){
+	    	EditData.EditVmName($(this).attr("data"));
+	    });
+	    //编辑安全组
+	    $(document).on("click","ul.dropdown-menu a.editSecurity",function(){
+	    	EditData.EditVmSecurity($(this).attr("data"),function(){
+	    		//右移按钮
+	    		$("span.btn-add-security").on("click",function(){
+	    			var securityName = $("select[name='allSecurity']").val();
+	    			if(securityName != null){
+	    			$("select[name='allSecurity'] option:selected").remove();
+	    			/* var strArr = securityName.split(",");
+	    			for(var i=0;i<strArr.length;i++){
+	    				alert(111);
+	    			} */
+	    			$("select[name='choosedSecurity']").append('<option value="'+securityName+'">'+securityName+'</option>');
+	    			}else{
+	    				Dialog.warning("请选择正确的安全组");
+	    			}
+	    		});
+	    		//左移按钮
+	    		$("span.btn-remove-security").on("click",function(){
+	    			var securityName = $("select[name='choosedSecurity']").val();
+	    			if(securityName != null){
+	    				$("select[name='choosedSecurity'] option:selected").remove();
+	    				$("select[name='allSecurity']").append('<option value="'+securityName+'">'+securityName+'</option>');
+	    			}else{
+	    				Dialog.warning("请选择正确的安全组");
+	    			}
+	    		});
+	    		//筛选按钮
+	    		$(document).on("click","span.btn-choose",function(){
+	    			var obj = $(this);
+	    			Common.xhr.ajax('/resources/data/arrays.txt',function(data){
+	    				if(data){
+				    		var text = "";
+				    		var res = data.data;
+				    		for(var i = 0;i<res.length;i++){
+				    			text+="<option value="+res[i].id+">"+res[i].id+"</option>";
+				    		}
+				    		obj.parent().next().html(text);
+						}else{
+							Dialog.warning("筛选失败");
+						}
+	    			})
+	    			
+	    		});
+	    	});
+    		
+	    });
+	    //修改云主机大小
+	    $(document).on("click","ul.dropdown-menu a.editVmType",function(){
+	    	EditData.EditVmType($(this).attr("data"));
+	    });
 	}
 	return {
 		init : init

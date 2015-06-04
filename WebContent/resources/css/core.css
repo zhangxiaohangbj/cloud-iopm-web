@@ -534,7 +534,8 @@ div.dataTables_length,div.dataTables_length label {
 .dataTables_wrapper .btn-more{
 	background-color: #E7E6E6;
 	color:#3F3F3F;
-	padding:3px 12px 3px 16px;
+	padding: 3px 8px 3px 12px;
+	margin-right: 0;
 }
 .dataTables_wrapper .btn-add:hover{
 	background-color: #25A5D2;
