@@ -467,18 +467,18 @@ define(['Common','bs/modal','bs/wizard','bs/tooltip','jq/form/validator','jq/for
 	    var EditData = {
 	    		//编辑云主机名称弹框
 	    	EditVmName : function(name){
-	    		Dialog.show({
+	    		Common.render(true,'tpls/ccenter/vmname.html','',function(html){
+	    			Dialog.show({
 	    	            title: '编辑云主机',
-	    	            message: '<form class="form-horizontal"><div class="form-group"><label for="server-name" class="control-label col-sm-2">'+
-	    	            		'<span style="color: red;">* </span>名称：</label><div class="col-sm-7 col-sm">'+
-								'<input type="text" class="wizard-form-control" id="server-name" name="server-name" value="'+name+'"></div></div></form>',
+	    	            message: html,
+	    	            nl2br: false,
 	    	            buttons: [{
 	    	                label: '保存',
 	    	                action: function(dialog) {
 	    	                	Common.xhr.ajax('/resources/data/arrays.txt',function(data){
 	    	                		if(data){
 	    	                			dialog.success("保存成功");
-							    		dialog.close();
+	    	                			dialog.close();
 									}else{
 										dialog.danger("保存失败");
 									}
@@ -489,8 +489,13 @@ define(['Common','bs/modal','bs/wizard','bs/tooltip','jq/form/validator','jq/for
 	    	                action: function(dialog) {
 	    	                    dialog.close();
 	    	                }
-	    	            }]
+	    	            }],
+	    	            onshown : function(){
+	    	            	$("#editVmName input[name='server-name']").val(name);
+	    	            }
 	    	        });
+	    		});
+	    		
 	    	},
 	    	//编辑安全组弹框
 	    	EditVmSecurity : function(id,cb){
@@ -541,11 +546,11 @@ define(['Common','bs/modal','bs/wizard','bs/tooltip','jq/form/validator','jq/for
 	    	}
 	    };
 	    //修改云主机名称
-	    $(document).on("click","ul.dropdown-menu a.editName",function(){
+	    $("ul.dropdown-menu a.editName").on("click",function(){
 	    	EditData.EditVmName($(this).attr("data"));
 	    });
 	    //编辑安全组
-	    $(document).on("click","ul.dropdown-menu a.editSecurity",function(){
+	    $("ul.dropdown-menu a.editSecurity").on("click",function(){
 	    	EditData.EditVmSecurity($(this).attr("data"),function(){
 	    		//右移按钮
 	    		$("span.btn-add-security").on("click",function(){
@@ -592,7 +597,7 @@ define(['Common','bs/modal','bs/wizard','bs/tooltip','jq/form/validator','jq/for
     		
 	    });
 	    //修改云主机大小
-	    $(document).on("click","ul.dropdown-menu a.editVmType",function(){
+	    $("ul.dropdown-menu a.editVmType").on("click",function(){
 	    	EditData.EditVmType($(this).attr("data"));
 	    });
 	}	
