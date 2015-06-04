@@ -291,6 +291,15 @@ define('Common', ['PubView', 'bs/modal', 'json', 'template', 'jq/dataTables', 'b
                 var inHtml = that.uiSelect(data);
                 return inHtml;
             });
+            template.helper('uiSelectList', function(data) {
+                if(!PubView.utils.isPlainObject(data)) {
+                    data = $.extend({}, {list: data}, {wrapper: false});
+                } else {
+                    data = $.extend({}, data, {wrapper: false});
+                }
+                var inHtml = that.uiSelect(data);
+                return inHtml;
+            });
             // 初始化导航和菜单索引
             this.initHeaderNavIndex();
             this.initSideBarNavIndex();
@@ -313,10 +322,12 @@ define('Common', ['PubView', 'bs/modal', 'json', 'template', 'jq/dataTables', 'b
             $("#loader").loader('destroy');
             return this;
         },
+        _inRender: false,
         _deferred: null,
-        Deferred: function() {
+        Deferred: function(callback) {
             if(!this._deferred) {
                 this._deferred = $.Deferred();
+                PubView.utils.isFunction(callback) && this._deferred.promise().done(callback);
             }
             return this._deferred;
         },
@@ -456,15 +467,20 @@ define('Common', ['PubView', 'bs/modal', 'json', 'template', 'jq/dataTables', 'b
                         that.resetSideBar();
                         Modal.loader('remove');
                     };
+                    that.Deferred(onLoad);
                     //路由后页面载入入口
                     require(ctrl, function(o){
-                        if(o && ('init' in o)){
+                        if(o && PubView.utils.isFunction(o.init)) {
                             var initRes = o.init();
                             if(PubView.utils.isObject(initRes) && initRes.done) {
-                                initRes.done(onLoad);
+                                initRes.done(function() {
+                                    that.resolve.apply(that, arguments);
+                                });
                             } else {
-                                onLoad();
+                                !that._inRender && that.resolve(initRes);
                             }
+                        } else {
+                            that.resolve();
                         }
                     });
                     return this;
@@ -472,22 +488,30 @@ define('Common', ['PubView', 'bs/modal', 'json', 'template', 'jq/dataTables', 'b
             };
             !that.router && (that.router = new Router());
         },
-        render: function(handleRender, tplUrl, data, callback) {
+        render: function(renderToPage, tplUrl, data, callback) {
             var that = this,
-                _handleRender, _tplUrl, _data, _callback;
-            if(typeof handleRender !== "boolean") {
-                _handleRender = false;
-                _tplUrl = handleRender;
+                _renderToPage, _tplUrl, _data, _beforeRender, _callback;
+            if(typeof renderToPage !== "boolean") {
+                _renderToPage = false;
+                _tplUrl = renderToPage;
                 _data = tplUrl;
                 _callback = data;
             } else {
-                _handleRender = handleRender;
+                _renderToPage = renderToPage;
                 _tplUrl= tplUrl;
                 _data = data;
                 _callback = callback;
             }
+            if(PubView.utils.isPlainObject(_tplUrl)) {
+                var obj = $.extend({}, _tplUrl);
+                _tplUrl = obj.url;
+                _data = obj.data;
+                _beforeRender = obj.beforeRender;
+                _callback = obj.callback;
+            }
             if(_tplUrl && PubView.utils.isString(_tplUrl)) {
                 try {
+                    _renderToPage && (that._inRender = true);
                     _tplUrl = that.xhr._getFullUrl(_tplUrl, true);
                     var posSuffix = _tplUrl.lastIndexOf(".");
                     if(posSuffix == -1) {
@@ -495,32 +519,47 @@ define('Common', ['PubView', 'bs/modal', 'json', 'template', 'jq/dataTables', 'b
                     } else if(posSuffix == _tplUrl.length - 1)  {
                         _tplUrl = _tplUrl + 'html';
                     }
-                    var doRender = function(data) {
-                        if(PubView.utils.isArray(data)) {
-                            data = $.extend({}, {list: data});
-                        } else if(!PubView.utils.isPlainObject(data)) {
-                            data = $.extend({}, {data: data});
+                    var doRender = function(_data) {
+                        var data = _data;
+                        if(PubView.utils.isArray(_data)) {
+                            data = $.extend({}, {list: _data});
+                        } else if(!PubView.utils.isPlainObject(_data)) {
+                            data = $.extend({}, {data: _data});
                         }
                         require(['text!'+_tplUrl], function(tplText) {
                             try{
                                 var render = template.compile(tplText),
                                     inHtml = render(data);
-                                if(!_handleRender) {
+                                if(_renderToPage) {
                                     that.$pageContent.html(inHtml);
-                                    PubView.utils.isFunction(_callback) && _callback();
+                                    PubView.utils.isFunction(_callback) && _callback(_data);
+                                    that.resolve();
                                 } else {
-                                    PubView.utils.isFunction(_callback) && _callback(inHtml);
+                                    PubView.utils.isFunction(_callback) && _callback(inHtml, _data);
                                 }
                             }catch(e){
+                                that._inRender = false;
+                                that.resolve();
                                 Modal.danger(e.message);
                             }
                         });
                     };
+                    var filterData = function(data) {
+                        var _data;
+                        try {
+                            if(typeof _beforeRender === "function") {
+                                _data = _beforeRender(data);
+                            }
+                        } catch (e) {
+                            _data = null;
+                        }
+                        return _data ? _data : data;
+                    };
                     if(PubView.utils.isPlainObject(_data)) {
-                        doRender(_data);
+                        doRender(filterData(_data));
                     } else if(_data && PubView.utils.isString(_data)) {
                         that.xhr.ajax(_data, function(data) {
-                            doRender(data);
+                            doRender(filterData(data));
                         });
                     } else if(PubView.utils.isFunction(_data)) {
                         _callback = _data;
@@ -529,10 +568,9 @@ define('Common', ['PubView', 'bs/modal', 'json', 'template', 'jq/dataTables', 'b
                         doRender();
                     }
                 } catch (e) {
+                    that._inRender = false;
+                    that.resolve();
                     Modal.danger(e.message);
-                    if(that._deferred) {
-                        that.resolve(false);
-                    }
                 }
             }
         },
@@ -585,6 +623,7 @@ define('Common', ['PubView', 'bs/modal', 'json', 'template', 'jq/dataTables', 'b
                         type: 'GET',
                         headers: this.headers,
                         dataType: 'json',
+                        contentType: 'application/json',
                         error: function(xhr, status) {
                             Modal.danger("Sorry, there was a problem!");
                         }
@@ -634,7 +673,7 @@ define('Common', ['PubView', 'bs/modal', 'json', 'template', 'jq/dataTables', 'b
             }
         },
         uiSelect: function(options, renderTo) {
-            var defaults = {className: "form-control"};
+            var defaults = {wrapper: true, className: "form-control"};
             if(!PubView.utils.isPlainObject(options)) {
                 options = $.extend({}, {list: options}, defaults);
             } else {
