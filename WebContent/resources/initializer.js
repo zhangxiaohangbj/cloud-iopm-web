@@ -419,7 +419,6 @@ define('Common', ['PubView', 'bs/modal', 'json', 'template', 'jq/dataTables', 'b
 
                 //根据hash重新路由或无缝刷新
                 this.route = function(hash){
-                    debugger;
                     hash = hash || that.getHash();
                     loop_1:
                         for(var i in this.table.path){
