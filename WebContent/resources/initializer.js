@@ -604,6 +604,14 @@ define('Common', ['PubView', 'bs/modal', 'json', 'template', 'jq/dataTables', 'b
                 }
             }
         },
+        requestCSS: function(cssUrl, callback) {
+            var that = this;
+            if(cssUrl && PubView.utils.isString(cssUrl)) {
+                require(['css!'+(cssUrl.indexOf('/')==0?PubView.root:PubView.rqBaseUrl+'/')+cssUrl], function() {
+                    PubView.utils.isFunction(callback) && callback.apply(that, arguments);
+                });
+            }
+        },
         xhr: {
             //请求header
             header: {
