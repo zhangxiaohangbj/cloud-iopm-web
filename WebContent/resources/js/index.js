@@ -32,7 +32,6 @@ define(['Common'],function(Common){
 			}
 		}, function() {
 			Common.resolve(true);
-			var inHtml = Common.uiSelect();
 		});
 	};
 	return {

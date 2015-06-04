@@ -282,8 +282,14 @@ aside {
 	margin-right: 6px;
 	font-size:16px;
 }
-.sidebar-nav > li > a > i.fa-arrows{
+.sidebar-nav > li > a > .icon-arrow {
 	float:right;
+}
+.sidebar-nav > li > a > .icon-arrow:before {
+	content: "\f107";
+}
+.sidebar-nav > .active > a > .icon-arrow:before {
+	content: "\f105";
 }
 .nav-second-level > li > a:hover,
 .nav-second-level > li > a:focus {
