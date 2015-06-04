@@ -103,14 +103,20 @@ input[disabled], select[disabled], textarea[disabled], input[readonly], select[r
  	min-height:300px;
  	border-right:1px solid #E5E5E5;
  }
- .wizard-input-section div.form-group .wizard-form-control{
+
+ .wizard-input-section .form-group .wizard-form-control{
  	border-radius:0;
  	height:30px;
  	width:100%;
  	padding:0 8px;
  	outline: none;
  	background-color: #fff;
- 	
+ }
+ .wizard-input-section div.has-error  .wizard-form-control{
+  	border-color:#a94442;
+ }
+  .wizard-input-section div.has-success  .wizard-form-control{
+  	border-color:#3c763d;
  }
  .wizard-input-section div.form-group textarea.wizard-form-control{
  	height:auto;
@@ -245,6 +251,7 @@ input[disabled], select[disabled], textarea[disabled], input[readonly], select[r
 .wizard-nav-list>li.already-visited>a.wizard-nav-link{
 	color:#3B473B;
 }
+.wizard-nav-list>li.already-visited.active>a.wizard-nav-link,
 .wizard-nav-container .wizard-nav-list>li.actived>a.wizard-nav-link{
 	color:#fff;
 }

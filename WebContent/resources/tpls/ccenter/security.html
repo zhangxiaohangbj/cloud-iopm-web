@@ -1,0 +1,31 @@
+<div class="row">
+		<div class="col-sm-5">
+		    <span style="display: block;margin-bottom: 10px;text-align: center;font-size: 16px;">全部安全组</span>
+			<div class="input-group">
+		      <input type="text" class="form-control" placeholder="" aria-describedby="basic-addon2" style="border-radius: 0;">
+		      <span class="input-group-addon btn-choose" id="basic-addon2" style="border-radius: 0;">筛选</span>
+		    </div>
+		    <select data-placeholder="" class="form-control" multiple="" tabindex="3" name="allSecurity" style="border-top: 0;border-radius: 0;">
+                <option value="Security Group1">Security Group1</option>
+                <option value="Security Group2">Security Group2</option>
+            </select>
+		</div>
+		<div class="col-sm-2">
+			<span class="btn btn-add-security" style="margin-top: 70px;border: 1px solid #ccc;background-color: #eee;border-radius: 0;">&nbsp;&gt;&gt;&nbsp;</span>
+			<span class="btn btn-remove-security" style="margin-top: 10px;border: 1px solid #ccc;background-color: #eee;border-radius: 0;">&nbsp;&lt;&lt;&nbsp;</span>
+		</div>
+		<div class="col-sm-5">
+			<span style="display: block;margin-bottom: 10px;text-align: center;font-size: 16px;">虚拟机安全组</span>
+			<div class="input-group">
+		      <input type="text" class="form-control" placeholder="" aria-describedby="basic-addon2" style="border-radius: 0;">
+		      <span class="input-group-addon btn-choose" id="basic-addon2" style="border-radius: 0;">筛选</span>
+		    </div>
+		    <select data-placeholder="" class="form-control" multiple="" tabindex="3" name="choosedSecurity" style="border-top: 0;border-radius: 0;">
+		    	<!-- {{each data as item i}}
+		    		<option value="Security Group1">Security Group1</option>
+		    	{{/each}} -->
+                <option value="Security Group3">Security Group3</option>
+                <option value="Security Group4">Security Group4</option>
+            </select>
+		</div>
+</div>
