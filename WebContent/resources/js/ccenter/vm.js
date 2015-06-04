@@ -95,11 +95,6 @@ define(['Common','bs/modal','bs/wizard','bs/tooltip','jq/form/validator','jq/for
 						prevNums:null,	//上一个虚机数量
 						nums: 1	//当前虚机数量
 				};
-				if($('#create-server-wizard').length == 0){
-					$('body').append(html);
-    			}else{
-    				return;
-    			}
 				//同步currentChosenObj
 		    	currentChosenObj.vdc = $('select.select-vdc').children('option:selected');
 		    	currentChosenObj.specs = $('select.select-specs').find('option:selected');
