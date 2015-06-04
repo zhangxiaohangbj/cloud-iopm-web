@@ -9,6 +9,9 @@
 							<div class="col-sm-7 col-sm">
 								<input type="text" class="wizard-form-control" id="server-name" name="server-name" placeholder="服务器名称">
 							</div>
+							<!-- <div class="col-sm-3 col-sm">
+					            <span class="help-block" style="color: #000000;padding-top: 10px;">请填写真实的邮箱</span>
+					        </div> -->
 						</div>
 					</div>
 					
@@ -62,7 +65,8 @@
 					<div class="wizard-input-section">
 						<div class="form-group">
 							<label for="select-vdc" class="control-label col-sm-3"><span>* </span>虚拟数据中心：</label>
-							<div class="col-sm-7 col-sm">
+							<div id="select-vm" class="col-sm-7 col-sm">
+								<!-- {{#uiSelect(vdcList,'#select-vm')}} -->
 								<select name="select-vdc"  class="wizard-form-control select select-vdc">
 								    {{each vdcList as item i}}
 										<option value="{{item.id}}">{{item.name}}</option>
@@ -98,7 +102,6 @@
 						</div>
 					</div>
 					
-					
 					<div class="wizard-input-section">
 						<div class="form-group">
 							<label for="vm-nums" class="control-label col-sm-3"><span>* </span>云主机数量：</label>
@@ -132,9 +135,6 @@
 					<p>属性的单选或多选框都能被赋予合适的样式。对于和多选或单选框联合使用的标签希望将悬停于上方的鼠标设置为“禁止点击”的样式</p>
 				</div>
 			</div>
-			
-			
-			
 			<!-- 网络  -->
 			<div class="wizard-card wizard-card-overlay" data-cardname="networks">
 			<h3>网络</h3>
@@ -187,9 +187,7 @@
 						</div>
 					</div>
 					
-					
 				</div>
-				
 				
 				<div class="wizard-card-desc col-sm-4">
 					<p>网卡：

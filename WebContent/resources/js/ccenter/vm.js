@@ -1,4 +1,4 @@
-define(['Common','bs/modal','bs/wizard','bs/tooltip'],function(Common,Dialog){
+define(['Common','bs/modal','bs/wizard','bs/tooltip','jq/form/validator','jq/form/validator/addons/bs3'],function(Common,Dialog){
 	require(['css!'+PubView.rqBaseUrl+'/css/wizard.css']);
 	var init = function(){
 		Common.Deferred();
@@ -82,9 +82,8 @@ define(['Common','bs/modal','bs/wizard','bs/tooltip'],function(Common,Dialog){
 		DataGetter.getDiskSnapShot();
 		DataGetter.getSpecs();
 		DataGetter.getVdc();
-		
 		//增加按钮
-	    $(document).on("click","span.btn-add",function(){
+	    $("#VmTable_wrapper span.btn-add").on("click",function(){
 	    	//需要修改为真实数据源
 			Common.render(true,'tpls/ccenter/add.html',renderData,function(html){
 				//维护当前select的值以及云主机数量，为更新配额以及vdc相关的数据用
@@ -98,6 +97,8 @@ define(['Common','bs/modal','bs/wizard','bs/tooltip'],function(Common,Dialog){
 				};
 				if($('#create-server-wizard').length == 0){
 					$('body').append(html);
+    			}else{
+    				return;
     			}
 				//同步currentChosenObj
 		    	currentChosenObj.vdc = $('select.select-vdc').children('option:selected');
@@ -292,7 +293,7 @@ define(['Common','bs/modal','bs/wizard','bs/tooltip'],function(Common,Dialog){
     	            }
     			});
     			wizard.show();
-    			
+    			wizard.disableNextButton();
     			var EventsHandler = {
 						//基本信息所需事件
 						bindBasicWizard : function(){
@@ -409,6 +410,30 @@ define(['Common','bs/modal','bs/wizard','bs/tooltip'],function(Common,Dialog){
 						    	checkboxClass: "icheckbox-info",
 						        radioClass: "iradio-info"
 						    })
+						},
+						//表单校验
+						formValidator: function(){
+							$(".form-horizontal").validate({
+					            rules: {
+					            	'server-name': {
+					                    required: true,
+					                    minlength: 4,
+					                    maxlength:15
+					                }
+					            }
+					        });
+						},
+						inputBlur: function(){
+							$('.form-horizontal input[type=text],.form-horizontal input[type=password]').blur(function(){
+								var id = $(this).attr('id');
+								if($("#"+id)){
+									if($(this).prop("disabled") == false && !$(".form-horizontal").validate().element("#"+id)){
+										wizard.disableNextButton();
+									}else{
+										wizard.enableNextButton();
+									}
+								}
+							});
 						}
 				}
     			EventsHandler.bindBasicWizard();
@@ -417,7 +442,8 @@ define(['Common','bs/modal','bs/wizard','bs/tooltip'],function(Common,Dialog){
 				//spinbox
 				EventsHandler.VmNumsSpinbox();
 				EventsHandler.securitySetting();
-    			
+				EventsHandler.formValidator();
+				EventsHandler.inputBlur();
     			wizard.on('closed', function() {
     				$('div.wizard').remove();
     				$('div.modal-backdrop').remove();
