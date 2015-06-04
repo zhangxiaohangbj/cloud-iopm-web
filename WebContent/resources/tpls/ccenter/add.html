@@ -9,6 +9,9 @@
 							<div class="col-sm-7 col-sm">
 								<input type="text" class="wizard-form-control" id="server-name" name="server-name" placeholder="服务器名称">
 							</div>
+							<!-- <div class="col-sm-3 col-sm">
+					            <span class="help-block" style="color: #000000;padding-top: 10px;">请填写真实的邮箱</span>
+					        </div> -->
 						</div>
 					</div>
 					
@@ -22,7 +25,25 @@
 								  <li><a  href="javascript:void(0)" data-image="disk">云硬盘</a></li>
 								  <li><a  href="javascript:void(0)" data-image="disksnap">云硬盘快照</a></li>
 								</ul>
-								<div class="image-list">
+								<div data-con="image" class="image-list">
+									{{each imageList as item i}}
+										<div class="btn" data-con="{{item.id}}"><i class="image-icon-default {{item.type}}"></i>{{item.name}}</div>
+									{{/each}}
+								</div>
+								<div data-con="snapshot"  class="image-list hide">
+									{{each snapshotList as item i}}
+										<div class="btn" data-con="{{item.id}}"><i class="image-icon-default {{item.type}}"></i>{{item.name}}</div>
+									{{/each}}
+								</div>
+								<div data-con="disk"   class="image-list hide">
+									{{each diskList as item i}}
+										<div class="btn" data-con="{{item.id}}"><i class="image-icon-default {{item.type}}"></i>{{item.name}}</div>
+									{{/each}}
+								</div>
+								<div data-con="disksnap"   class="image-list hide">
+									{{each diskSnapList as item i}}
+										<div class="btn" data-con="{{item.id}}"><i class="image-icon-default {{item.type}}"></i>{{item.name}}</div>
+									{{/each}}
 								</div>
 							</div>
 							<input type="hidden" class="wizard-form-control" id="image-id" name="image-id">
@@ -44,8 +65,12 @@
 					<div class="wizard-input-section">
 						<div class="form-group">
 							<label for="select-vdc" class="control-label col-sm-3"><span>* </span>虚拟数据中心：</label>
-							<div class="col-sm-7 col-sm">
+							<div id="select-vm" class="col-sm-7 col-sm">
+								<!-- {{#uiSelect(vdcList,'#select-vm')}} -->
 								<select name="select-vdc"  class="wizard-form-control select select-vdc">
+								    {{each vdcList as item i}}
+										<option value="{{item.id}}">{{item.name}}</option>
+								    {{/each}}
 								</select>
 							</div>
 						</div>
@@ -65,15 +90,17 @@
 						<div class="form-group">
 							<label for="select-specs" class="control-label col-sm-3"><span>* </span>云主机规格：</label>
 							<div class="col-sm-7 col-sm">
-				                    <select name="select-specs"  class="wizard-form-control select select-specs" tabindex="5">
-				                    </select>
+			                    <select name="select-specs"  class="wizard-form-control select select-specs" tabindex="5">
+			                    	{{each specsList as item i}}
+										<option data-root-disk="{{item.root_disk}}" data-tmp-disk="{{item.tmp_disk}}" data-memory="{{item.memory}}" data-core="{{item.core_num}}"  value="{{item.id}}">{{item.name}}</option>
+								  	{{/each}}
+			                    </select>
 							</div>
 							<div class="col-sm-2 col-sm config-detail-info">
 								<i data-toggle="popover" class="fa fa-info-circle"></i>
 							</div>
 						</div>
 					</div>
-					
 					
 					<div class="wizard-input-section">
 						<div class="form-group">
@@ -94,11 +121,11 @@
 						</div>
 					</div>
 					
-					
 					<div class="wizard-input-section">
 						<div class="form-group">
 							<label for="" class="control-label col-sm-3">配额：</label>
 							<div class="col-sm-8 col-sm quotas">
+								
 							</div>
 						</div>
 					</div>
@@ -108,9 +135,6 @@
 					<p>属性的单选或多选框都能被赋予合适的样式。对于和多选或单选框联合使用的标签希望将悬停于上方的鼠标设置为“禁止点击”的样式</p>
 				</div>
 			</div>
-			
-			
-			
 			<!-- 网络  -->
 			<div class="wizard-card wizard-card-overlay" data-cardname="networks">
 			<h3>网络</h3>
@@ -149,11 +173,6 @@
 							<label for="select-sub-network" class="control-label col-sm-2"><span>* </span>指定子网：</label>
 							<div class="col-sm-7 col-sm">
 								<select disabled name="select-sub-network" class="wizard-form-control select">
-								  <option>默认子网</option>
-								  <option>input-section2</option>
-								  <option>input-section3</option>
-								  <option>input-section4</option>
-								  <option>input-section5</option>
 								</select>
 							</div>
 						</div>
@@ -163,19 +182,12 @@
 							<label for="select-net-ip" class="control-label col-sm-2"><span>* </span>指定IP：</label>
 							<div class="col-sm-7 col-sm">
 								<select disabled name="select-net-ip" class="wizard-form-control select ">
-								  <option>DHCP默认</option>
-								  <option>172.168.1.2</option>
-								  <option>172.168.1.3</option>
-								  <option>172.168.1.4</option>
-								  <option>172.168.1.5</option>
 								</select>
 							</div>
 						</div>
 					</div>
 					
-					
 				</div>
-				
 				
 				<div class="wizard-card-desc col-sm-4">
 					<p>网卡：
