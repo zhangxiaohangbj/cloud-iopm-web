@@ -1,0 +1,50 @@
+[
+	{
+		"id" : "58c41046-408e-b959-d63147471b",
+		"name" : "micro-1 (1vCPU / 512M)",
+		"root_disk" : "15G",
+		"memory" : "512M",
+		"tmp_disk" : "0",
+		"core_num" : "1"
+	},
+	{
+		"id" : "58c41046-408e-b959-d63147471w",
+		"name" : "micro-2 (1vCPU / 1G)",
+		"root_disk" : "15G",
+		"memory" : "1024M",
+		"tmp_disk" : "0",
+		"core_num" : "1"
+	},
+	{
+		"id" : "58c41046-408e-b959-d63147471b",
+		"name" : "standard-12 (12vCPU / 24G)",
+		"root_disk" : "45G",
+		"memory" : "20480M",
+		"tmp_disk" : "0",
+		"core_num" : "12"
+	},
+	{
+		"id" : "58c41046-408e-b959-d63147471b",
+		"name" : "standard-16 (16vCPU / 32G)",
+		"root_disk" : "45G",
+		"memory" : "28576M",
+		"tmp_disk" : "0",
+		"core_num" : "16"
+	},
+	{
+		"id" : "58c41046-408e-b959-d63147471b",
+		"name" : "memory-8 (8vCPU / 32G)",
+		"root_disk" : "15G",
+		"memory" : "51200M",
+		"tmp_disk" : "0",
+		"core_num" : "8"
+	},
+	{
+		"id" : "58c41046-408e-b959-d63147471b",
+		"name" : "memory-8 (8vCPU / 64G)",
+		"root_disk" : "45G",
+		"memory" : "59296M",
+		"tmp_disk" : "0",
+		"core_num" : "8"
+	}
+]
