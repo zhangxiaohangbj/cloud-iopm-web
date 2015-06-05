@@ -1,7 +1,6 @@
 define(['Common'],function(Common){
 	var init = function(){
-		Common.Deferred();
-		Common.render('tpls/index.html', {
+		Common.render(true, 'tpls/index.html', {
 			iSelectData: {
 				name: 'xxxx',
 				attrs: {
@@ -30,9 +29,34 @@ define(['Common'],function(Common){
 					}
 				]
 			}
-		}, function() {
-			Common.resolve(true);
-			var inHtml = Common.uiSelect();
+		}, function(data) {
+			$('#table-id').dataTable({
+				data: [
+					{
+						"name":       "Tiger Nixon",
+						"position":   "System Architect",
+						"salary":     "$3,120",
+						"start_date": "2011/04/25",
+						"office":     "Edinburgh",
+						"extn":       "5421"
+					},
+					{
+						"name":       "Garrett Winters",
+						"position":   "Director",
+						"salary":     "$5,300",
+						"start_date": "2011/07/25",
+						"office":     "Edinburgh",
+						"extn":       "8422"
+					}
+				],
+				columns: [
+					{ orderable: false, data: null },
+					{ data: 'name' },
+					{ data: 'position' },
+					{ data: 'salary' },
+					{ data: 'office' }
+				]
+			});
 		});
 	};
 	return {
