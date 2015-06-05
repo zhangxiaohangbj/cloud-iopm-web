@@ -184,6 +184,7 @@ input[disabled], select[disabled], textarea[disabled], input[readonly], select[r
 }
 .wizard-card[data-cardname=security] .wizard-input-section div.security-group label{
 	width:60%;
+	font-size:14px;
 	display:block;
 }
 .wizard-card[data-cardname=security] .nav-pills>li>a{

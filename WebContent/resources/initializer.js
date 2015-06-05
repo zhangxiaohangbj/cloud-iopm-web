@@ -504,6 +504,7 @@ define('Common', ['PubView', 'bs/modal', 'json', 'template', 'jq/dataTables', 'b
                                     PubView.utils.isFunction(_callback) && _callback(inHtml);
                                 }
                             }catch(e){
+                            	debugger
                                 throw "数据解析出错，请稍后再试…";
                             }
                         });
@@ -625,11 +626,12 @@ define('Common', ['PubView', 'bs/modal', 'json', 'template', 'jq/dataTables', 'b
                 }
             }
         },
-        uiSelect: function(data, appendToEl) {
+        uiSelect: function(data,wrapper, appendToEl) {
             var defaults = {className: "form-control"};
             if(!PubView.utils.isPlainObject(data)) {
                 data = $.extend({}, {list: data}, defaults);
             } else {
+            	data.wrapper = wrapper;
                 data = $.extend({}, defaults, data);
             }
             var inHtml = this.template('ui-select', data);

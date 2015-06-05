@@ -106,10 +106,7 @@ define(['Common','bs/modal','bs/wizard','bs/tooltip','jq/form/validator','jq/for
     					var vdc_id = currentChosenObj.vdc.val() || $('select.select-vdc').children('option:selected').val();
     					if(vdc_id){
     						Common.xhr.ajax('/resources/data/select.txt',function(data){
-        						var html = '<option>input-section1</option>'+
-    			    				    	'<option>input-section2</option>'+
-    			    				    	'<option>input-section3</option>'+
-    			    				    	'<option>input-section4</option>';
+        						var html = Common.uiSelect(data);
     					    	$('select.select-available-zone').html(html);
     					    	//同步currentChosenObj
     					    	currentChosenObj.az = $('select.select-available-zone').children('option:selected');
@@ -257,12 +254,14 @@ define(['Common','bs/modal','bs/wizard','bs/tooltip','jq/form/validator','jq/for
     				//载入安全组
     				initSecurityGroup : function(){
     					Common.xhr.ajax('/resources/data/select.txt',function(data){
-    						var html = '<label><input type="checkbox" class="selectAll"> Security Group1</label>'+
-										'<label><input type="checkbox" class="selectAll"> Security Group2</label>'+
-										'<label><input type="checkbox" class="selectAll"> Security Group3</label>'+
-										'<label><input type="checkbox" class="selectAll"> Security Group4</label>';
-					    	$('div.security-group').html(html);
-					    	EventsHandler.initCheckBox();
+					    	var dataArr = [];
+    						if(data && data.length){
+    							for(var i=0,l=data.length;i<l;i++){
+    								dataArr.push('<label><input type="checkbox">'+data[i].name+'</></label>');
+    							}
+    							$('div.security-group').html(dataArr.join(''));
+    							EventsHandler.initCheckBox();
+    						}
     					})
     				}
     			};
@@ -421,7 +420,7 @@ define(['Common','bs/modal','bs/wizard','bs/tooltip','jq/form/validator','jq/for
 						inputBlur: function(){
 							$('.form-horizontal input[type=text],.form-horizontal input[type=password]').blur(function(){
 								var id = $(this).attr('id');
-								if($("#"+id)){
+								if($("#"+id) && $("#"+id).length){
 									if($(this).prop("disabled") == false && !$(".form-horizontal").validate().element("#"+id)){
 										wizard.disableNextButton();
 									}else{
