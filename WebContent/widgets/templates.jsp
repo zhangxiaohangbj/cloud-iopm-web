@@ -1,6 +1,8 @@
 <script type="text/html" id="ui-select">
 {{if list}}
+    {{if wrapper}}
     <select{{if id}} id="{{id}}"{{/if}}{{if name}} name="{{name}}"{{/if}}{{if className}} class="{{className}}"{{/if}}{{if multiple}} multiple="multiple"{{/if}}{{if attrs}}{{each attrs}} {{$index}}="{{$value}}"{{/each}}{{/if}}>
+    {{/if}}
     {{each list as item i}}
         {{if item.value}}
         <option index="{{i}}" value="{{item.value}}"{{if selected}} selected="selected"{{/if}}{{if item.attrs}}{{each item.attrs}} {{$index}}="{{$value}}"{{/each}}{{/if}}>{{item.label || item.value}}</option>
@@ -12,6 +14,8 @@
         </optgroup>
         {{/if}}
     {{/each}}
+    {{if wrapper}}
     </select>
+    {{/if}}
 {{/if}}
 </script>

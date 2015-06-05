@@ -5,7 +5,7 @@ define('Common', ['PubView', 'bs/modal', 'json', 'template', 'jq/dataTables', 'b
     //获取hash
     var _getHash = function(url){
         if(!url && typeof window.location.hash !== "undefined") {
-            return window.location.hash;
+            return window.location.hash || '';
         }
         url = url || document.URL;
         return '#' + url.replace(/^[^#]*#?(.*)$/, '$1' );
@@ -38,16 +38,6 @@ define('Common', ['PubView', 'bs/modal', 'json', 'template', 'jq/dataTables', 'b
             link: '#'
         }
     ];
-    var navPrimaryCurIndex = function() {
-        var hash = _getHash(), regExp = new RegExp(hash+"$", "i");
-        for (var i=0; i<navPrimaryItems.length; i++) {
-            var navItem = navPrimaryItems[i];
-            if(navItem.link && regExp.test(navItem.link)) {
-                return i + 1;
-            }
-        }
-        return 1;
-    }();
     var sideBarItems = [
         null,
         null,
@@ -68,7 +58,7 @@ define('Common', ['PubView', 'bs/modal', 'json', 'template', 'jq/dataTables', 'b
                     link: ''
                 },
                 {
-                    text: '<i class="fa fa-puzzle-piece"></i>设备管理 <i class="fa fa-angle-down fa-arrows"></i>',
+                    text: '<i class="fa fa-puzzle-piece"></i>设备管理<i class="fa icon-arrow"></i>',
                     items: [
                         {
                             text: '服务器',
@@ -85,7 +75,7 @@ define('Common', ['PubView', 'bs/modal', 'json', 'template', 'jq/dataTables', 'b
                     ]
                 },
                 {
-                    text: '<i class="fa fa-cogs"></i>设备管理<i class="fa fa-angle-down fa-arrows"></i>',
+                    text: '<i class="fa fa-cogs"></i>设备管理<i class="fa icon-arrow"></i>',
                     items: [
                         {
                             text: '服务器',
@@ -114,7 +104,7 @@ define('Common', ['PubView', 'bs/modal', 'json', 'template', 'jq/dataTables', 'b
                     ]
                 },
                 {
-                    text: '<i class="fa fa-cubes"></i>物理区域<i class="fa fa-angle-down fa-arrows"></i>',
+                    text: '<i class="fa fa-cubes"></i>物理区域<i class="fa icon-arrow"></i>',
                     link: '',
                     items: [
                         {
@@ -142,7 +132,7 @@ define('Common', ['PubView', 'bs/modal', 'json', 'template', 'jq/dataTables', 'b
             current: [1,1],
             items: [
                 {
-                    text: '<i class="fa fa-puzzle-piece"></i>云安全',
+                    text: '<i class="fa fa-puzzle-piece"></i>云安全<i class="fa icon-arrow"></i>',
                     items: [
                         {
                             text: '防火墙',
@@ -155,7 +145,7 @@ define('Common', ['PubView', 'bs/modal', 'json', 'template', 'jq/dataTables', 'b
                     ]
                 },
                 {
-                    text: '<i class="fa fa-cloud"></i>数据库',
+                    text: '<i class="fa fa-cloud"></i>数据库<i class="fa icon-arrow"></i>',
                     items: [
                         {
                             text: '关系型数据库',
@@ -168,7 +158,7 @@ define('Common', ['PubView', 'bs/modal', 'json', 'template', 'jq/dataTables', 'b
                     ]
                 },
                 {
-                    text: '<i class="fa fa-cogs"></i>云存储',
+                    text: '<i class="fa fa-cogs"></i>云存储<i class="fa icon-arrow"></i>',
                     items: [
                         {
                             text: '硬盘',
@@ -253,14 +243,47 @@ define('Common', ['PubView', 'bs/modal', 'json', 'template', 'jq/dataTables', 'b
     }
 
     return {
+        hash: function() {
+            return _getHash();
+        }(),
         pub: {
             navPrimaryItems: navPrimaryItems,
-            navPrimaryCurIndex: navPrimaryCurIndex,
-            sideBarDataMap: sideBarDataMap
+            sideBarDataMap: sideBarDataMap,
+            headerNavIndex: 1,
+            sideBarNavIndex: null
+        },
+        initHeaderNavIndex: function() {
+            var hash = this.hash;
+            hash = hash.split('\/')[0];
+            for (var i=0; i<navPrimaryItems.length; i++) {
+                var navItem = navPrimaryItems[i];
+                if(navItem.link && navItem.link == hash) {
+                    this.pub.headerNavIndex = i + 1;
+                    return this;
+                }
+            }
+            return this;
+        },
+        initSideBarNavIndex: function() {
+            var hash = this.hash;
+            var $li = $("#side-bar").find('[href$="'+hash+'"]').parents('li:first');
+            if($li.length) {
+                this.pub.sideBarNavIndex = [];
+                var indexFirst = $li.attr('index'), indexSecond = 0;
+                var $second = $li.parents(".nav-second-level:first");
+                if($second.length) {
+                    indexSecond = indexFirst;
+                    indexFirst = $second.parents("li:first").attr('index');
+                    indexFirst && (indexSecond = indexSecond.replace(new RegExp('^'+indexFirst), ''));
+                }
+                this.pub.sideBarNavIndex[0] = parseInt(indexFirst);
+                if(indexSecond) {
+                    this.pub.sideBarNavIndex[1] = parseInt(indexSecond);
+                }
+            }
         },
         $pageMain: null,
         $pageContent: null,
-        getHash: _getHash,
         init: function(){
             var that = this;
             // 注册template公共方法
@@ -268,6 +291,18 @@ define('Common', ['PubView', 'bs/modal', 'json', 'template', 'jq/dataTables', 'b
                 var inHtml = that.uiSelect(data);
                 return inHtml;
             });
+            template.helper('uiSelectList', function(data) {
+                if(!PubView.utils.isPlainObject(data)) {
+                    data = $.extend({}, {list: data}, {wrapper: false});
+                } else {
+                    data = $.extend({}, data, {wrapper: false});
+                }
+                var inHtml = that.uiSelect(data);
+                return inHtml;
+            });
+            // 初始化导航和菜单索引
+            this.initHeaderNavIndex();
+            this.initSideBarNavIndex();
             // 初始化页面结构
             $(document.body).removeClass("loading").append(
                 '<div id="page-main" class="clearfix">'+
@@ -287,10 +322,12 @@ define('Common', ['PubView', 'bs/modal', 'json', 'template', 'jq/dataTables', 'b
             $("#loader").loader('destroy');
             return this;
         },
+        _inRender: false,
         _deferred: null,
-        Deferred: function() {
+        Deferred: function(callback) {
             if(!this._deferred) {
                 this._deferred = $.Deferred();
+                PubView.utils.isFunction(callback) && this._deferred.promise().done(callback);
             }
             return this._deferred;
         },
@@ -337,36 +374,18 @@ define('Common', ['PubView', 'bs/modal', 'json', 'template', 'jq/dataTables', 'b
                 index = parseInt($headerNav.find('.active').attr('index')) || 1;
             if(this.pub.sideBarDataMap[index]) {
                 PubView.renderSideBar({ data: this.pub.sideBarDataMap[index] });
+                this.initSideBarNavIndex();
+                if(this.pub.sideBarNavIndex) {
+                    PubView.activeSideBar.apply(PubView, this.pub.sideBarNavIndex);
+                }
             } else {
                 PubView.renderSideBar(null);
             }
+            this.pub.headerNavIndex = index;
             this.adjustContentLeft();
         },
         initDataTable: function($tar, cb) {
             if(PubView.utils.is$($tar)) {
-                $.extend(true, $.fn.dataTable.defaults, {
-                    "sDom": "<'row tableMenus'<'col-sm-6 left-col'><'col-sm-6 right-col'f>>" + "t" + "<'row tableInfos'<'col-sm-4'i><'col-sm-8'lp>>",
-                    "oLanguage": {
-                        "sSearch": "_INPUT_<i class='fa fa-search'></i>",
-                        "sLengthMenu": "每页显示 _MENU_ 条",
-                        "sInfo": "第 _START_~_END_ 条 / 共<span class='nums'> _TOTAL_ </span>条",
-                        "sInfoEmpty": "第 0~0 条 / 共 0 条",
-                        "oPaginate": {
-                            "sPrevious": '<i class="fa fa-angle-left"></i>',
-                            "sNext": '<i class="fa fa-angle-right"></i>'
-                        },
-                        "sPaginationType": "two_button",
-                        "sEmptyTable": '<div class="text-danger text-center">还没有数据</div>',
-                        "sZeroRecords": '<div class="text-danger text-center">没有找到符合查询条件的数据项</div>',
-                        "sInfoFiltered": "(总 _MAX_ 条)"
-                    }
-                });
-                /* Default class modification */
-                $.extend($.fn.dataTableExt.oStdClasses, {
-                    "sWrapper": "dataTables_wrapper form-inline",
-                    "sFilterInput": "form-control",
-                    "sLengthSelect": "form-control input-sm"
-                });
                 $tar.dataTable({
                     bProcessing : true,
                     bSort : false
@@ -382,16 +401,16 @@ define('Common', ['PubView', 'bs/modal', 'json', 'template', 'jq/dataTables', 'b
             //IE8虽然在兼容模式下有onhashchange事件，但不起作用(_isUndefined(documentMode) || documentMode > 7)
             if("onhashchange" in window && !documentMode || documentMode > 7){
                 window.onhashchange = function(){
-                    var hash =  that.getHash();
+                    that.hash =  _getHash();
                     that.router && that.router.route();
                 };
             } else {
                 //要兼容IE低版本,暂时采用定时器模拟监听hashchange,最好使用子iframe方法或者jquery.address插件
-                var thash = that.getHash();
+                var thash = _getHash();
                 var t = setInterval(function(){
-                    var chash = that.getHash();
+                    var chash = _getHash();
                     if(chash != thash){
-                        thash = chash;
+                        that.hash = thash = chash;
                         that.router && that.router.route();
                     }
                 }, 100);
@@ -419,7 +438,7 @@ define('Common', ['PubView', 'bs/modal', 'json', 'template', 'jq/dataTables', 'b
 
                 //根据hash重新路由或无缝刷新
                 this.route = function(hash){
-                    hash = hash || that.getHash();
+                    hash = hash || that.hash;
                     loop_1:
                         for(var i in this.table.path){
                             var path = this.table.path[i];
@@ -448,15 +467,20 @@ define('Common', ['PubView', 'bs/modal', 'json', 'template', 'jq/dataTables', 'b
                         that.resetSideBar();
                         Modal.loader('remove');
                     };
+                    that.Deferred(onLoad);
                     //路由后页面载入入口
                     require(ctrl, function(o){
-                        if(o && ('init' in o)){
+                        if(o && PubView.utils.isFunction(o.init)) {
                             var initRes = o.init();
                             if(PubView.utils.isObject(initRes) && initRes.done) {
-                                initRes.done(onLoad);
+                                initRes.done(function() {
+                                    that.resolve.apply(that, arguments);
+                                });
                             } else {
-                                onLoad();
+                                !that._inRender && that.resolve(initRes);
                             }
+                        } else {
+                            that.resolve();
                         }
                     });
                     return this;
@@ -464,22 +488,30 @@ define('Common', ['PubView', 'bs/modal', 'json', 'template', 'jq/dataTables', 'b
             };
             !that.router && (that.router = new Router());
         },
-        render: function(handleRender, tplUrl, data, callback) {
+        render: function(renderToPage, tplUrl, data, callback) {
             var that = this,
-                _handleRender, _tplUrl, _data, _callback;
-            if(typeof handleRender !== "boolean") {
-                _handleRender = false;
-                _tplUrl = handleRender;
+                _renderToPage, _tplUrl, _data, _beforeRender, _callback;
+            if(typeof renderToPage !== "boolean") {
+                _renderToPage = false;
+                _tplUrl = renderToPage;
                 _data = tplUrl;
                 _callback = data;
             } else {
-                _handleRender = handleRender;
+                _renderToPage = renderToPage;
                 _tplUrl= tplUrl;
                 _data = data;
                 _callback = callback;
             }
+            if(PubView.utils.isPlainObject(_tplUrl)) {
+                var obj = $.extend({}, _tplUrl);
+                _tplUrl = obj.url;
+                _data = obj.data;
+                _beforeRender = obj.beforeRender;
+                _callback = obj.callback;
+            }
             if(_tplUrl && PubView.utils.isString(_tplUrl)) {
                 try {
+                    _renderToPage && (that._inRender = true);
                     _tplUrl = that.xhr._getFullUrl(_tplUrl, true);
                     var posSuffix = _tplUrl.lastIndexOf(".");
                     if(posSuffix == -1) {
@@ -487,33 +519,47 @@ define('Common', ['PubView', 'bs/modal', 'json', 'template', 'jq/dataTables', 'b
                     } else if(posSuffix == _tplUrl.length - 1)  {
                         _tplUrl = _tplUrl + 'html';
                     }
-                    var doRender = function(data) {
-                        if(PubView.utils.isArray(data)) {
-                            data = $.extend({}, {list: data});
-                        } else if(!PubView.utils.isPlainObject(data)) {
-                            data = $.extend({}, {data: data});
+                    var doRender = function(_data) {
+                        var data = _data;
+                        if(PubView.utils.isArray(_data)) {
+                            data = $.extend({}, {list: _data});
+                        } else if(!PubView.utils.isPlainObject(_data)) {
+                            data = $.extend({}, {data: _data});
                         }
                         require(['text!'+_tplUrl], function(tplText) {
                             try{
                                 var render = template.compile(tplText),
                                     inHtml = render(data);
-                                if(!_handleRender) {
+                                if(_renderToPage) {
                                     that.$pageContent.html(inHtml);
-                                    PubView.utils.isFunction(_callback) && _callback();
+                                    PubView.utils.isFunction(_callback) && _callback(_data);
+                                    that.resolve();
                                 } else {
-                                    PubView.utils.isFunction(_callback) && _callback(inHtml);
+                                    PubView.utils.isFunction(_callback) && _callback(inHtml, _data);
                                 }
                             }catch(e){
-                            	debugger
-                                throw "数据解析出错，请稍后再试…";
+                                that._inRender = false;
+                                that.resolve();
+                                Modal.danger(e.message);
                             }
                         });
                     };
+                    var filterData = function(data) {
+                        var _data;
+                        try {
+                            if(typeof _beforeRender === "function") {
+                                _data = _beforeRender(data);
+                            }
+                        } catch (e) {
+                            _data = null;
+                        }
+                        return _data ? _data : data;
+                    };
                     if(PubView.utils.isPlainObject(_data)) {
-                        doRender(_data);
+                        doRender(filterData(_data));
                     } else if(_data && PubView.utils.isString(_data)) {
                         that.xhr.ajax(_data, function(data) {
-                            doRender(data);
+                            doRender(filterData(data));
                         });
                     } else if(PubView.utils.isFunction(_data)) {
                         _callback = _data;
@@ -522,10 +568,9 @@ define('Common', ['PubView', 'bs/modal', 'json', 'template', 'jq/dataTables', 'b
                         doRender();
                     }
                 } catch (e) {
+                    that._inRender = false;
+                    that.resolve();
                     Modal.danger(e.message);
-                    if(that._deferred) {
-                        that.resolve(false);
-                    }
                 }
             }
         },
@@ -557,6 +602,14 @@ define('Common', ['PubView', 'bs/modal', 'json', 'template', 'jq/dataTables', 'b
                         this.resolve(false);
                     }
                 }
+            }
+        },
+        requestCSS: function(cssUrl, callback) {
+            var that = this;
+            if(cssUrl && PubView.utils.isString(cssUrl)) {
+                require(['css!'+(cssUrl.indexOf('/')==0?PubView.root:PubView.rqBaseUrl+'/')+cssUrl], function() {
+                    PubView.utils.isFunction(callback) && callback.apply(that, arguments);
+                });
             }
         },
         xhr: {
@@ -601,6 +654,7 @@ define('Common', ['PubView', 'bs/modal', 'json', 'template', 'jq/dataTables', 'b
                     'type': 'POST',
                     'url': url,
                     'data': JSON.stringify(data),
+                    'contentType': 'application/json',
                     'success': callback
                 });
             },
@@ -609,6 +663,7 @@ define('Common', ['PubView', 'bs/modal', 'json', 'template', 'jq/dataTables', 'b
                     'type': 'PUT',
                     'url': url,
                     'data': JSON.stringify(data),
+                    'contentType': 'application/json',
                     'success': callback
                 });
             },
@@ -626,21 +681,20 @@ define('Common', ['PubView', 'bs/modal', 'json', 'template', 'jq/dataTables', 'b
                 }
             }
         },
-        uiSelect: function(data,wrapper, appendToEl) {
-            var defaults = {className: "form-control"};
-            if(!PubView.utils.isPlainObject(data)) {
-                data = $.extend({}, {list: data}, defaults);
+        uiSelect: function(options, renderTo) {
+            var defaults = {wrapper: true, className: "form-control"};
+            if(!PubView.utils.isPlainObject(options)) {
+                options = $.extend({}, {list: options}, defaults);
             } else {
-            	data.wrapper = wrapper;
-                data = $.extend({}, defaults, data);
+                options = $.extend({}, defaults, options);
             }
-            var inHtml = this.template('ui-select', data);
+            var inHtml = this.template('ui-select', options);
             try {
-                if(appendToEl) {
-                    if(!PubView.utils.is$(appendToEl)) {
-                        appendToEl = $(appendToEl);
+                if(renderTo) {
+                    if(!PubView.utils.is$(renderTo)) {
+                        renderTo = $(renderTo);
                     }
-                    appendToEl.append(inHtml);
+                    renderTo.append(inHtml);
                 }
             } catch (e) { }
             return inHtml;
@@ -671,7 +725,7 @@ require(['PubView', 'Common'], function(PubView, Common) {
                 logo: { },
                 nav: [
                     {
-                        current: Common.pub.navPrimaryCurIndex,
+                        current: Common.pub.headerNavIndex,
                         items: Common.pub.navPrimaryItems
                     },
                     {
@@ -771,32 +825,13 @@ require(['PubView', 'Common'], function(PubView, Common) {
             }
         },
         sideBar: function() {
-            return Common.pub.sideBarDataMap[Common.pub.navPrimaryCurIndex] ? {
-                data: Common.pub.sideBarDataMap[Common.pub.navPrimaryCurIndex],
-                rendered: function() {
-                    var lis = $('#side-bar').find("li");
-                    $(document).on('click', '#side-bar .nav-first-level', function(){
-                        var arrow = $(this).children('.fa-arrows'),
-                            second = $(this).siblings('.nav-second-level');
-                        //其他
-                        $('#side-bar .nav-first-level').each(function(){
-                            var tul = $(this).siblings('.nav-second-level'),
-                                tarrow = $(this).children('.fa-arrows');
-                            if(tul.length && tul.attr('aria-expanded') == "false"){
-                                tarrow.removeClass('fa-angle-right').addClass('fa-angle-down');
-                            }
-                        });
-                        //
-                        if(second.length){
-                            if(second.attr('aria-expanded') == "false"){
-                                arrow.removeClass('fa-angle-right').addClass('fa-angle-down');
-                            }else{
-                                arrow.removeClass('fa-angle-down').addClass('fa-angle-right');
-                            }
-                        }
-                    });
-                }
-            } : null;
+            return Common.pub.sideBarDataMap[Common.pub.headerNavIndex] ?
+                $.extend(
+                    {
+                        data: Common.pub.sideBarDataMap[Common.pub.headerNavIndex]
+                    },
+                    Common.pub.sideBarNavIndex ? {current: Common.pub.sideBarNavIndex} : null
+                ) : null;
         }()
     });
 
