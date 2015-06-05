@@ -466,7 +466,7 @@ define(['Common','bs/modal','bs/wizard','bs/tooltip','jq/form/validator','jq/for
 	    var EditData = {
 	    		//编辑云主机名称弹框
 	    	EditVmName : function(name){
-	    		Common.render(true,'tpls/ccenter/vmname.html','',function(html){
+	    		Common.render('tpls/ccenter/vmname.html','',function(html){
 	    			Dialog.show({
 	    	            title: '编辑云主机',
 	    	            message: html,
@@ -476,10 +476,10 @@ define(['Common','bs/modal','bs/wizard','bs/tooltip','jq/form/validator','jq/for
 	    	                action: function(dialog) {
 	    	                	Common.xhr.ajax('/resources/data/arrays.txt',function(data){
 	    	                		if(data){
-	    	                			dialog.alert("保存成功");
+	    	                			alert("保存成功");
 	    	                			dialog.close();
 									}else{
-										dialog.danger("保存失败");
+										alert("保存失败");
 									}
 								})
 	    	                }
@@ -512,10 +512,10 @@ define(['Common','bs/modal','bs/wizard','bs/tooltip','jq/form/validator','jq/for
 		    	                action: function(dialog) {
 		    	                	Common.xhr.ajax('/resources/data/arrays.txt',function(data){
 		    	                		if(data){
-		    	                			dialog.alert("保存成功");
+		    	                			alert("保存成功");
 								    		dialog.close();
 										}else{
-											dialog.danger("保存失败");
+											alert("保存失败");
 										}
 		    	                	});
 		    	                }
@@ -541,11 +541,12 @@ define(['Common','bs/modal','bs/wizard','bs/tooltip','jq/form/validator','jq/for
 	    };
 	    //修改云主机名称
 	    $("ul.dropdown-menu a.editName").on("click",function(){
+	    	require(['css!'+PubView.rqBaseUrl+'/css/dialog.css']);
 	    	EditData.EditVmName($(this).attr("data"));
 	    });
 	    //编辑安全组
 	    $("ul.dropdown-menu a.editSecurity").on("click",function(){
-	    	require(['css!'+PubView.rqBaseUrl+'/css/vmDialog.css']);
+	    	require(['css!'+PubView.rqBaseUrl+'/css/dialog.css']);
 	    	EditData.EditVmSecurity($(this).attr("data"),function(){
 	    		//右移按钮
 	    		$("#edit_vm_security .security-left").on("dblclick",function(){
@@ -562,9 +563,9 @@ define(['Common','bs/modal','bs/wizard','bs/tooltip','jq/form/validator','jq/for
     		
 	    });
 	    //修改云主机大小
-	    $("ul.dropdown-menu a.editVmType").on("click",function(){
-	    	EditData.EditVmType($(this).attr("data"));
-	    });
+//	    $("ul.dropdown-menu a.editVmType").on("click",function(){
+//	    	EditData.EditVmType($(this).attr("data"));
+//	    });
 	}	
 	return {
 		init : init
