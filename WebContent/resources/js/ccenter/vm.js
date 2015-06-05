@@ -586,15 +586,28 @@ define(['Common','bs/modal','bs/wizard','bs/tooltip','jq/form/validator','jq/for
 	    $("ul.dropdown-menu a.editSecurity").on("click",function(){
 	    	require(['css!'+PubView.rqBaseUrl+'/css/dialog.css']);
 	    	EditData.EditVmSecurity($(this).attr("data"),function(){
-	    		//右移按钮
+	    		//全部安全组双击事件
 	    		$("#edit_vm_security .security-left").on("dblclick",function(){
 	    			$(this).remove();
 	    			$("ul[name='choosedSecurity']").append('<li class="p3"><span class="security-left">'+$(this).html()+'</span></li>');
 	    		});
-	    		//左移按钮
+	    		//已选安全组双击事件
 	    		$("#edit_vm_security .security-right").on("dblclick",function(){
 	    			$(this).remove();
 	    			$("ul[name='allSecurity']").append('<li class="p3"><span class="security-left">'+$(this).html()+'</span></li>');
+	    		});
+	    		//安全组search  
+	    		$('#edit_vm_security .form-control').on('keypress',function(event){  
+	    			var obj = $(this);
+	    		    if(event.keyCode == "13") 
+	    		    	Common.xhr.ajax('/resources/data/arrays.txt',function(data){
+	    		    		var res = data.data;
+	    		    		var text = "";
+		    		    	for(var i = 0;i<res.length;i++){
+		    		    		text += '<li class="p3"><span class="security-left">'+res[i].name+'</span></li>';
+		    		    	}
+		    		    	obj.parent().next().find("ul").html(text);
+	    		    	});
 	    		});
 	    	});
 	    });
