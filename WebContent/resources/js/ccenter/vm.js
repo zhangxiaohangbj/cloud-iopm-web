@@ -1,12 +1,10 @@
 define(['Common','bs/modal','bs/wizard','bs/tooltip','jq/form/validator','jq/form/validator/addons/bs3'],function(Common,Dialog){
 	require(['css!'+PubView.rqBaseUrl+'/css/wizard.css']);
 	var init = function(){
-		Common.Deferred();
 		Common.$pageContent.addClass("loading");
 		//需要修改为真实数据源
-		Common.render('tpls/ccenter/vm.html','/resources/data/arrays.txt',function(){
+		Common.render(true,'tpls/ccenter/vm.html','/resources/data/arrays.txt',function(){
 			bindEvent();
-	    	Common.resolve(true);
 		});
 	};
 	
@@ -85,7 +83,7 @@ define(['Common','bs/modal','bs/wizard','bs/tooltip','jq/form/validator','jq/for
 		//增加按钮
 	    $("#VmTable_wrapper span.btn-add").on("click",function(){
 	    	//需要修改为真实数据源
-			Common.render(true,'tpls/ccenter/add.html',renderData,function(html){
+			Common.render('tpls/ccenter/add.html',renderData,function(html){
 				//维护当前select的值以及云主机数量，为更新配额以及vdc相关的数据用
 				var currentChosenObj = {
 						vdc: null,	//当前vdc
@@ -172,7 +170,7 @@ define(['Common','bs/modal','bs/wizard','bs/tooltip','jq/form/validator','jq/for
 	    				    			}
 	    				    	}
 	    				    	//生成html数据
-    							Common.render(true,'tpls/ccenter/quota.html',renderData,function(html){
+    							Common.render('tpls/ccenter/quota.html',renderData,function(html){
             						wizard.el.find('div.quotas').html(html);
             					});
     						})
@@ -492,7 +490,7 @@ define(['Common','bs/modal','bs/wizard','bs/tooltip','jq/form/validator','jq/for
 				Common.xhr.ajax('/resources/data/arrays.txt',function(data){
 					
 			    	//生成html数据
-					Common.render(true,'tpls/ccenter/security.html',data,function(html){
+					Common.render('tpls/ccenter/security.html',data,function(html){
 						Dialog.show({
 		    	            title: '编辑安全组',
 		    	            message: html,
