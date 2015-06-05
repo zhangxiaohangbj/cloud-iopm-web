@@ -429,7 +429,7 @@ define(['Common','bs/modal','bs/wizard','bs/tooltip','jq/form/validator','jq/for
     			DataIniter.initSecurityGroup();
     			DataIniter.initAvailableNetWorks();
     			
-    			//
+    			//展现wizard，禁用下一步按钮
     			
     			wizard.show();
     			wizard.disableNextButton();
@@ -442,6 +442,7 @@ define(['Common','bs/modal','bs/wizard','bs/tooltip','jq/form/validator','jq/for
 				EventsHandler.securitySetting();
 				EventsHandler.formValidator();
 				EventsHandler.inputBlur();
+				//关闭后移出dom
     			wizard.on('closed', function() {
     				$('div.wizard').remove();
     				$('div.modal-backdrop').remove();
