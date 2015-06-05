@@ -280,7 +280,7 @@ define(['Common','bs/modal','bs/wizard','bs/tooltip','jq/form/validator','jq/for
 					Common.xhr.ajax('/resources/data/quota.txt',function(quotas){
 						//当前配额 等于 当前vdc下总配额 减去  当前选中规格的额度
 				    	var current = currentChosenObj.specs;
-				    	if(current.length){
+				    	if(current && current.length){
 				    		quotas.core.used = parseInt(quotas.core.used) + parseInt(current.attr('data-core'));
     				    	quotas.memory.used = parseInt(quotas.memory.used) + parseInt(current.attr('data-memory'));
 				    	};
@@ -558,6 +558,7 @@ define(['Common','bs/modal','bs/wizard','bs/tooltip','jq/form/validator','jq/for
 	    	                	Common.xhr.ajax('/resources/data/arrays.txt',function(data){
 	    	                		if(data){
 	    	                			alert("保存成功");
+	    	                			resetCurrentChosenObj();
 							    		dialog.close();
 									}else{
 										alert("保存失败");
@@ -567,101 +568,13 @@ define(['Common','bs/modal','bs/wizard','bs/tooltip','jq/form/validator','jq/for
 	    	            }, {
 	    	                label: '取消',
 	    	                action: function(dialog) {
+	    	                	resetCurrentChosenObj();
 	    	                    dialog.close();
 	    	                }
 	    	            }],
 	    	            onshown : cb  //Modal show后回调
 	    	        });
 	    		});
-	    	},
-	    	specs: null,	//当前选中规格
-			prevSpecs: null, //上一个选中规格
-			nums :1,
-	    	initPopverInfo : function(){
-	    		//云主机规格popover
-				var current =  EditData.specs || $('select.select-specs').find('option:selected');
-				var	rootDisk = current.attr('data-root-disk'),
-					tmpDisk = current.attr('data-tmp-disk'),
-					memory = current.attr('data-memory'),
-					core = current.attr('data-core');
-				var tpl = '<div class="popver-tips"><p>名称：'+current.html()+'</p><p>根磁盘：'+rootDisk+',  临时磁盘： '+tmpDisk+'</p><p>内存：'+memory+'  核数 :'+core+'</p></div>',
-					popoverOptions = {
-	    				html: true,
-	    				content: tpl,
-	    				trigger: 'hover',
-	    				delay: {
-	    					hide: 500
-	    				}
-	    			};
-				var _$popover = $('[data-toggle="popover"]').data('bs.popover');
-				if(_$popover){
-					_$popover.options.content=tpl;
-				}else{
-					$('[data-toggle="popover"]').popover(popoverOptions);
-				}
-				
-	    	},
-	    	initQuotasInfo : function(){
-	    		//配额，先获取数据，进行加工后再去render
-				Common.xhr.ajax('/resources/data/quota.txt',function(quotas){
-					//当前配额 等于 当前vdc下总配额 减去  当前选中规格的额度
-					var current =  EditData.specs || $('select.select-specs').find('option:selected');
-			    	if(current.length){
-			    		quotas.core.used = parseInt(quotas.core.used) + parseInt(current.attr('data-core'));
-				    	quotas.memory.used = parseInt(quotas.memory.used) + parseInt(current.attr('data-memory'));
-			    	};
-			    	var getMathRound = function(used,total){
-			    		return Math.round((parseInt(used)/parseInt(total))*100);
-			    	}
-			    	var getClass = function(rate){
-			    		return rate <= 30 ? 'progress-bar-success' : rate >= 80 ? 'progress-bar-danger' : 'progress-bar-info';
-			    	}
-			    	var rateCore = getMathRound(quotas.core.used,quotas.core.total),
-			    		rateMemory = getMathRound(quotas.memory.used,quotas.memory.total),
-			    		rateNums = getMathRound(quotas.nums.used,quotas.nums.total),
-			    		styleCore = getClass(rateCore),styleMemory = getClass(rateMemory),styleNums=getClass(rateNums);
-			    	var renderData = {
-			    			core: {
-			    				total: quotas.core.total, used: quotas.core.used, rate: rateCore, style: styleCore
-			    			},
-			    			memory: {
-			    				total: quotas.memory.total, used: quotas.memory.used, rate: rateMemory, style: styleMemory
-			    			},
-			    			nums: {
-			    				total: quotas.nums.total, used: quotas.nums.used, rate: rateNums, style: styleNums
-			    			}
-			    	}
-			    	//生成html数据
-					Common.render('tpls/ccenter/quota.html',renderData,function(html){
-						$("#editVmDetail").find('div.quotas').html(html);
-					});
-				});
-	    	},
-	    	updateQuotaSpecs : function(change){
-	    		$('div.quotas').children('.specs').each(function(){
-					var key = $(this).attr('data'),
-						info = $(this).find('.progress-info'),
-						progressBar = $(this).find('.progress-bar'),
-						total = parseInt(info.attr('data-all')),
-						used = parseInt(info.attr('data-used')),
-						oData = EditData.prevSpecs ? parseInt(EditData.prevSpecs.attr('data-'+key)): 0;
-						nData = parseInt(EditData.specs.attr('data-'+key)) || 0;
-					//切换后的使用值
-					used = used + (change != null ? change*(nData - oData) : EditData.nums*(nData - oData));
-					//使用率
-					var useRate = Math.round(used/total*100);
-					if(useRate <= 100){
-						//更新dom内容-info
-						info.attr('data-used',used);
-						info.find('span.quota-desc').html(total+'中的'+used+'已使用');
-						//更新进度条
-						progressBar.width(useRate+"%");
-						progressBar.attr('aria-valuenow',useRate);
-						progressBar.html(useRate+'%');
-					}else{
-						Dialog.danger($(this).find('.quota-key').html()+"超出配额");
-					}
-				})
 	    	}
 	    };
 	    //修改云主机名称
@@ -688,23 +601,19 @@ define(['Common','bs/modal','bs/wizard','bs/tooltip','jq/form/validator','jq/for
 	    //修改虚拟机大小
 	    $("ul.dropdown-menu a.editVmType").on("click",function(){
 	    	require(['css!'+PubView.rqBaseUrl+'/css/dialog.css']);
-	    	//获取云主机个数
+	    	//获取云主机个数,规格等信息
 	    	Common.xhr.ajax('/resources/data/arrays.txt',function(data){
-	    		data = 1;
-	    		EditData.nums = data;
+	    		data.nums = 1;
+	    		data.vcd_id = "58c41046-408e-b959-d63147471w";
+	    		data.vcd_name = "micro-2 (1vCPU / 1G)";
+	    		currentChosenObj.nums = data.nums;  //data:云主机个数
 	    		EditData.EditVmType($(this).attr("data"),function(){
-		    		EditData.specs = $('select.select-specs').find('option:selected');
-		    		EditData.initPopverInfo();
-		    		EditData.initQuotasInfo();
-					$('select.select-specs').change(function(){
-						var current = $(this).find('option:selected');
-						//同步EditData
-						EditData.prevSpecs = EditData.specs;
-						EditData.specs = current;
-						//重新加载详细信息提示
-				    	EditData.initPopverInfo();
-				    	EditData.updateQuotaSpecs();
-					})
+	    			$("#editVmDetail div.col-sm:first").html(data.vcd_name);
+	    			$("[name='select-specs']").val(data.vcd_id);
+	    			
+		    		DataIniter.initPopver();
+		    		DataIniter.initQuotos(data.vcd_id);  //data:vcd_id
+		    		EventsHandler.specsChange();
 		    	});
 	    	})
 	    });
