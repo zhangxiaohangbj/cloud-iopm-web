@@ -631,7 +631,6 @@ define('Common', ['PubView', 'bs/modal', 'json', 'template', 'jq/dataTables', 'b
                         type: 'GET',
                         headers: this.headers,
                         dataType: 'json',
-                        contentType: 'application/json',
                         error: function(xhr, status) {
                             Modal.danger("Sorry, there was a problem!");
                         }
@@ -655,6 +654,7 @@ define('Common', ['PubView', 'bs/modal', 'json', 'template', 'jq/dataTables', 'b
                     'type': 'POST',
                     'url': url,
                     'data': JSON.stringify(data),
+                    'contentType': 'application/json',
                     'success': callback
                 });
             },
@@ -663,6 +663,7 @@ define('Common', ['PubView', 'bs/modal', 'json', 'template', 'jq/dataTables', 'b
                     'type': 'PUT',
                     'url': url,
                     'data': JSON.stringify(data),
+                    'contentType': 'application/json',
                     'success': callback
                 });
             },
