@@ -7,6 +7,9 @@
 	line-height: 30px;
 	color: #333;
 }
+.bootstrap-dialog .bootstrap-dialog-message {
+	font-size: 14px;
+}
 .modal-body {
 	background-color: #fff;
 }
@@ -26,6 +29,7 @@
 	border-color: #36B3DF;
 	color: #fff;
 }
+/*µ¯¿òbodyÄÚÈÝÑùÊ½*/
 div.form-group label {
 	padding: 5px 0 0 0;
 	font-weight: normal;
@@ -61,4 +65,15 @@ div.select-list{
 }
 .modal-dialog li.p3{
 	padding: 3px;
+}
+div.form-group label span {
+	color: red;
+}
+.form-group .wizard-form-control {
+	border-radius: 0;
+	height: 30px;
+	width: 100%;
+	padding: 0 8px;
+	outline: none;
+	background-color: #fff;
 }
