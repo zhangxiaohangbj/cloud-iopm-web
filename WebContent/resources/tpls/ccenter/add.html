@@ -66,11 +66,8 @@
 						<div class="form-group">
 							<label for="select-vdc" class="control-label col-sm-3"><span>* </span>虚拟数据中心：</label>
 							<div id="select-vm" class="col-sm-7 col-sm">
-								<!-- {{#uiSelect(vdcList,'#select-vm')}} -->
 								<select name="select-vdc"  class="wizard-form-control select select-vdc">
-								    {{each vdcList as item i}}
-										<option value="{{item.id}}">{{item.name}}</option>
-								    {{/each}}
+								    {{#uiSelectList(vdcList)}}
 								</select>
 							</div>
 						</div>
