@@ -441,7 +441,17 @@ define('Common', ['PubView', 'bs/modal', 'json', 'template', 'jq/dataTables', 'b
                     this.table.ctrl.unshift(ctrl);
                     return this;
                 };
-
+                //默认路由入口前缀
+                this.ctrlPrefix = 'js/';
+                //获取默认的路由入口文件路径
+                this.getDefaultCtrl = function(hash) {
+                    hash = hash || that.hash;
+                    var ctrl;
+                    if(hash) {
+                        ctrl = hash.replace(/^#/, this.ctrlPrefix);
+                    }
+                    return ctrl;
+                };
                 //根据hash重新路由或无缝刷新
                 this.route = function(hash){
                     hash = hash || that.hash;
@@ -457,8 +467,8 @@ define('Common', ['PubView', 'bs/modal', 'json', 'template', 'jq/dataTables', 'b
                                 }
                             }
                         }
-                    if(!ctrl){ //load default ctrl
-                        ctrl = this.table.ctrl[0];
+                    if(!ctrl){
+                        ctrl = this.getDefaultCtrl(hash);
                     }
 
                     if(ctrl){
@@ -474,21 +484,36 @@ define('Common', ['PubView', 'bs/modal', 'json', 'template', 'jq/dataTables', 'b
                         Modal.loader('remove');
                     };
                     that.Deferred(onLoad);
-                    //路由后页面载入入口
-                    require(ctrl, function(o){
-                        if(o && PubView.utils.isFunction(o.init)) {
-                            var initRes = o.init();
-                            if(PubView.utils.isObject(initRes) && initRes.done) {
-                                initRes.done(function() {
-                                    that.resolve.apply(that, arguments);
-                                });
+                    var ctrlList = [];
+                    if(!PubView.utils.isArray(ctrl)) {
+                        ctrlList.push(ctrl);
+                    } else {
+                        ctrlList = ctrl;
+                    }
+                    try {
+                        //路由后页面载入入口
+                        require(ctrlList, function(o){
+                            if(o && PubView.utils.isFunction(o.init)) {
+                                var initRes = o.init();
+                                if(PubView.utils.isObject(initRes) && initRes.done) {
+                                    initRes.done(function() {
+                                        that.resolve.apply(that, arguments);
+                                    });
+                                } else {
+                                    !that._inRender && that.resolve(initRes);
+                                }
                             } else {
-                                !that._inRender && that.resolve(initRes);
+                                that.resolve();
                             }
+                        });
+                    } catch (e) {
+                        that.resolve();
+                        if(e.requireType) {
+                            Modal.danger("Router Error:【"+ctrlList.join(',')+"】Can not load this js control Module.");
                         } else {
-                            that.resolve();
+                            Modal.danger(e.message);
                         }
-                    });
+                    }
                     return this;
                 };
             };
@@ -596,13 +621,23 @@ define('Common', ['PubView', 'bs/modal', 'json', 'template', 'jq/dataTables', 'b
                 Modal.danger('Common html error: '+ e.message);
             }
         },
-        _initComponents: function($parent) {
-            $parent.find('[data-spy="iCheck"]').iCheck({
+        componentsDefaults: {
+            'iCheck': {
                 radioClass: "iradio-info",
                 checkboxClass: "icheckbox-info"
+            }
+        },
+        _initComponents: function($parent) {
+            var that = this;
+            $parent.find('[data-spy]').each(function() {
+                var $this = $(this), spyApi = $this.attr('data-spy');
+                if(spyApi === 'scroll') {
+                    $this.scrollspy();
+                } else if($.fn[spyApi]) {
+                    $this[spyApi](that.componentsDefaults[spyApi]);
+                }
             });
             $parent.find('[data-toggle="tooltip"]').tooltip();
-            $parent.find('[data-toggle="popover"]').popover();
         },
         template: function(tplId, data, callback) {
             if(PubView.utils.isString(tplId)) {
@@ -653,7 +688,7 @@ define('Common', ['PubView', 'bs/modal', 'json', 'template', 'jq/dataTables', 'b
                     if(PubView.utils.isString(object)) {
                         object = $.extend({}, {url: object});
                     } else if(!PubView.utils.isPlainObject(object) || !object.url) {
-                        Modal.danger("Ajax Error: 请确定请求内容url");
+                        Modal.danger("XHR Request Error: 请确定请求内容url");
                         return false;
                     }
                     object.url = this._getFullUrl(object.url);
@@ -661,8 +696,8 @@ define('Common', ['PubView', 'bs/modal', 'json', 'template', 'jq/dataTables', 'b
                         type: 'GET',
                         headers: this.headers,
                         dataType: 'json',
-                        error: function(xhr, status) {
-                            Modal.danger("Sorry, there was a problem!");
+                        error: function(xhr, errorText) {
+                            Modal.danger("XHR Request Error: 【"+xhr.status+"】"+xhr.statusText);
                         }
                     };
                     return $.ajax($.extend(
@@ -672,7 +707,7 @@ define('Common', ['PubView', 'bs/modal', 'json', 'template', 'jq/dataTables', 'b
                         PubView.utils.isFunction(callback) ? {success: callback} : null)
                     );
                 } else {
-                    Modal.danger("Ajax Error: 请确定请求内容url");
+                    Modal.danger("XHR Request Error: 请确定请求内容url");
                     if(this._deferred) {
                         this.resolve(false);
                     }
@@ -752,9 +787,6 @@ require(['PubView', 'Common'], function(PubView, Common) {
     with(Common.router){
         when("^#?(!.*)?$", ['js/index']);
         when("^#ccenter(!.*)?$", ['js/ccenter/vm']);
-        when("^#ccenter/vm(!.*)?$", ['js/ccenter/vm']);
-        when("^#ccenter/storage(!.*)?$", ['js/ccenter/storage']);
-        //otherwise(['js/ccenter/vm']);
     }
 
     //路由当前页面
