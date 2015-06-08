@@ -1,4 +1,4 @@
-define(['Common','bs/modal','bs/wizard','bs/tooltip','jq/form/validator','jq/form/validator/addons/bs3'],function(Common,Dialog){
+define(['Common','bs/modal','bs/wizard','bs/tooltip','jq/form/validator','jq/form/validator/addons/bs3'],function(Common,Modal){
 	Common.requestCSS('css/wizard.css');
 	var init = function(){
 		Common.$pageContent.addClass("loading");
@@ -108,7 +108,7 @@ define(['Common','bs/modal','bs/wizard','bs/tooltip','jq/form/validator','jq/for
 				    	currentChosenObj.az = $('select.select-available-zone').children('option:selected');
 					});
 				}else{
-					Dialog.danger('尚未选择所属vdc');
+					Modal.danger('尚未选择所属vdc');
 				}
 			},
 			//init云主机规格的详细信息popver
@@ -173,7 +173,7 @@ define(['Common','bs/modal','bs/wizard','bs/tooltip','jq/form/validator','jq/for
     					});
 					})
 				}else{
-					Dialog.danger('尚未选择vdc');
+					Modal.danger('尚未选择vdc');
 				}
 			},
 			//根据vdc可用网络信息
@@ -215,7 +215,7 @@ define(['Common','bs/modal','bs/wizard','bs/tooltip','jq/form/validator','jq/for
 						progressBar.attr('aria-valuenow',useRate);
 						progressBar.html(useRate+'%');
 					}else{
-						Dialog.danger($(this).find('.quota-key').html()+"超出配额");
+						Modal.danger($(this).find('.quota-key').html()+"超出配额");
 					}
 				})
 			},
@@ -243,7 +243,7 @@ define(['Common','bs/modal','bs/wizard','bs/tooltip','jq/form/validator','jq/for
 						progressBar.html(useRate+'%');
 						this.updateQuotaSpecs(nData - oData);
 					}else{
-						Dialog.danger($(this).find('.quota-key').html()+'超出配额');
+						Modal.danger($(this).find('.quota-key').html()+'超出配额');
 					}
 				}
 			},
@@ -349,7 +349,7 @@ define(['Common','bs/modal','bs/wizard','bs/tooltip','jq/form/validator','jq/for
 							//网卡 指定子网和指定ip置为可用,
 							$('input[name=network-card-name],select[name=select-sub-network],select[name=select-net-ip]').prop('disabled',false);
 						}else{
-							Dialog.danger('不能重复选择');
+							Modal.danger('不能重复选择');
 						}
 					});
 					//删除已选网络点击事件
@@ -399,8 +399,8 @@ define(['Common','bs/modal','bs/wizard','bs/tooltip','jq/form/validator','jq/for
 			            }
 			        });
 				},
-				inputBlur: function(){
-					$('.form-horizontal input[type=text],.form-horizontal input[type=password]').blur(function(){
+				oninput: function(){
+					$('.form-horizontal input[type=text],.form-horizontal input[type=password]').on('input propertychange',function(){
 						var id = $(this).attr('id');
 						if($("#"+id) && $("#"+id).length){
 							if($(this).prop("disabled") == false && !$(".form-horizontal").validate().element("#"+id)){
@@ -467,13 +467,18 @@ define(['Common','bs/modal','bs/wizard','bs/tooltip','jq/form/validator','jq/for
 				EventsHandler.VmNumsSpinbox();
 				EventsHandler.securitySetting();
 				EventsHandler.formValidator();
-				EventsHandler.inputBlur();
-				//关闭后移出dom
-    			wizard.on('closed', function() {
+				EventsHandler.oninput();
+				//关闭弹窗
+				var closeWizard = function(){
     				$('div.wizard').remove();
     				$('div.modal-backdrop').remove();
     				resetCurrentChosenObj();
+    			}
+				//关闭后移出dom
+    			wizard.on('closed', function() {
+    				closeWizard();
     			});
+    			
     			wizard.on("submit", function(wizard) {
     				var serverData = {
     					"name": $("#server-name").val(),
@@ -491,11 +496,10 @@ define(['Common','bs/modal','bs/wizard','bs/tooltip','jq/form/validator','jq/for
 //    					}
 //    				}
     				Common.xhr.postJSON('/9cc717d8047e46e5bf23804fc4400247/servers',serverData,function(data){
-    					wizard.trigger("success");
-    					wizard.hideButtons();
     					wizard._submitting = false;
-    					wizard.showSubmitCard("success");
-    					wizard.updateProgressBar(0);
+    					wizard.updateProgressBar(100);
+    					closeWizard();
+    					Common.router.route();
     				})
     			});
 
@@ -506,7 +510,7 @@ define(['Common','bs/modal','bs/wizard','bs/tooltip','jq/form/validator','jq/for
 	    		//编辑云主机名称弹框
 	    	EditVmName : function(name){
 	    		Common.render('tpls/ccenter/vmname.html','',function(html){
-	    			Dialog.show({
+	    			Modal.show({
 	    	            title: '编辑云主机',
 	    	            message: html,
 	    	            nl2br: false,
@@ -542,7 +546,7 @@ define(['Common','bs/modal','bs/wizard','bs/tooltip','jq/form/validator','jq/for
 					
 			    	//生成html数据
 					Common.render('tpls/ccenter/security.html',data,function(html){
-						Dialog.show({
+						Modal.show({
 		    	            title: '编辑安全组',
 		    	            message: html,
 		    	            nl2br: false,
@@ -572,7 +576,7 @@ define(['Common','bs/modal','bs/wizard','bs/tooltip','jq/form/validator','jq/for
 	    	//编辑虚拟机大小弹框
 	    	EditVmType : function(id,cb){
 	    		Common.render('tpls/ccenter/vmdetail.html',renderData,function(html){
-		    		Dialog.show({
+		    		Modal.show({
 	    	            title: '编辑虚拟机大小',
 	    	            message: html,
 	    	            nl2br: false,
