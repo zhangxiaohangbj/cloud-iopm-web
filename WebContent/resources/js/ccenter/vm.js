@@ -2,10 +2,13 @@ define(['Common','bs/modal','bs/wizard','bs/tooltip','jq/form/validator','jq/for
 	Common.requestCSS('css/wizard.css');
 	var init = function(){
 		Common.$pageContent.addClass("loading");
-		//需要修改为真实数据源
-		Common.render(true,'tpls/ccenter/vm.html','/resources/data/arrays.txt',function(){
-			bindEvent();
-		});
+		//先获取数据，进行加工后再去render
+		Common.xhr.ajax('/9cc717d8047e46e5bf23804fc4400247/servers/page/1/10',function(page){
+			var serversData = {"data":page.result}
+			Common.render(true,'tpls/ccenter/vm.html',serversData,function(){
+				bindEvent();
+			});
+		})		
 	};
 	
 	var bindEvent = function(){
@@ -463,16 +466,28 @@ define(['Common','bs/modal','bs/wizard','bs/tooltip','jq/form/validator','jq/for
     				resetCurrentChosenObj();
     			});
     			wizard.on("submit", function(wizard) {
-    				var submit = {
-    					"hostname": $("#new-server-fqdn").val()
+    				var serverData = {
+    					"name": $("#server-name").val(),
+    					"imageRef": 'ed18e2ce-a574-4ff0-8a00-6ef9d7dc4c2b',//$("#image-id").val(),
+    					"flavorRef": '3',//$("#select-specs").val(),
+    					"networks": [{
+    						"uuid": 'af8c1f42-b21c-4d13-bc92-1852e22f4f98',//$("#chosen-network").val(),
+    						"fixed_ip": '192.168.0.115'//$("#select-net-ip").val()
+    					}]
     				};
-    				setTimeout(function() {
+//    				var fixed_ip = $("#select-net-ip").val();
+//    				if(fixed_ip!=null&&fixed_ip!="DHCP"){
+//    					serverData["networks"]={
+//	    						"uuid": $("#chosen-network").val()
+//    					}
+//    				}
+    				Common.xhr.postJSON('/9cc717d8047e46e5bf23804fc4400247/servers',serverData,function(data){
     					wizard.trigger("success");
     					wizard.hideButtons();
     					wizard._submitting = false;
     					wizard.showSubmitCard("success");
     					wizard.updateProgressBar(0);
-    				}, 2000);
+    				})
     			});
 
 			})
