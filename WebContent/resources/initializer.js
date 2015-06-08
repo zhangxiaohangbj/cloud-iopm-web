@@ -58,11 +58,11 @@ define('Common', ['PubView', 'bs/modal', 'json', 'template', 'jq/dataTables', 'b
                     link: ''
                 },
                 {
-                    text: '<i class="fa fa-database"></i>镜像管理',
+                    text: '<i class="fa fa-cube"></i>镜像管理',
                     link: ''
                 },
                 {
-                    text: '<i class="fa fa-puzzle-piece"></i>VPC管理<i class="fa icon-arrow"></i>',
+                    text: '<i class="fa fa-vimeo-square"></i>VPC管理<i class="fa icon-arrow"></i>',
                     items: [
                         {
                             text: '网络管理',
@@ -83,7 +83,7 @@ define('Common', ['PubView', 'bs/modal', 'json', 'template', 'jq/dataTables', 'b
                     ]
                 },
                 {
-                    text: '<i class="fa fa-cogs"></i>安全管理<i class="fa icon-arrow"></i>',
+                    text: '<i class="fa fa-th-large"></i>安全管理<i class="fa icon-arrow"></i>',
                     items: [
                         {
                             text: 'ACLs',
@@ -114,7 +114,7 @@ define('Common', ['PubView', 'bs/modal', 'json', 'template', 'jq/dataTables', 'b
                     ]
                 },
                 {
-                    text: '<i class="fa fa-cubes"></i>配额设置<i class="fa icon-arrow"></i>',
+                    text: '<i class="fa fa-list-alt"></i>配额设置<i class="fa icon-arrow"></i>',
                     link: '',
                     items: [
                         {
