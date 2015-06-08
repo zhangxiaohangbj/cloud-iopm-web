@@ -537,7 +537,7 @@ define('Common', ['PubView', 'bs/modal', 'json', 'template', 'jq/dataTables', 'b
                                 var render = template.compile(tplText),
                                     inHtml = render(data);
                                 if(_renderToPage) {
-                                    that.$pageContent.html(inHtml);
+                                    that.html(that.$pageContent, inHtml);
                                     PubView.utils.isFunction(_callback) && _callback(_data);
                                     that.resolve();
                                 } else {
@@ -579,6 +579,30 @@ define('Common', ['PubView', 'bs/modal', 'json', 'template', 'jq/dataTables', 'b
                     Modal.danger(e.message);
                 }
             }
+        },
+        html: function(parent, inHtml) {
+            try {
+                var $parent;
+                if(!PubView.utils.is$(parent)) {
+                    $parent = $(parent);
+                } else {
+                    $parent = parent;
+                }
+                if($parent && inHtml) {
+                    $parent.html(inHtml);
+                    this._initComponents($parent);
+                }
+            } catch (e) {
+                Modal.danger('Common html error: '+ e.message);
+            }
+        },
+        _initComponents: function($parent) {
+            $parent.find('[data-spy="iCheck"]').iCheck({
+                radioClass: "iradio-info",
+                checkboxClass: "icheckbox-info"
+            });
+            $parent.find('[data-toggle="tooltip"]').tooltip();
+            $parent.find('[data-toggle="popover"]').popover();
         },
         template: function(tplId, data, callback) {
             if(PubView.utils.isString(tplId)) {
@@ -704,6 +728,18 @@ define('Common', ['PubView', 'bs/modal', 'json', 'template', 'jq/dataTables', 'b
                 }
             } catch (e) { }
             return inHtml;
+        },
+        dataTable: function(tableSelector, options) {
+            if(PubView.utils.isString(tableSelector) || PubView.utils.is$(tableSelector)) {
+                var $table;
+                if(PubView.utils.isString(tableSelector)) {
+                    $table = $(tableSelector);
+                } else {
+                    $table = tableSelector;
+                }
+                if($table.length <= 0) return null;
+                $table.dataTable(options);
+            }
         }
     };
 });
