@@ -102,7 +102,8 @@ header > .container,
 /* #header-nav > nav > ul > li + li {
 	border-left: 1px solid #f1f4f9;
 } */
-#header-nav > nav > ul > li.hover{
+#header-nav > nav > ul > li.hover,
+#header-nav > nav > ul > li.active{
     background-color:#3E4A5A;
 }
 #header-nav > nav > ul > li > a {
@@ -248,9 +249,9 @@ aside {
 	padding: 0;
 }
 .sidebar-nav > li {
-	/* margin-bottom: 12px; */
 	border-bottom:1px solid #E0E0E0;
 }
+
 .sidebar-nav > li:focus {
 	background:transparent;
 }
@@ -269,14 +270,19 @@ aside {
 	margin-right: 22px;
 	vertical-align: baseline;
 }
-
-.sidebar-nav > li.active > a,
-.sidebar-nav > li > a:focus {
-	color: #36B3DF;
-}
 .sidebar-nav > li > a:hover{
 	color: #36B3DF;
 	background: transparent;
+}
+.sidebar-nav > li.active > a,
+.sidebar-nav > li.active > a:hover {
+	color: #fff;
+	background-color:#36b3df;
+}
+.sidebar-nav > li.active > a.nav-first-level,
+.sidebar-nav > li.active > a.nav-first-level:hover {
+	color: #36B3DF;
+	background-color:transparent
 }
 .sidebar-nav > li > a > .fa {
 	margin-right: 6px;
