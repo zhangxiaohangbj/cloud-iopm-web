@@ -91,148 +91,7 @@ define(['Common','bs/modal','bs/wizard','bs/tooltip','jq/form/validator','jq/for
 				nums: 1	//当前虚机数量
 		};
 		var wizard;
-    	var EventsHandler = {
-				//基本信息所需事件
-				bindBasicWizard : function(){
-					//basic-1：动态获取镜像或者快照
-	    			wizard.el.find(".wizard-card .image-source a").click(function() {
-	    				var source = $(this).attr('data-image');
-	    				$(this).parent().siblings('.active').removeClass('active');
-	    				$(this).parent().addClass('active');
-	    				$(this).parents('ul:first').siblings('div').each(function(){
-	    					if($(this).attr('data-con') == source){
-	    						$(this).removeClass('hide').addClass('show');
-	    					}else{
-	    						$(this).removeClass('show').addClass('hide');
-	    					}
-	    				})
-	    			});
-	    			//basic 2：点击镜像列表添加选中
-	    			wizard.el.find(".wizard-card .image-list .btn").click(function(){
-	    				$(this).parents('.form-group:first').find('.selected').removeClass('selected');
-	    				$(this).addClass('selected');
-	    				var data = $(this).attr("data-con");
-	    				$(this).parents('.form-group:first').find('input[name=image-id]').val(data);
-	    			})
-				},
-				//详细信息 -绑定云主机数量spinbox
-				VmNumsSpinbox : function(){
-					require(['bs/spinbox'],function(){
-	    				$('#setVmNums').spinbox({
-		    					value: 1,
-		    					min: 1,
-		    					max: 5
-	    				});
-	    				$('#setVmNums').on('changed.bs.spinbox', function () {
-	    					//同步currentChosenObj 第一次会执行两次，待解决
-							currentChosenObj.prevNums = currentChosenObj.nums;
-    				    	currentChosenObj.nums = $(this).spinbox('value');
-    				    	//更新配额信息
-							DataIniter.updateQuotaNums();
-						})
-	    			})
-				},
-				//vdc切换，需要加载可用域 可用网络，配额的数据
-				vdcChange : function(){
-					$('select.select-vdc').change(function(){
-    					var current = $(this).children('option:selected');
-				    	currentChosenObj.vdc = current;//同步currentChosenObj
-				    	DataIniter.initAvailableZone();//重新加载可用域的数据
-				    	DataIniter.initQuotos();//重新加载配额数据
-				    	DataIniter.initAvailableNetWorks();//重新获取可用网络数据
-    				});
-				},
-				//规格change
-				specsChange : function(){
-					$('select.select-specs').change(function(){
-						var current = $(this).find('option:selected');
-						//同步currentChosenObj
-						currentChosenObj.prevSpecs = currentChosenObj.specs;
-				    	currentChosenObj.specs = current;
-						//重新加载详细信息提示
-						DataIniter.initPopver();
-						DataIniter.updateQuotaSpecs();
-					})
-				},
-				//可用网络选择事件
-				networkChosen : function(){
-					//滑过出现添加图标
-					$(document).on("mouseover mouseout","a.list-group-item",function(event){
-						if(event.type == "mouseover"){
-							$(this).find('.fa').show();
-						 }else if(event.type == "mouseout"){
-							 $(this).find('.fa').hide();
-						 }
-					})
-					//选择可用网络绑定点击事件
-					wizard.el.find(".available-network .list-group-item").click(function(){
-						if("true" != $(this).attr('has-chosen')){
-							var clone = $(this).clone();
-							clone.find('i').removeClass('fa-plus-circle').addClass('fa-minus-circle').css('display','none');
-							wizard.el.find('.chosen-network').append(clone);
-							$(this).attr('has-chosen',"true");
-							//网卡 指定子网和指定ip置为可用,
-							$('input[name=network-card-name],select[name=select-sub-network],select[name=select-net-ip]').prop('disabled',false);
-						}else{
-							Dialog.danger('不能重复选择');
-						}
-					});
-					//删除已选网络点击事件
-					$(document).on("click",".chosen-network a.list-group-item i",function(event){
-						var index = $(this).parent().attr('data-index');
-						wizard.el.find(".available-network a[data-index="+index+"]").attr("has-chosen","false");
-						$(this).parent().remove();
-						//如果没有已选，则网卡 指定子网和指定ip置为disabled
-						if(wizard.el.find('.chosen-network').children().length == 0){
-							$('input[name=network-card-name],select[name=select-sub-network],select[name=select-net-ip]').prop('disabled',true);
-						}
-					})
-				},
-				//访问安全事件
-				securitySetting : function(){
-					wizard.el.find('ul.security-type a').click(function(){
-	    				$(this).parent().siblings('.active').removeClass('active');
-	    				$(this).parent().addClass('active');
-	    				var name = $(this).html(),dataType = $(this).attr('data-type'),
-	    					pwdCon = $(this).parents('.security-type:first').next();
-	    				pwdCon.find('label[for=login-key]').html(name+':');
-	    				pwdCon.find('div[data-for='+dataType+']').siblings('div').hide();
-	    				pwdCon.find('div[data-for='+dataType+']').show();
-					})
-				},
-				//初始化安全组的绑定checkbox
-				initCheckBox : function(){
-					$('input[type="checkbox"],input[type="radio"]').iCheck({
-				    	checkboxClass: "icheckbox-info",
-				        radioClass: "iradio-info"
-				    })
-				},
-				//表单校验
-				formValidator: function(){
-					$(".form-horizontal").validate({
-			            rules: {
-			            	'server-name': {
-			                    required: true,
-			                    minlength: 4,
-			                    maxlength:15
-			                }
-			            }
-			        });
-				},
-				inputBlur: function(){
-					$('.form-horizontal input[type=text],.form-horizontal input[type=password]').blur(function(){
-						var id = $(this).attr('id');
-						if($("#"+id) && $("#"+id).length){
-							if($(this).prop("disabled") == false && !$(".form-horizontal").validate().element("#"+id)){
-								wizard.disableNextButton();
-							}else{
-								wizard.enableNextButton();
-							}
-						}
-					});
-				}
-		};
-		
+    	
     	//载入默认的数据 inits,创建数据载入类
 		var DataIniter = {
 			//根据vdc获取可用域数据
@@ -403,6 +262,156 @@ define(['Common','bs/modal','bs/wizard','bs/tooltip','jq/form/validator','jq/for
 				
 			}
 		};
+		//载入后的事件
+		var EventsHandler = {
+				//基本信息所需事件
+				bindBasicWizard : function(){
+					//basic-1：动态获取镜像或者快照
+	    			wizard.el.find(".wizard-card .image-source a").click(function() {
+	    				var source = $(this).attr('data-image');
+	    				$(this).parent().siblings('.active').removeClass('active');
+	    				$(this).parent().addClass('active');
+	    				$(this).parents('ul:first').siblings('div').each(function(){
+	    					if($(this).attr('data-con') == source){
+	    						$(this).removeClass('hide').addClass('show');
+	    					}else{
+	    						$(this).removeClass('show').addClass('hide');
+	    					}
+	    				})
+	    			});
+	    			//basic 2：点击镜像列表添加选中
+	    			wizard.el.find(".wizard-card .image-list .btn").click(function(){
+	    				$(this).parents('.form-group:first').find('.selected').removeClass('selected');
+	    				$(this).addClass('selected');
+	    				var data = $(this).attr("data-con");
+	    				$(this).parents('.form-group:first').find('input[name=image-id]').val(data);
+	    			})
+				},
+				//详细信息 -绑定云主机数量spinbox
+				VmNumsSpinbox : function(){
+					require(['bs/spinbox'],function(){
+	    				$('#setVmNums').spinbox({
+		    					value: 1,
+		    					min: 1,
+		    					max: 5
+	    				});
+	    				$('#setVmNums').on('changed.bs.spinbox', function () {
+	    					//同步currentChosenObj 第一次会执行两次，待解决
+							currentChosenObj.prevNums = currentChosenObj.nums;
+    				    	currentChosenObj.nums = $(this).spinbox('value');
+    				    	//更新配额信息
+							DataIniter.updateQuotaNums();
+						})
+	    			})
+				},
+				//vdc切换，需要加载可用域 可用网络，配额的数据
+				vdcChange : function(){
+					$('select.select-vdc').change(function(){
+    					var current = $(this).children('option:selected');
+				    	currentChosenObj.vdc = current;//同步currentChosenObj
+				    	DataIniter.initAvailableZone();//重新加载可用域的数据
+				    	DataIniter.initQuotos();//重新加载配额数据
+				    	DataIniter.initAvailableNetWorks();//重新获取可用网络数据
+    				});
+				},
+				//规格change
+				specsChange : function(){
+					$('select.select-specs').change(function(){
+						var current = $(this).find('option:selected');
+						//同步currentChosenObj
+						currentChosenObj.prevSpecs = currentChosenObj.specs;
+				    	currentChosenObj.specs = current;
+						//重新加载详细信息提示
+						DataIniter.initPopver();
+						DataIniter.updateQuotaSpecs();
+					})
+				},
+				//可用网络选择事件
+				networkChosen : function(){
+					//滑过出现添加图标
+					$(document).on("mouseover mouseout","a.list-group-item",function(event){
+						if(event.type == "mouseover"){
+							$(this).find('.fa').show();
+						 }else if(event.type == "mouseout"){
+							 $(this).find('.fa').hide();
+						 }
+					});
+					//选择可用网络绑定点击事件
+					wizard.el.find(".available-network .list-group-item").click(function(){
+						if("true" != $(this).attr('has-chosen')){
+							var clone = $(this).clone();
+							clone.find('i').removeClass('fa-plus-circle').addClass('fa-minus-circle').css('display','none');
+							wizard.el.find('.chosen-network').append(clone);
+							$(this).attr('has-chosen',"true");
+							//网卡 指定子网和指定ip置为可用,
+							$('input[name=network-card-name],select[name=select-sub-network],select[name=select-net-ip]').prop('disabled',false);
+						}else{
+							Dialog.danger('不能重复选择');
+						}
+					});
+					//删除已选网络点击事件
+					$(document).on("click",".chosen-network a.list-group-item i",function(event){
+						$(this).unbind('click');
+						var index = $(this).parent().attr('data-index');
+						wizard.el.find(".available-network a[data-index="+index+"]").attr("has-chosen","false");
+						$(this).parent().remove();
+						//如果没有已选，则网卡 指定子网和指定ip置为disabled
+						if(wizard.el.find('.chosen-network').children().length == 0){
+							$('input[name=network-card-name],select[name=select-sub-network],select[name=select-net-ip]').prop('disabled',true);
+						}
+					});
+					//载入拖拽效果
+					require(['jq/dragsort'], function() {
+						 $(".available-network,.chosen-network").dragsort({ dragSelector: "a", dragBetween: true,  placeHolderTemplate: "<a class='list-group-item'></a>" });
+					})
+				},
+				//访问安全事件
+				securitySetting : function(){
+					wizard.el.find('ul.security-type a').click(function(){
+	    				$(this).parent().siblings('.active').removeClass('active');
+	    				$(this).parent().addClass('active');
+	    				var name = $(this).html(),dataType = $(this).attr('data-type'),
+	    					pwdCon = $(this).parents('.security-type:first').next();
+	    				pwdCon.find('label[for=login-key]').html(name+':');
+	    				pwdCon.find('div[data-for='+dataType+']').siblings('div').hide();
+	    				pwdCon.find('div[data-for='+dataType+']').show();
+					})
+				},
+				//初始化安全组的绑定checkbox
+				initCheckBox : function(){
+					$('input[type="checkbox"],input[type="radio"]').iCheck({
+				    	checkboxClass: "icheckbox-info",
+				        radioClass: "iradio-info"
+				    })
+				},
+				//表单校验
+				formValidator: function(){
+					$(".form-horizontal").validate({
+			            rules: {
+			            	'server-name': {
+			                    required: true,
+			                    minlength: 4,
+			                    maxlength:15
+			                }
+			            }
+			        });
+				},
+				inputBlur: function(){
+					$('.form-horizontal input[type=text],.form-horizontal input[type=password]').blur(function(){
+						var id = $(this).attr('id');
+						if($("#"+id) && $("#"+id).length){
+							if($(this).prop("disabled") == false && !$(".form-horizontal").validate().element("#"+id)){
+								wizard.disableNextButton();
+							}else{
+								wizard.enableNextButton();
+							}
+						}
+					});
+				}
+				
+		};
+		
+		//重置CurrentChosenObj对象
 		var resetCurrentChosenObj = function(){
 			for(var key in currentChosenObj){
 				currentChosenObj[key] = null;
