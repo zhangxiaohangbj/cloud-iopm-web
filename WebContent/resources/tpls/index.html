@@ -8,7 +8,7 @@
 {{#uiSelectList(iSelectData)}}
 </select>
 
-<table class="table table-primary table-striped" id="table-id">
+<table class="table table-primary table-striped" id="table-example">
     <thead>
         <tr>
             <th class="c1">
@@ -25,7 +25,153 @@
             <th class="c2">虚拟数据中心</th>
             <th class="c1">电源状态</th>
             <th class="c2">运行时间</th>
-            <th class="c2 sorting_disabled">操作</th>
+            <th class="c2">操作</th>
         </tr>
     </thead>
+    <tbody>
+        <tr>
+            <td class=" ">
+                <label>
+                    <input type="checkbox" data-spy="iCheck">
+                </label>
+            </td>
+            <td class=" ">Tiger Nixon</td>
+            <td class=" ">192.168.100.4</td>
+            <td class=" ">10.65.25.66</td>
+            <td class=" ">4GB | 2CPU | 40GB</td>
+            <td class=" ">
+                <span class="text-success">已激活</span>
+            </td>
+            <td class=" ">WDK1</td>
+            <td class=" ">service</td>
+            <td class=" ">
+                <span class="text-success">运行中</span>
+            </td>
+            <td class=" ">2天14小时</td>
+            <td class=" ">
+                <a class="btn-opt pull-left" data-toggle="tooltip" title="创建快照" data-act="stop" style="margin: 0;"><i class="glyphicon glyphicon-off"></i></a>
+                <!-- <a class="btn-opt" data-toggle="tooltip" title="控制台" data-act="delete"><i class="glyphicon glyphicon-trash"></i></a> -->
+                <div class="dropdown">
+                    <span class="btn btn-more dropdown-toggle" data-toggle="dropdown" aria-expanded="false">更 多 <i class="fa fa-angle-down fa-fw"></i></span>
+                    <ul class="dropdown-menu" style="right: 0;left: initial;">
+                        <li><a href="#"><i class="fa fa-file-text fa-fw"></i>绑定浮动IP</a></li>
+                        <li><a href="#"><i class="fa fa-gear fa-fw"></i>解除浮动IP绑定</a></li>
+                        <li><a href="javascript:void(0)" class="editName" data="Tiger Nixon"><i class="fa fa-file-text fa-fw"></i>修改云主机名称</a></li>
+                        <li><a href="javascript:void(0)" class="editSecurity" data=""><i class="fa fa-file-text fa-fw"></i>编辑安全组</a></li>
+                        <li><a href="#"><i class="fa fa-file-text fa-fw"></i>控制台</a></li>
+                        <li><a href="#"><i class="fa fa-file-text fa-fw"></i>查看日志</a></li>
+                        <li><a href="#"><i class="fa fa-file-text fa-fw"></i>暂停</a></li>
+                        <li><a href="#"><i class="fa fa-file-text fa-fw"></i>挂起</a></li>
+                        <li><a href="javascript:void(0)" class="editVmType" data=""><i class="fa fa-file-text fa-fw"></i>调整配置</a></li>
+                        <li><a href="#"><i class="fa fa-file-text fa-fw"></i>软重启</a></li>
+                        <li><a href="#"><i class="fa fa-file-text fa-fw"></i>硬重启</a></li>
+                        <li><a href="#"><i class="fa fa-file-text fa-fw"></i>关闭</a></li>
+                        <li><a href="#"><i class="fa fa-file-text fa-fw"></i>重建</a></li>
+                        <li><a href="#"><i class="fa fa-file-text fa-fw"></i>终止</a></li>
+                    </ul>
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td class=" ">
+                <label>
+                    <input type="checkbox" data-spy="iCheck">
+                </label>
+            </td>
+            <td class=" ">Tiger Nixon</td>
+            <td class=" ">192.168.100.4</td>
+            <td class=" ">10.65.25.66</td>
+            <td class=" ">4GB | 2CPU | 40GB</td>
+            <td class=" ">
+                <span class="text-danger">待激活</span>
+            </td>
+            <td class=" ">WDK2</td>
+            <td class=" ">service</td>
+            <td class=" ">
+                <span class="text-danger">未启动</span>
+            </td>
+            <td class=" ">1天3小时</td>
+            <td class=" ">
+                <a class="btn-opt pull-left" data-toggle="tooltip" title="创建快照" data-act="stop" style="margin: 0;"><i class="glyphicon glyphicon-off"></i></a>
+                <!-- <a class="btn-opt" data-toggle="tooltip" title="控制台" data-act="delete"><i class="glyphicon glyphicon-trash"></i></a> -->
+                <div class="dropdown">
+                    <span class="btn btn-more dropdown-toggle" data-toggle="dropdown" aria-expanded="false">更 多 <i class="fa fa-angle-down fa-fw"></i></span>
+                    <ul class="dropdown-menu" style="right: 0;left: initial;">
+                        <li><a href="#"><i class="fa fa-file-text fa-fw"></i>绑定浮动IP</a></li>
+                        <li><a href="#"><i class="fa fa-gear fa-fw"></i>解除浮动IP绑定</a></li>
+                        <li><a href="javascript:void(0)" class="editName" data="Tiger Nixon"><i class="fa fa-file-text fa-fw"></i>修改云主机名称</a></li>
+                        <li><a href="javascript:void(0)" class="editSecurity" data=""><i class="fa fa-file-text fa-fw"></i>编辑安全组</a></li>
+                        <li><a href="#"><i class="fa fa-file-text fa-fw"></i>控制台</a></li>
+                        <li><a href="#"><i class="fa fa-file-text fa-fw"></i>查看日志</a></li>
+                        <li><a href="#"><i class="fa fa-file-text fa-fw"></i>暂停</a></li>
+                        <li><a href="#"><i class="fa fa-file-text fa-fw"></i>挂起</a></li>
+                        <li><a href="javascript:void(0)" class="editVmType" data=""><i class="fa fa-file-text fa-fw"></i>调整配置</a></li>
+                        <li><a href="#"><i class="fa fa-file-text fa-fw"></i>软重启</a></li>
+                        <li><a href="#"><i class="fa fa-file-text fa-fw"></i>硬重启</a></li>
+                        <li><a href="#"><i class="fa fa-file-text fa-fw"></i>关闭</a></li>
+                        <li><a href="#"><i class="fa fa-file-text fa-fw"></i>重建</a></li>
+                        <li><a href="#"><i class="fa fa-file-text fa-fw"></i>终止</a></li>
+                    </ul>
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td class=" ">
+                <label>
+                    <input type="checkbox" data-spy="iCheck">
+                </label>
+            </td>
+            <td class=" ">Tiger Nixon</td>
+            <td class=" ">192.168.100.4</td>
+            <td class=" ">10.65.25.66</td>
+            <td class=" ">4GB | 2CPU | 40GB</td>
+            <td class=" ">
+                <span class="text-success">已激活</span>
+            </td>
+            <td class=" ">WDK1</td>
+            <td class=" ">service</td>
+            <td class=" ">
+                <span class="text-danger">未启动</span>
+            </td>
+            <td class=" ">16小时</td>
+            <td class=" ">
+                <a class="btn-opt pull-left" data-toggle="tooltip" title="创建快照" data-act="stop" style="margin: 0;"><i class="glyphicon glyphicon-off"></i></a>
+                <!-- <a class="btn-opt" data-toggle="tooltip" title="控制台" data-act="delete"><i class="glyphicon glyphicon-trash"></i></a> -->
+                <div class="dropdown">
+                    <span class="btn btn-more dropdown-toggle" data-toggle="dropdown" aria-expanded="false">更 多 <i class="fa fa-angle-down fa-fw"></i></span>
+                    <ul class="dropdown-menu" style="right: 0;left: initial;">
+                        <li><a href="#"><i class="fa fa-file-text fa-fw"></i>绑定浮动IP</a></li>
+                        <li><a href="#"><i class="fa fa-gear fa-fw"></i>解除浮动IP绑定</a></li>
+                        <li><a href="javascript:void(0)" class="editName" data="Tiger Nixon"><i class="fa fa-file-text fa-fw"></i>修改云主机名称</a></li>
+                        <li><a href="javascript:void(0)" class="editSecurity" data=""><i class="fa fa-file-text fa-fw"></i>编辑安全组</a></li>
+                        <li><a href="#"><i class="fa fa-file-text fa-fw"></i>控制台</a></li>
+                        <li><a href="#"><i class="fa fa-file-text fa-fw"></i>查看日志</a></li>
+                        <li><a href="#"><i class="fa fa-file-text fa-fw"></i>暂停</a></li>
+                        <li><a href="#"><i class="fa fa-file-text fa-fw"></i>挂起</a></li>
+                        <li><a href="javascript:void(0)" class="editVmType" data=""><i class="fa fa-file-text fa-fw"></i>调整配置</a></li>
+                        <li><a href="#"><i class="fa fa-file-text fa-fw"></i>软重启</a></li>
+                        <li><a href="#"><i class="fa fa-file-text fa-fw"></i>硬重启</a></li>
+                        <li><a href="#"><i class="fa fa-file-text fa-fw"></i>关闭</a></li>
+                        <li><a href="#"><i class="fa fa-file-text fa-fw"></i>重建</a></li>
+                        <li><a href="#"><i class="fa fa-file-text fa-fw"></i>终止</a></li>
+                    </ul>
+                </div>
+            </td>
+        </tr>
+    </tbody>
+    <tfoot>
+        <tr>
+            <td rowspan="1" colspan="1"></td>
+            <td rowspan="1" colspan="1"></td>
+            <td rowspan="1" colspan="1"></td>
+            <td rowspan="1" colspan="1"></td>
+            <td rowspan="1" colspan="1"></td>
+            <td rowspan="1" colspan="1"></td>
+            <td rowspan="1" colspan="1"></td>
+            <td rowspan="1" colspan="1"></td>
+            <td rowspan="1" colspan="1"></td>
+            <td rowspan="1" colspan="1"></td>
+            <td rowspan="1" colspan="1"></td>
+        </tr>
+    </tfoot>
 </table>
