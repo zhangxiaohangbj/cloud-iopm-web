@@ -2,10 +2,13 @@ define(['Common','bs/modal','bs/wizard','bs/tooltip','jq/form/validator','jq/for
 	Common.requestCSS('css/wizard.css');
 	var init = function(){
 		Common.$pageContent.addClass("loading");
-		//需要修改为真实数据源
-		Common.render(true,'tpls/ccenter/vm.html','/resources/data/arrays.txt',function(){
-			bindEvent();
-		});
+		//先获取数据，进行加工后再去render
+		Common.xhr.ajax('/9cc717d8047e46e5bf23804fc4400247/servers/page/1/10',function(page){
+			var serversData = {"data":page.result}
+			Common.render(true,'tpls/ccenter/vm.html',serversData,function(){
+				bindEvent();
+			});
+		})		
 	};
 	
 	var bindEvent = function(){
@@ -139,7 +142,7 @@ define(['Common','bs/modal','bs/wizard','bs/tooltip','jq/form/validator','jq/for
 					Common.xhr.ajax('/resources/data/quota.txt',function(quotas){
 						//当前配额 等于 当前vdc下总配额 减去  当前选中规格的额度
 				    	var current = currentChosenObj.specs;
-				    	if(current.length){
+				    	if(current && current.length){
 				    		quotas.core.used = parseInt(quotas.core.used) + parseInt(current.attr('data-core'));
     				    	quotas.memory.used = parseInt(quotas.memory.used) + parseInt(current.attr('data-memory'));
 				    	};
@@ -472,16 +475,28 @@ define(['Common','bs/modal','bs/wizard','bs/tooltip','jq/form/validator','jq/for
     				resetCurrentChosenObj();
     			});
     			wizard.on("submit", function(wizard) {
-    				var submit = {
-    					"hostname": $("#new-server-fqdn").val()
+    				var serverData = {
+    					"name": $("#server-name").val(),
+    					"imageRef": 'ed18e2ce-a574-4ff0-8a00-6ef9d7dc4c2b',//$("#image-id").val(),
+    					"flavorRef": '3',//$("#select-specs").val(),
+    					"networks": [{
+    						"uuid": 'af8c1f42-b21c-4d13-bc92-1852e22f4f98',//$("#chosen-network").val(),
+    						"fixed_ip": '192.168.0.115'//$("#select-net-ip").val()
+    					}]
     				};
-    				setTimeout(function() {
+//    				var fixed_ip = $("#select-net-ip").val();
+//    				if(fixed_ip!=null&&fixed_ip!="DHCP"){
+//    					serverData["networks"]={
+//	    						"uuid": $("#chosen-network").val()
+//    					}
+//    				}
+    				Common.xhr.postJSON('/9cc717d8047e46e5bf23804fc4400247/servers',serverData,function(data){
     					wizard.trigger("success");
     					wizard.hideButtons();
     					wizard._submitting = false;
     					wizard.showSubmitCard("success");
     					wizard.updateProgressBar(0);
-    				}, 2000);
+    				})
     			});
 
 			})
@@ -555,11 +570,34 @@ define(['Common','bs/modal','bs/wizard','bs/tooltip','jq/form/validator','jq/for
 				})
 	    	},
 	    	//编辑虚拟机大小弹框
-	    	EditVmType : function(id){
-	    		
-	    		require(['template','text!'+PubVars.contextPath+'/resources/tpls/ccenter/vmdetail.html'],function(template,tpl){
-	    			//初始化云主机规格,完成后去绑定popver提示
-	    			DataIniter.initQuotos();
+	    	EditVmType : function(id,cb){
+	    		Common.render('tpls/ccenter/vmdetail.html',renderData,function(html){
+		    		Dialog.show({
+	    	            title: '编辑虚拟机大小',
+	    	            message: html,
+	    	            nl2br: false,
+	    	            buttons: [{
+	    	                label: '保存',
+	    	                action: function(dialog) {
+	    	                	Common.xhr.ajax('/resources/data/arrays.txt',function(data){
+	    	                		if(data){
+	    	                			alert("保存成功");
+	    	                			resetCurrentChosenObj();
+							    		dialog.close();
+									}else{
+										alert("保存失败");
+									}
+	    	                	});
+	    	                }
+	    	            }, {
+	    	                label: '取消',
+	    	                action: function(dialog) {
+	    	                	resetCurrentChosenObj();
+	    	                    dialog.close();
+	    	                }
+	    	            }],
+	    	            onshown : cb  //Modal show后回调
+	    	        });
 	    		});
 	    	}
 	    };
@@ -572,24 +610,50 @@ define(['Common','bs/modal','bs/wizard','bs/tooltip','jq/form/validator','jq/for
 	    $("ul.dropdown-menu a.editSecurity").on("click",function(){
 	    	require(['css!'+PubView.rqBaseUrl+'/css/dialog.css']);
 	    	EditData.EditVmSecurity($(this).attr("data"),function(){
-	    		//右移按钮
+	    		//全部安全组双击事件
 	    		$("#edit_vm_security .security-left").on("dblclick",function(){
 	    			$(this).remove();
 	    			$("ul[name='choosedSecurity']").append('<li class="p3"><span class="security-left">'+$(this).html()+'</span></li>');
 	    		});
-	    		//左移按钮
+	    		//已选安全组双击事件
 	    		$("#edit_vm_security .security-right").on("dblclick",function(){
 	    			$(this).remove();
 	    			$("ul[name='allSecurity']").append('<li class="p3"><span class="security-left">'+$(this).html()+'</span></li>');
 	    		});
-	    		
+	    		//安全组search  
+	    		$('#edit_vm_security .form-control').on('keypress',function(event){  
+	    			var obj = $(this);
+	    		    if(event.keyCode == "13") 
+	    		    	Common.xhr.ajax('/resources/data/arrays.txt',function(data){
+	    		    		var res = data.data;
+	    		    		var text = "";
+		    		    	for(var i = 0;i<res.length;i++){
+		    		    		text += '<li class="p3"><span class="security-left">'+res[i].name+'</span></li>';
+		    		    	}
+		    		    	obj.parent().next().find("ul").html(text);
+	    		    	});
+	    		});
 	    	});
-    		
 	    });
-	    //修改云主机大小
-//	    $("ul.dropdown-menu a.editVmType").on("click",function(){
-//	    	EditData.EditVmType($(this).attr("data"));
-//	    });
+	    //修改虚拟机大小
+	    $("ul.dropdown-menu a.editVmType").on("click",function(){
+	    	require(['css!'+PubView.rqBaseUrl+'/css/dialog.css']);
+	    	//获取云主机个数,规格等信息
+	    	Common.xhr.ajax('/resources/data/arrays.txt',function(data){
+	    		data.nums = 1;
+	    		data.vcd_id = "58c41046-408e-b959-d63147471w";
+	    		data.vcd_name = "micro-2 (1vCPU / 1G)";
+	    		currentChosenObj.nums = data.nums;  //data:云主机个数
+	    		EditData.EditVmType($(this).attr("data"),function(){
+	    			$("#editVmDetail div.col-sm:first").html(data.vcd_name);
+	    			$("[name='select-specs']").val(data.vcd_id);
+	    			
+		    		DataIniter.initPopver();
+		    		DataIniter.initQuotos(data.vcd_id);  //data:vcd_id
+		    		EventsHandler.specsChange();
+		    	});
+	    	})
+	    });
 	}	
 	return {
 		init : init
