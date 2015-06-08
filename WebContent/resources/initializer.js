@@ -50,77 +50,83 @@ define('Common', ['PubView', 'bs/modal', 'json', 'template', 'jq/dataTables', 'b
                     link: '#vdc'
                 },
                 {
-                    text: '<i class="fa fa-tachometer"></i>云主机',
+                    text: '<i class="fa fa-tachometer"></i>云主机管理',
                     link: ''
                 },
                 {
-                    text: '<i class="fa fa-database"></i>云主机规格',
+                    text: '<i class="fa fa-database"></i>磁盘管理',
                     link: ''
                 },
                 {
-                    text: '<i class="fa fa-puzzle-piece"></i>设备管理<i class="fa icon-arrow"></i>',
+                    text: '<i class="fa fa-database"></i>镜像管理',
+                    link: ''
+                },
+                {
+                    text: '<i class="fa fa-puzzle-piece"></i>VPC管理<i class="fa icon-arrow"></i>',
                     items: [
                         {
-                            text: '服务器',
-                            link: '#vm'
+                            text: '网络管理',
+                            link: '#vpc/network'
                         },
                         {
-                            text: '存储设备',
-                            link: '#storage'
+                            text: '子网管理',
+                            link: '#vpc/subnet'
                         },
                         {
-                            text: '交换机',
-                            link: '#switchboard'
+                            text: '路由器管理',
+                            link: '#vpc/router'
+                        },
+                        {
+                            text: '浮动IP管理',
+                            link: '#vpc/floatingip'
                         }
                     ]
                 },
                 {
-                    text: '<i class="fa fa-cogs"></i>设备管理<i class="fa icon-arrow"></i>',
+                    text: '<i class="fa fa-cogs"></i>安全管理<i class="fa icon-arrow"></i>',
                     items: [
                         {
-                            text: '服务器',
-                            link: ''
+                            text: 'ACLs',
+                            link: '#security/acls'
                         },
                         {
-                            text: '存储设备',
-                            link: ''
-                        },
-                        {
-                            text: '交换机',
-                            link: ''
+                            text: '安全组',
+                            link: '#security/securitygroup'
                         },
                         {
                             text: '防火墙',
-                            link: ''
-                        },
-                        {
-                            text: '负载均衡设备',
-                            link: ''
-                        },
-                        {
-                            text: '路由器',
-                            link: ''
+                            link: '#'
                         }
                     ]
                 },
                 {
-                    text: '<i class="fa fa-cubes"></i>物理区域<i class="fa icon-arrow"></i>',
+                    text: '<i class="fa fa-cubes"></i>VPN管理<i class="fa icon-arrow"></i>',
                     link: '',
                     items: [
                         {
-                            text: '服务器',
+                            text: 'VPN网关',
                             link: ''
                         },
                         {
-                            text: '存储设备',
+                            text: 'VPN链接',
+                            link: ''
+                        }
+                    ]
+                },
+                {
+                    text: '<i class="fa fa-cubes"></i>配额设置<i class="fa icon-arrow"></i>',
+                    link: '',
+                    items: [
+                        {
+                            text: '云主机规格',
                             link: ''
                         },
                         {
-                            text: '交换机',
+                            text: 'VDC配额',
                             link: ''
                         },
                         {
-                            text: '防火墙',
+                            text: 'VPC配额',
                             link: ''
                         }
                     ]
@@ -556,7 +562,7 @@ define('Common', ['PubView', 'bs/modal', 'json', 'template', 'jq/dataTables', 'b
                                 var render = template.compile(tplText),
                                     inHtml = render(data);
                                 if(_renderToPage) {
-                                    that.$pageContent.html(inHtml);
+                                    that.html(that.$pageContent, inHtml);
                                     PubView.utils.isFunction(_callback) && _callback(_data);
                                     that.resolve();
                                 } else {
@@ -757,6 +763,18 @@ define('Common', ['PubView', 'bs/modal', 'json', 'template', 'jq/dataTables', 'b
                 }
             } catch (e) { }
             return inHtml;
+        },
+        dataTable: function(tableSelector, options) {
+            if(PubView.utils.isString(tableSelector) || PubView.utils.is$(tableSelector)) {
+                var $table;
+                if(PubView.utils.isString(tableSelector)) {
+                    $table = $(tableSelector);
+                } else {
+                    $table = tableSelector;
+                }
+                if($table.length <= 0) return null;
+                $table.dataTable(options);
+            }
         }
     };
 });
