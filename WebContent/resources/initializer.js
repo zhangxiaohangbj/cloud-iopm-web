@@ -754,6 +754,7 @@ require(['PubView', 'Common'], function(PubView, Common) {
         when("^#ccenter(!.*)?$", ['js/ccenter/vm']);
         when("^#ccenter/vm(!.*)?$", ['js/ccenter/vm']);
         when("^#ccenter/storage(!.*)?$", ['js/ccenter/storage']);
+        when("^#ccenter/vpc/subnet(!.*)?$", ['js/ccenter/vpc/subnet']);
         //otherwise(['js/ccenter/vm']);
     }
 

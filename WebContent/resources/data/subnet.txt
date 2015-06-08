@@ -1,0 +1,28 @@
+{
+    "data": [
+        {
+            "name" : "VPC1",
+            "os_type":"subnet1",
+            "inner_ip": "10.12.1.0/24",
+            "float_ip": "虚拟数据中心1",
+            "os_conf": "IPV4",
+            "active_status" : "10.12.1.1"
+        },
+        {
+            "name" : "VPC2",
+            "os_type":"subnet1",
+            "inner_ip": "10.12.1.0/24",
+            "float_ip": "虚拟数据中心1",
+            "os_conf": "IPV4",
+            "active_status" : "10.12.1.1"
+        },
+        {
+            "name" : "VPC3",
+            "os_type":"subnet1",
+            "inner_ip": "10.12.1.0/24",
+            "float_ip": "虚拟数据中心1",
+            "os_conf": "IPV4",
+            "active_status" : "10.12.1.1"
+        }
+    ]
+}

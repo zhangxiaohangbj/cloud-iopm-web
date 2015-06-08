@@ -43,7 +43,7 @@ div.form-group .col-sm {
 	width: 100%;
 	padding: 0 8px;
 	outline: none;
-	background-color: #fff;
+	/* background-color: #fff; */
 }
 div.select-list{
 	padding: 8px;

@@ -1,0 +1,93 @@
+<div class="page-header clearfix">
+	<ol class="breadcrumb">
+	  <li class="active">子网详情</li>
+	</ol>
+</div>
+<div class="page-body">
+	<div class="pane">
+		<div class="pane-content">
+			<form class="form-horizontal">
+				<div class="form-group" style="overflow: hidden;">
+					<label for="server-name" class="control-label col-sm-3">
+				 	VPC：</label>
+				 	<div class="col-sm-5 col-sm">
+						<input type="text" class="dialog-form-control input-readonly" name="subnet-name" value="{{name}}" readonly="readonly">
+					</div>
+				</div>
+				<div class="form-group" style="overflow: hidden;">
+					<label for="server-name" class="control-label col-sm-3">
+				 	子网名称：</label>
+				 	<div class="col-sm-5 col-sm">
+						<input type="text" class="dialog-form-control input-readonly" name="subnet-name" value="{{os_type}}" readonly="readonly">
+					</div>
+				</div>
+				<div class="form-group" style="overflow: hidden;">
+					<label for="server-name" class="control-label col-sm-3">
+				 	CIDR地址：</label>
+				 	<div class="col-sm-5 col-sm">
+						<input type="text" class="dialog-form-control input-readonly" name="subnet-name" value="{{os_type}}" readonly="readonly">
+					</div>
+				</div>
+				<div class="form-group" style="overflow: hidden;">
+					<label for="server-name" class="control-label col-sm-3">
+				 	IP版本：</label>
+				 	<div class="col-sm-5 col-sm">
+						<select disabled="disabled">
+							<option>IPV4</option>
+							<option>IPV6</option>
+						</select>
+					</div>
+				</div>
+				<div class="form-group" style="overflow: hidden;">
+					<label for="server-name" class="control-label col-sm-3">
+				 	网关IP：</label>
+				 	<div class="col-sm-5 col-sm">
+						<input type="text" class="dialog-form-control" name="subnet-name" value="{{inner_ip}}" disabled="disabled">
+					</div>
+				</div>
+				<div class="form-group" style="overflow: hidden;">
+					<label for="server-name" class="control-label col-sm-3">
+				 	禁用网关：</label>
+				 	<div class="col-sm-5 col-sm">
+						<label><input type="checkbox" {{if os_conf=='IPV4'}}checked {{/if}} readonly="readonly"></label>
+					</div>
+				</div>
+				<div class="form-group" style="overflow: hidden;">
+					<label for="server-name" class="control-label col-sm-3">
+				 	激活DHCP：</label>
+				 	<div class="col-sm-5 col-sm">
+						<label><input type="checkbox" readonly="readonly"></label>
+					</div>
+				</div>
+				<div class="form-group" style="overflow: hidden;">
+					<label for="server-name" class="control-label col-sm-3">
+				 	分配地址池：</label>
+				 	<div class="col-sm-5 col-sm">
+						<input type="text" class="dialog-form-control" name="subnet-name" value="" readonly="readonly">
+					</div>
+				</div>
+				<div class="form-group" style="overflow: hidden;">
+					<label for="server-name" class="control-label col-sm-3">
+				 	DNS域名解析服务：</label>
+				 	<div class="col-sm-5 col-sm">
+						<input type="text" class="dialog-form-control" name="subnet-name" value="" readonly="readonly">
+					</div>
+				</div>
+				<div class="form-group" style="overflow: hidden;">
+					<label for="server-name" class="control-label col-sm-3">
+				 	主机路由：</label>
+				 	<div class="col-sm-5 col-sm">
+						<input type="text" class="dialog-form-control" name="subnet-name" value="" readonly="readonly">
+					</div>
+				</div>
+				<div class="form-group" style="overflow: hidden;">
+					<label for="server-name" class="control-label col-sm-3"></label>
+				 	<div class="col-sm-5 col-sm">
+						<a href="javascript:location.reload();" class="btn btn-default">返回</a>
+					</div>
+				</div>
+			</form>
+			
+		</div>
+	</div>
+</div>
