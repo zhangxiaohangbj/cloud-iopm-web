@@ -3,12 +3,9 @@ define(['Common','bs/modal','bs/wizard','bs/tooltip','jq/form/validator','jq/for
 	var init = function(){
 		Common.$pageContent.addClass("loading");
 		//先获取数据，进行加工后再去render
-		Common.xhr.ajax('/9cc717d8047e46e5bf23804fc4400247/servers/page/1/10',function(page){
-			var serversData = {"data":page.result}
-			Common.render(true,'tpls/ccenter/vm.html',serversData,function(){
-				bindEvent();
-			});
-		})		
+		Common.render(true,'tpls/ccenter/vm.html','/9cc717d8047e46e5bf23804fc4400247/servers/page/1/10',function(){
+			bindEvent();
+		});
 	};
 	
 	var bindEvent = function(){
