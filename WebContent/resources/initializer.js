@@ -1,7 +1,7 @@
 /**
  * 初始化对象,包含公共的初始化加载方法和全局的方法，包括路由注册
  */
-define('Common', ['PubView', 'bs/modal', 'json', 'template', 'jq/dataTables', 'bs/popover'], function(PubView, Modal, JSON, template) {
+define('Common', ['PubView', 'bs/modal', 'json', 'template', 'jq/dataTables', 'jq/dataTables/themes/bs3', 'bs/popover'], function(PubView, Modal, JSON, template) {
     //获取hash
     var _getHash = function(url){
         if(!url && typeof window.location.hash !== "undefined") {
@@ -239,12 +239,6 @@ define('Common', ['PubView', 'bs/modal', 'json', 'template', 'jq/dataTables', 'b
                 "sZeroRecords": '<div class="text-danger text-center">没有找到符合查询条件的数据项</div>',
                 "sInfoFiltered": "(总 _MAX_ 条)"
             }
-        });
-        /* Default class modification */
-        $.extend($.fn.dataTableExt.oStdClasses, {
-            "sWrapper": "dataTables_wrapper form-inline",
-            "sFilterInput": "form-control",
-            "sLengthSelect": "form-control input-sm"
         });
     }
 
