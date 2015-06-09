@@ -3,9 +3,12 @@ define(['Common','bs/modal','bs/wizard','bs/tooltip','jq/form/validator','jq/for
 	var init = function(){
 		Common.$pageContent.addClass("loading");
 		//先获取数据，进行加工后再去render
-		Common.render(true,'tpls/ccenter/vm.html','/9cc717d8047e46e5bf23804fc4400247/servers/page/1/10',function(){
-			bindEvent();
-		});
+		Common.xhr.ajax('/9cc717d8047e46e5bf23804fc4400247/servers/page/1/10',function(page){
+			var serversData = {"data":page.result}
+			Common.render(true,'tpls/ccenter/vm.html',serversData,function(){
+				bindEvent();
+			});
+		})
 	};
 	
 	var bindEvent = function(){
@@ -63,13 +66,13 @@ define(['Common','bs/modal','bs/wizard','bs/tooltip','jq/form/validator','jq/for
 				//vdc列表,获取完vdc列表后，需要去加载可用域的数据以及可用网络的数据和安全组的数据
 				getVdc:function(){
 					//管理员和普通租户的逻辑在此判断
-					Common.xhr.ajax('/resources/data/select.txt',function(vdcList){
-						renderData.vdcList = vdcList;
+					Common.xhr.ajax('/v2.0/tenants',function(vdcPage){
+						renderData.vdcList = vdcPage.result;
 					});
 				},
 				//虚机规格
 				getSpecs: function(){
-					Common.xhr.ajax('/resources/data/specs.txt',function(specsList){
+					Common.xhr.ajax('/cloud/v2/{tenant_id}/flavors',function(specsList){
 						renderData.specsList = specsList;
 					});
 				}
@@ -98,8 +101,12 @@ define(['Common','bs/modal','bs/wizard','bs/tooltip','jq/form/validator','jq/for
 			initAvailableZone : function(){
 				var vdc_id = currentChosenObj.vdc.val() || $('select.select-vdc').children('option:selected').val();
 				if(vdc_id){
-					Common.xhr.ajax('/resources/data/select.txt',function(data){
-						var html = Common.uiSelect(data);
+					Common.xhr.ajax('/v2/'+vdc_id+'/os-availability-zone',function(data){
+						var selectData = {}
+						for(int i=0;i<data.length;i++){
+							selectData[i] = {"name":data[i]."zoonName"}
+						}
+						var html = Common.uiSelect(selectData);
 				    	$('select.select-available-zone').html(html);
 				    	//同步currentChosenObj
 				    	currentChosenObj.az = $('select.select-available-zone').children('option:selected');
@@ -477,15 +484,15 @@ define(['Common','bs/modal','bs/wizard','bs/tooltip','jq/form/validator','jq/for
     			});
     			
     			wizard.on("submit", function(wizard) {
-    				var serverData = {
+    				var serverData = {"server":{
     					"name": $("#server-name").val(),
     					"imageRef": 'ed18e2ce-a574-4ff0-8a00-6ef9d7dc4c2b',//$("#image-id").val(),
     					"flavorRef": '3',//$("#select-specs").val(),
     					"networks": [{
-    						"uuid": 'af8c1f42-b21c-4d13-bc92-1852e22f4f98',//$("#chosen-network").val(),
-    						"fixed_ip": '192.168.0.115'//$("#select-net-ip").val()
+    						"uuid": 'af8c1f42-b21c-4d13-bc92-1852e22f4f98'//,//$("#chosen-network").val(),
+    						//"fixed_ip": '192.168.0.115'//$("#select-net-ip").val()
     					}]
-    				};
+    				}};
 //    				var fixed_ip = $("#select-net-ip").val();
 //    				if(fixed_ip!=null&&fixed_ip!="DHCP"){
 //    					serverData["networks"]={
