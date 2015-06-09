@@ -182,6 +182,37 @@ define('Common', ['PubView', 'bs/modal', 'json', 'template', 'jq/dataTables', 'j
                 }
             ]
         },
+        {
+            title: '<i class="fa fa-codepen fa-fw"></i>调度与监控',
+            current: [1,1],
+            items: [
+                {
+                    text: '<i class="fa fa-puzzle-piece"></i>任务管理<i class="fa icon-arrow"></i>',
+                    items: [
+                        {
+                            text: '任务定义',
+                            link: '#task'
+                        },
+                        {
+                            text: '任务监控',
+                            link: '#monitor'
+                        },
+                        {
+                            text: '策略定义',
+                            link: '#strategy'
+                        },
+                        {
+                            text: '任务分组',
+                            link: '#taskGroup'
+                        },
+                        {
+                            text: '策略分组',
+                            link: '#strategyGroup'
+                        }
+                    ]
+                }
+            ]
+        },
         null
     ];
     var sideBarDataMap = function() {
