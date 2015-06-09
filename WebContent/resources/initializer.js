@@ -47,11 +47,11 @@ define('Common', ['PubView', 'bs/modal', 'json', 'template', 'jq/dataTables', 'j
             items: [
                 {
                     text: '<i class="fa fa-cloud"></i>虚拟数据中心',
-                    link: '#vdc'
+                    link: '#vdc/'
                 },
                 {
                     text: '<i class="fa fa-tachometer"></i>云主机管理',
-                    link: ''
+                    link: '#vm/'
                 },
                 {
                     text: '<i class="fa fa-database"></i>磁盘管理',
@@ -286,8 +286,6 @@ define('Common', ['PubView', 'bs/modal', 'json', 'template', 'jq/dataTables', 'j
         $pageContent: null,
         init: function(){
             var that = this;
-            // 子对象持有当前common引用
-            this.xhr._root = that;
             // 注册template公共方法
             template.helper('uiSelect', function(data) {
                 var inHtml = that.uiSelect(data);
@@ -316,6 +314,8 @@ define('Common', ['PubView', 'bs/modal', 'json', 'template', 'jq/dataTables', 'j
             this.resize();
             // resize监听
             $(window).on('resize', this.resize);
+            // 初始化异步请求对象
+            this._xhr();
             // 初始化路由表
             this._router();
             // 注册hash监听
@@ -334,6 +334,7 @@ define('Common', ['PubView', 'bs/modal', 'json', 'template', 'jq/dataTables', 'j
             return this._deferred;
         },
         resolve: function() {
+            this._inRender && (this._inRender = false);
             if(this._deferred) {
                 this._deferred.resolve.apply(this, arguments);
                 delete this._deferred;
@@ -396,7 +397,6 @@ define('Common', ['PubView', 'bs/modal', 'json', 'template', 'jq/dataTables', 'j
             }
             return this;
         },
-        router: null,
         _registerHashEvent: function() {
             var that = this;
             var documentMode = document.documentMode;
@@ -418,6 +418,7 @@ define('Common', ['PubView', 'bs/modal', 'json', 'template', 'jq/dataTables', 'j
                 }, 100);
             }
         },
+        router: null,
         _router: function() {
             var that = this;
             var Router = function() {
@@ -439,23 +440,29 @@ define('Common', ['PubView', 'bs/modal', 'json', 'template', 'jq/dataTables', 'j
                 };
                 //默认路由入口前缀
                 this.ctrlPrefix = 'js/';
+                //默认路由入口
+                this.ctrlDef = 'index';
                 //获取默认的路由入口文件路径
                 this.getDefaultCtrl = function(hash) {
                     hash = hash || that.hash;
-                    var ctrl;
-                    if(hash) {
-                        ctrl = hash.replace(/^#/, this.ctrlPrefix);
+                    if(hash && hash.lastIndexOf('/') < 0) {
+                        hash += '/';
+                    } else if(!hash) {
+                        hash = '#';
+                    }
+                    var ctrl = hash.replace(/^#/, this.ctrlPrefix);
+                    if(ctrl.lastIndexOf('/') == ctrl.length - 1) {
+                        ctrl += this.ctrlDef;
                     }
                     return ctrl;
                 };
                 //根据hash重新路由或无缝刷新
                 this.route = function(hash){
-                	debugger
                     hash = hash || that.hash;
+                    var ctrl;
                     loop_1:
                         for(var i in this.table.path){
                             var path = this.table.path[i];
-                            var ctrl;
                             if(path){
                                 var regx = new RegExp(path, "gi");
                                 if(regx.test(hash)){
@@ -466,8 +473,11 @@ define('Common', ['PubView', 'bs/modal', 'json', 'template', 'jq/dataTables', 'j
                         }
                     if(!ctrl){
                         ctrl = this.getDefaultCtrl(hash);
+                    }else{
+                    	if(ctrl[0].lastIndexOf('/') == ctrl[0].length - 1) {
+                            ctrl += this.ctrlDef;
+                        }
                     }
-                    debugger
                     if(ctrl){
                         this.loadctrl(ctrl);
                     }
@@ -487,30 +497,32 @@ define('Common', ['PubView', 'bs/modal', 'json', 'template', 'jq/dataTables', 'j
                     } else {
                         ctrlList = ctrl;
                     }
-                    try {
-                        //路由后页面载入入口
-                        require(ctrlList, function(o){
-                            if(o && PubView.utils.isFunction(o.init)) {
-                                var initRes = o.init();
-                                if(PubView.utils.isObject(initRes) && initRes.done) {
-                                    initRes.done(function() {
-                                        that.resolve.apply(that, arguments);
-                                    });
-                                } else {
-                                    !that._inRender && that.resolve(initRes);
-                                }
+                    //路由后页面载入入口
+                    require(ctrlList, function(o){
+                        if(o && PubView.utils.isFunction(o.init)) {
+                            var initRes = o.init();
+                            if(PubView.utils.isObject(initRes) && initRes.done) {
+                                initRes.done(function() {
+                                    that.resolve.apply(that, arguments);
+                                });
                             } else {
-                                that.resolve();
+                                !that._inRender && that.resolve(initRes);
                             }
-                        });
-                    } catch (e) {
+                        } else {
+                            that.resolve();
+                        }
+                    }, function(e) {
                         that.resolve();
                         if(e.requireType) {
-                            Modal.danger("Router Error:【"+ctrlList.join(',')+"】Can not load this js control Module.");
+                            if(e.requireMap) {
+                                Modal.danger('Script error for ' + e.requireMap.id + ': ' + e.message);
+                            } else {
+                                Modal.danger(e.message.split('\n')[0] + '. Can not load this Control Module');
+                            }
                         } else {
                             Modal.danger(e.message);
                         }
-                    }
+                    });
                     return this;
                 };
             };
@@ -566,10 +578,12 @@ define('Common', ['PubView', 'bs/modal', 'json', 'template', 'jq/dataTables', 'j
                                     PubView.utils.isFunction(_callback) && _callback(inHtml, _data);
                                 }
                             }catch(e){
-                                that._inRender = false;
                                 that.resolve();
                                 Modal.danger(e.message);
                             }
+                        }, function(e) {
+                            that.resolve();
+                            Modal.danger("Template load error: " + e.message.split(' ')[0]);
                         });
                     };
                     var filterData = function(data) {
@@ -596,7 +610,6 @@ define('Common', ['PubView', 'bs/modal', 'json', 'template', 'jq/dataTables', 'j
                         doRender();
                     }
                 } catch (e) {
-                    that._inRender = false;
                     that.resolve();
                     Modal.danger(e.message);
                 }
@@ -674,88 +687,88 @@ define('Common', ['PubView', 'bs/modal', 'json', 'template', 'jq/dataTables', 'j
                 });
             }
         },
-        xhr: {
-            // 父级对象引用
-            _root: null,
-            //请求header
-            header: {
-                Accept: "application/json",
-                'Content-Type': "application/json"
-            },
-            ajax: function(object, callback) {
-                var root = this._root,
-                    resolve = function(msg) {
-                        if(root) {
-                            root._inRender && (root._inRender = false);
-                            root._deferred && root.resolve();
-                        }
+        xhr: null,
+        _xhr: function() {
+            var that = this;
+            var XHR = function() {
+                //请求header
+                this.header = {
+                    Accept: "application/json",
+                    'Content-Type': "application/json"
+                };
+                this.ajax = function(object, callback) {
+                    var resolve = function(msg) {
+                        that._inRender && (that._inRender = false);
+                        that._deferred && that.resolve();
                         msg && Modal.danger(msg);
                     };
-                if(object) {
-                    if(PubView.utils.isString(object)) {
-                        object = $.extend({}, {url: object});
-                    } else if(!PubView.utils.isPlainObject(object) || !object.url) {
+                    if(object) {
+                        if(PubView.utils.isString(object)) {
+                            object = $.extend({}, {url: object});
+                        } else if(!PubView.utils.isPlainObject(object) || !object.url) {
+                            resolve("Ajax Error: 请确定请求内容url");
+                            return false;
+                        }
+                        object.url = this._getFullUrl(object.url);
+                        var defaults = {
+                            type: 'GET',
+                            headers: this.headers,
+                            dataType: 'json',
+                            error: function(xhr, errorText) {
+                                if(errorText) {
+                                    errorText = errorText.replace(/(.+)error$/, "$1 error").replace(/\b\w+\b/g,function(w) {
+                                        return w.substr(0,1).toLocaleUpperCase() + w.substring(1);
+                                    });
+                                } else {
+                                    errorText = 'Error';
+                                }
+                                resolve("Ajax "+errorText+ (xhr.status >= 400 ? ": Status "+xhr.status+" / "+xhr.statusText : "."));
+                            }
+                        };
+                        return $.ajax($.extend(
+                                {},
+                                defaults,
+                                object,
+                                PubView.utils.isFunction(callback) ? {success: callback} : null)
+                        );
+                    } else {
                         resolve("Ajax Error: 请确定请求内容url");
                         return false;
                     }
-                    object.url = this._getFullUrl(object.url);
-                    var defaults = {
-                        type: 'GET',
-                        headers: this.headers,
-                        dataType: 'json',
-                        error: function(xhr, errorText) {
-                            if(errorText) {
-                                errorText = errorText.replace(/(.+)error$/, "$1 error").replace(/\b\w+\b/g,function(w) {
-                                    return w.substr(0,1).toLocaleUpperCase() + w.substring(1);
-                                });
-                            } else {
-                                errorText = 'Error';
-                            }
-                            resolve("Ajax "+errorText+ (xhr.status >= 400 ? ": Status "+xhr.status+" / "+xhr.statusText : "."));
+                };
+                this.postJSON = function(url, data, callback) {
+                    return this.ajax({
+                        'type': 'POST',
+                        'url': url,
+                        'data': JSON.stringify(data),
+                        'contentType': 'application/json',
+                        'success': callback
+                    });
+                };
+                this.putJSON = function(url, data, callback) {
+                    return this.ajax({
+                        'type': 'PUT',
+                        'url': url,
+                        'data': JSON.stringify(data),
+                        'contentType': 'application/json',
+                        'success': callback
+                    });
+                };
+                this._getFullUrl = function(url, isResource) {
+                    if(url && PubView.utils.isString(url)) {
+                        if(/^((https?|s?ftp):)|(file:\/)\/\//.test(url)) {
+                            return url;
                         }
-                    };
-                    return $.ajax($.extend(
-                        {},
-                        defaults,
-                        object,
-                        PubView.utils.isFunction(callback) ? {success: callback} : null)
-                    );
-                } else {
-                    resolve("Ajax Error: 请确定请求内容url");
-                    return false;
-                }
-            },
-            postJSON: function(url, data, callback) {
-                return this.ajax({
-                    'type': 'POST',
-                    'url': url,
-                    'data': JSON.stringify(data),
-                    'contentType': 'application/json',
-                    'success': callback
-                });
-            },
-            putJSON: function(url, data, callback) {
-                return this.ajax({
-                    'type': 'PUT',
-                    'url': url,
-                    'data': JSON.stringify(data),
-                    'contentType': 'application/json',
-                    'success': callback
-                });
-            },
-            _getFullUrl: function(url, isResource) {
-                if(url && PubView.utils.isString(url)) {
-                    if(/^((https?|s?ftp):)|(file:\/)\/\//.test(url)) {
+                        if(!isResource) {
+                            return PubView.root + (url.indexOf("/") == 0 ? url : '/' + url);
+                        }
                         return url;
+                    } else {
+                        return PubView.root;
                     }
-                    if(!isResource) {
-                        return PubView.root + (url.indexOf("/") == 0 ? url : '/' + url);
-                    }
-                    return url;
-                } else {
-                    return PubView.root;
-                }
-            }
+                };
+            };
+            !that.xhr && (that.xhr = new XHR());
         },
         uiSelect: function(options, renderTo) {
             var defaults = {wrapper: true, className: "form-control"};
@@ -793,12 +806,9 @@ define('Common', ['PubView', 'bs/modal', 'json', 'template', 'jq/dataTables', 'j
 require(['PubView', 'Common'], function(PubView, Common) {
     // 初始化
     Common.init();
-
     // 注册路由规则
     with(Common.router){
-        when("^#?(!.*)?$", ['js/index']);
-        //when("^#ccenter(!.*)?$", ['js/ccenter/vm/vm']);
-        //when("^#ccenter/vm(!.*)?$", ['js/ccenter/vm/vm']);
+        when("^#ccenter(!.*)?$", ['js/ccenter/vm/']);
     }
 
     //路由当前页面

@@ -1,0 +1,35 @@
+<div data="core"  class="specs">
+	<div class="progress-info clearfix" data-all="{{core.total}}" data-used="{{core.used}}">
+	  	<span class="quota-key">虚拟内核数量</span>
+	  	<span  class="quota-desc">{{core.total}}中的{{core.used}}个已使用</span>
+	</div>
+	<div class="progress">
+		<div class="progress-bar {{core.style}}" role="progressbar" aria-valuenow="{{core.rate}}" aria-valuemin="0" aria-valuemax="100" style="width: {{core.rate}}%">
+		    {{core.rate}}%
+		</div>
+	</div>
+</div>
+
+<div data="memory" class="specs">
+	<div class="progress-info clearfix" data-all="{{memory.total}}" data-used="{{memory.used}}">
+	  	<span class="quota-key">内存总计</span>
+	  	<span  class="quota-desc">{{memory.total}}中的{{memory.used}}已使用</span>
+	</div>
+	<div class="progress">
+		<div class="progress-bar {{memory.style}}" role="progressbar" aria-valuenow="{{memory.rate}}" aria-valuemin="0" aria-valuemax="100" style="width: {{memory.rate}}%;">
+		{{memory.rate}}%
+		</div>
+	</div>
+</div>
+
+<div data="nums" class="nums">
+	<div class="progress-info clearfix" data-all="{{nums.total}}" data-used="{{nums.used}}">
+	  	<span class="quota-key">云主机数量</span>
+	  	<span  class="quota-desc">{{nums.total}}中的{{nums.used}}已使用</span>
+	</div>
+	<div class="progress">
+		<div class="progress-bar {{nums.style}}" role="progressbar" aria-valuenow="{{nums.rate}}" aria-valuemin="0" aria-valuemax="100" style="width: {{nums.rate}}%;">
+		{{nums.rate}}%
+		</div>
+	</div>
+</div>
