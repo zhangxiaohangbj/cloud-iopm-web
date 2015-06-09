@@ -102,7 +102,8 @@ header > .container,
 /* #header-nav > nav > ul > li + li {
 	border-left: 1px solid #f1f4f9;
 } */
-#header-nav > nav > ul > li.hover{
+#header-nav > nav > ul > li.hover,
+#header-nav > nav > ul > li.active{
     background-color:#3E4A5A;
 }
 #header-nav > nav > ul > li > a {
@@ -248,9 +249,9 @@ aside {
 	padding: 0;
 }
 .sidebar-nav > li {
-	/* margin-bottom: 12px; */
 	border-bottom:1px solid #E0E0E0;
 }
+
 .sidebar-nav > li:focus {
 	background:transparent;
 }
@@ -269,14 +270,19 @@ aside {
 	margin-right: 22px;
 	vertical-align: baseline;
 }
-
-.sidebar-nav > li.active > a,
-.sidebar-nav > li > a:focus {
-	color: #36B3DF;
-}
 .sidebar-nav > li > a:hover{
 	color: #36B3DF;
 	background: transparent;
+}
+.sidebar-nav > li.active > a,
+.sidebar-nav > li.active > a:hover {
+	color: #fff;
+	background-color:#36b3df;
+}
+.sidebar-nav > li.active > a.nav-first-level,
+.sidebar-nav > li.active > a.nav-first-level:hover {
+	color: #36B3DF;
+	background-color:transparent
 }
 .sidebar-nav > li > a > .fa {
 	margin-right: 6px;
@@ -416,108 +422,134 @@ body{
 .dataTables_wrapper {
 	margin-bottom:30px;
 }
-.table-primary {
-    border: 1px solid #e9e9e9;
-    margin:10px 0 0 0;
+.page-content .dataTables_wrapper {
+	clear: none;
 }
-.table-primary > thead > tr > th {
+.table-primary, .table-primary.dataTable {
+	clear: none;
+    border: 1px solid #e9e9e9;
+    margin: 10px 0 0 0;
+}
+.table-primary > thead > tr > th label,
+.table-primary > tbody > tr > td label,
+.table-primary.dataTable > thead > tr > th label,
+.table-primary.dataTable > tbody > tr > td label {
+	margin-bottom: 0;
+}
+.table-primary > thead > tr > th,
+.table-primary.dataTable > thead > tr > th {
+	height:40px;
+	padding: 0;
     background-color: #e4e9ec;
     border-bottom: 0 none;
-    height:40px;
 }
 .table-primary > thead > tr > th,
 .table-primary > thead > tr > td,
-.table-primary > tbody > tr > td {
+.table-primary > tbody > tr > td,
+.table-primary.dataTable > thead > tr > th,
+.table-primary.dataTable > thead > tr > td,
+.table-primary.dataTable > tbody > tr > td {
     font-size: 0.9em;
     font-weight: normal;
     text-align: center;
     vertical-align: middle;
 }
-.table-primary > tbody > tr > td {
+.table-primary > tbody > tr > td,
+.table-primary > tfoot > tr > td,
+.table-primary.dataTable > tbody > tr > td,
+.table-primary.dataTable > tfoot > tr > td {
     padding: 9px 8px;
     border-top: 1px solid #e4e9ec;
 }
 .table-primary.table-striped > tbody > tr:nth-child(odd),
-.table-primary.table-striped > tbody > tr.odd {
+.table-primary.table-striped > tbody > tr.odd,
+.table-primary.table-striped.dataTable > tbody > tr:nth-child(odd),
+.table-primary.table-striped.dataTable > tbody > tr.odd {
     background-color: #fff;
 }
 .table-primary.table-striped > tbody > tr:nth-child(even),
-.table-primary.table-striped > tbody > tr.even {
+.table-primary.table-striped > tbody > tr.even,
+.table-primary.table-striped.dataTable > tbody > tr:nth-child(even),
+.table-primary.table-striped.dataTable > tbody > tr.even {
     background-color: #fff;
 }
 .table-primary.table-striped > tbody > tr:hover,
-.table-primary.table-hover > tbody > tr:hover {
+.table-primary.table-hover > tbody > tr:hover,
+.table-primary.table-striped.dataTable > tbody > tr:hover,
+.table-primary.table-hover.dataTable > tbody > tr:hover {
     background-color: #f1f5f6;
 }
-table > tbody > tr > td .btn-opt {
+table > tbody > tr > td .btn-opt,
+table.dataTable > tbody > tr > td .btn-opt {
     font-size:16px;
     color: #A19A9A;
 	margin: 0 6px;
 	cursor: pointer;
 }
-table > tbody > tr > td .btn-opt:hover{
+table > tbody > tr > td .btn-opt:hover,
+table.dataTable > tbody > tr > td .btn-opt:hover {
 	color: #777;
 }
-div.dataTables_paginate .pagination>li>a,
-div.dataTables_paginate .pagination>li>span {
+.tableMenus .dataTables_filter label {
+	position: relative;
+	margin-left: 10px;
+	font-weight: normal;
+	margin-bottom:0;
+}
+.tableMenus .dataTables_filter label > .fa-search{
+	color:#9D9898;
+	position: absolute;
+	right: 4px;
+	top: 50%;
+	margin-top: -7px;
+}
+.dataTables_wrapper .tableInfos .dataTables_paginate {
+	float: left;
+	margin: 0;
+	padding-top: 7px;
+}
+.tableInfos .dataTables_paginate ul.pagination {
+	float: left;
+	margin: 0 0 0 35px;
+}
+.tableInfos .dataTables_paginate .pagination>li>a,
+.tableInfos .dataTables_paginate .pagination>li>span {
     padding: 0.2em 0.6em;
 }
 table.dataTable + .row {
     margin-top: 30px;
 }
 table.dataTable + .row > [class*="col-"] {
-    padding: 0 0 0 20px;
+    padding: 0 15px 0 20px;
 }
-div.dataTables_paginate {
-    float: left;
-    margin: 0;
-}
-div.dataTables_paginate ul.pagination {
-    float: left;
-    margin: 7px 0 0 20px;
-}
-div.dataTables_filter label {
-    margin-left: 10px;
-    font-weight: normal;
-    margin-bottom:0;
-}
-
-div.dataTables_filter label > .fa-search{
-    margin-left: -20px;
-    color:#9D9898;
-}
-div.dataTables_length,div.dataTables_length label {
+.tableInfos .dataTables_length,
+.tableInfos .dataTables_length label {
     float:left;
     text-align: left;
     font-weight: normal;
     margin-bottom:0;
 }
-.pane-content > .dataTables_wrapper > .row.tableMenus{
+.dataTables_wrapper > .row.tableMenus{
 	border:1px solid #e5e5e5;
 	height:42px;
 	line-height:42px;
 	background-color:#f9f9f9;
 	margin:0;
 }
-.row.tableMenus .right-col{
-	padding-right:5px;
-}
 .row.tableMenus .right-col .form-control{
-	height:auto;
-	padding:3px 10px;
+	padding:3px 18px 3px 8px;
 	color:#938E8E;
 	vertical-align:baseline;
 }
-.pane-content > .dataTables_wrapper > .tableInfos{
-	font-size:13px;
-	color:#6C6C6C;
-}
-.tableInfos{
+.dataTables_wrapper .tableInfos {
 	height:35px;
 	line-height:35px;
+	color:#6C6C6C;
+	font-size:13px;
 }
-.dataTables_filter,.tableInfos .dataTables_info{
+.dataTables_wrapper .tableInfos .dataTables_info {
 	float:right;
+	padding-top: 0;
 }
 .dataTables_info span.nums{
 	color:#36b3df;
@@ -557,14 +589,14 @@ div.dataTables_length,div.dataTables_length label {
 	border-radius:1px;
 }
 .pagination>.active>a,
- .pagination>.active>a:focus,
-  .pagination>.active>a:hover,
-   .pagination>.active>span,
-    .pagination>.active>span:focus,
-     .pagination>.active>span:hover{
-     	background-color:#36b3df;
-     	border-color:#36b3df;
-     }
+.pagination>.active>a:focus,
+.pagination>.active>a:hover,
+.pagination>.active>span,
+.pagination>.active>span:focus,
+.pagination>.active>span:hover {
+	background-color:#36b3df;
+	border-color:#36b3df;
+ }
 /*操作系统图标*/
 i.image-icon-default{
 	display: inline-block;

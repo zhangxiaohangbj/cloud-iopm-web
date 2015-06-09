@@ -1,5 +1,4 @@
-{
-    "data": [
+[
         {
             "name" : "Tiger Nixon",
             "os_type":"Linux_centeros",
@@ -36,5 +35,4 @@
             "power_status":"running",
             "run_time":"16小时"
         }
-    ]
-}
+]

@@ -1,0 +1,8 @@
+{
+    "name" : "subnet1",
+    "cidr": "10.12.1.0/24",
+    "float_ip": "虚拟数据中心1",
+    "ip_version": "4",
+    "gateway_ip" : "10.12.1.1",
+    "enable_dhcp" : "1"
+}
