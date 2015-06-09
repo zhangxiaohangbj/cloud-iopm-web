@@ -3,8 +3,13 @@ define(['Common','bs/modal','bs/wizard','bs/tooltip','jq/form/validator','jq/for
 	var init = function(){
 		Common.$pageContent.addClass("loading");
 		//先获取数据，进行加工后再去render
-		Common.render(true,'tpls/ccenter/vm.html','/resources/data/arrays.txt',function(){
-			bindEvent();
+		Common.render(true,{
+			tpl:'tpls/ccenter/vm.html',
+			data:'/9cc717d8047e46e5bf23804fc4400247/servers/page/1/10',
+			beforeRender: function(data){
+				return data.result;
+			},
+			callback: bindEvent
 		});
 	};
 	
