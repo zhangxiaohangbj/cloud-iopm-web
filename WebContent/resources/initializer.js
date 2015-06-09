@@ -450,6 +450,7 @@ define('Common', ['PubView', 'bs/modal', 'json', 'template', 'jq/dataTables', 'j
                 };
                 //根据hash重新路由或无缝刷新
                 this.route = function(hash){
+                	debugger
                     hash = hash || that.hash;
                     loop_1:
                         for(var i in this.table.path){
@@ -466,7 +467,7 @@ define('Common', ['PubView', 'bs/modal', 'json', 'template', 'jq/dataTables', 'j
                     if(!ctrl){
                         ctrl = this.getDefaultCtrl(hash);
                     }
-
+                    debugger
                     if(ctrl){
                         this.loadctrl(ctrl);
                     }
@@ -796,7 +797,8 @@ require(['PubView', 'Common'], function(PubView, Common) {
     // 注册路由规则
     with(Common.router){
         when("^#?(!.*)?$", ['js/index']);
-        when("^#ccenter(!.*)?$", ['js/ccenter/vm']);
+        //when("^#ccenter(!.*)?$", ['js/ccenter/vm/vm']);
+        //when("^#ccenter/vm(!.*)?$", ['js/ccenter/vm/vm']);
     }
 
     //路由当前页面
