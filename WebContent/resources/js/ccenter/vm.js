@@ -105,8 +105,8 @@ define(['Common','bs/modal','bs/wizard','bs/tooltip','jq/form/validator','jq/for
 				if(vdc_id){
 					Common.xhr.ajax('/v2/'+vdc_id+'/os-availability-zone',function(data){
 						var selectData = {}
-						for(int i=0;i<data.length;i++){
-							selectData[i] = {"name":data[i]."zoonName"}
+						for(var i=0;i<data.length;i++){
+							selectData[i] = {"name":data[i]["zoonName"]}
 						}
 						var html = Common.uiSelect(selectData);
 				    	$('select.select-available-zone').html(html);
