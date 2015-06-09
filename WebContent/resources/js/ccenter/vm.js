@@ -3,7 +3,7 @@ define(['Common','bs/modal','bs/wizard','bs/tooltip','jq/form/validator','jq/for
 	var init = function(){
 		Common.$pageContent.addClass("loading");
 		//先获取数据，进行加工后再去render
-		Common.render(true,'tpls/ccenter/vm.html','/9cc717d8047e46e5bf23804fc4400247/servers/page/1/10',function(){
+		Common.render(true,'tpls/ccenter/vm.html','/resources/data/arrays.txt',function(){
 			bindEvent();
 		});
 	};
@@ -258,7 +258,7 @@ define(['Common','bs/modal','bs/wizard','bs/tooltip','jq/form/validator','jq/for
 				})
 			},
 			//选中网络后初始化子网和IP
-			initSubNetIps : function(){
+			initSubNet: function(){
 				
 			}
 		};
@@ -329,40 +329,34 @@ define(['Common','bs/modal','bs/wizard','bs/tooltip','jq/form/validator','jq/for
 				//可用网络选择事件
 				networkChosen : function(){
 					//滑过出现添加图标
-					$(document).on("mouseover mouseout","a.list-group-item",function(event){
+					$(document).off("mouseover mouseout",".available-network a.list-group-item");
+					$(document).on("mouseover mouseout",".available-network a.list-group-item",function(event){
 						if(event.type == "mouseover"){
 							$(this).find('.fa').show();
 						 }else if(event.type == "mouseout"){
 							 $(this).find('.fa').hide();
 						 }
 					});
-					//选择可用网络绑定点击事件
-					wizard.el.find(".available-network .list-group-item").click(function(){
-						if("true" != $(this).attr('has-chosen')){
-							var clone = $(this).clone();
-							clone.find('i').removeClass('fa-plus-circle').addClass('fa-minus-circle').css('display','none');
-							wizard.el.find('.chosen-network').append(clone);
-							$(this).attr('has-chosen',"true");
-							//网卡 指定子网和指定ip置为可用,
-							$('input[name=network-card-name],select[name=select-sub-network],select[name=select-net-ip]').prop('disabled',false);
-						}else{
-							Modal.danger('不能重复选择');
-						}
-					});
-					//删除已选网络点击事件
-					$(document).on("click",".chosen-network a.list-group-item i",function(event){
-						$(this).unbind('click');
-						var index = $(this).parent().attr('data-index');
-						wizard.el.find(".available-network a[data-index="+index+"]").attr("has-chosen","false");
-						$(this).parent().remove();
-						//如果没有已选，则网卡 指定子网和指定ip置为disabled
-						if(wizard.el.find('.chosen-network').children().length == 0){
-							$('input[name=network-card-name],select[name=select-sub-network],select[name=select-net-ip]').prop('disabled',true);
-						}
+					//选择可用网络绑定点击事件,先移出之前绑定的事件，防止多次执行
+					$(document).off("click",".available-network .list-group-item");
+					$(document).on("click",".available-network .list-group-item",function(event){
+						var clone = $(this).clone();
+						clone.find('i').hide();
+						$(this).remove();
+						wizard.el.find('.chosen-network').append(clone);
+						//网卡 指定子网和指定ip置为可用,
+						$('input[name=network-card-name],select[name=select-sub-network],select[name=select-net-ip]').prop('disabled',false);
 					});
 					//载入拖拽效果
 					require(['jq/dragsort'], function() {
-						 $(".available-network,.chosen-network").dragsort({ dragSelector: "a", dragBetween: true,  placeHolderTemplate: "<a class='list-group-item'></a>" });
+						 $(".available-network,.chosen-network").dragsort({defaultSelector:"a", dragBetween: true,  placeHolderTemplate: "<a class='list-group-item'></a>",dragEnd: function(){
+							 debugger
+							 //拖下来
+							 if($(this).parent().attr('data-listidx') == "1"){
+								 $(this).find('i').hide();
+							 }
+							 
+						 } });
 					})
 				},
 				//访问安全事件
@@ -475,7 +469,6 @@ define(['Common','bs/modal','bs/wizard','bs/tooltip','jq/form/validator','jq/for
     			wizard.on('closed', function() {
     				closeWizard();
     			});
-    			
     			wizard.on("submit", function(wizard) {
     				var serverData = {
     					"name": $("#server-name").val(),
