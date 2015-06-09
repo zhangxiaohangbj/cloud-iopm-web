@@ -1,8 +1,8 @@
 {
-    "name" : "VPC1",
-    "os_type":"subnet1",
-    "inner_ip": "10.12.1.0/24",
+    "name" : "subnet1",
+    "cidr": "10.12.1.0/24",
     "float_ip": "虚拟数据中心1",
-    "os_conf": "IPV4",
-    "active_status" : "10.12.1.1"
+    "ip_version": "4",
+    "gateway_ip" : "10.12.1.1",
+    "enable_dhcp" : "1"
 }

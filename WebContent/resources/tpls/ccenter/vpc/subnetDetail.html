@@ -11,30 +11,30 @@
 					<label for="server-name" class="control-label col-sm-3">
 				 	VPC：</label>
 				 	<div class="col-sm-5 col-sm">
-						<input type="text" class="dialog-form-control input-readonly" name="subnet-name" value="{{name}}" readonly="readonly">
+						<input type="text" class="dialog-form-control input-readonly" name="vpc_name" value="{{vpc_name}}" readonly="readonly">
 					</div>
 				</div>
 				<div class="form-group" style="overflow: hidden;">
 					<label for="server-name" class="control-label col-sm-3">
 				 	子网名称：</label>
 				 	<div class="col-sm-5 col-sm">
-						<input type="text" class="dialog-form-control input-readonly" name="subnet-name" value="{{os_type}}" readonly="readonly">
+						<input type="text" class="dialog-form-control input-readonly" name="name" value="{{name}}" readonly="readonly">
 					</div>
 				</div>
 				<div class="form-group" style="overflow: hidden;">
 					<label for="server-name" class="control-label col-sm-3">
 				 	CIDR地址：</label>
 				 	<div class="col-sm-5 col-sm">
-						<input type="text" class="dialog-form-control input-readonly" name="subnet-name" value="{{os_type}}" readonly="readonly">
+						<input type="text" class="dialog-form-control input-readonly" name="cidr" value="{{cidr}}" readonly="readonly">
 					</div>
 				</div>
 				<div class="form-group" style="overflow: hidden;">
 					<label for="server-name" class="control-label col-sm-3">
 				 	IP版本：</label>
 				 	<div class="col-sm-5 col-sm">
-						<select disabled="disabled">
-							<option>IPV4</option>
-							<option>IPV6</option>
+						<select disabled="disabled" name="ip_version">
+							<option value="4" {{if ip_version=='4'}}selected="selected"{{/if}}>IPV4</option>
+							<option value="6" {{if ip_version=='6'}}selected="selected"{{/if}}>IPV6</option>
 						</select>
 					</div>
 				</div>
@@ -42,21 +42,21 @@
 					<label for="server-name" class="control-label col-sm-3">
 				 	网关IP：</label>
 				 	<div class="col-sm-5 col-sm">
-						<input type="text" class="dialog-form-control" name="subnet-name" value="{{inner_ip}}" disabled="disabled">
+						<input type="text" class="dialog-form-control" name="gateway_ip" value="{{gateway_ip}}" disabled="disabled">
 					</div>
 				</div>
 				<div class="form-group" style="overflow: hidden;">
 					<label for="server-name" class="control-label col-sm-3">
 				 	禁用网关：</label>
 				 	<div class="col-sm-5 col-sm">
-						<label><input type="checkbox" {{if os_conf=='IPV4'}}checked {{/if}} readonly="readonly"></label>
+						<label><input type="checkbox" readonly="readonly"></label>
 					</div>
 				</div>
 				<div class="form-group" style="overflow: hidden;">
 					<label for="server-name" class="control-label col-sm-3">
 				 	激活DHCP：</label>
 				 	<div class="col-sm-5 col-sm">
-						<label><input type="checkbox" readonly="readonly"></label>
+						<label><input type="checkbox" readonly="readonly" {{if enable_dhcp=='1'}}checked {{/if}}></label>
 					</div>
 				</div>
 				<div class="form-group" style="overflow: hidden;">

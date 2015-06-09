@@ -3,23 +3,23 @@
 		<label for="server-name" class="control-label col-sm-3">
 	 	<span style="color: red;">* </span>子网名称：</label>
 	 	<div class="col-sm-7 col-sm">
-			<input type="text" class="dialog-form-control" name="subnet-name" value="">
+			<input type="text" class="dialog-form-control" name="name" value="">
 		</div>
 	</div>
 	<div class="form-group">
 		<label for="server-name" class="control-label col-sm-3">
 	 	<span style="color: red;">* </span>CIDR地址：</label>
 	 	<div class="col-sm-7 col-sm">
-			<input type="text" class="dialog-form-control" name="subnet-name" value="">
+			<input type="text" class="dialog-form-control" name="cidr" value="">
 		</div>
 	</div>
 	<div class="form-group">
 		<label for="server-name" class="control-label col-sm-3">
 	 	<span style="color: red;">* </span>IP版本：</label>
 	 	<div class="col-sm-7 col-sm">
-			<select class="form-control">
-				<option>IPV4</option>
-				<option>IPV6</option>
+			<select class="form-control" name="ip_version">
+				<option value="4">IPV4</option>
+				<option value="6">IPV6</option>
 			</select>
 		</div>
 	</div>
@@ -27,7 +27,7 @@
 		<label for="server-name" class="control-label col-sm-3">
 	 	<span style="color: red;">* </span>网关IP：</label>
 	 	<div class="col-sm-7 col-sm">
-			<input type="text" class="dialog-form-control" name="subnet-name" value="">
+			<input type="text" class="dialog-form-control" name="gateway_ip" value="">
 		</div>
 	</div>
 	<div class="form-group">
@@ -41,7 +41,7 @@
 		<label for="server-name" class="control-label col-sm-3">
 	 	激活DHCP：</label>
 	 	<div class="col-sm-7 col-sm">
-			<label><input type="checkbox"></label>
+			<label><input type="checkbox" name="enable_dhcp"></label>
 		</div>
 	</div>
 	<div class="form-group">
