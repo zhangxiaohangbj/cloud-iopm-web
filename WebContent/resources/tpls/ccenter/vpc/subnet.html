@@ -22,14 +22,14 @@
 					</tr>
 				</thead>
 				<tbody>
-				{{each data as item i}}
+				{{each result as item i}}
 					<tr>
 						<td><label><input type="checkbox"></label></td>
 						<td>{{item.network_id}}</td>
 						<td><a href="javascript:void(0);" class="subnet-name" data="subnetid1">{{item.name}}</a></td>
 						<td>{{item.cidr}}</td>
-						<td>{{item.vdc_id}}</td>
-						<td>{{item.ip_version}}</td>
+						<td>{{item.tenant_id}}</td>
+						<td>IPV{{item.ip_version}}</td>
 						<td>
 			 				{{item.gateway_ip}}
 			 			</td>

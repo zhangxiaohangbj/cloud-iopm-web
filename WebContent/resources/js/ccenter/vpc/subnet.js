@@ -4,15 +4,9 @@ define(['Common','bs/modal','bs/wizard','bs/tooltip','jq/form/validator','jq/for
 	var init = function(){
 		Common.$pageContent.addClass("loading");
 		//需要修改为真实数据源
-//		Common.render(true,'tpls/ccenter/vpc/subnet.html','/resources/data/subnet.txt',function(){
-//			bindEvent();
-//		});
-		Common.xhr.ajax('/v2.0/subnets/page/1/10',function(data){
-			var serversData = {"data":data.result}
-			Common.render(true,'tpls/ccenter/vpc/subnet.html',serversData,function(){
-				bindEvent();
-			});
-		})
+		Common.render(true,'tpls/ccenter/vpc/subnet.html','/v2.0/subnets/page/1/10',function(){
+			bindEvent();
+		});
 	};
 	
 	var bindEvent = function(){
