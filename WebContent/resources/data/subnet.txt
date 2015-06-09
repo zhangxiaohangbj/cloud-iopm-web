@@ -1,26 +1,26 @@
 {
     "data": [
         {
-            "vpc_name" : "VPC1",
+            "network_id" : "VPC1",
             "name":"subnet1",
             "cidr": "10.12.1.0/24",
-            "float_ip": "虚拟数据中心1",
+            "vdc_id": "虚拟数据中心1",
             "ip_version": "IPV4",
             "gateway_ip" : "10.12.1.1"
         },
         {
-            "vpc_name" : "VPC2",
+            "network_id" : "VPC2",
             "name":"subnet1",
             "cidr": "10.12.1.0/24",
-            "float_ip": "虚拟数据中心1",
+            "vdc_id": "虚拟数据中心1",
             "ip_version": "IPV4",
             "gateway_ip" : "10.12.1.1"
         },
         {
-            "vpc_name" : "VPC3",
+            "network_id" : "VPC3",
             "name":"subnet1",
             "cidr": "10.12.1.0/24",
-            "float_ip": "虚拟数据中心1",
+            "vdc_id": "虚拟数据中心1",
             "ip_version": "IPV4",
             "gateway_ip" : "10.12.1.1"
         }
