@@ -1,0 +1,79 @@
+.bootstrap-dialog.type-primary .modal-header{
+	padding: 5px 14px;
+	background-color: #F5F5F5;
+}
+.bootstrap-dialog .bootstrap-dialog-title{
+	font-size: 15px;
+	line-height: 30px;
+	color: #333;
+}
+.bootstrap-dialog .bootstrap-dialog-message {
+	font-size: 14px;
+}
+.modal-body {
+	background-color: #fff;
+}
+.modal-footer{
+	background-color: #fff;
+	border-top: 0;
+}
+.btn-default{
+	padding: 4px 12px;
+	background-color: #36B3DF;
+	border-color: #36B3DF;
+	color: #fff;
+	border-radius: 0;
+}
+.btn-blue{
+	background-color: #36B3DF;
+	border-color: #36B3DF;
+	color: #fff;
+}
+/*µ¯¿òbodyÄÚÈÝÑùÊ½*/
+div.form-group label {
+	padding: 5px 0 0 0;
+	font-weight: normal;
+}
+div.form-group .col-sm {
+	padding-left: 2px;
+}
+.form-group .dialog-form-control {
+	border-radius: 0;
+	height: 30px;
+	width: 100%;
+	padding: 0 8px;
+	outline: none;
+	/* background-color: #fff; */
+}
+div.select-list{
+	padding: 8px;
+	border: 1px solid #ccc;
+	background-color: #fff;
+	height: 150px;
+	overflow-y: scroll;
+	border-top: 0;
+}
+.modal-dialog ul{
+	padding-left: 0;
+}
+.modal-dialog ul li{
+	list-style: none;
+}
+.modal-dialog ul li:HOVER{
+	background-color: #428bca;
+	color: #fff;
+}
+.modal-dialog li.p3{
+	padding: 3px;
+}
+div.form-group label span {
+	color: red;
+}
+.form-group .wizard-form-control {
+	border-radius: 0;
+	height: 30px;
+	width: 100%;
+	padding: 0 8px;
+	outline: none;
+	background-color: #fff;
+}

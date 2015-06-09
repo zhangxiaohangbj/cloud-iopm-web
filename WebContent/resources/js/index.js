@@ -1,7 +1,6 @@
 define(['Common'],function(Common){
 	var init = function(){
-		Common.Deferred();
-		Common.render('tpls/index.html', {
+		Common.render(true, 'tpls/index.html', {
 			iSelectData: {
 				name: 'xxxx',
 				attrs: {
@@ -30,9 +29,15 @@ define(['Common'],function(Common){
 					}
 				]
 			}
-		}, function() {
-			Common.resolve(true);
-			var inHtml = Common.uiSelect();
+		}, function(data) {
+			Common.dataTable('#table-example', {
+				columnDefs: [
+					{
+						orderable: false,
+						targets: [0, 10]
+					}
+				]
+			});
 		});
 	};
 	return {

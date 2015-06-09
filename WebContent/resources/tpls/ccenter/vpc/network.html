@@ -1,0 +1,79 @@
+<div class="page-header clearfix">
+	<ol class="breadcrumb">
+	  <li class="active">VPC列表</li>
+	</ol>
+</div>
+<div class="page-body">
+	<div class="pane">
+		<div class="pane-content">
+			<table class="table table-primary table-striped" id="networkTable">
+				<thead>
+					<tr>
+						<th class="c1">
+							<label><input type="checkbox" class="selectAll"></label>
+						</th>
+						<th class="c2">VPC名称</th>
+						<th class="c2">虚拟数据中心</th>
+						<th class="c2">网络类型</th>
+						<th class="c1">CIDR</th>
+						<th class="c1">是否共享</th>
+						<th class="c1">状态</th>
+						<th class="c2">管理员状态</th>
+						<th class="c2 sorting_disabled">操作</th>
+					</tr>
+				</thead>
+				<tbody>
+				{{each data as item i}}
+					<tr>
+						<td><label><input type="checkbox"></label></td>
+						<td>{{item.name}}</td>
+						<td>{{item.tenant_id}}</td>
+						<td>{{if item["router:external"] == true}} 外部网络 {{else}} 内部网络 {{/if}}</td>
+						<td>{{item.cidr}}</td>
+						<td>{{if item.shared == true}} 共享 {{else}} 非共享 {{/if}}</td>
+						<td>
+			 			{{if item.status == 'ACTIVE'}}
+			 				<span class="text-success">运行中</span>
+			 				{{else}}
+			 				<span class="text-danger">停止</span>
+			 			{{/if}}
+			 			</td>
+						<td>
+						{{if item.admin_state_up == true}}
+			 				<span class="text-success">可用</span>
+			 				{{else}}
+			 				<span class="text-danger">禁用</span>
+			 			{{/if}}
+						</td>
+						<td>
+						<a class="btn-opt" data-toggle="tooltip" title="编辑网络" href="javascript:void(0)" data="{{item.id}}" data-act="stop" style="margin: 0;"><li class="glyphicon glyphicon-edit"></li></a>
+						<div class="dropdown">
+							<span class="btn btn-more dropdown-toggle" data-toggle="dropdown" aria-expanded="false">更 多 <i class="fa fa-angle-down fa-fw"></i></span>
+							<ul class="dropdown-menu" style="right: 0;left: initial;">
+								<li><a href="javascript:void(0)" data="{{item.id}}"><i class="fa fa-file-text fa-fw"></i>编辑VPC</a></li>
+								<li><a href="javascript:void(0)" data="{{item.id}}"><i class="fa fa-file-text fa-fw"></i>增加子网</a></li>
+								<li><a href="javascript:void(0)" data="{{item.id}}"><i class="fa fa-file-text fa-fw"></i>删除VPC</a></li>
+							</ul>
+						</div>
+						</td>
+					</tr>
+    			{{/each}}
+				</tbody>
+				<tfoot>
+					<tr>
+
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+					</tr>
+				</tfoot>
+			</table>
+		</div>
+	</div>
+</div>
