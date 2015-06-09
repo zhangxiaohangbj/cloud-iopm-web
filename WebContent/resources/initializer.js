@@ -286,6 +286,8 @@ define('Common', ['PubView', 'bs/modal', 'json', 'template', 'jq/dataTables', 'j
         $pageContent: null,
         init: function(){
             var that = this;
+            // 子对象持有当前common引用
+            this.xhr._root = that;
             // 注册template公共方法
             template.helper('uiSelect', function(data) {
                 var inHtml = that.uiSelect(data);
@@ -529,7 +531,7 @@ define('Common', ['PubView', 'bs/modal', 'json', 'template', 'jq/dataTables', 'j
             }
             if(PubView.utils.isPlainObject(_tplUrl)) {
                 var obj = $.extend({}, _tplUrl);
-                _tplUrl = obj.url;
+                _tplUrl = obj.tpl;
                 _data = obj.data;
                 _beforeRender = obj.beforeRender;
                 _callback = obj.callback;
@@ -672,17 +674,27 @@ define('Common', ['PubView', 'bs/modal', 'json', 'template', 'jq/dataTables', 'j
             }
         },
         xhr: {
+            // 父级对象引用
+            _root: null,
             //请求header
             header: {
                 Accept: "application/json",
                 'Content-Type': "application/json"
             },
             ajax: function(object, callback) {
+                var root = this._root,
+                    resolve = function(msg) {
+                        if(root) {
+                            root._inRender && (root._inRender = false);
+                            root._deferred && root.resolve();
+                        }
+                        msg && Modal.danger(msg);
+                    };
                 if(object) {
                     if(PubView.utils.isString(object)) {
                         object = $.extend({}, {url: object});
                     } else if(!PubView.utils.isPlainObject(object) || !object.url) {
-                        Modal.danger("XHR Request Error: 请确定请求内容url");
+                        resolve("Ajax Error: 请确定请求内容url");
                         return false;
                     }
                     object.url = this._getFullUrl(object.url);
@@ -691,7 +703,14 @@ define('Common', ['PubView', 'bs/modal', 'json', 'template', 'jq/dataTables', 'j
                         headers: this.headers,
                         dataType: 'json',
                         error: function(xhr, errorText) {
-                            Modal.danger("XHR Request Error: 【"+xhr.status+"】"+xhr.statusText);
+                            if(errorText) {
+                                errorText = errorText.replace(/(.+)error$/, "$1 error").replace(/\b\w+\b/g,function(w) {
+                                    return w.substr(0,1).toLocaleUpperCase() + w.substring(1);
+                                });
+                            } else {
+                                errorText = 'Error';
+                            }
+                            resolve("Ajax "+errorText+ (xhr.status >= 400 ? ": Status "+xhr.status+" / "+xhr.statusText : "."));
                         }
                     };
                     return $.ajax($.extend(
@@ -701,10 +720,7 @@ define('Common', ['PubView', 'bs/modal', 'json', 'template', 'jq/dataTables', 'j
                         PubView.utils.isFunction(callback) ? {success: callback} : null)
                     );
                 } else {
-                    Modal.danger("XHR Request Error: 请确定请求内容url");
-                    if(this._deferred) {
-                        this.resolve(false);
-                    }
+                    resolve("Ajax Error: 请确定请求内容url");
                     return false;
                 }
             },
