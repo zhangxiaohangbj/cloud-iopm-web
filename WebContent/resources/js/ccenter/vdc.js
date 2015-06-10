@@ -7,8 +7,7 @@ define(['Common','bs/modal','bs/wizard','bs/tooltip','jq/form/validator','jq/for
 			tpl:'tpls/ccenter/vdc/list.html',
 			data:'/v2.0/tenants/page/10/1',
 			beforeRender: function(data){
-				//debugger;
-				return data.result;
+				return data.result;;
 			},
 			callback: bindEvent
 		});
@@ -22,6 +21,19 @@ define(['Common','bs/modal','bs/wizard','bs/tooltip','jq/form/validator','jq/for
 				);
 			Common.$pageContent.removeClass("loading");
 		});
+		//icheck
+	    $('input[type="checkbox"]').iCheck({
+	    	checkboxClass: "icheckbox-info",
+	        radioClass: "iradio-info"
+	    }).on('ifChecked',function(e){
+	    	if(e.target.className == 'selectAll'){
+	    		$('.table-primary').find('input[type=checkbox]').iCheck('check');
+	    	}
+	    }).on('ifUnchecked',function(e){
+	    	if(e.target.className == 'selectAll'){
+	    		$('.table-primary').find('input[type=checkbox]').iCheck('uncheck');
+	    	}
+	    });
 	}	
 	return {
 		init : init
