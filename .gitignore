@@ -4,4 +4,5 @@
 /.settings
 /.classpath
 
-/cloud-iopm-web.iml
+/cloud-iopm-web.iml/.classpath
+/bin
