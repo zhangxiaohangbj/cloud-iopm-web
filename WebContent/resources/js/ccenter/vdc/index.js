@@ -5,9 +5,10 @@ define(['Common','bs/modal','bs/wizard','bs/tooltip','jq/form/validator','jq/for
 		//先获取数据，进行加工后再去render
 		Common.render(true,{
 			tpl:'tpls/ccenter/vdc/list.html',
-			data:'/resources/data/arrays.txt',
+			data:'/v2.0/tenants/page/10/1',
 			beforeRender: function(data){
-				return data;
+				//debugger;
+				return data.result;
 			},
 			callback: bindEvent
 		});
