@@ -1,0 +1,23 @@
+<form class="form-horizontal" id="editVdcBasic">
+	<div class="form-group">
+		<label class="control-label col-sm-3">
+	 	<span style="color: red;">* </span>名称：</label>
+	 	<div class="col-sm-7 col-sm">
+			<input type="text" class="dialog-form-control" name="name" value="{{name}}">
+		</div>
+	</div>
+	<div class="form-group">
+		<label class="control-label col-sm-3">
+	 	</span>描述：</label>
+	 	<div class="col-sm-7 col-sm">
+			<textarea rows="" cols="" class="dialog-form-control" name="description" value="description"></textarea>
+		</div>
+	</div>
+	<div class="form-group">
+		<label for="server-name" class="control-label col-sm-3">
+	 	禁用网关：</label>
+	 	<div class="col-sm-7 col-sm">
+			<label><input type="checkbox" {{if enabled=='1'}}checked {{/if}}></label>
+		</div>
+	</div>
+</form>
