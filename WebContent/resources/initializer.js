@@ -207,7 +207,7 @@ define('Common', ['PubView', 'bs/modal', 'json', 'template', 'jq/dataTables', 'j
                         },
                         {
                             text: '策略分组',
-                            link: '#strategyGroup'
+                            link: '#task/strategyGroup'
                         }
                     ]
                 }
