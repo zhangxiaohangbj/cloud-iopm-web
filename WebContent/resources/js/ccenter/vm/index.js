@@ -23,7 +23,7 @@ define(['Common','bs/modal','bs/wizard','bs/tooltip','jq/form/validator','jq/for
 			Common.$pageContent.removeClass("loading");
 		});
 		
-		$("[data-toggle='tooltip']").tooltip();
+		//$("[data-toggle='tooltip']").tooltip();
 		
 		//icheck
 	    $('input[type="checkbox"]').iCheck({
@@ -104,9 +104,9 @@ define(['Common','bs/modal','bs/wizard','bs/tooltip','jq/form/validator','jq/for
 				var vdc_id = currentChosenObj.vdc.val() || $('select.select-vdc').children('option:selected').val();
 				if(vdc_id){
 					Common.xhr.ajax('/v2/'+vdc_id+'/os-availability-zone',function(data){
-						var selectData = {}
+						var selectData = [];
 						for(var i=0;i<data.length;i++){
-							selectData[i] = {"name":data[i]["zoonName"]}
+							selectData[i] = {"name":data[i]["zoneName"]};
 						}
 						var html = Common.uiSelect(selectData);
 				    	$('select.select-available-zone').html(html);
