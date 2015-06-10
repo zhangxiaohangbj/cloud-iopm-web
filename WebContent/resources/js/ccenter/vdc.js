@@ -5,9 +5,9 @@ define(['Common','bs/modal','bs/wizard','bs/tooltip','jq/form/validator','jq/for
 		//先获取数据，进行加工后再去render
 		Common.render(true,{
 			tpl:'tpls/ccenter/vdc/list.html',
-			data:'/resources/data/arrays.txt',
+			data:'/v2.0/tenants/page/10/1',
 			beforeRender: function(data){
-				return data;
+				return data.result;;
 			},
 			callback: bindEvent
 		});
@@ -21,6 +21,19 @@ define(['Common','bs/modal','bs/wizard','bs/tooltip','jq/form/validator','jq/for
 				);
 			Common.$pageContent.removeClass("loading");
 		});
+		//icheck
+	    $('input[type="checkbox"]').iCheck({
+	    	checkboxClass: "icheckbox-info",
+	        radioClass: "iradio-info"
+	    }).on('ifChecked',function(e){
+	    	if(e.target.className == 'selectAll'){
+	    		$('.table-primary').find('input[type=checkbox]').iCheck('check');
+	    	}
+	    }).on('ifUnchecked',function(e){
+	    	if(e.target.className == 'selectAll'){
+	    		$('.table-primary').find('input[type=checkbox]').iCheck('uncheck');
+	    	}
+	    });
 	}	
 	return {
 		init : init

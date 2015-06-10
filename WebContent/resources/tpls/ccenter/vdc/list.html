@@ -23,17 +23,16 @@
 					<tr>
 						<td><label><input type="checkbox"></label></td>
 						<td>{{item.name}}</td>
-						<td>{{item.desc}}</td>
+						<td>{{item.description}}</td>
 						<td>
-			 			{{if item.active_status == 'actived'}}
+			 			{{if item.enabled == '1'}}
 			 				<span class="text-success">已激活</span>
 			 				{{else}}
 			 				<span class="text-danger">待激活</span>
 			 			{{/if}}
 			 			</td>
 						<td>
-						<a class="btn-opt" data-toggle="tooltip" title="创建快照" data-act="stop" style="margin: 0;"><i class="glyphicon glyphicon-off"></i></a>
-						<!-- <a class="btn-opt" data-toggle="tooltip" title="控制台" data-act="delete"><i class="glyphicon glyphicon-trash"></i></a> -->
+						<a class="btn-opt" data-toggle="tooltip" title="成员管理" data-act="stop" style="margin: 0;"><i class="fa fa-file-text fa-fw"></i></a>
 						<div class="dropdown">
 							<span class="btn btn-more dropdown-toggle" data-toggle="dropdown" aria-expanded="false">更 多 <i class="fa fa-angle-down fa-fw"></i></span>
 							<ul class="dropdown-menu" style="right: 0;left: initial;">

@@ -1,5 +1,16 @@
 <form class="form-horizontal" id="addSubnet">
 	<div class="form-group">
+		<label for="network_id" class="control-label col-sm-3">
+	 	<span style="color: red;">* </span>VPC：</label>
+	 	<div class="col-sm-7 col-sm">
+		 	<select class="form-control" name="network_id">
+			 	{{each networks as item i}}
+			 		<option value="{{item.id}}">{{item.name}}</option>
+			 	{{/each}}
+		 	</select>
+		</div>
+	</div>
+	<div class="form-group">
 		<label for="name" class="control-label col-sm-3">
 	 	<span style="color: red;">* </span>子网名称：</label>
 	 	<div class="col-sm-7 col-sm">
@@ -46,21 +57,22 @@
 	</div>
 	<div class="form-group">
 		<label for="allocation_pools" class="control-label col-sm-3">
-	 	<span style="color: red;">* </span>分配地址池：</label>
+	 	分配地址池：</label>
 	 	<div class="col-sm-7 col-sm">
-			<input type="text" class="dialog-form-control" name="allocation_pools" value="">
+			<input type="text" class="dialog-form-control" name="start" value="" style="width: 45%;">&nbsp;-
+			<input type="text" class="dialog-form-control" name="end" value="" style="width: 45%;">
 		</div>
 	</div>
 	<div class="form-group">
 		<label for="server-name" class="control-label col-sm-3">
-	 	<span style="color: red;">* </span>DNS域名解析服务：</label>
+	 	DNS域名解析服务：</label>
 	 	<div class="col-sm-7 col-sm">
 			<input type="text" class="dialog-form-control" name="subnet-name" value="">
 		</div>
 	</div>
 	<div class="form-group">
 		<label for="server-name" class="control-label col-sm-3">
-	 	<span style="color: red;">* </span>主机路由：</label>
+	 	主机路由：</label>
 	 	<div class="col-sm-7 col-sm">
 			<input type="text" class="dialog-form-control" name="subnet-name" value="">
 		</div>
