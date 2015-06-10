@@ -86,6 +86,8 @@ dependencies {
 	
 	runtime "com.inspur.cloud:cloud-vm:1.2.0-SNAPSHOT"
 	
+	runtime "com.inspur.cloud:cloud-image:1.2.0-SNAPSHOT"
+	
 	//
 	runtime("com.inspur.cloud:cloud-storage:1.2.0-SNAPSHOT")
 	//vpc network
