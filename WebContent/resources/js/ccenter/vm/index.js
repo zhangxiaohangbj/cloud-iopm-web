@@ -43,7 +43,7 @@ define(['Common','bs/modal','bs/wizard','bs/tooltip','jq/form/validator','jq/for
 		var DataGetter = {
 				//镜像列表,type:类型
 				getImage: function(type){
-					Common.xhr.ajax('/resources/data/image.txt',function(imageList){
+					Common.xhr.ajax('/resources/data/image.txt',function(imageList){///v2/images
 						renderData.imageList = imageList;
 					});
 				},
@@ -74,7 +74,7 @@ define(['Common','bs/modal','bs/wizard','bs/tooltip','jq/form/validator','jq/for
 				},
 				//虚机规格
 				getSpecs: function(){
-					Common.xhr.ajax('/cloud/v2/{tenant_id}/flavors',function(specsList){
+					Common.xhr.ajax('/cloud/v2/{tenant_id}/flavors/detail',function(specsList){
 						renderData.specsList = specsList;
 					});
 				}
@@ -180,7 +180,7 @@ define(['Common','bs/modal','bs/wizard','bs/tooltip','jq/form/validator','jq/for
 			//根据vdc可用网络信息
 			initAvailableNetWorks : function(){
 				var vdc_id = currentChosenObj.vdc.val() || $('select.select-vdc').children('option:selected').val();
-				Common.xhr.ajax('/resources/data/select.txt',function(networks){
+				Common.xhr.ajax('/v2.0/networks',function(networks){
 					var dataArr = [];
 					if(networks && networks.length){
 						for(var i=0,l=networks.length;i<l;i++){
@@ -263,7 +263,19 @@ define(['Common','bs/modal','bs/wizard','bs/tooltip','jq/form/validator','jq/for
 			},
 			//选中网络后初始化子网和IP
 			initSubNet: function(){
-				
+				var networkId = currentChosenObj.networkId;
+				if(networkId){
+					Common.xhr.ajax(/v2.0/subnets,function(data){
+						var selectData = {}
+						for(var i=0;i<data.length;i++){
+							selectData[i] = {"name":data[i]["zoneName"],"id":""}
+						}
+						var html = Common.uiSelect(selectData);
+				    	$('select.select-available-zone').html(html);
+				    	//同步currentChosenObj
+				    	currentChosenObj.az = $('select.select-available-zone').children('option:selected');
+					});
+				}
 			}
 		};
 		//载入后的事件
@@ -358,6 +370,8 @@ define(['Common','bs/modal','bs/wizard','bs/tooltip','jq/form/validator','jq/for
 							 //拖下来
 							 if($(this).parent().attr('data-listidx') == "1"){
 								 $(this).find('i').hide();
+								 currentChosenObj.networkId = $(this).find('span').html();
+								 DataIniter.initSubNet()
 							 }
 							 
 						 } });
