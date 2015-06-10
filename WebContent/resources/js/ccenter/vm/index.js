@@ -23,7 +23,7 @@ define(['Common','bs/modal','bs/wizard','bs/tooltip','jq/form/validator','jq/for
 			Common.$pageContent.removeClass("loading");
 		});
 		
-		$("[data-toggle='tooltip']").tooltip();
+		//$("[data-toggle='tooltip']").tooltip();
 		
 		//icheck
 	    $('input[type="checkbox"]').iCheck({
