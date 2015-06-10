@@ -90,7 +90,7 @@ dependencies {
 	runtime("com.inspur.cloud:cloud-storage:1.2.0-SNAPSHOT")
 	//vpc network
 	runtime("com.inspur.cloud:cloud-vpc:1.2.0-SNAPSHOT")
-	//vdc network
+	//vdc
 	runtime("com.inspur.cloud:cloud-vdc:1.2.0-SNAPSHOT")
 	
 }
