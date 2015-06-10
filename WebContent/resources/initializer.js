@@ -47,11 +47,11 @@ define('Common', ['PubView', 'bs/modal', 'json', 'template', 'jq/dataTables', 'j
             items: [
                 {
                     text: '<i class="fa fa-cloud"></i>虚拟数据中心',
-                    link: '#vdc'
+                    link: '#vdc/'
                 },
                 {
                     text: '<i class="fa fa-tachometer"></i>云主机管理',
-                    link: ''
+                    link: '#vm/'
                 },
                 {
                     text: '<i class="fa fa-database"></i>磁盘管理',
@@ -504,8 +504,11 @@ define('Common', ['PubView', 'bs/modal', 'json', 'template', 'jq/dataTables', 'j
                         }
                     if(!ctrl){
                         ctrl = this.getDefaultCtrl(hash);
+                    }else{
+                    	if(ctrl[0].lastIndexOf('/') == ctrl[0].length - 1) {
+                            ctrl += this.ctrlDef;
+                        }
                     }
-
                     if(ctrl){
                         this.loadctrl(ctrl);
                     }
@@ -834,10 +837,9 @@ define('Common', ['PubView', 'bs/modal', 'json', 'template', 'jq/dataTables', 'j
 require(['PubView', 'Common'], function(PubView, Common) {
     // 初始化
     Common.init();
-
     // 注册路由规则
     with(Common.router){
-        when("^#ccenter(!.*)?$", ['js/ccenter/vm']);
+        when("^#ccenter(!.*)?$", ['js/ccenter/vm/']);
     }
 
     //路由当前页面
