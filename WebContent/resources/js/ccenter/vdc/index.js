@@ -4,10 +4,10 @@ define(['Common','bs/modal','bs/wizard','bs/tooltip','jq/form/validator','jq/for
 		Common.$pageContent.addClass("loading");
 		//先获取数据，进行加工后再去render
 		Common.render(true,{
-			tpl:'tpls/ccenter/vm/vm.html',
-			data:'/9cc717d8047e46e5bf23804fc4400247/servers/page/1/10',
+			tpl:'tpls/ccenter/vdc/list.html',
+			data:'/resources/data/arrays.txt',
 			beforeRender: function(data){
-				return data.result;
+				return data;
 			},
 			callback: bindEvent
 		});
@@ -15,7 +15,7 @@ define(['Common','bs/modal','bs/wizard','bs/tooltip','jq/form/validator','jq/for
 	
 	var bindEvent = function(){
 		//dataTables
-		Common.initDataTable($('#VmTable'),function($tar){
+		Common.initDataTable($('#VdcTable'),function($tar){
 			$tar.prev().find('.left-col:first').append(
 					'<span class="btn btn-add">接 入</span>'
 				);

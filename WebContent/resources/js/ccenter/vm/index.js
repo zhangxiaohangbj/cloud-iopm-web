@@ -133,12 +133,7 @@ define(['Common','bs/modal','bs/wizard','bs/tooltip','jq/form/validator','jq/for
 	    					hide: 500
 	    				}
 	    			};
-				var _$popover = $('[data-toggle="popover"]').data('bs.popover');
-				if(_$popover){
-					_$popover.options.content=tpl;
-				}else{
-					$('[data-toggle="popover"]').popover(popoverOptions);
-				}
+				$('[data-toggle="popover"]').popover(popoverOptions);
 			},
 			//vdc的可用配额
 			initQuotos : function(vdc_id){
