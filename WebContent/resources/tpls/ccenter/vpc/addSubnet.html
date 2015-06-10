@@ -3,7 +3,7 @@
 		<label for="network_id" class="control-label col-sm-3">
 	 	<span style="color: red;">* </span>VPC：</label>
 	 	<div class="col-sm-7 col-sm">
-		 	<select class="form-control" name="network_id">
+		 	<select class="dialog-form-control select" name="network_id">
 			 	{{each networks as item i}}
 			 		<option value="{{item.id}}">{{item.name}}</option>
 			 	{{/each}}
@@ -28,7 +28,7 @@
 		<label for="ip_version" class="control-label col-sm-3">
 	 	<span style="color: red;">* </span>IP版本：</label>
 	 	<div class="col-sm-7 col-sm">
-			<select class="form-control" name="ip_version">
+			<select class="dialog-form-control select" name="ip_version">
 				<option value="4">IPV4</option>
 				<option value="6">IPV6</option>
 			</select>
