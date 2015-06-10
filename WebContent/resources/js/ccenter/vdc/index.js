@@ -4,7 +4,7 @@ define(['Common','bs/modal','bs/wizard','bs/tooltip','jq/form/validator','jq/for
 		Common.$pageContent.addClass("loading");
 		//先获取数据，进行加工后再去render
 		Common.render(true,{
-			tpl:'tpls/ccenter/vm.html',
+			tpl:'tpls/ccenter/vm/vm.html',
 			data:'/9cc717d8047e46e5bf23804fc4400247/servers/page/1/10',
 			beforeRender: function(data){
 				return data.result;

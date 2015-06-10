@@ -4,7 +4,7 @@ define(['Common','bs/modal','bs/wizard','bs/tooltip','jq/form/validator','jq/for
 		Common.$pageContent.addClass("loading");
 		//先获取数据，进行加工后再去render
 		Common.render(true,{
-			tpl:'tpls/ccenter/vm.html',
+			tpl:'tpls/ccenter/vm/vm.html',
 			data:'/9cc717d8047e46e5bf23804fc4400247/servers/page/1/10',
 			beforeRender: function(data){
 				return data.result;
@@ -174,7 +174,7 @@ define(['Common','bs/modal','bs/wizard','bs/tooltip','jq/form/validator','jq/for
 				    			}
 				    	}
 				    	//生成html数据
-						Common.render('tpls/ccenter/quota.html',renderData,function(html){
+						Common.render('tpls/ccenter/vm/quota.html',renderData,function(html){
     						$('div.quotas').html(html);
     					});
 					})
@@ -425,7 +425,7 @@ define(['Common','bs/modal','bs/wizard','bs/tooltip','jq/form/validator','jq/for
 		//增加按钮
 	    $("#VmTable_wrapper span.btn-add").on("click",function(){
 	    	//需要修改为真实数据源
-			Common.render('tpls/ccenter/add.html',renderData,function(html){
+			Common.render('tpls/ccenter/vm/add.html',renderData,function(html){
 				
 				$('body').append(html);
 				//同步currentChosenObj
@@ -509,7 +509,7 @@ define(['Common','bs/modal','bs/wizard','bs/tooltip','jq/form/validator','jq/for
 	    var EditData = {
 	    		//编辑云主机名称弹框
 	    	EditVmName : function(name){
-	    		Common.render('tpls/ccenter/vmname.html','',function(html){
+	    		Common.render('tpls/ccenter/vm/vmname.html','',function(html){
 	    			Modal.show({
 	    	            title: '编辑云主机',
 	    	            message: html,
@@ -545,7 +545,7 @@ define(['Common','bs/modal','bs/wizard','bs/tooltip','jq/form/validator','jq/for
 				Common.xhr.ajax('/resources/data/arrays.txt',function(data){
 					
 			    	//生成html数据
-					Common.render('tpls/ccenter/security.html',data,function(html){
+					Common.render('tpls/ccenter/vm/security.html',data,function(html){
 						Modal.show({
 		    	            title: '编辑安全组',
 		    	            message: html,
@@ -575,7 +575,7 @@ define(['Common','bs/modal','bs/wizard','bs/tooltip','jq/form/validator','jq/for
 	    	},
 	    	//编辑虚拟机大小弹框
 	    	EditVmType : function(id,cb){
-	    		Common.render('tpls/ccenter/vmdetail.html',renderData,function(html){
+	    		Common.render('tpls/ccenter/vm/vmdetail.html',renderData,function(html){
 		    		Modal.show({
 	    	            title: '编辑虚拟机大小',
 	    	            message: html,
