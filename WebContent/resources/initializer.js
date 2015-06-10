@@ -47,11 +47,11 @@ define('Common', ['PubView', 'bs/modal', 'json', 'template', 'jq/dataTables', 'j
             items: [
                 {
                     text: '<i class="fa fa-cloud"></i>虚拟数据中心',
-                    link: '#vdc/'
+                    link: '#vdc'
                 },
                 {
                     text: '<i class="fa fa-tachometer"></i>云主机管理',
-                    link: '#vm/'
+                    link: '#vm'
                 },
                 {
                     text: '<i class="fa fa-database"></i>磁盘管理',
@@ -171,12 +171,43 @@ define('Common', ['PubView', 'bs/modal', 'json', 'template', 'jq/dataTables', 'j
                             link: '#volumes'
                         },
                         {
-                            text: 'Vitural SAN',
+                            text: 'vitural SAN',
                             link: '#vsans'
                         },
                         {
                             text: '快照',
                             link: '#snapshots'
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            title: '<i class="fa fa-codepen fa-fw"></i>调度与监控',
+            current: [1,1],
+            items: [
+                {
+                    text: '<i class="fa fa-puzzle-piece"></i>任务管理<i class="fa icon-arrow"></i>',
+                    items: [
+                        {
+                            text: '任务定义',
+                            link: '#task'
+                        },
+                        {
+                            text: '任务监控',
+                            link: '#monitor'
+                        },
+                        {
+                            text: '策略定义',
+                            link: '#strategy'
+                        },
+                        {
+                            text: '任务分组',
+                            link: '#taskGroup'
+                        },
+                        {
+                            text: '策略分组',
+                            link: '#task/strategyGroup'
                         }
                     ]
                 }
@@ -456,6 +487,10 @@ define('Common', ['PubView', 'bs/modal', 'json', 'template', 'jq/dataTables', 'j
                     }
                     return ctrl;
                 };
+                //重新加载当前页面
+                this.reload = function() {
+                    this.route();
+                };
                 //根据hash重新路由或无缝刷新
                 this.route = function(hash){
                     hash = hash || that.hash;
@@ -696,18 +731,21 @@ define('Common', ['PubView', 'bs/modal', 'json', 'template', 'jq/dataTables', 'j
                     Accept: "application/json",
                     'Content-Type': "application/json"
                 };
-                this.ajax = function(object, callback) {
+                this.ajax = function(url, success) {
                     var resolve = function(msg) {
                         that._inRender && (that._inRender = false);
                         that._deferred && that.resolve();
                         msg && Modal.danger(msg);
                     };
-                    if(object) {
-                        if(PubView.utils.isString(object)) {
-                            object = $.extend({}, {url: object});
-                        } else if(!PubView.utils.isPlainObject(object) || !object.url) {
+                    if(url) {
+                        var object;
+                        if(PubView.utils.isString(url)) {
+                            object = $.extend({}, {url: url});
+                        } else if(!PubView.utils.isPlainObject(url) || !url.url) {
                             resolve("Ajax Error: 请确定请求内容url");
                             return false;
+                        } else {
+                            object = $.extend({}, url);
                         }
                         object.url = this._getFullUrl(object.url);
                         var defaults = {
@@ -729,30 +767,229 @@ define('Common', ['PubView', 'bs/modal', 'json', 'template', 'jq/dataTables', 'j
                                 {},
                                 defaults,
                                 object,
-                                PubView.utils.isFunction(callback) ? {success: callback} : null)
+                                PubView.utils.isFunction(success) ? {success: success} : null)
                         );
                     } else {
                         resolve("Ajax Error: 请确定请求内容url");
                         return false;
                     }
                 };
-                this.postJSON = function(url, data, callback) {
+                this.get = function(url, data, success) {
+                    var _data, _success;
+                    if(PubView.utils.isFunction(data)) {
+                        _success = data;
+                        _data = null;
+                    } else {
+                        _data = data;
+                        _success = success;
+                    }
+                    return this.ajax({
+                        'type': 'GET',
+                        'url': url,
+                        'data': _data,
+                        'success': _success
+                    });
+                };
+                this.getSync = function(url, data, success) {
+                    var _data, _success;
+                    if(PubView.utils.isFunction(data)) {
+                        _success = data;
+                        _data = null;
+                    } else {
+                        _data = data;
+                        _success = success;
+                    }
+                    return this.ajax({
+                        'type': 'GET',
+                        'async': false,
+                        'url': url,
+                        'data': _data,
+                        'success': _success
+                    });
+                };
+                this.post = function(url, data, success) {
+                    var _data, _success;
+                    if(PubView.utils.isFunction(data)) {
+                        _success = data;
+                        _data = null;
+                    } else {
+                        _data = data;
+                        _success = success;
+                    }
                     return this.ajax({
                         'type': 'POST',
                         'url': url,
-                        'data': JSON.stringify(data),
-                        'contentType': 'application/json',
-                        'success': callback
+                        'data': _data,
+                        'success': _success
                     });
                 };
-                this.putJSON = function(url, data, callback) {
+                this.postSync = function(url, data, success) {
+                    var _data, _success;
+                    if(PubView.utils.isFunction(data)) {
+                        _success = data;
+                        _data = null;
+                    } else {
+                        _data = data;
+                        _success = success;
+                    }
+                    return this.ajax({
+                        'type': 'POST',
+                        'async': false,
+                        'url': url,
+                        'data': _data,
+                        'success': _success
+                    });
+                };
+                this.put = function(url, data, success) {
+                    var _data, _success;
+                    if(PubView.utils.isFunction(data)) {
+                        _success = data;
+                        _data = null;
+                    } else {
+                        _data = data;
+                        _success = success;
+                    }
                     return this.ajax({
                         'type': 'PUT',
                         'url': url,
-                        'data': JSON.stringify(data),
-                        'contentType': 'application/json',
-                        'success': callback
+                        'data': _data,
+                        'success': _success
                     });
+                };
+                this.putSync = function(url, data, success) {
+                    var _data, _success;
+                    if(PubView.utils.isFunction(data)) {
+                        _success = data;
+                        _data = null;
+                    } else {
+                        _data = data;
+                        _success = success;
+                    }
+                    return this.ajax({
+                        'type': 'PUT',
+                        'async': false,
+                        'url': url,
+                        'data': _data,
+                        'success': _success
+                    });
+                };
+                this.del = function(url, data, success) {
+                    var _data, _success;
+                    if(PubView.utils.isFunction(data)) {
+                        _success = data;
+                        _data = null;
+                    } else {
+                        _data = data;
+                        _success = success;
+                    }
+                    return this.ajax({
+                        'type': 'DELETE',
+                        'url': url,
+                        'data': _data,
+                        'success': _success
+                    });
+                };
+                this.delSync = function(url, data, success) {
+                    var _data, _success;
+                    if(PubView.utils.isFunction(data)) {
+                        _success = data;
+                        _data = null;
+                    } else {
+                        _data = data;
+                        _success = success;
+                    }
+                    return this.ajax({
+                        'type': 'DELETE',
+                        'async': false,
+                        'url': url,
+                        'data': _data,
+                        'success': _success
+                    });
+                };
+                this.postJSON = function(url, data, success) {
+                    var _data, _success;
+                    if(PubView.utils.isFunction(data)) {
+                        _success = data;
+                        _data = {};
+                    } else {
+                        _data = data;
+                        _success = success;
+                    }
+                    try {
+                        return this.ajax({
+                            'type': 'POST',
+                            'url': url,
+                            'data': JSON.stringify(_data),
+                            'contentType': 'application/json',
+                            'success': _success
+                        });
+                    } catch (e) {
+                        Modal.danger("Ajax postJSON Error: data param parse error.");
+                    }
+                };
+                this.postJSONSync = function(url, data, success) {
+                    var _data, _success;
+                    if(PubView.utils.isFunction(data)) {
+                        _success = data;
+                        _data = {};
+                    } else {
+                        _data = data;
+                        _success = success;
+                    }
+                    try {
+                        return this.ajax({
+                            'type': 'POST',
+                            'async': false,
+                            'url': url,
+                            'data': JSON.stringify(_data),
+                            'contentType': 'application/json',
+                            'success': _success
+                        });
+                    } catch (e) {
+                        Modal.danger("Ajax postJSONSync Error: data param parse error.");
+                    }
+                };
+                this.putJSON = function(url, data, success) {
+                    var _data, _success;
+                    if(PubView.utils.isFunction(data)) {
+                        _success = data;
+                        _data = {};
+                    } else {
+                        _data = data;
+                        _success = success;
+                    }
+                    try {
+                        return this.ajax({
+                            'type': 'PUT',
+                            'url': url,
+                            'data': JSON.stringify(_data),
+                            'contentType': 'application/json',
+                            'success': _success
+                        });
+                    } catch (e) {
+                        Modal.danger("Ajax putJSON Error: data param parse error.");
+                    }
+                };
+                this.putJSONSync = function(url, data, success) {
+                    var _data, _success;
+                    if(PubView.utils.isFunction(data)) {
+                        _success = data;
+                        _data = {};
+                    } else {
+                        _data = data;
+                        _success = success;
+                    }
+                    try {
+                        return this.ajax({
+                            'type': 'PUT',
+                            'url': url,
+                            'data': JSON.stringify(_data),
+                            'contentType': 'application/json',
+                            'success': _success
+                        });
+                    } catch (e) {
+                        Modal.danger("Ajax putJSONSync Error: data param parse error.");
+                    }
                 };
                 this._getFullUrl = function(url, isResource) {
                     if(url && PubView.utils.isString(url)) {
@@ -808,7 +1045,7 @@ require(['PubView', 'Common'], function(PubView, Common) {
     Common.init();
     // 注册路由规则
     with(Common.router){
-        when("^#ccenter(!.*)?$", ['js/ccenter/vm/']);
+        when("^#ccenter(!.*)?$", ['js/ccenter/vm']);
     }
 
     //路由当前页面

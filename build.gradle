@@ -85,16 +85,12 @@ dependencies {
 //	runtime "com.inspur.cloudframework:cloud-rest-api-example:1.2.0-SNAPSHOT"
 	
 	runtime "com.inspur.cloud:cloud-vm:1.2.0-SNAPSHOT"
-	
-	runtime "com.inspur.cloud:cloud-image:1.2.0-SNAPSHOT"
-	
-	//
+
 	runtime("com.inspur.cloud:cloud-storage:1.2.0-SNAPSHOT")
-	//vpc network
+	runtime("com.inspur.cloud:cloud-task:1.2.0-SNAPSHOT")
 	runtime("com.inspur.cloud:cloud-vpc:1.2.0-SNAPSHOT")
-	//vdc
+	runtime("com.inspur.cloud:cloud-image:1.2.0-SNAPSHOT")
 	runtime("com.inspur.cloud:cloud-vdc:1.2.0-SNAPSHOT")
-	
 }
 
 ext.excludeRegexs = []

@@ -133,15 +133,10 @@ define(['Common','bs/modal','bs/wizard','bs/tooltip','jq/form/validator','jq/for
 	    					hide: 500
 	    				}
 	    			};
-				var _$popover = $('[data-toggle="popover"]').data('bs.popover');
-				if(_$popover){
-					_$popover.options.content=tpl;
-				}else{
-					$('[data-toggle="popover"]').popover(popoverOptions);
-				}
+				$('[data-toggle="popover"]').popover(popoverOptions);
 			},
 			//vdc的可用配额
-			initQuotos : function(vdc_id){
+			initQuatos : function(vdc_id){
 				vdc_id = vdc_id || currentChosenObj.vdc.val() || $('select.select-vdc').find('option:selected').val();
 				if(vdc_id){
 					//先获取数据，进行加工后再去render
@@ -331,7 +326,7 @@ define(['Common','bs/modal','bs/wizard','bs/tooltip','jq/form/validator','jq/for
     					var current = $(this).children('option:selected');
 				    	currentChosenObj.vdc = current;//同步currentChosenObj
 				    	DataIniter.initAvailableZone();//重新加载可用域的数据
-				    	DataIniter.initQuotos();//重新加载配额数据
+				    	DataIniter.initQuatos();//重新加载配额数据
 				    	DataIniter.initAvailableNetWorks();//重新获取可用网络数据
     				});
 				},
@@ -465,7 +460,7 @@ define(['Common','bs/modal','bs/wizard','bs/tooltip','jq/form/validator','jq/for
 		    	
     			DataIniter.initAvailableZone();
     			DataIniter.initPopver();
-    			DataIniter.initQuotos();
+    			DataIniter.initQuatos();
     			DataIniter.initSecurityGroup();
     			DataIniter.initAvailableNetWorks();
     			
@@ -667,7 +662,7 @@ define(['Common','bs/modal','bs/wizard','bs/tooltip','jq/form/validator','jq/for
 	    			$("[name='select-specs']").val(data.vcd_id);
 	    			
 		    		DataIniter.initPopver();
-		    		DataIniter.initQuotos(data.vcd_id);  //data:vcd_id
+		    		DataIniter.initQuatos(data.vcd_id);  //data:vcd_id
 		    		EventsHandler.specsChange();
 		    	});
 	    	})
