@@ -71,8 +71,9 @@ define(['Common','bs/modal','bs/wizard','bs/tooltip','jq/form/validator','jq/for
 				}
 	    }
 	    var EditData = {
-	    		//编辑云主机名称弹框
+	    	//创建子网弹框
 	    	AddSubnet : function(cb){
+	    		//先获取vpc后，再render
 	    		Common.xhr.ajax('/v2.0/networks',function(data){
 	    			Common.render('tpls/ccenter/vpc/addSubnet.html',data,function(html){
 		    			Dialog.show({
@@ -98,7 +99,7 @@ define(['Common','bs/modal','bs/wizard','bs/tooltip','jq/form/validator','jq/for
 	           	    	                	      {
 	           	    	                	        "end": $("#addSubnet [name='end']").val()? $("#addSubnet [name='end']").val():254,
 	           	    	                	        "id": "",
-	           	    	                	        "start": $("#addSubnet [name='start']").val()? $("#addSubnet [name='start']").val():0,
+	           	    	                	        "start": $("#addSubnet [name='start']").val()? $("#addSubnet [name='start']").val():1,
 	           	    	                	        "subnet_id": ""
 	           	    	                	      }
 	           	    	                	    ],
@@ -131,6 +132,7 @@ define(['Common','bs/modal','bs/wizard','bs/tooltip','jq/form/validator','jq/for
 	    		})
 	    		
 	    	},
+	    	//编辑子网弹框
 	    	EditSubnet : function(id,cb){
 	    		Common.xhr.ajax('/v2.0/subnets/'+id,function(data){
 	    		Common.render('tpls/ccenter/vpc/editSubnet.html',data.subnet,function(html){
