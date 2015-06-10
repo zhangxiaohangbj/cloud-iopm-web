@@ -14,7 +14,6 @@ define(['Common','bs/modal','bs/wizard','bs/tooltip','jq/form/validator','jq/for
 	};
 	
 	var bindEvent = function(){
-		alert('bind event');
 		//dataTables
 		Common.initDataTable($('#VmTable'),function($tar){
 			$tar.prev().find('.left-col:first').append(
