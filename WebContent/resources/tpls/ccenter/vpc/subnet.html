@@ -26,7 +26,7 @@
 					<tr>
 						<td><label><input type="checkbox"></label></td>
 						<td>{{item.network_id}}</td>
-						<td><a href="javascript:void(0);" class="subnet-name" data="subnetid1">{{item.name}}</a></td>
+						<td><a href="javascript:void(0);" class="subnet-name" data="{{item.id}}">{{item.name}}</a></td>
 						<td>{{item.cidr}}</td>
 						<td>{{item.tenant_id}}</td>
 						<td>IPV{{item.ip_version}}</td>
@@ -34,11 +34,11 @@
 			 				{{item.gateway_ip}}
 			 			</td>
 						<td>
-							<a class="btn-opt pull-left" data-toggle="tooltip" title="编辑" data-act="stop" style="margin: 0;" data="subnetid1"><i class="glyphicon glyphicon-edit"></i></a>
+							<a class="btn-opt pull-left" data-toggle="tooltip" title="编辑" data-act="stop" style="margin: 0;" data="{{item.id}}"><i class="glyphicon glyphicon-edit"></i></a>
 							<div class="dropdown">
 								<span class="btn btn-more dropdown-toggle" data-toggle="dropdown" aria-expanded="false">更 多 <i class="fa fa-angle-down fa-fw"></i></span>
 								<ul class="dropdown-menu" style="right: 0;left: initial;">
-									<li><a href="javascript:void(0)" class="deleteSubnet" data="subnetid1"><i class="fa fa-trash-o fa-fw"></i>删除子网</a></li>
+									<li><a href="javascript:void(0)" class="deleteSubnet" data="{{item.id}}"><i class="fa fa-trash-o fa-fw"></i>删除子网</a></li>
 								</ul>
 							</div>	
 						</td>

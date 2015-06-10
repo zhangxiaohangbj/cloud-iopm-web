@@ -3,7 +3,7 @@ define(['Common','bs/modal','bs/wizard','bs/tooltip','jq/form/validator','jq/for
 	Common.requestCSS('css/dialog.css');
 	var init = function(){
 		Common.$pageContent.addClass("loading");
-		//需要修改为真实数据源
+		//render获取的数据
 		Common.render(true,'tpls/ccenter/vpc/subnet.html','/v2.0/subnets/page/1/10',function(){
 			bindEvent();
 		});
@@ -66,13 +66,35 @@ define(['Common','bs/modal','bs/wizard','bs/tooltip','jq/form/validator','jq/for
 	    	                action: function(dialog) {
 	    	                	var valid = $(".form-horizontal").valid();
 	    	            		if(!valid) return false;
+//	    	                	var serverData = {
+//	    	                			"id":"subnetid5",
+//	    	        					"name": $("#addSubnet [name='name']").val(),
+//	    	        					"cidr":  $("#addSubnet [name='cidr']").val(),
+//	    	        					"ip_version": $("#addSubnet [name='ip_version']").val(),
+//	    	        					"gateway_ip": $("#addSubnet [name='gateway_ip']").val(),
+//	    	        					"enable_dhcp":$("#addSubnet [name='enable_dhcp']:checked").length? 1:0
+//	    	        				};
 	    	                	var serverData = {
-	    	        					"name": $("#addSubnet [name='name']").val(),
-	    	        					"cidr":  $("#addSubnet [name='cidr']").val(),
-	    	        					"ip_version": $("#addSubnet [name='ip_version']").val(),
-	    	        					"gateway_ip": $("#addSubnet [name='gateway_ip']").val(),
-	    	        					"enable_dhcp":$("#addSubnet [name='enable_dhcp']:checked").length? 1:0
-	    	        				};
+	    	                	    "allocation_pools": [
+	    	                	      {
+	    	                	        "end": "",
+	    	                	        "id": "",
+	    	                	        "start": "",
+	    	                	        "subnet_id": ""
+	    	                	      }
+	    	                	    ],
+	    	                	    "cidr":  $("#addSubnet [name='cidr']").val(),
+	    	                	    "enable_dhcp": $("#addSubnet [name='enable_dhcp']:checked").length? 1:0,
+	    	                	    "gateway_ip": $("#addSubnet [name='gateway_ip']").val(),
+	    	                	    "id": "subnetid5",
+	    	                	    "ip_version": $("#addSubnet [name='ip_version']").val(),
+	    	                	    "ipv6_address_mode": "",
+	    	                	    "ipv6_ra_mode": "",
+	    	                	    "name": $("#addSubnet [name='name']").val(),
+	    	                	    "network_id": "networkid1",
+	    	                	    "shared": 0,
+	    	                	    "tenant_id": "vdcid1"
+	    	                	  };
 	    	                	Common.xhr.postJSON('/v2.0/subnets',serverData,function(data){
 	    	                		if(data){
 	    	                			alert("保存成功");

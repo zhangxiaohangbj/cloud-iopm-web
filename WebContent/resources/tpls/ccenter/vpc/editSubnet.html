@@ -1,16 +1,16 @@
 <form class="form-horizontal" id="addSubnet">
 	<div class="form-group">
-		<label for="name" class="control-label col-sm-3">
+		<label class="control-label col-sm-3">
 	 	<span style="color: red;">* </span>子网名称：</label>
 	 	<div class="col-sm-7 col-sm">
-			<input type="text" class="dialog-form-control input-readonly" name="name" value="{{name}}" readonly="readonly">
+			<input type="text" class="dialog-form-control" name="name" value="{{name}}" readonly="readonly">
 		</div>
 	</div>
 	<div class="form-group">
-		<label for="cidr" class="control-label col-sm-3">
+		<label class="control-label col-sm-3">
 	 	<span style="color: red;">* </span>CIDR地址：</label>
 	 	<div class="col-sm-7 col-sm">
-			<input type="text" class="dialog-form-control input-readonly" name="cidr" value="{{cidr}}" readonly="readonly">
+			<input type="text" class="dialog-form-control" name="cidr" value="{{cidr}}" readonly="readonly">
 		</div>
 	</div>
 	<div class="form-group">
@@ -31,7 +31,7 @@
 		<label for="enable_dhcp" class="control-label col-sm-3">
 	 	激活DHCP：</label>
 	 	<div class="col-sm-7 col-sm">
-			<label><input type="checkbox" {{if enable_dhcp=='1'}}checked {{/if}} name="enable_dhcp"></label>
+			<label><input type="checkbox" {{if enable_dhcp == true}}checked {{/if}} name="enable_dhcp"></label>
 		</div>
 	</div>
 	<div class="form-group">
