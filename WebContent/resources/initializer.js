@@ -47,11 +47,11 @@ define('Common', ['PubView', 'bs/modal', 'json', 'template', 'jq/dataTables', 'j
             items: [
                 {
                     text: '<i class="fa fa-cloud"></i>虚拟数据中心',
-                    link: '#vdc/'
+                    link: '#vdc'
                 },
                 {
                     text: '<i class="fa fa-tachometer"></i>云主机管理',
-                    link: '#vm/'
+                    link: '#vm'
                 },
                 {
                     text: '<i class="fa fa-database"></i>磁盘管理',
@@ -171,7 +171,7 @@ define('Common', ['PubView', 'bs/modal', 'json', 'template', 'jq/dataTables', 'j
                             link: '#volumes'
                         },
                         {
-                            text: 'Vitural SAN',
+                            text: 'vitural SAN',
                             link: '#vsans'
                         },
                         {
@@ -808,7 +808,7 @@ require(['PubView', 'Common'], function(PubView, Common) {
     Common.init();
     // 注册路由规则
     with(Common.router){
-        when("^#ccenter(!.*)?$", ['js/ccenter/vm/']);
+        when("^#ccenter(!.*)?$", ['js/ccenter/vm']);
     }
 
     //路由当前页面

@@ -21,6 +21,19 @@ define(['Common','bs/modal','bs/wizard','bs/tooltip','jq/form/validator','jq/for
 				);
 			Common.$pageContent.removeClass("loading");
 		});
+		//icheck
+	    $('input[type="checkbox"]').iCheck({
+	    	checkboxClass: "icheckbox-info",
+	        radioClass: "iradio-info"
+	    }).on('ifChecked',function(e){
+	    	if(e.target.className == 'selectAll'){
+	    		$('.table-primary').find('input[type=checkbox]').iCheck('check');
+	    	}
+	    }).on('ifUnchecked',function(e){
+	    	if(e.target.className == 'selectAll'){
+	    		$('.table-primary').find('input[type=checkbox]').iCheck('uncheck');
+	    	}
+	    });
 	}	
 	return {
 		init : init
