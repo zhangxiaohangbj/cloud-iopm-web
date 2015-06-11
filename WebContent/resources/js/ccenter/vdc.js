@@ -160,6 +160,10 @@ define(['Common','bs/modal','bs/wizard','bs/tooltip','jq/form/validator','jq/for
 	    $("ul.dropdown-menu a.updateQuota").on("click",function(){
 	    	more.QuotaSets($(this).attr("data"));
 	    });
+	    //可用分区
+	    $("ul.dropdown-menu a.vdcAz").on("click",function(){
+	    	more.AZ($(this).attr("data-env"),$(this).attr("data"));
+	    });
     
 	    //更多
 	    var more = {
@@ -209,10 +213,34 @@ define(['Common','bs/modal','bs/wizard','bs/tooltip','jq/form/validator','jq/for
 			    	            onshown : function(){}
 			    	        });
 			    		});
-		    		})
-		    		
-		    	}
-	    }
+		    		})	
+		    	},
+	  //可用分区管理
+    	AZ : function(env_id,vdc_id){
+    		//先获取az后，再render
+    		Common.xhr.ajax('/v2/os-availability-zone/virtualEnv/' + env_id,function(eaz){
+    			Common.xhr.ajax('/v2.0/az/' + vdc_id,function(vaz){
+    				var data = {
+    						eazList:eaz,
+    						vazList:vaz,
+    						env:renderData.veList
+    				}
+    				Common.render('tpls/ccenter/vdc/az.html',data,function(html){
+        				Modal.show({
+    	    	            title: '可用分区',
+    	    	            message: html,
+    	    	            nl2br: false,
+    	    	            buttons: [{
+    	    	                label: '保存',
+    	    	                action: function(dialog) {}
+    	    	            }],
+    	    	            onshown : function(){}
+    	    	        });
+    	    		});
+    			})		
+    		})		
+    	 }
+	   }
 	}	
 	return {
 		init : init
