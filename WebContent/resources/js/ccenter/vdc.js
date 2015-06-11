@@ -39,7 +39,7 @@ define(['Common','bs/modal','bs/wizard','bs/tooltip','jq/form/validator','jq/for
 		var DataGetter = {
 				//虚拟化环境 virtural environment
 				getVe: function(){
-					Common.xhr.ajax('/resources/data/select.txt',function(veList){///v2/images
+					Common.xhr.ajax('v2/virtual-env',function(veList){///v2/images
 						renderData.veList = veList;
 					});
 				},
@@ -90,11 +90,11 @@ define(['Common','bs/modal','bs/wizard','bs/tooltip','jq/form/validator','jq/for
     			};
     			//载入默认的数据 inits,创建数据载入类
     			var DataIniter = {
-    				//根据ve获取可用分区
+    				//根据ve_id获取可用分区
     				initAz : function(){
     					var ve_id = currentChosenObj.ve.val() || $('select.select-ve').children('option:selected').val();
     					if(ve_id){
-    						/*Common.xhr.ajax('/v2/'+vdc_id+'/os-availability-zone',function(data){
+    						Common.xhr.ajax('/v2/os-availability-zone/virtualEnv/' + ve_id,function(data){
     							var selectData = [];
     							for(var i=0;i<data.length;i++){
     								selectData[i] = {"name":data[i]["zoneName"]};
@@ -103,7 +103,7 @@ define(['Common','bs/modal','bs/wizard','bs/tooltip','jq/form/validator','jq/for
     					    	$('select.select-available-zone').html(html);
     					    	//同步currentChosenObj
     					    	currentChosenObj.az = $('select.select-available-zone').children('option:selected');
-    						});*/
+    						});
     						EventsHandler.azEvent();
     					}else{
     						Modal.danger('尚未选择所属虚拟化环境');
@@ -223,7 +223,7 @@ define(['Common','bs/modal','bs/wizard','bs/tooltip','jq/form/validator','jq/for
     				var data = {
     						eazList:eaz,
     						vazList:vaz,
-    						env:renderData.veList
+    						veList:renderData.veList
     				}
     				Common.render('tpls/ccenter/vdc/az.html',data,function(html){
         				Modal.show({
