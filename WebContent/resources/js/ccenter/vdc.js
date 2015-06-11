@@ -1,11 +1,12 @@
 define(['Common','bs/modal','bs/wizard','bs/tooltip','jq/form/validator','jq/form/validator/addons/bs3'],function(Common,Modal){
 	Common.requestCSS('css/wizard.css');
-	Common.requestCSS('css/dialog.css');
+	//Common.requestCSS('css/dialog.css');
 	var init = function(){
 		Common.$pageContent.addClass("loading");
 		Common.render(true,{
 			tpl:'tpls/ccenter/vdc/list.html',
-			data:'/v2.0/tenants/page/10/1',
+			//data:'/v2.0/tenants/page/10/1',
+			data:'/resources/data/select.txt',
 			beforeRender: function(data){
 				return data.result;;
 			},

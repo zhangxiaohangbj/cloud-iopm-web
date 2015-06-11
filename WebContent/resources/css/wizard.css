@@ -291,6 +291,10 @@ input[disabled], select[disabled], textarea[disabled], input[readonly], select[r
  .wizard-input-section .panel .list-group{
  	height:290px;overflow-y:auto;
  	border:1px solid #ddd;
+ 	overflow-x:hidden;
+ }
+ .wizard-card[data-cardname="members"] .wizard-input-section .panel .list-group{
+ 	height:320px;
  }
  .wizard-input-section .panel, .wizard-input-section .panel-default{
  	border:0;
@@ -318,9 +322,18 @@ input[disabled], select[disabled], textarea[disabled], input[readonly], select[r
 .wizard-input-section .panel .list-group{
 	border-top:0;
 }
- .wizard-input-section .panel .list-group a.list-group-item{
+.wizard-input-section .panel .list-group>ul:hover{
+	background-color:#F2F2F2;
+	
+}
+.wizard-input-section .panel .list-group .list-group-item{
  	border :0;padding:6px 15px;
  }
- .wizard-input-section .panel .list-group a.list-group-item i{
- 	display:none;float:right;
+ .wizard-input-section .panel .list-group .list-group-item .dropdown .btn-default{
+ 	padding:3px;border-radius:0;
+ }
+ .open>.dropdown-menu-right{
+ 	right:0;left:inherit;
+ }
+ .wizard-input-section .panel .list-group .list-group-item i{
  }
