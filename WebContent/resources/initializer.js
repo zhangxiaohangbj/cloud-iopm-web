@@ -30,8 +30,8 @@ define('Common', ['PubView', 'bs/modal', 'json', 'template', 'jq/dataTables', 'j
             link: '#cservice'
         },
         {
-            text: '调度与监控',
-            link: '#'
+            text: '监控与调度',
+            link: '#monitor'
         },
         {
             text: '系统管理',
@@ -183,7 +183,7 @@ define('Common', ['PubView', 'bs/modal', 'json', 'template', 'jq/dataTables', 'j
             ]
         },
         {
-            title: '<i class="fa fa-codepen fa-fw"></i>调度与监控',
+            title: '<i class="fa fa-codepen fa-fw"></i>监控与调度',
             current: [1,1],
             items: [
                 {
@@ -1046,6 +1046,7 @@ require(['PubView', 'Common'], function(PubView, Common) {
     // 注册路由规则
     with(Common.router){
         when("^#ccenter(!.*)?$", ['js/ccenter/vm']);
+        when("^#monitor(!.*)?$", ['js/monitor/task/strategyGroup']);
     }
 
     //路由当前页面

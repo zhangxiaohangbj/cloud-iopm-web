@@ -1,4 +1,4 @@
-define(['Common','bs/modal','bs/wizard','bs/tooltip','jq/form/validator','jq/form/validator/addons/bs3'],function(Common,Dialog){
+define(['Common','bs/modal','bs/wizard','bs/tooltip','jq/form/validator','jq/form/validator/addons/bs3','bs/switcher'],function(Common,Dialog){
 	Common.requestCSS('css/wizard.css');
 	Common.requestCSS('css/dialog.css');
 	var init = function(){
@@ -33,6 +33,58 @@ define(['Common','bs/modal','bs/wizard','bs/tooltip','jq/form/validator','jq/for
 	    		$('.table-primary').find('input[type=checkbox]').iCheck('uncheck');
 	    	}
 	    });
+	    //ip校验
+	    $.validator.addMethod("ip", function(value, element) {
+	    	return this.optional(element) || /^((\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.){3}(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])$/.test(value);
+	    }, "请填写正确的网关IP");
+	    //cidr校验
+	    $.validator.addMethod("cidr", function(value, element) {
+	    	return this.optional(element) || /^((\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.){3}(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\/\d{1,2}$/.test(value);
+	    }, "请填写正确的CIDR地址");
+	    //根据cidr校验ip
+	    $.validator.addMethod("ip_rule", function(value, element) {
+	    	var optionalValue = this.optional(element);
+	    	// Element is optional
+	    	if (optionalValue) {
+	    		return optionalValue;
+	    	}
+	    	var cidr = $("#addSubnet [name='cidr']").val();
+	    	if(cidr == "" || cidr ==null) return true;
+	    	var cidr = cidr.substring(0,cidr.lastIndexOf("."));
+	    	var regx = new RegExp(cidr+"\.([1-9]\d{0,1}|1\d\d|2[0-4]\d|25[0-5])");
+	    	 if(!regx.test(value)){
+	    		 return false;
+	    	 }else return true;
+	    	
+	    }, "请根据CIDR地址填写网关IP");
+	    //地址池校验
+	    $.validator.addMethod("pools_end", function(value, element) {
+	    	var optionalValue = this.optional(element);
+	    	// Element is optional
+	    	if (optionalValue) {
+	    		return optionalValue;
+	    	}
+	    	var start = $("#addSubnet [name='start']").val();
+	    	if(start == "" || start ==null) return true;
+	    	 if(parseInt(value) < parseInt(start)){
+	    		 return false;
+	    	 }else return true;
+	    	
+	    }, "地址池结束值应大于开始值");
+	    $.validator.addMethod("pools_start", function(value, element) {
+	    	var optionalValue = this.optional(element);
+	    	// Element is optional
+	    	if (optionalValue) {
+	    		return optionalValue;
+	    	}
+	    	var end = $("#addSubnet [name='end']").val();
+	    	if(end == "" || end ==null) return true;
+	    	 if(parseInt(value) > parseInt(end)){
+	    		 return false;
+	    	 }else return true;
+	    	
+	    }, "地址池开始值应小于结束值");
+	    
 	    var EventsHandler = {
 	    		//表单校验
 				formValidator: function(){
@@ -40,8 +92,29 @@ define(['Common','bs/modal','bs/wizard','bs/tooltip','jq/form/validator','jq/for
 			            rules: {
 			            	'name': {
 			                    required: true,
-			                    minlength: 4,
-			                    maxlength:15
+			                    maxlength:255
+			                },
+			                'cidr': {
+			                    required: true,
+			                    maxlength:64,
+			                    cidr: true
+			                },
+			                'gateway_ip':{
+			                	required: true,
+			                    ip: true,
+			                    ip_rule: true
+			                },
+			                'end':{
+			                	max:255,
+			                	min:1,
+			                	pools_end:true,
+			                	digits:true
+			                },
+			                'start':{
+			                	max:255,
+			                	min:1,
+			                	pools_start:true,
+			                	digits:true
 			                }
 			            }
 			        });
@@ -51,65 +124,93 @@ define(['Common','bs/modal','bs/wizard','bs/tooltip','jq/form/validator','jq/for
 		    	    	checkboxClass: "icheckbox-info",
 		    	        radioClass: "iradio-info"
 		    	    })
+				},
+				switcher:function(){
+					$("#addSubnet input[type=\"checkbox\"], input[type=\"radio\"]").not("[data-switch-no-init]").switcher();
+					$("[data-switch-set]").on("click", function() {
+			            var type;
+			            type = $(this).data("switch-set");
+			            $(this).parent().find(".btn-gray").removeClass("btn-gray");
+			            $(this).addClass("btn-gray");
+			            return $("#switch-" + type).switcher(type, $(this).data("switch-value"));
+			        });
+				},
+				enable_ip :function(){
+					$("#enable_ip .btn").on("click", function() {
+			            var btn_val = $(this).data("switch-value");
+			            $(this).parent().find(".btn-gray").removeClass("btn-gray");
+			            $(this).addClass("btn-gray");
+			            if(btn_val) {
+			            	$("#gateway_ip").css("display","none");
+			            	$("input[name='enable_ip']").val(1);
+			            }else {
+			            	$("#gateway_ip").css("display","");
+			            	$("input[name='enable_ip']").val(0);
+			            }
+			        });
 				}
 	    }
 	    var EditData = {
-	    		//编辑云主机名称弹框
+	    	//创建子网弹框
 	    	AddSubnet : function(cb){
-	    		Common.render('tpls/ccenter/vpc/addSubnet.html','',function(html){
-	    			Dialog.show({
-	    	            title: '子网创建',
-	    	            message: html,
-	    	            nl2br: false,
-	    	            buttons: [{
-	    	                label: '创建',
-	    	                action: function(dialog) {
-	    	                	var valid = $(".form-horizontal").valid();
-	    	            		if(!valid) return false;
-//	    	                	var serverData = {
-//	    	                			"id":"subnetid5",
-//	    	        					"name": $("#addSubnet [name='name']").val(),
-//	    	        					"cidr":  $("#addSubnet [name='cidr']").val(),
-//	    	        					"ip_version": $("#addSubnet [name='ip_version']").val(),
-//	    	        					"gateway_ip": $("#addSubnet [name='gateway_ip']").val(),
-//	    	        					"enable_dhcp":$("#addSubnet [name='enable_dhcp']:checked").length? 1:0
-//	    	        				};
-	    	                	var serverData = {
-	    	                	    "allocation_pools": [
-	    	                	      {
-	    	                	        "end": "",
-	    	                	        "id": "",
-	    	                	        "start": "",
-	    	                	        "subnet_id": ""
-	    	                	      }
-	    	                	    ],
-	    	                	    "cidr":  $("#addSubnet [name='cidr']").val(),
-	    	                	    "enable_dhcp": $("#addSubnet [name='enable_dhcp']:checked").length? 1:0,
-	    	                	    "gateway_ip": $("#addSubnet [name='gateway_ip']").val(),
-	    	                	    "id": "subnetid5",
-	    	                	    "ip_version": $("#addSubnet [name='ip_version']").val(),
-	    	                	    "ipv6_address_mode": "",
-	    	                	    "ipv6_ra_mode": "",
-	    	                	    "name": $("#addSubnet [name='name']").val(),
-	    	                	    "network_id": "networkid1",
-	    	                	    "shared": 0,
-	    	                	    "tenant_id": "vdcid1"
-	    	                	  };
-	    	                	Common.xhr.postJSON('/v2.0/subnets',serverData,function(data){
-	    	                		if(data){
-	    	                			alert("保存成功");
-	    	                			dialog.close();
-									}else{
-										alert("保存失败");
-									}
-								})
-	    	                }
-	    	            }],
-	    	            onshown : cb
-	    	        });
-	    		});
+	    		//先获取vpc后，再render
+	    		Common.xhr.ajax('/v2.0/networks',function(data){
+	    			Common.render('tpls/ccenter/vpc/addSubnet.html',data,function(html){
+		    			Dialog.show({
+		    	            title: '子网创建',
+		    	            message: html,
+		    	            nl2br: false,
+		    	            buttons: [{
+		    	                label: '创建',
+		    	                action: function(dialog) {
+		    	                	var valid = $(".form-horizontal").valid();
+		    	            		if(!valid) return false;
+//		    	                	var serverData = {
+//		    	                			"id":"subnetid5",
+//		    	        					"name": $("#addSubnet [name='name']").val(),
+//		    	        					"cidr":  $("#addSubnet [name='cidr']").val(),
+//		    	        					"ip_version": $("#addSubnet [name='ip_version']").val(),
+//		    	        					"gateway_ip": $("#addSubnet [name='gateway_ip']").val(),
+//		    	        					"enable_dhcp":$("#addSubnet [name='enable_dhcp']:checked").length? 1:0
+//		    	        				};
+		    	                	var serverData = {
+		    	                		"subnet":{
+		    	                			"allocation_pools": [
+	           	    	                	      {
+	           	    	                	        "end": $("#addSubnet [name='end']").val()? $("#addSubnet [name='end']").val():254,
+	           	    	                	        "start": $("#addSubnet [name='start']").val()? $("#addSubnet [name='start']").val():1
+	           	    	                	      }
+	           	    	                	    ],
+	           	    	                	    "cidr":  $("#addSubnet [name='cidr']").val(),
+	           	    	                	    "enable_dhcp": $("#addSubnet [name='enable_dhcp']:checked").length? 1:0,
+	           	    	                	    "gateway_ip": $("input[name='enable_ip']").val()? null:$("#addSubnet [name='gateway_ip']").val(),
+	           	    	                	    "ip_version": $("#addSubnet [name='ip_version']").val(),
+	           	    	                	    "ipv6_address_mode": "",
+	           	    	                	    "ipv6_ra_mode": "",
+	           	    	                	    "name": $("#addSubnet [name='name']").val(),
+	           	    	                	    "network_id": $("#addSubnet [name='network_id']").val(),
+	           	    	                	    "shared": 0,
+	           	    	                	    "tenant_id": "vdcid1"
+		    	                		}
+		    	                	  };
+		    	                	Common.xhr.postJSON('/v2.0/subnets',serverData,function(data){
+		    	                		if(data){
+		    	                			Dialog.success('保存成功')
+		    	                			setTimeout(function(){Dialog.closeAll()},2000);
+		    	                			Common.router.route();
+										}else{
+											 Dialog.warning ('保存失败')
+										}
+									})
+		    	                }
+		    	            }],
+		    	            onshown : cb
+		    	        });
+		    		});
+	    		})
 	    		
 	    	},
+	    	//编辑子网弹框
 	    	EditSubnet : function(id,cb){
 	    		Common.xhr.ajax('/v2.0/subnets/'+id,function(data){
 	    		Common.render('tpls/ccenter/vpc/editSubnet.html',data.subnet,function(html){
@@ -123,16 +224,30 @@ define(['Common','bs/modal','bs/wizard','bs/tooltip','jq/form/validator','jq/for
 	    	                	var valid = $(".form-horizontal").valid();
 	    	            		if(!valid) return false;
 	    	            		var serverData = {
-	    	        					"ip_version": $("#addSubnet [name='ip_version']").val(),
-	    	        					"gateway_ip": $("#addSubnet [name='gateway_ip']").val(),
-	    	        					"enable_dhcp":$("#addSubnet [name='enable_dhcp']:checked").length? 1:0
-	    	        				};
-	    	                	Common.xhr.putJSON('/v2.0/subnets/subnetid1',serverData,function(data){
+		    	                		"subnet":{
+		    	                			"allocation_pools": [
+	           	    	                	      {
+	           	    	                	        "end": $("#addSubnet [name='end']").val()? $("#addSubnet [name='end']").val():254,
+	           	    	                	        "start": $("#addSubnet [name='start']").val()? $("#addSubnet [name='start']").val():1,
+	           	    	                	        "id" :"",
+	           	    	                	        "subnet_id":id
+	           	    	                	      }
+	           	    	                	    ],
+	           	    	                	    "enable_dhcp": $("#addSubnet [name='enable_dhcp']:checked").length? 1:0,
+	           	    	                	    "gateway_ip": $("input[name='enable_ip']").val()? null:$("#addSubnet [name='gateway_ip']").val(),
+	           	    	                	    "ip_version": $("#addSubnet [name='ip_version']").val(),
+	           	    	                	    "ipv6_address_mode": "",
+	           	    	                	    "ipv6_ra_mode": "",
+	           	    	                	    "name": $("#addSubnet [name='name']").val()
+		    	                		}
+		    	                	  };
+	    	                	Common.xhr.putJSON('/v2.0/subnets/'+id,serverData,function(data){
 	    	                		if(data){
-	    	                			alert("保存成功");
-	    	                			dialog.close();
+	    	                			Dialog.success('保存成功')
+	    	                			setTimeout(function(){Dialog.closeAll()},2000);
+	    	                			Common.router.route();
 									}else{
-										alert("保存失败");
+										Dialog.warning ('保存失败')
 									}
 								})
 	    	                }
@@ -147,14 +262,16 @@ define(['Common','bs/modal','bs/wizard','bs/tooltip','jq/form/validator','jq/for
 	  //创建子网
 	    $("#SubnetTable_wrapper span.btn-add").on("click",function(){
 	    	EditData.AddSubnet(function(){
-	    		EventsHandler.checkboxICheck();
+	    		EventsHandler.enable_ip();
+	    		EventsHandler.switcher();
 	    		EventsHandler.formValidator();
 	    	});
 	    });
 	    //编辑子网
 	    $("#SubnetTable_wrapper a.btn-opt").on("click",function(){
 	    	EditData.EditSubnet($(this).attr("data"),function(){
-	    		EventsHandler.checkboxICheck();
+	    		EventsHandler.enable_ip();
+	    		EventsHandler.switcher();
 	    		EventsHandler.formValidator();
 	    	});
 	    });
@@ -163,6 +280,10 @@ define(['Common','bs/modal','bs/wizard','bs/tooltip','jq/form/validator','jq/for
 	    		Common.render('tpls/ccenter/vpc/subnetDetail.html',data.subnet,function(html){
 	    			$("#page-main .page-content").html(html);
 	    			EventsHandler.checkboxICheck();
+	    			//返回按钮
+	    		    $(".form-horizontal a.reload").on("click",function(){
+	    		    	Common.router.route();
+	    		    })
 	    		});
 	    	});
 	    })
@@ -172,21 +293,18 @@ define(['Common','bs/modal','bs/wizard','bs/tooltip','jq/form/validator','jq/for
 	    	 var id = obj.attr("data");
 	    	 Dialog.confirm('确定要删除该子网吗?', function(result){
 	             if(result) {
-	            	 $.ajax({
-	                     'type': 'DELETE',
-	                     'url': '/v2.0/subnets/'+id,
-	                     'contentType': 'application/json',
-	                     'success': function(data){
+	            	 Common.xhr.del('/v2.0/subnets/'+id,
+	                     function(data){
 	                    	 if(data){
-	                    		 alert("删除成功");
-	                    		 location.reload();
+	                    		 Dialog.success('删除成功')
+ 	                			 setTimeout(function(){Dialog.closeAll()},2000);
+	                    		 Common.router.route();
 	                    	 }else{
-	                    		 alert("删除失败");
+	                    		 Dialog.warning ('删除失败')
 	                    	 }
-	                     }
-	                 });
+	                     });
 	             }else {
-	            	 Dialog.close();
+	            	 Dialog.closeAll();
 	             }
 	         });
 	     })
