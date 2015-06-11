@@ -273,6 +273,15 @@ define('Common', ['PubView', 'bs/modal', 'json', 'template', 'jq/dataTables', 'j
         });
     }
 
+    var modalDefaults = {
+        position: 'right 48'
+    };
+    Modal.processing.setDefaultOptions(modalDefaults);
+    Modal.info.setDefaultOptions(modalDefaults);
+    Modal.warning.setDefaultOptions(modalDefaults);
+    Modal.error.setDefaultOptions(modalDefaults);
+    Modal.success.setDefaultOptions(modalDefaults);
+
     return {
         hash: function() {
             return _getHash();
