@@ -1,4 +1,4 @@
-<div class="wizard" id="create-server-wizard" data-title="创建服务器">
+<div class="wizard" id="create-vdc-wizard" data-title="创建服务器">
 			<!-- 基本信息 -->
 			<div class="wizard-card" data-cardname="basci">
 				<h3>基本信息</h3>
@@ -7,51 +7,22 @@
 						<div class="form-group">
 							<label for="server-name" class="control-label col-sm-2"><span>* </span>名称：</label>
 							<div class="col-sm-7 col-sm">
-								<input type="text" class="wizard-form-control" id="server-name" name="server-name" placeholder="服务器名称">
+								<input type="text" class="wizard-form-control" id="vdc-name" name="vdc-name" placeholder="vdc名称">
 							</div>
-							<!-- <div class="col-sm-3 col-sm">
-					            <span class="help-block" style="color: #000000;padding-top: 10px;">请填写真实的邮箱</span>
-					        </div> -->
 						</div>
 					</div>
 					
 					<div class="wizard-input-section">
 						<div class="form-group">
-							<label for="server-desc" class="control-label col-sm-2"><span>* </span>镜像：</label>
+							<label for="server-desc" class="control-label col-sm-2"><span>* </span>描述：</label>
 							<div class="col-sm-9 col-sm">
-								<ul class="nav nav-pills image-source">
-								  <li class="active"><a href="javascript:void(0)"  data-image="image">镜像</a></li>
-								  <li><a href="javascript:void(0)"  data-image="snapshot">快照</a></li>
-								  <li><a  href="javascript:void(0)" data-image="disk">云硬盘</a></li>
-								  <li><a  href="javascript:void(0)" data-image="disksnap">云硬盘快照</a></li>
-								</ul>
-								<div data-con="image" class="image-list">
-									{{each imageList as item i}}
-										<div class="btn" data-con="{{item.id}}"><i class="image-icon-default {{item.type}}"></i>{{item.name}}</div>
-									{{/each}}
-								</div>
-								<div data-con="snapshot"  class="image-list hide">
-									{{each snapshotList as item i}}
-										<div class="btn" data-con="{{item.id}}"><i class="image-icon-default {{item.type}}"></i>{{item.name}}</div>
-									{{/each}}
-								</div>
-								<div data-con="disk"   class="image-list hide">
-									{{each diskList as item i}}
-										<div class="btn" data-con="{{item.id}}"><i class="image-icon-default {{item.type}}"></i>{{item.name}}</div>
-									{{/each}}
-								</div>
-								<div data-con="disksnap"   class="image-list hide">
-									{{each diskSnapList as item i}}
-										<div class="btn" data-con="{{item.id}}"><i class="image-icon-default {{item.type}}"></i>{{item.name}}</div>
-									{{/each}}
-								</div>
+								<textarea class="wizard-form-control" rows="10"></textarea>
 							</div>
-							<input type="hidden" class="wizard-form-control" id="image-id" name="image-id">
 						</div>
 					</div>
 				</div>
 				<div class="wizard-card-desc col-sm-4">
-					<p>镜像：选择创建你的云主机所用的镜像。其中，从镜像创建是指从不同类型操作系统的镜像文件创建，另外可选择是否创建一个新磁盘；
+					<p>一个虚拟数据中心对于一个租户：选择创建你的云主机所用的镜像。其中，从镜像创建是指从不同类型操作系统的镜像文件创建，另外可选择是否创建一个新磁盘；
 						从快照创建是指从云主机的快照创建；
 						从云硬盘创建是指从一个通过云主机创建的云硬盘来创建云主机，云硬盘会被挂载到云主机上；</p>
 				</div>
@@ -59,77 +30,91 @@
 			</div>
 			
 			<!--详细信息 -->
-			<div class="wizard-card" data-cardname="detail">
-				<h3>详细配置</h3>
-				<div class="wizard-card-content col-sm-8">
+			<div class="wizard-card" data-cardname="az">
+				<h3>可用分区</h3>
+				<div class="wizard-card-content none-desc col-sm-12">
 					<div class="wizard-input-section">
 						<div class="form-group">
-							<label for="select-vdc" class="control-label col-sm-3"><span>* </span>虚拟数据中心：</label>
-							<div id="select-vm" class="col-sm-7 col-sm">
-								<select name="select-vdc"  class="wizard-form-control select select-vdc">
-								    {{#uiSelectList(vdcList)}}
+							<label for="select-vdc" class="control-label col-sm-2"><span>* </span>虚拟化环境：</label>
+							<div id="select-vm" class="col-sm-5 col-sm">
+								<select name="select-vdc"  class="wizard-form-control select select-ve">
+								    {{#uiSelectList(veList)}}
 								</select>
 							</div>
 						</div>
 					</div>
 					
 					<div class="wizard-input-section">
-						<div class="form-group">
-							<label for="select-available-zone" class="control-label col-sm-3"><span>* </span>可用域：</label>
-							<div class="col-sm-7 col-sm">
-								<select name="select-available-zone"   class="wizard-form-control select select-available-zone">
-								</select>
+						<div class="chose-az">
+							<div class="col-sm-5 col-sm">
+								<div class="panel panel-default">
+								  <!-- Default panel contents -->
+								  <div class="panel-heading clearfix">
+								  	<span>全部</span>
+								  	<form class="form-search pull-right">
+									  	<input type="text" class="search-query">
+									  	<i class="fa fa-search"></i>
+								  	</form>
+								  	</div>
+								  <!-- <div class="panel-body">
+								   <form class="form-search">
+									  <input type="text" class="search-query">
+									  <button type="submit" class="btn">Search</button>
+									</form>
+								  </div> -->
+								
+								  <!-- List group -->
+								  <div class="list-group">
+									  <a href="javascript:void(0);" class="list-group-item">
+										  Dapibus ac facilisis in
+										  <i class="fa fa-plus-circle fa-fw"></i>
+									  </a>
+									  <a href="#" class="list-group-item">
+										  Morbi leo risus
+										  <i class="fa fa-plus-circle fa-fw"></i>
+									  </a>
+									  <a href="#" class="list-group-item">
+										  Porta ac consectetur ac
+										  <i class="fa fa-plus-circle fa-fw"></i>
+									  </a>
+									  <a href="#" class="list-group-item">
+										  Vestibulum at eros
+										  <i class="fa fa-plus-circle fa-fw"></i>
+									  </a>
+									  <a href="#" class="list-group-item">
+										  Dapibus ac facilisis in
+										  <i class="fa fa-plus-circle fa-fw"></i>
+									  </a>
+								  </div>
+								</div>
 							</div>
-						</div>
-					</div>
-					
-					<div class="wizard-input-section">
-						<div class="form-group">
-							<label for="select-specs" class="control-label col-sm-3"><span>* </span>云主机规格：</label>
-							<div class="col-sm-7 col-sm">
-			                    <select name="select-specs"  class="wizard-form-control select select-specs" tabindex="5">
-			                    	{{each specsList as item i}}
-										<option data-root-disk="{{item.root_disk}}" data-tmp-disk="{{item.tmp_disk}}" data-memory="{{item.memory}}" data-core="{{item.core_num}}"  value="{{item.id}}">{{item.name}}</option>
-								  	{{/each}}
-			                    </select>
-							</div>
-							<div class="col-sm-2 col-sm config-detail-info">
-								<i data-toggle="popover" class="fa fa-info-circle"></i>
-							</div>
-						</div>
-					</div>
-					
-					<div class="wizard-input-section">
-						<div class="form-group">
-							<label for="vm-nums" class="control-label col-sm-3"><span>* </span>云主机数量：</label>
-							<div class="col-sm-7 col-sm">
-								<div class="spinbox"  id="setVmNums">
-								  <input type="text" name="vm-nums" style="height:35px;"  class="wizard-form-control input-mini spinbox-input">
-								  <div class="spinbox-buttons btn-group btn-group-vertical">
-								    <button type="button" class="btn btn-default spinbox-up btn-xs">
-								      <span class="glyphicon glyphicon-chevron-up"></span><span class="sr-only">Increase</span>
-								    </button>
-								    <button type="button" class="btn btn-default spinbox-down btn-xs">
-								      <span class="glyphicon glyphicon-chevron-down"></span><span class="sr-only">Decrease</span>
-								    </button>
+							<div class="col-sm-5 col-sm">
+								<div class="panel panel-default">
+								  <!-- Default panel contents -->
+								  <div class="panel-heading clearfix">
+								  	<span>已选择</span>
+								  	<form class="form-search pull-right">
+									  	<input type="text" class="search-query">
+									  	<i class="fa fa-search"></i>
+								  	</form>
+								  	</div>
+								  <!-- <div class="panel-body">
+								   <form class="form-search">
+									  <input type="text" class="search-query">
+									  <button type="submit" class="btn">Search</button>
+									</form>
+								  </div> -->
+								
+								  <!-- List group -->
+								  <div class="list-group">
+									  <a href="#" class="list-group-item">Vestibulum at eros</a>
+									  <a href="#" class="list-group-item">Dapibus ac facilisis in</a>
 								  </div>
 								</div>
 							</div>
 						</div>
 					</div>
 					
-					<div class="wizard-input-section">
-						<div class="form-group">
-							<label for="" class="control-label col-sm-3">配额：</label>
-							<div class="col-sm-8 col-sm quotas">
-								
-							</div>
-						</div>
-					</div>
-					
-				</div>
-				<div class="wizard-card-desc col-sm-4">
-					<p>属性的单选或多选框都能被赋予合适的样式。对于和多选或单选框联合使用的标签希望将悬停于上方的鼠标设置为“禁止点击”的样式</p>
 				</div>
 			</div>
 			<!-- 网络  -->

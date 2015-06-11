@@ -94,6 +94,9 @@ input[disabled], select[disabled], textarea[disabled], input[readonly], select[r
  	margin:0;
  	padding:0;
  }
+ .wizard-card .wizard-card-content.none-desc{
+ 	border-right:0;
+ } 
  .wizard-card .wizard-card-desc p{
  	line-height:1.5em;
  	padding:30px 10px;
@@ -284,4 +287,31 @@ input[disabled], select[disabled], textarea[disabled], input[readonly], select[r
  .chosen-container-active.chosen-with-drop .chosen-single{
  	outline:none;
  	box-shadow:0;
+ }
+ .wizard-input-section .panel .list-group{
+ 	height:290px;overflow-y:auto;
+ 	border:1px solid #ddd;
+ }
+ .wizard-input-section .panel, .wizard-input-section .panel-default{
+ 	border:0;
+ 	-webkit-box-shadow:0;
+ 	box-shadow:0;
+ }
+ .wizard-input-section .panel-default>.panel-heading{
+ 	background-color:#fff;border:0;
+ 	padding:10px 0 10px 10px;
+ }
+ .wizard-input-section .panel-default>.panel-heading .search-query{
+ 	padding:2px 20px;height:26px;
+ 	/* float:right; */
+ }
+ .wizard-input-section .panel-default>.panel-heading i{
+ 	margin-left:-22px;
+ }
+
+ .wizard-input-section .panel .list-group a.list-group-item{
+ 	border :0;padding:6px 15px;
+ }
+ .wizard-input-section .panel .list-group a.list-group-item i{
+ 	display:none;float:right;
  }
