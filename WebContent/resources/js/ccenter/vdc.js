@@ -161,6 +161,10 @@ define(['Common','bs/modal','bs/wizard','bs/tooltip','jq/form/validator','jq/for
 	    $("ul.dropdown-menu a.updateQuota").on("click",function(){
 	    	more.QuotaSets($(this).attr("data"));
 	    });
+	    //可用分区
+	    $("ul.dropdown-menu a.vdcAz").on("click",function(){
+	    	more.AZ($(this).attr("data-env"),$(this).attr("data"));
+	    });
     
 	    //更多
 	    var more = {
@@ -168,22 +172,76 @@ define(['Common','bs/modal','bs/wizard','bs/tooltip','jq/form/validator','jq/for
 		    	QuotaSets : function(id){
 		    		//先获取QuotaSets后，再render
 		    		Common.xhr.ajax('/v2.0/9cc717d8047e46e5bf23804fc4400247/os-quota-sets/' + id,function(data){
-		    			Common.render('tpls/ccenter/vdc/quota.html',data,function(html){
+		    			Common.render('tpls/ccenter/vdc/quota.html',data.quota_set,function(html){
 		    				Modal.show({
 			    	            title: '配额',
 			    	            message: html,
 			    	            nl2br: false,
 			    	            buttons: [{
 			    	                label: '保存',
-			    	                action: function(dialog) {}
+			    	                action: function(dialog) {
+			    	                	var serverData = {
+				    	            			"quota_set":{
+				    	        					"metadata_items": $("#vdcQuota [name='metadata_items']").val(),
+				    	        					"cores": $("#vdcQuota [name='cores']").val(),
+				    	        					"instances": $("#vdcQuota [name='instances']").val(),
+				    	        					"injected_file_content_bytes": $("#vdcQuota [name='injected_file_content_bytes']").val(),
+				    	        					"disks": $("#vdcQuota [name='disks']").val(),
+				    	        					"diskSnapshots": $("#vdcQuota [name='diskSnapshots']").val(),
+				    	        					"diskTotalSizes": $("#vdcQuota [name='diskTotalSizes']").val(),
+				    	        					"ram": $("#vdcQuota [name='ram']").val(),
+				    	        					"security_group_rules": $("#vdcQuota [name='security_group_rules']").val(),
+				    	        					"floating_ips": $("#vdcQuota [name='floating_ips']").val(),
+				    	        					"network": $("#vdcQuota [name='network']").val(),
+				    	        					"port": $("#vdcQuota [name='port']").val(),
+				    	        					"route": $("#vdcQuota [name='route']").val(),
+				    	        					"subnet": $("#vdcQuota [name='subnet']").val(),
+				    	        					"injected_files": $("#vdcQuota [name='injected_files']").val(),
+				    	        					"security_groups": $("#vdcQuota [name='security_groups']").val(),
+				    	            				}
+			    	        				};
+			    	                	Common.xhr.putJSON('/v2.0/9cc717d8047e46e5bf23804fc4400247/os-quota-sets/'+id,serverData,function(data){
+			    	                		if(data){
+			    	                			alert("保存成功");
+			    	                			
+			    	                			dialog.close();
+											}else{
+												alert("保存失败");
+											}
+										})
+			    	                }
 			    	            }],
 			    	            onshown : function(){}
 			    	        });
 			    		});
-		    		})
-		    		
-		    	}
-	    }
+		    		})	
+		    	},
+	  //可用分区管理
+    	AZ : function(env_id,vdc_id){
+    		//先获取az后，再render
+    		Common.xhr.ajax('/v2/os-availability-zone/virtualEnv/' + env_id,function(eaz){
+    			Common.xhr.ajax('/v2.0/az/' + vdc_id,function(vaz){
+    				var data = {
+    						eazList:eaz,
+    						vazList:vaz,
+    						env:renderData.veList
+    				}
+    				Common.render('tpls/ccenter/vdc/az.html',data,function(html){
+        				Modal.show({
+    	    	            title: '可用分区',
+    	    	            message: html,
+    	    	            nl2br: false,
+    	    	            buttons: [{
+    	    	                label: '保存',
+    	    	                action: function(dialog) {}
+    	    	            }],
+    	    	            onshown : function(){}
+    	    	        });
+    	    		});
+    			})		
+    		})		
+    	 }
+	   }
 	}	
 	return {
 		init : init
