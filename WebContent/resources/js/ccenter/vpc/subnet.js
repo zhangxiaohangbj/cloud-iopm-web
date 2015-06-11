@@ -184,6 +184,10 @@ define(['Common','bs/modal','bs/wizard','bs/tooltip','jq/form/validator','jq/for
 	    		Common.render('tpls/ccenter/vpc/subnetDetail.html',data.subnet,function(html){
 	    			$("#page-main .page-content").html(html);
 	    			EventsHandler.checkboxICheck();
+	    			//返回按钮
+	    		    $(".form-horizontal a.reload").on("click",function(){
+	    		    	Common.router.route();
+	    		    })
 	    		});
 	    	});
 	    })
@@ -193,21 +197,17 @@ define(['Common','bs/modal','bs/wizard','bs/tooltip','jq/form/validator','jq/for
 	    	 var id = obj.attr("data");
 	    	 Dialog.confirm('确定要删除该子网吗?', function(result){
 	             if(result) {
-	            	 $.ajax({
-	                     'type': 'DELETE',
-	                     'url': '/v2.0/subnets/'+id,
-	                     'contentType': 'application/json',
-	                     'success': function(data){
+	            	 Common.xhr.del('/v2.0/subnets/'+id,
+	                     function(data){
 	                    	 if(data){
 	                    		 alert("删除成功");
-	                    		 location.reload();
+	                    		 Common.router.route();
 	                    	 }else{
 	                    		 alert("删除失败");
 	                    	 }
-	                     }
-	                 });
+	                     });
 	             }else {
-	            	 Dialog.close();
+	            	 Dialog.closeAll();
 	             }
 	         });
 	     })

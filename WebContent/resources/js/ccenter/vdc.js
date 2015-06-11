@@ -2,10 +2,10 @@ define(['Common','bs/modal','bs/wizard','bs/tooltip','jq/form/validator','jq/for
 	Common.requestCSS('css/wizard.css');
 	var init = function(){
 		Common.$pageContent.addClass("loading");
-		//先获取数据，进行加工后再去render
 		Common.render(true,{
 			tpl:'tpls/ccenter/vdc/list.html',
-			data:'/v2.0/tenants/page/10/1',
+			//data:'/v2.0/tenants/page/10/1',
+			data:'/resources/data/arrays.txt',
 			beforeRender: function(data){
 				return data.result;;
 			},
@@ -34,6 +34,127 @@ define(['Common','bs/modal','bs/wizard','bs/tooltip','jq/form/validator','jq/for
 	    		$('.table-primary').find('input[type=checkbox]').iCheck('uncheck');
 	    	}
 	    });
+	    var renderData = {};
+        //初始化加载，不依赖其他模块
+		var DataGetter = {
+				//虚拟化环境 virtural environment
+				getVe: function(){
+					Common.xhr.ajax('/resources/data/select.txt',function(veList){///v2/images
+						renderData.veList = veList;
+					});
+				},
+				//根据虚拟化环境获取可用az
+				getAz:  function(){
+					Common.xhr.ajax('/resources/data/select.txt',function(azList){
+						renderData.azList = azList;
+					});
+				},
+				//获取成员信息及对应的角色
+				getUsers : function(){
+					Common.xhr.ajax('/resources/data/select.txt',function(userList){
+						renderData.userList = userList;
+					});
+				},
+				//获取网络资源池
+				getNetPool: function(){
+					Common.xhr.ajax('/resources/data/select.txt',function(netList){
+						renderData.netList = netList;
+					});
+				},
+				//根据网络资源池获取等待分配的IP列表
+				getIps:function(){
+					Common.xhr.ajax('/resources/data/select.txt',function(ipList){
+						renderData.ipList = ipList;
+					});
+				}
+		}
+		DataGetter.getVe();
+		DataGetter.getAz();
+		DataGetter.getUsers();
+		DataGetter.getNetPool();
+		DataGetter.getIps();
+	  //增加按钮
+	    $("#VdcTable_wrapper span.btn-add").on("click",function(){
+	    	//需要修改为真实数据源
+			Common.render('tpls/ccenter/vdc/add.html',renderData,function(html){
+				$('body').append(html);
+				//wizard show
+    			$.fn.wizard.logging = true;
+    			var wizard;
+    			
+    			//维护当前select的值
+    			var currentChosenObj = {
+    					ve: null,	//当前虚拟化环境
+    					az: null,
+    					netId: null
+    			};
+    			//载入默认的数据 inits,创建数据载入类
+    			var DataIniter = {
+    				//根据ve获取可用分区
+    				initAz : function(){
+    					var ve_id = currentChosenObj.ve.val() || $('select.select-ve').children('option:selected').val();
+    					if(ve_id){
+    						/*Common.xhr.ajax('/v2/'+vdc_id+'/os-availability-zone',function(data){
+    							var selectData = [];
+    							for(var i=0;i<data.length;i++){
+    								selectData[i] = {"name":data[i]["zoneName"]};
+    							}
+    							var html = Common.uiSelect(selectData);
+    					    	$('select.select-available-zone').html(html);
+    					    	//同步currentChosenObj
+    					    	currentChosenObj.az = $('select.select-available-zone').children('option:selected');
+    						});*/
+    						EventsHandler.azEvent();
+    					}else{
+    						Modal.danger('尚未选择所属虚拟化环境');
+    					}
+    				}
+    			}
+    			//载入后的事件
+    			var EventsHandler = {
+    					//虚拟化环境change事件
+    					veChange: function(){
+    						//同步
+    						currentChosenObj.ve = $('select.select-ve').children('option:selected');
+    						//重新载入可用分区数据
+    						DataIniter.initAz();
+    					},
+    					//初始化可用分区所需的事件
+    					azEvent: function(){
+    						//滑过出现添加图标
+    						$(document).off("mouseover mouseout",".chose-az a.list-group-item");
+    						$(document).on("mouseover mouseout",".chose-az a.list-group-item",function(event){
+    							if(event.type == "mouseover"){
+    								$(this).find('.fa').show();
+    							 }else if(event.type == "mouseout"){
+    								 $(this).find('.fa').hide();
+    							 }
+    						});
+    					}
+    			}
+				//同步currentChosenObj
+		    	currentChosenObj.ve = $('select.select-ve').children('option:selected');
+		    	currentChosenObj.netId = $('select.select-net').find('option:selected');
+		    	//载入依赖数据
+		    	DataIniter.initAz();
+		    	//
+    			wizard = $('#create-vdc-wizard').wizard({
+    				keyboard : false,
+    				contentHeight : 526,
+    				contentWidth : 900,
+    				showCancel: true,
+    				backdrop: 'static',
+    				buttons: {
+    	                cancelText: "取消",
+    	                nextText: "下一步",
+    	                backText: "上一步",
+    	                submitText: "提交",
+    	                submittingText: "提交中..."
+    	            }
+    			});
+    			wizard.show();
+			});
+	    });
 	    
 	    //更新配额
 	    $("ul.dropdown-menu a.updateQuota").on("click",function(){
@@ -54,46 +175,7 @@ define(['Common','bs/modal','bs/wizard','bs/tooltip','jq/form/validator','jq/for
 			    	            nl2br: false,
 			    	            buttons: [{
 			    	                label: '保存',
-			    	                action: function(dialog) {/*
-			    	                	var valid = $(".form-horizontal").valid();
-			    	            		if(!valid) return false;
-//			    	                	var serverData = {
-//			    	                			"id":"subnetid5",
-//			    	        					"name": $("#addSubnet [name='name']").val(),
-//			    	        					"cidr":  $("#addSubnet [name='cidr']").val(),
-//			    	        					"ip_version": $("#addSubnet [name='ip_version']").val(),
-//			    	        					"gateway_ip": $("#addSubnet [name='gateway_ip']").val(),
-//			    	        					"enable_dhcp":$("#addSubnet [name='enable_dhcp']:checked").length? 1:0
-//			    	        				};
-			    	                	var serverData = {
-			    	                		"subnet":{
-			    	                			"allocation_pools": [
-		           	    	                	      {
-		           	    	                	        "end": $("#addSubnet [name='end']").val()? $("#addSubnet [name='end']").val():254,
-		           	    	                	        "start": $("#addSubnet [name='start']").val()? $("#addSubnet [name='start']").val():1
-		           	    	                	      }
-		           	    	                	    ],
-		           	    	                	    "cidr":  $("#addSubnet [name='cidr']").val(),
-		           	    	                	    "enable_dhcp": $("#addSubnet [name='enable_dhcp']:checked").length? 1:0,
-		           	    	                	    "gateway_ip": $("#addSubnet [name='gateway_ip']").val(),
-		           	    	                	    "ip_version": $("#addSubnet [name='ip_version']").val(),
-		           	    	                	    "ipv6_address_mode": "",
-		           	    	                	    "ipv6_ra_mode": "",
-		           	    	                	    "name": $("#addSubnet [name='name']").val(),
-		           	    	                	    "network_id": $("#addSubnet [name='network_id']").val(),
-		           	    	                	    "shared": 0,
-		           	    	                	    "tenant_id": "vdcid1"
-			    	                		}
-			    	                	  };
-			    	                	Common.xhr.postJSON('/v2.0/subnets',serverData,function(data){
-			    	                		if(data){
-			    	                			alert("保存成功");
-			    	                			dialog.close();
-											}else{
-												alert("保存失败");
-											}
-										})
-			    	                */}
+			    	                action: function(dialog) {}
 			    	            }],
 			    	            onshown : function(){}
 			    	        });
@@ -101,6 +183,7 @@ define(['Common','bs/modal','bs/wizard','bs/tooltip','jq/form/validator','jq/for
 		    		})
 		    		
 		    	}
+	    }
 	}	
 	return {
 		init : init
