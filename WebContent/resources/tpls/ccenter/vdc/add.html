@@ -32,11 +32,11 @@
 			<!--详细信息 -->
 			<div class="wizard-card" data-cardname="az">
 				<h3>可用分区</h3>
-				<div class="wizard-card-content none-desc col-sm-12">
+				<div class="wizard-card-content  col-sm-8">
 					<div class="wizard-input-section">
 						<div class="form-group">
-							<label for="select-vdc" class="control-label col-sm-2"><span>* </span>虚拟化环境：</label>
-							<div id="select-vm" class="col-sm-5 col-sm">
+							<label for="select-vdc" class="control-label col-sm-3"><span>* </span>虚拟化环境：</label>
+							<div id="select-vm" class="col-sm-7 col-sm">
 								<select name="select-vdc"  class="wizard-form-control select select-ve">
 								    {{#uiSelectList(veList)}}
 								</select>
@@ -46,26 +46,43 @@
 					
 					<div class="wizard-input-section">
 						<div class="chose-az">
-							<div class="col-sm-5 col-sm">
+							<div class="col-sm-6 col-sm">
 								<div class="panel panel-default">
 								  <!-- Default panel contents -->
-								  <div class="panel-heading clearfix">
-								  	<span>全部</span>
-								  	<form class="form-search pull-right">
+								  <div class="panel-heading clearfix">全部</div>
+								 <div class="panel-body clearfix">
+								   <form class="form-search">
 									  	<input type="text" class="search-query">
 									  	<i class="fa fa-search"></i>
 								  	</form>
-								  	</div>
-								  <!-- <div class="panel-body">
-								   <form class="form-search">
-									  <input type="text" class="search-query">
-									  <button type="submit" class="btn">Search</button>
-									</form>
-								  </div> -->
+								  </div>
 								
 								  <!-- List group -->
 								  <div class="list-group">
+								  
 									  <a href="javascript:void(0);" class="list-group-item">
+										  Dapibus ac facilisis in
+										  <i class="fa fa-plus-circle fa-fw"></i>
+									  </a>
+									  <a href="#" class="list-group-item">
+										  Morbi leo risus
+										  <i class="fa fa-plus-circle fa-fw"></i>
+									  </a>
+									  <a href="javascript:void(0);" class="list-group-item">
+										  Dapibus ac facilisis in
+										  <i class="fa fa-plus-circle fa-fw"></i>
+									  </a>
+									  <a href="#" class="list-group-item">
+										  Morbi leo risus
+										  <i class="fa fa-plus-circle fa-fw"></i>
+									  </a><a href="javascript:void(0);" class="list-group-item">
+										  Dapibus ac facilisis in
+										  <i class="fa fa-plus-circle fa-fw"></i>
+									  </a>
+									  <a href="#" class="list-group-item">
+										  Morbi leo risus
+										  <i class="fa fa-plus-circle fa-fw"></i>
+									  </a><a href="javascript:void(0);" class="list-group-item">
 										  Dapibus ac facilisis in
 										  <i class="fa fa-plus-circle fa-fw"></i>
 									  </a>
@@ -88,27 +105,25 @@
 								  </div>
 								</div>
 							</div>
-							<div class="col-sm-5 col-sm">
+							<div class="col-sm-6 col-sm">
 								<div class="panel panel-default">
 								  <!-- Default panel contents -->
-								  <div class="panel-heading clearfix">
-								  	<span>已选择</span>
-								  	<form class="form-search pull-right">
+								  <div class="panel-heading clearfix">已选择</div>
+								 <div class="panel-body clearfix">
+								   <form class="form-search">
 									  	<input type="text" class="search-query">
 									  	<i class="fa fa-search"></i>
 								  	</form>
-								  	</div>
-								  <!-- <div class="panel-body">
-								   <form class="form-search">
-									  <input type="text" class="search-query">
-									  <button type="submit" class="btn">Search</button>
-									</form>
-								  </div> -->
+								  </div>
 								
 								  <!-- List group -->
 								  <div class="list-group">
-									  <a href="#" class="list-group-item">Vestibulum at eros</a>
-									  <a href="#" class="list-group-item">Dapibus ac facilisis in</a>
+									  <a href="javascript:void(0);" class="list-group-item">
+										  Dapibus ac facilisis in
+									  </a>
+									  <a href="#" class="list-group-item">
+										  Morbi leo risus
+									  </a>
 								  </div>
 								</div>
 							</div>
@@ -116,10 +131,16 @@
 					</div>
 					
 				</div>
+				<div class="wizard-card-desc col-sm-4">
+					<p>一个虚拟数据中心对于一个租户：选择创建你的云主机所用的镜像。其中，从镜像创建是指从不同类型操作系统的镜像文件创建，另外可选择是否创建一个新磁盘；
+						从快照创建是指从云主机的快照创建；
+						从云硬盘创建是指从一个通过云主机创建的云硬盘来创建云主机，云硬盘会被挂载到云主机上；</p>
+				</div>
+				
 			</div>
-			<!-- 网络  -->
+			<!-- 配额信息  -->
 			<div class="wizard-card wizard-card-overlay" data-cardname="networks">
-			<h3>网络</h3>
+			<h3>配额信息</h3>
 				<div class="wizard-card-content col-sm-8">
 					<div class="wizard-input-section">
 						<div class="form-group">
@@ -179,7 +200,7 @@
 				</div>
 			</div>
 			<div class="wizard-card wizard-card-overlay" data-cardname="security">
-				<h3>访问安全</h3>
+				<h3>成员信息</h3>
 				<div class="wizard-card-content col-sm-8">
 					<div class="wizard-input-section">
 						<div class="form-group">
@@ -225,7 +246,7 @@
 			</div>
 
 			<div class="wizard-card" data-cardname="senior">
-				<h3>高级设置</h3>
+				<h3>浮动IP</h3>
 				<div class="wizard-card-content col-sm-8">
 					<div class="wizard-input-section">
 						<div class="form-group">
