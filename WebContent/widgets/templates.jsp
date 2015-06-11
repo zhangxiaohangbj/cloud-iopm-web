@@ -1,5 +1,5 @@
 <script type="text/html" id="ui-select">
-{{if list}} 
+{{if list}}
     {{if wrapper}}
     <select{{if id}} id="{{id}}"{{/if}}{{if name}} name="{{name}}"{{/if}}{{if className}} class="{{className}}"{{/if}}{{if multiple}} multiple="multiple"{{/if}}{{if attrs}}{{each attrs}} {{$index}}="{{$value}}"{{/each}}{{/if}}>
     {{/if}}

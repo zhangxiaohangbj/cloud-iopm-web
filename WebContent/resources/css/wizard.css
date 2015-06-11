@@ -332,6 +332,10 @@ input[disabled], select[disabled], textarea[disabled], input[readonly], select[r
  .wizard-input-section .panel .list-group .list-group-item .dropdown .btn-default{
  	padding:3px;border-radius:0;
  }
+ .wizard-input-section .panel .list-group div.dropdown,
+ .open>.dropdown-menu-right a{
+ 	font-size:13px;
+ }
  .open>.dropdown-menu-right{
  	right:0;left:inherit;
  }
