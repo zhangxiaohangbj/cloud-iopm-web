@@ -1,37 +1,52 @@
-<div id="vdcAz" style="overflow:hidden;">
-		<div class="col-sm-6">
-		    <span style="display: block;margin-bottom: 10px;font-size: 16px;">全部可用分区</span>
-			<div style="padding: 8px;border: 1px solid #ccc;">
-		      <input type="text" class="form-control" placeholder="Search">
-		    </div>
-		    <!-- <select data-placeholder="" class="form-control" multiple="" tabindex="3" name="allSecurity" style="border-top: 0;border-radius: 0;">
-                <option value="Security Group1">Security Group1</option>
-                <option value="Security Group2">Security Group2</option>
-            </select> -->
-            <div class="select-list">
-            	<ul name="allSecurity">
-            		<li class="p3"><span class="security-left">Security Group1</span></li>
-            		<li class="p3"><span class="security-left">Security Group2</span></li>
-            	</ul>
-            </div>
+
+<div class="col-sm-12" id="vdcAz">
+	<div class="form-group">
+		<label for="select-vdc" class="control-label col-sm-3"><span>*
+		</span>虚拟化环境：</label>
+		<div id="select-vm" class="col-sm-7 col-sm">
+			<select name="select-vdc"
+				class="wizard-form-control select select-ve">
+				{{#uiSelectList(veList)}}
+			</select>
 		</div>
-		<div class="col-sm-6">
-			<span style="display: block;margin-bottom: 10px;font-size: 16px;">已选可用分区</span>
-			<div style="padding: 8px;border: 1px solid #ccc;">
-		      <input type="text" class="form-control" placeholder="Search">
-		    </div>
-		    <!-- <select data-placeholder="" class="form-control" multiple="" tabindex="3" name="choosedSecurity" style="border-top: 0;border-radius: 0;">
-		    	{{each data as item i}}
-		    		<option value="Security Group1">Security Group1</option>
-		    	{{/each}}
-                <option value="Security Group3">Security Group3</option>
-                <option value="Security Group4">Security Group4</option>
-            </select> -->
-             <div class="select-list">
-            	<ul  name="choosedSecurity">
-            		<li class="p3"><span class="security-right">Security Group3</span></li>
-            		<li class="p3"><span class="security-right">Security Group4</span></li>
-            	</ul>
-            </div>
+	</div>
+	<div class="chose-az">
+		<div class="col-sm-6 col-sm">
+			<div class="panel panel-default">
+				<!-- Default panel contents -->
+				<div class="panel-heading clearfix">全部</div>
+				<div class="panel-body clearfix">
+					<form class="form-search">
+						<input type="text" class="search-query"> <i
+							class="fa fa-search"></i>
+					</form>
+				</div>
+
+				<!-- List group -->
+				<div class="list-group">
+					{{each eazList as item i}} <a href="javascript:void(0);"
+						class="list-group-item">{{item.name}}<i
+						class="fa fa-plus-circle fa-fw"></i></a> {{/each}} 
+				</div>
+			</div>
 		</div>
+		<div class="col-sm-6 col-sm">
+			<div class="panel panel-default">
+				<!-- Default panel contents -->
+				<div class="panel-heading clearfix">已选择</div>
+				<div class="panel-body clearfix">
+					<form class="form-search">
+						<input type="text" class="search-query"> <i
+							class="fa fa-search"></i>
+					</form>
+				</div>
+
+				<!-- List group -->
+				<div class="list-group">
+					{{each eazList as item i}} <a href="javascript:void(0);"
+						class="list-group-item">{{item.name}}</a> {{/each}}
+				</div>
+			</div>
+		</div>
+	</div>
 </div>
