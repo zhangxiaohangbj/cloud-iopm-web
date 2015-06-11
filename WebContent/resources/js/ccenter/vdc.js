@@ -1,11 +1,11 @@
 define(['Common','bs/modal','bs/wizard','bs/tooltip','jq/form/validator','jq/form/validator/addons/bs3'],function(Common,Modal){
 	Common.requestCSS('css/wizard.css');
+	Common.requestCSS('css/dialog.css');
 	var init = function(){
 		Common.$pageContent.addClass("loading");
 		Common.render(true,{
 			tpl:'tpls/ccenter/vdc/list.html',
-			//data:'/v2.0/tenants/page/10/1',
-			data:'/resources/data/arrays.txt',
+			data:'/v2.0/tenants/page/10/1',
 			beforeRender: function(data){
 				return data.result;;
 			},
@@ -34,7 +34,6 @@ define(['Common','bs/modal','bs/wizard','bs/tooltip','jq/form/validator','jq/for
 	    		$('.table-primary').find('input[type=checkbox]').iCheck('uncheck');
 	    	}
 	    });
-	    
 	    var renderData = {};
         //初始化加载，不依赖其他模块
 		var DataGetter = {
@@ -156,6 +155,34 @@ define(['Common','bs/modal','bs/wizard','bs/tooltip','jq/form/validator','jq/for
     			wizard.show();
 			});
 	    });
+	    
+	    //更新配额
+	    $("ul.dropdown-menu a.updateQuota").on("click",function(){
+	    	more.QuotaSets($(this).attr("data"));
+	    });
+    
+	    //更多
+	    var more = {
+		    	//配额管理
+		    	QuotaSets : function(id){
+		    		//先获取QuotaSets后，再render
+		    		Common.xhr.ajax('/v2.0/9cc717d8047e46e5bf23804fc4400247/os-quota-sets/' + id,function(data){
+		    			Common.render('tpls/ccenter/vdc/quota.html',data,function(html){
+		    				Modal.show({
+			    	            title: '配额',
+			    	            message: html,
+			    	            nl2br: false,
+			    	            buttons: [{
+			    	                label: '保存',
+			    	                action: function(dialog) {}
+			    	            }],
+			    	            onshown : function(){}
+			    	        });
+			    		});
+		    		})
+		    		
+		    	}
+	    }
 	}	
 	return {
 		init : init
