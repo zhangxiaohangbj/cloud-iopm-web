@@ -1,11 +1,11 @@
 define(['Common','bs/modal','bs/wizard','bs/tooltip','jq/form/validator','jq/form/validator/addons/bs3'],function(Common,Modal){
 	Common.requestCSS('css/wizard.css');
+	Common.requestCSS('css/dialog.css');
 	var init = function(){
 		Common.$pageContent.addClass("loading");
 		Common.render(true,{
 			tpl:'tpls/ccenter/vdc/list.html',
-			//data:'/v2.0/tenants/page/10/1',
-			data:'/resources/data/arrays.txt',
+			data:'/v2.0/tenants/page/10/1',
 			beforeRender: function(data){
 				return data.result;;
 			},
@@ -158,8 +158,7 @@ define(['Common','bs/modal','bs/wizard','bs/tooltip','jq/form/validator','jq/for
 	    
 	    //更新配额
 	    $("ul.dropdown-menu a.updateQuota").on("click",function(){
-	    	require(['css!'+PubView.rqBaseUrl+'/css/dialog.css']);
-	    	EditData.EditVmName($(this).attr("data"));
+	    	more.QuotaSets($(this).attr("data"));
 	    });
     
 	    //更多
@@ -167,10 +166,10 @@ define(['Common','bs/modal','bs/wizard','bs/tooltip','jq/form/validator','jq/for
 		    	//配额管理
 		    	QuotaSets : function(id){
 		    		//先获取QuotaSets后，再render
-		    		Common.xhr.ajax('/v2.0/1/os-quota-sets/' + id,function(data){
+		    		Common.xhr.ajax('/v2.0/9cc717d8047e46e5bf23804fc4400247/os-quota-sets/' + id,function(data){
 		    			Common.render('tpls/ccenter/vdc/quota.html',data,function(html){
-			    			Dialog.show({
-			    	            title: '子网创建',
+		    				Modal.show({
+			    	            title: '配额',
 			    	            message: html,
 			    	            nl2br: false,
 			    	            buttons: [{
