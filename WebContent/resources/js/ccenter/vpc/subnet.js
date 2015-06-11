@@ -98,15 +98,12 @@ define(['Common','bs/modal','bs/wizard','bs/tooltip','jq/form/validator','jq/for
 		    	                			"allocation_pools": [
 	           	    	                	      {
 	           	    	                	        "end": $("#addSubnet [name='end']").val()? $("#addSubnet [name='end']").val():254,
-	           	    	                	        "id": "",
-	           	    	                	        "start": $("#addSubnet [name='start']").val()? $("#addSubnet [name='start']").val():1,
-	           	    	                	        "subnet_id": ""
+	           	    	                	        "start": $("#addSubnet [name='start']").val()? $("#addSubnet [name='start']").val():1
 	           	    	                	      }
 	           	    	                	    ],
 	           	    	                	    "cidr":  $("#addSubnet [name='cidr']").val(),
 	           	    	                	    "enable_dhcp": $("#addSubnet [name='enable_dhcp']:checked").length? 1:0,
 	           	    	                	    "gateway_ip": $("#addSubnet [name='gateway_ip']").val(),
-	           	    	                	    "id": "subnetid5",
 	           	    	                	    "ip_version": $("#addSubnet [name='ip_version']").val(),
 	           	    	                	    "ipv6_address_mode": "",
 	           	    	                	    "ipv6_ra_mode": "",
