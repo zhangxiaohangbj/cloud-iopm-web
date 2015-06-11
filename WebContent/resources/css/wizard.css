@@ -301,14 +301,23 @@ input[disabled], select[disabled], textarea[disabled], input[readonly], select[r
  	background-color:#fff;border:0;
  	padding:10px 0 10px 10px;
  }
- .wizard-input-section .panel-default>.panel-heading .search-query{
- 	padding:2px 20px;height:26px;
- 	/* float:right; */
+ .wizard-input-section .panel-default>.panel-body{
+ 	border:1px solid #ddd;border-bottom:0;
+ 	padding:0;
  }
- .wizard-input-section .panel-default>.panel-heading i{
+ .wizard-input-section .panel-default>.panel-body .form-search{
+ 	padding:5px 10px;
+ }
+ .panel-body .form-search .search-query{
+ 	height:26px;width:96%;
+ }
+ .panel-body .form-search i{
  	margin-left:-22px;
+ 	color:#BDBBBB;
  }
-
+.wizard-input-section .panel .list-group{
+	border-top:0;
+}
  .wizard-input-section .panel .list-group a.list-group-item{
  	border :0;padding:6px 15px;
  }
