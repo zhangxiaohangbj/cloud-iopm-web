@@ -6,7 +6,7 @@ define(['Common','bs/modal','bs/wizard','bs/tooltip','jq/form/validator','jq/for
 		//先获取数据，进行加工后再去render
 		Common.render(true,{
 			tpl:'tpls/monitor/task/taskGroup/list.html',
-			data:'/cloud/task/task-group',
+			data:'/cloud/task/task-group?deleted=false',
 			beforeRender: function(data){
 				return data;
 			},
@@ -57,7 +57,7 @@ define(['Common','bs/modal','bs/wizard','bs/tooltip','jq/form/validator','jq/for
 	    		//需要修改为真实数据源
 				Common.render('tpls/monitor/task/taskGroup/add.html','',function(html){
 					Modal.show({
-	    	            title: '新建策略分组',
+	    	            title: '新建任务分组',
 	    	            message: html,
 	    	            nl2br: false,
 	    	            buttons: [{
@@ -98,7 +98,7 @@ define(['Common','bs/modal','bs/wizard','bs/tooltip','jq/form/validator','jq/for
 	    		Common.xhr.ajax('/cloud/task/task-group/'+id,function(data){
 	    			Common.render('tpls/monitor/task/taskGroup/add.html',data,function(html){
 						Modal.show({
-		    	            title: '编辑策略分组',
+		    	            title: '编辑任务分组',
 		    	            message: html,
 		    	            nl2br: false,
 		    	            buttons: [{

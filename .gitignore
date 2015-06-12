@@ -3,4 +3,8 @@
 /.gradle
 /.settings
 /.classpath
+
+/cloud-iopm-web.iml
 /bin
+
+/WebContent/META-INF/MANIFEST.MF

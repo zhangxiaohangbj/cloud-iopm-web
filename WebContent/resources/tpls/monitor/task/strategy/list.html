@@ -1,0 +1,52 @@
+<div class="page-header clearfix">
+	<ol class="breadcrumb">
+	  <li class="active">策略列表</li>
+	</ol>
+</div>
+<div class="page-body">
+	<div class="pane">
+		<div class="pane-content">
+			<table class="table table-primary table-striped" id="strategyTable">
+				<thead>
+					<tr>
+						<th class="c2">
+							<label><input type="checkbox" class="selectAll"></label>
+						</th>
+						<th class="c4">分组名称</th>
+						<th class="c6">描述</th>
+						<th class="c2">创建时间</th>
+						<th class="c6 sorting_disabled">操作</th>
+					</tr>
+				</thead>
+				<tbody>
+				{{each list as item i}}
+					<tr>
+						<td><label><input type="checkbox"></label></td>
+						<td>{{item.name}}</td>
+						<td>{{item.memo}}</td>
+						<td>{{item.createdAt}}</td>
+						<td>
+						<a class="btn-opt" data-toggle="tooltip" title="编辑分组" href="javascript:void(0)" data="{{item.id}}" data-act="stop" style="margin: 0;"><li class="glyphicon glyphicon-edit"></li></a>
+						<div class="dropdown">
+							<span class="btn btn-more dropdown-toggle" data-toggle="dropdown" aria-expanded="false">更 多 <i class="fa fa-angle-down fa-fw"></i></span>
+							<ul class="dropdown-menu" style="right: 0;left: initial;">
+								<li><a href="javascript:void(0)" class="delete" data="{{item.id}}"><i class="fa fa-trash-o fa-fw"></i>删除</a></li>
+							</ul>
+						</div>	
+						</td>
+					</tr>
+    			{{/each}}
+				</tbody>
+				<tfoot>
+					<tr>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+					</tr>
+				</tfoot>
+			</table>
+		</div>
+	</div>
+</div>

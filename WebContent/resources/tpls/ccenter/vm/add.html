@@ -51,9 +51,12 @@
 					</div>
 				</div>
 				<div class="wizard-card-desc col-sm-4">
-					<p>镜像：选择创建你的云主机所用的镜像。其中，从镜像创建是指从不同类型操作系统的镜像文件创建，另外可选择是否创建一个新磁盘；
-						从快照创建是指从云主机的快照创建；
-						从云硬盘创建是指从一个通过云主机创建的云硬盘来创建云主机，云硬盘会被挂载到云主机上；</p>
+					<p><b>镜像</b>：
+					<br>选择创建你的云主机所用的镜像。其中：
+					<br>从<b>镜像</b>创建是指从不同类型操作系统的镜像文件创建；
+					<br>从<b>快照</b>创建是指从云主机的快照创建；
+					<br>从<b>云硬盘</b>创建是指从一个通过云主机创建的云硬盘来创建云主机，云硬盘会被挂载到云主机上；
+					<br>从<b>云硬盘快照</b>创建是指从一个通过云主机创建的云硬盘快照创建云主机，同时创建一个新的云硬盘。</p>
 				</div>
 			
 			</div>
@@ -89,7 +92,7 @@
 							<div class="col-sm-7 col-sm">
 			                    <select name="flavorRef"  class="wizard-form-control select flavorRef" tabindex="5">
 			                    	{{each specsList as item i}}
-										<option data-root-disk="{{item.root_disk}}" data-tmp-disk="{{item.tmp_disk}}" data-memory="{{item.memory}}" data-core="{{item.core_num}}"  value="{{item.id}}">{{item.name}}</option>
+										<option data-root-disk="{{item.disk}}" data-tmp-disk="{{item.ephemeral}}" data-memory="{{item.ram}}" data-core="{{item.vcpus}}"  value="{{item.id}}">{{item.name}}</option>
 								  	{{/each}}
 			                    </select>
 							</div>
@@ -129,7 +132,19 @@
 					
 				</div>
 				<div class="wizard-card-desc col-sm-4">
-					<p>属性的单选或多选框都能被赋予合适的样式。对于和多选或单选框联合使用的标签希望将悬停于上方的鼠标设置为“禁止点击”的样式</p>
+					<p>
+					<b>虚拟数据中心</b>：
+					<br>只有超级管理员可更改该配置。普通用户默认选择所在的虚拟数据中心。
+					<br>指定你的云主机所属的虚拟数据中心后，所使用的配额、可用分区、网络将受限于该数据中心定义的范围。
+					<br><b>可用域</b>：
+					<br>指定你的云主机在哪个可用域中创建。默认自动选择可用域。
+					<br><b>云主机规格</b>：
+					<br>选择你的云主机的规格，即定义云主机的内核数、内存大小、根磁盘大小等。
+					<br>所选择的规格受限于虚拟数据中心的配额。
+					<br><b>云主机数量</b>：
+					<br>选择你的本次创建云主机的数量。
+					<br>所选择的数量受限于虚拟数据中心的配额。
+					</p>
 				</div>
 			</div>
 			<!-- 网络  -->
@@ -187,10 +202,11 @@
 				</div>
 				
 				<div class="wizard-card-desc col-sm-4">
-					<p>网卡：
-						通过按按钮或者拖拽释放来在选择可用网络中选择网络,当然也可以通过拖拽释放来改变nic的顺序.
-						选择网卡后，可指定子网和IP。
-						默认情况下，自动选择子网和DHCP方式</p>
+					<p>
+					<b>网卡</b>：
+					<br>通过按按钮或者拖拽释放来在选择可用网络中选择网络,当然也可以通过拖拽释放来改变nic的顺序.
+					<br>选择网卡后，可指定子网和fixedIP。
+					<br>默认情况下，自动选择默认子网和DHCP方式</p>
 				</div>
 			</div>
 			<div class="wizard-card wizard-card-overlay" data-cardname="security">
@@ -214,10 +230,12 @@
 					                <div class="pwd clearfix">
 					                  <label  class="col-sm-2" for="login-key">密钥: </label>
 					                  <div data-for="secret-key" class="col-sm-9 col-sm">
-						                  <span class="text-danger" style="line-height:30px;">暂无密钥, <a href="javascript:;"> 创建密钥</a></span>
+										<select name="keypairs"   class="wizard-form-control select keypairs">
+										</select>			                  
+						                <span class="text-danger" style="line-height:30px;"><a href="javascript:;"> 创建密钥</a></span>
 					                  </div>
 					                  <div data-for="password"  class="col-sm-9 col-sm" style="display:none">
-						                  <input type="password" nclass="wizard-form-control" placeholder="请输入密码">
+						                  <input type="password" class="wizard-form-control" placeholder="请输入密码">
 					                  </div>
 					                </div>
 								</div>
@@ -234,8 +252,8 @@
 					</div>
 				</div>
 				<div class="wizard-card-desc col-sm-4">
-					<p>登陆信息：选择登陆系统的方式，密钥或密码选择其中一种。如果是windows系统，只能选择密码的方式。</p>
-					<p>安全组：通过安全组控制你的云主机的访问权限</p>
+					<p><b>登陆信息</b>：选择登陆系统的方式，密钥或密码选择其中一种。如果是windows系统，只能选择密码的方式。</p>
+					<p><b>安全组</b>：通过安全组控制你的云主机的访问权限</p>
 				</div>
 			</div>
 

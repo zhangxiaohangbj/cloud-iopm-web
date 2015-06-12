@@ -1,4 +1,4 @@
-define(['Common','bs/modal','bs/wizard','bs/tooltip','jq/form/validator','jq/form/validator/addons/bs3'],function(Common,Dialog){
+define(['Common','bs/modal','bs/wizard','bs/tooltip','jq/form/validator','jq/form/validator/addons/bs3','bs/switcher'],function(Common,Dialog){
 	Common.requestCSS('css/wizard.css');
 	Common.requestCSS('css/dialog.css');
 	var init = function(){
@@ -22,10 +22,19 @@ define(['Common','bs/modal','bs/wizard','bs/tooltip','jq/form/validator','jq/for
 		var DataIniter = {
 				//vdc列表
 				initVdcList : function(){
-					Common.xhr.ajax('/v2.0/tenants',function(tenants){
-						var html = Common.uiSelect(tenants.result);
-						debugger;
+					Common.xhr.ajax('/v2.0/tenants',function(data){
+						var tenants = data.tenants;
+						var id = $('select.tenant_id').attr("data");
+						if(id!=null){
+							for (var i=0;i<tenants.length;i++) {
+								if (tenants[i].id==id) {
+									tenants[i].selected="selected";
+								}
+							}
+						}				
+						var html = Common.uiSelect(tenants);
 				    	$('select.tenant_id').html(html);
+				    	
 					})
 				},
 		};
@@ -36,10 +45,11 @@ define(['Common','bs/modal','bs/wizard','bs/tooltip','jq/form/validator','jq/for
 		var EventsHandler = {
 	    		//表单校验
 				formValidator: function(){
-					$(".form-horizontal").validate({
+					return $(".form-horizontal").validate({
 			            rules: {
 			            	'name': {
-			                    required: true,
+			            		required: true,
+			                    minlength: 4,
 			                    maxlength:255
 			                },
 			                'cidr': {
@@ -49,7 +59,10 @@ define(['Common','bs/modal','bs/wizard','bs/tooltip','jq/form/validator','jq/for
 			                }
 			            }
 			        });
-				}
+				},
+				switcher:function(){
+					$(".col-sm input[type=\"checkbox\"], input[type=\"radio\"]").not("[data-switch-no-init]").switcher();
+				},
 	    }
 		//增加按钮
 		$("#networkTable_wrapper span.btn-add").on("click",function(){
@@ -63,6 +76,8 @@ define(['Common','bs/modal','bs/wizard','bs/tooltip','jq/form/validator','jq/for
     	            buttons: [{
     	                label: '保存',
     	                action: function(dialog) {
+    	                	var valid = $(".form-horizontal").valid();
+    	            		if(!valid) return false;
     	                	var data = $("#addNetwork").serializeArray();
     	                	var postData={"network":{}};
     	                	for(var i=0;i<data.length;i++){
@@ -73,8 +88,9 @@ define(['Common','bs/modal','bs/wizard','bs/tooltip','jq/form/validator','jq/for
     	                	postData.network["router:external"] =  postData.network["router:external"] ==null?false:true;               			
     	                	Common.xhr.postJSON('/v2.0/networks',postData,function(data){
     	                		if(data){
-    	                			alert("保存成功");
     	                			dialog.close();
+    	                			Dialog.success('保存成功')
+     	                			setTimeout(function(){Dialog.closeAll()},3000);
     	                			Common.router.route();
 								}else{
 									alert("保存失败");
@@ -87,9 +103,15 @@ define(['Common','bs/modal','bs/wizard','bs/tooltip','jq/form/validator','jq/for
     	                    dialog.close();
     	                }
     	            }],
-    	            onshown : function(){
+    	            onshown : function(dialog){
+    	    			EventsHandler.switcher();
     	    			DataIniter.initVdcList();
-    	    			EventsHandler.formValidator();
+    	    			dialog.setData("formvalid",EventsHandler.formValidator());
+    	            },
+    	            onhide : function(dialog){
+    	            	debugger;
+    	            	var valid = dialog.getData("formvalid");
+    	            	valid.hideErrors();
     	            }
     	        });
     		
@@ -107,6 +129,8 @@ define(['Common','bs/modal','bs/wizard','bs/tooltip','jq/form/validator','jq/for
     	            buttons: [{
     	                label: '保存',
     	                action: function(dialog) {
+    	                	var valid = $(".form-horizontal").valid();
+    	            		if(!valid) return false;
     	                	var data = $("#editNetwork").serializeArray();
     	                	var postData={"network":{}};
     	                	for(var i=0;i<data.length;i++){
@@ -117,8 +141,9 @@ define(['Common','bs/modal','bs/wizard','bs/tooltip','jq/form/validator','jq/for
     	                	postData.network["router:external"] =  postData.network["router:external"] ==null?false:true;               			
     	                	Common.xhr.putJSON('/v2.0/networks/'+id,postData,function(data){
     	                		if(data){
-    	                			alert("保存成功");
     	                			dialog.close();
+    	                			Dialog.success('修改成功')
+     	                			setTimeout(function(){Dialog.closeAll()},3000);
     	                			Common.router.route();
 								}else{
 									alert("保存失败");
@@ -132,7 +157,8 @@ define(['Common','bs/modal','bs/wizard','bs/tooltip','jq/form/validator','jq/for
     	                }
     	            }],
     	            onshown : function(){
-    	    			DataIniter.initVdcList();
+    	            	EventsHandler.switcher();
+    	    			DataIniter.initVdcList();    			
     	    			EventsHandler.formValidator();
     	            }
     	        });
@@ -146,10 +172,12 @@ define(['Common','bs/modal','bs/wizard','bs/tooltip','jq/form/validator','jq/for
 	            	 Common.xhr.del('/v2.0/networks/'+id,"",
 	                     function(data){
 	                    	 if(data){
-	                    		 alert("删除成功");
-	                    		 Common.router.route();
+ 	                			Dialog.success('删除成功')
+ 	                			setTimeout(function(){Dialog.closeAll()},3000);
+	                    		Common.router.route();
 	                    	 }else{
-	                    		 alert("删除失败");
+	                    		Dialog.success('删除失败')
+	 	                		setTimeout(function(){Dialog.closeAll()},3000);
 	                    	 }
 	                     });
 	             }else {
@@ -161,7 +189,13 @@ define(['Common','bs/modal','bs/wizard','bs/tooltip','jq/form/validator','jq/for
 	    $("#networkTable_wrapper a.network-name").on("click",function(){
 	    	var id = $(this).attr("data");
 	    	Common.render(true,'tpls/ccenter/vpc/networkdetail.html','/v2.0/networks/'+id,function(html){
-	    		
+	    		Common.render(false,'tpls/ccenter/vpc/networkdetailsubnetlist.html','/v2.0/subnets?network_id='+id,function(html){
+	    			EventsHandler.switcher();
+					$('#subnetTableDiv').html(html);
+					 $("a.reload").on("click",function(){
+		    		    	Common.router.route();
+		    		  });
+				});
 	    	});
 	    })
 		
