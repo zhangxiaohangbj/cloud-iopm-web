@@ -1,4 +1,105 @@
 <div class="wizard" id="create-vdc-wizard" data-title="创建服务器">
+			<div class="wizard-card wizard-card-overlay" data-cardname="members">
+				<h3>成员信息</h3>
+				<div class="wizard-card-content none-desc col-sm-12">
+					<div class="wizard-input-section">
+						<div class="chose-az">
+							<div class="col-sm-5 col-sm">
+								<div class="panel panel-default">
+								  <!-- Default panel contents -->
+								  <div class="panel-heading clearfix">全部</div>
+								 <div class="panel-body clearfix">
+								   <form class="form-search">
+									  	<input type="text" class="search-query">
+									  	<i class="fa fa-search"></i>
+								  	</form>
+								  </div>
+								
+								  <!-- List group -->
+								  <div class="list-group">
+										<ul class="nav nav-pills btn-group btn-group-sm dark_stripe list-group-item">
+											<li class="member" data-update_members-id="">
+											<span class="display_name">ceilometer</span></li>
+											<li class="dropdown role_options" style="display: none;">
+												<a class="dropdown-toggle btn btn-default" data-toggle="dropdown" href="#" aria-haspopup="true" aria-expanded="false">
+													<span class="roles_display">不存在任何角色</span><span class="caret"></span>
+												</a>
+												<ul class="dropdown-menu role_dropdown clearfix">
+											      <li data-role-id="116f8fbad9fd4041b216ab8b46342f4c"><i class="fa fa-check"></i>  admin</li>
+											      <li data-role-id="7608c7b62a444839a1f892b7aa7e62f7"><i class="fa fa-check"></i>  ResellerAdmin</li>
+											      <li data-role-id="9fe2ff9ee4384b1894a90878d3e92bab"><i class="fa fa-check"></i>  _member_</li>
+											      <li data-role-id="b42432fbee8d47eeb36a1c6cc77c0e5c"><i class="fa fa-check"></i>  heat_stack_user</li>
+											      <li data-role-id="d91d521016654f71875abbd5cc423120"><i class="fa fa-check"></i>  角色名称1</li>
+											      <li data-role-id="f1ed11a0226d4f6e90216ae426b044af"><i class="fa fa-check"></i>  heat_stack_owner</li>
+											    </ul>
+										    </li>
+									    </ul>
+									    <ul class="nav nav-pills btn-group btn-group-sm dark_stripe list-group-item">
+											<li class="member" data-update_members-id="">
+											<span class="display_name">ceilometer</span></li>
+											<li class="dropdown role_options" style="display: none;">
+												<div class="dropdown">
+												  <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-expanded="true">
+												    Dropdown
+												    <span class="caret"></span>
+												  </button>
+												  <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
+												    <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Action</a></li>
+												    <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Another action</a></li>
+												    <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Something else here</a></li>
+												    <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Separated link</a></li>
+												  </ul>
+												</div>
+										    </li>
+									    </ul>								  
+							    	</div>
+								</div>
+							</div>
+							<div class="col-sm-7 col-sm">
+								<div class="panel panel-default">
+								  <!-- Default panel contents -->
+								  <div class="panel-heading clearfix">已选择</div>
+								 <div class="panel-body clearfix">
+								   <form class="form-search">
+									  	<input type="text" class="search-query">
+									  	<i class="fa fa-search"></i>
+								  	</form>
+								  </div>
+								
+								  <!-- List group -->
+								  <div class="list-group">
+								   <ul class="nav nav-pills btn-group btn-group-sm dark_stripe list-group-item">
+											<li class="member" data-update_members-id="">
+												<span class="display_name">ceilometer</span>
+											</li>
+											<li class="pull-right"><i class="fa fa-minus-circle"></i></li>
+											<li class="dropdown role_options pull-right" >
+												<div class="dropdown">
+												  <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-expanded="true">
+												    Dropdown
+												    <span class="caret"></span>
+												  </button>
+												  <ul class="dropdown-menu dropdown-menu-right" role="menu" aria-labelledby="dropdownMenu1">
+												    <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Action</a></li>
+												    <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Another action</a></li>
+												    <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Something else here</a></li>
+												    <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Separated link</a></li>
+												  </ul>
+												</div>
+										    </li>
+									  </ul>
+									 </div>
+								</div>
+							</div>
+						</div>
+					</div>
+					
+				</div>
+				
+			</div>
+
+
+
 			<!-- 基本信息 -->
 			<div class="wizard-card" data-cardname="basci">
 				<h3>基本信息</h3>
@@ -35,9 +136,9 @@
 				<div class="wizard-card-content  col-sm-8">
 					<div class="wizard-input-section">
 						<div class="form-group">
-							<label for="select-vdc" class="control-label col-sm-3"><span>* </span>虚拟化环境：</label>
-							<div id="select-vm" class="col-sm-7 col-sm">
-								<select name="select-vdc"  class="wizard-form-control select select-ve">
+							<label for="select-ve" class="control-label col-sm-3"><span>* </span>虚拟化环境：</label>
+							<div  class="col-sm-7 col-sm">
+								<select name="select-ve"  class="wizard-form-control select select-ve">
 								    {{#uiSelectList(veList)}}
 								</select>
 							</div>
@@ -45,7 +146,7 @@
 					</div>
 					
 					<div class="wizard-input-section">
-						<div class="chose-az">
+						<div class="chose-az" id="vdcAZ">
 							<div class="col-sm-6 col-sm">
 								<div class="panel panel-default">
 								  <!-- Default panel contents -->
@@ -55,53 +156,9 @@
 									  	<input type="text" class="search-query">
 									  	<i class="fa fa-search"></i>
 								  	</form>
-								  </div>
-								
+								  </div>								
 								  <!-- List group -->
-								  <div class="list-group">
-								  
-									  <a href="javascript:void(0);" class="list-group-item">
-										  Dapibus ac facilisis in
-										  <i class="fa fa-plus-circle fa-fw"></i>
-									  </a>
-									  <a href="#" class="list-group-item">
-										  Morbi leo risus
-										  <i class="fa fa-plus-circle fa-fw"></i>
-									  </a>
-									  <a href="javascript:void(0);" class="list-group-item">
-										  Dapibus ac facilisis in
-										  <i class="fa fa-plus-circle fa-fw"></i>
-									  </a>
-									  <a href="#" class="list-group-item">
-										  Morbi leo risus
-										  <i class="fa fa-plus-circle fa-fw"></i>
-									  </a><a href="javascript:void(0);" class="list-group-item">
-										  Dapibus ac facilisis in
-										  <i class="fa fa-plus-circle fa-fw"></i>
-									  </a>
-									  <a href="#" class="list-group-item">
-										  Morbi leo risus
-										  <i class="fa fa-plus-circle fa-fw"></i>
-									  </a><a href="javascript:void(0);" class="list-group-item">
-										  Dapibus ac facilisis in
-										  <i class="fa fa-plus-circle fa-fw"></i>
-									  </a>
-									  <a href="#" class="list-group-item">
-										  Morbi leo risus
-										  <i class="fa fa-plus-circle fa-fw"></i>
-									  </a>
-									  <a href="#" class="list-group-item">
-										  Porta ac consectetur ac
-										  <i class="fa fa-plus-circle fa-fw"></i>
-									  </a>
-									  <a href="#" class="list-group-item">
-										  Vestibulum at eros
-										  <i class="fa fa-plus-circle fa-fw"></i>
-									  </a>
-									  <a href="#" class="list-group-item">
-										  Dapibus ac facilisis in
-										  <i class="fa fa-plus-circle fa-fw"></i>
-									  </a>
+								  <div class="list-group list-group-all">
 								  </div>
 								</div>
 							</div>
@@ -117,13 +174,13 @@
 								  </div>
 								
 								  <!-- List group -->
-								  <div class="list-group">
-									  <a href="javascript:void(0);" class="list-group-item">
+								  <div class="list-group list-group-select">
+									 <!--  <a href="javascript:void(0);" class="list-group-item">
 										  Dapibus ac facilisis in
 									  </a>
 									  <a href="#" class="list-group-item">
 										  Morbi leo risus
-									  </a>
+									  </a> -->
 								  </div>
 								</div>
 							</div>
@@ -199,51 +256,7 @@
 						默认情况下，自动选择子网和DHCP方式</p>
 				</div>
 			</div>
-			<div class="wizard-card wizard-card-overlay" data-cardname="security">
-				<h3>成员信息</h3>
-				<div class="wizard-card-content col-sm-8">
-					<div class="wizard-input-section">
-						<div class="form-group">
-							<label for="login" class="control-label col-sm-2"><span>* </span>登陆信息：</label>
-							<div class="col-sm-9 col-sm">
-								<ul class="nav nav-pills security-type">
-								  <li class="active"><a href="javascript:void(0)"  data-type="secret-key">密钥</a></li>
-								  <li><a href="javascript:void(0)"  data-type="password">密码</a></li>
-								</ul>
-								<div class="login-info">
-									<div class="usr clearfix">
-					                  <label class="col-sm-2" for="login-name">用户名: </label>
-					                  <div class="col-sm-9 col-sm">
-					                  	 <input type="text" value="root"  class="wizard-form-control" id="login-name" name="login-name">
-					                  </div>
-					                </div>
-					                <div class="pwd clearfix">
-					                  <label  class="col-sm-2" for="login-key">密钥: </label>
-					                  <div data-for="secret-key" class="col-sm-9 col-sm">
-						                  <span class="text-danger" style="line-height:30px;">暂无密钥, <a href="javascript:;"> 创建密钥</a></span>
-					                  </div>
-					                  <div data-for="password"  class="col-sm-9 col-sm" style="display:none">
-						                  <input type="password" name="login-pwd" class="wizard-form-control" placeholder="请输入密码">
-					                  </div>
-					                </div>
-								</div>
-							</div>
-						</div>
-					</div>
-					
-					<div class="wizard-input-section">
-						<div class="form-group">
-							<label class="control-label col-sm-2"><span>* </span>安全组：</label>
-							<div class="col-sm-9  security-group">
-							</div>
-						</div>
-					</div>
-				</div>
-				<div class="wizard-card-desc col-sm-4">
-					<p>登陆信息：选择登陆系统的方式，密钥或密码选择其中一种。如果是windows系统，只能选择密码的方式。</p>
-					<p>安全组：通过安全组控制你的云主机的访问权限</p>
-				</div>
-			</div>
+			
 
 			<div class="wizard-card" data-cardname="senior">
 				<h3>浮动IP</h3>

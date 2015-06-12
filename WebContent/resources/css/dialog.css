@@ -25,6 +25,11 @@
 	color: #fff;
 	border-radius: 0;
 }
+.btn-gray {
+	color: #333;
+	background-color: #fff;
+	border-color: #ccc;
+}
 .btn-blue{
 	background-color: #36B3DF;
 	border-color: #36B3DF;

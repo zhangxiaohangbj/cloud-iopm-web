@@ -1,11 +1,12 @@
 define(['Common','bs/modal','bs/wizard','bs/tooltip','jq/form/validator','jq/form/validator/addons/bs3'],function(Common,Modal){
 	Common.requestCSS('css/wizard.css');
-	Common.requestCSS('css/dialog.css');
+	//Common.requestCSS('css/dialog.css');
 	var init = function(){
 		Common.$pageContent.addClass("loading");
 		Common.render(true,{
 			tpl:'tpls/ccenter/vdc/list.html',
-			data:'/v2.0/tenants/page/10/1',
+			//data:'/v2.0/tenants/page/10/1',
+			data:'/resources/data/select.txt',
 			beforeRender: function(data){
 				return data.result;;
 			},
@@ -39,7 +40,7 @@ define(['Common','bs/modal','bs/wizard','bs/tooltip','jq/form/validator','jq/for
 		var DataGetter = {
 				//虚拟化环境 virtural environment
 				getVe: function(){
-					Common.xhr.ajax('/resources/data/select.txt',function(veList){///v2/images
+					Common.xhr.ajax('v2/virtual-env',function(veList){///v2/images
 						renderData.veList = veList;
 					});
 				},
@@ -90,34 +91,37 @@ define(['Common','bs/modal','bs/wizard','bs/tooltip','jq/form/validator','jq/for
     			};
     			//载入默认的数据 inits,创建数据载入类
     			var DataIniter = {
-    				//根据ve获取可用分区
+    				//根据ve_id获取可用分区
     				initAz : function(){
     					var ve_id = currentChosenObj.ve.val() || $('select.select-ve').children('option:selected').val();
     					if(ve_id){
-    						/*Common.xhr.ajax('/v2/'+vdc_id+'/os-availability-zone',function(data){
-    							var selectData = [];
+    						Common.xhr.ajax('/v2/os-availability-zone/virtualEnv/' + ve_id,function(data){
+    							$("#vdcAZ").find(".list-group-all").empty();
+    							var listview=[];
     							for(var i=0;i<data.length;i++){
-    								selectData[i] = {"name":data[i]["zoneName"]};
+    								listview.push('<a href="javascript:void(0);" class="list-group-item">',data[i]["name"],'<i class="fa fa-plus-circle fa-fw" style="float: right;display:none;"></i></a>')
     							}
-    							var html = Common.uiSelect(selectData);
-    					    	$('select.select-available-zone').html(html);
-    					    	//同步currentChosenObj
-    					    	currentChosenObj.az = $('select.select-available-zone').children('option:selected');
-    						});*/
-    						EventsHandler.azEvent();
+    							$("#vdcAZ").find(".list-group-all").html(listview.join(""));
+    							EventsHandler.azAddEvent();
+    						});
+    						
     					}else{
     						Modal.danger('尚未选择所属虚拟化环境');
     					}
     				}
     			}
+    			
     			//载入后的事件
     			var EventsHandler = {
     					//虚拟化环境change事件
     					veChange: function(){
-    						//同步
-    						currentChosenObj.ve = $('select.select-ve').children('option:selected');
-    						//重新载入可用分区数据
-    						DataIniter.initAz();
+    						$('select.select-ve').change(function(){
+    							//同步
+        						currentChosenObj.ve = $('select.select-ve').children('option:selected');
+        						//重新载入可用分区数据
+        						DataIniter.initAz();
+    	    				});
+    						
     					},
     					//初始化可用分区所需的事件
     					azEvent: function(){
@@ -130,6 +134,12 @@ define(['Common','bs/modal','bs/wizard','bs/tooltip','jq/form/validator','jq/for
     								 $(this).find('.fa').hide();
     							 }
     						});
+    					},
+    					//点击加号，添加可用分区
+    					azAddEvent:function(){
+    						$("#vdcAZ").find(".list-group-all").find(".fa-fw").click(function(e){
+    							alert(11);
+    						}); 
     					}
     			}
 				//同步currentChosenObj
@@ -137,6 +147,8 @@ define(['Common','bs/modal','bs/wizard','bs/tooltip','jq/form/validator','jq/for
 		    	currentChosenObj.netId = $('select.select-net').find('option:selected');
 		    	//载入依赖数据
 		    	DataIniter.initAz();
+		    	EventsHandler.azEvent();
+				EventsHandler.veChange();
 		    	//
     			wizard = $('#create-vdc-wizard').wizard({
     				keyboard : false,
@@ -159,6 +171,10 @@ define(['Common','bs/modal','bs/wizard','bs/tooltip','jq/form/validator','jq/for
 	    //更新配额
 	    $("ul.dropdown-menu a.updateQuota").on("click",function(){
 	    	more.QuotaSets($(this).attr("data"));
+	    });
+	    //可用分区
+	    $("ul.dropdown-menu a.vdcAz").on("click",function(){
+	    	more.AZ($(this).attr("data-env"),$(this).attr("data"));
 	    });
     
 	    //更多
@@ -209,10 +225,34 @@ define(['Common','bs/modal','bs/wizard','bs/tooltip','jq/form/validator','jq/for
 			    	            onshown : function(){}
 			    	        });
 			    		});
-		    		})
-		    		
-		    	}
-	    }
+		    		})	
+		    	},
+	  //可用分区管理
+    	AZ : function(env_id,vdc_id){
+    		//先获取az后，再render
+    		Common.xhr.ajax('/v2/os-availability-zone/virtualEnv/' + env_id,function(eaz){
+    			Common.xhr.ajax('/v2.0/az/' + vdc_id,function(vaz){
+    				var data = {
+    						eazList:eaz,
+    						vazList:vaz,
+    						veList:renderData.veList
+    				}
+    				Common.render('tpls/ccenter/vdc/az.html',data,function(html){
+        				Modal.show({
+    	    	            title: '可用分区',
+    	    	            message: html,
+    	    	            nl2br: false,
+    	    	            buttons: [{
+    	    	                label: '保存',
+    	    	                action: function(dialog) {}
+    	    	            }],
+    	    	            onshown : function(){}
+    	    	        });
+    	    		});
+    			})		
+    		})		
+    	 }
+	   }
 	}	
 	return {
 		init : init
