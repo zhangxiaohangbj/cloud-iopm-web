@@ -1,38 +1,38 @@
-<form class="form-horizontal" id="addNetwork">
+<form class="form-horizontal" id="editNetwork">
 	<div class="form-group">
 		<label for="name" class="control-label col-sm-4"><span style="color: red;">* </span>VPC名称：</label>
 	 	<div class="col-sm-5 col-sm">
-			<input type="text" class="dialog-form-control" id="name" name="name" value="">
+			<input type="text" class="dialog-form-control" id="name" name="name" value="{{network.name}}">
 		</div>
 	</div>
 	<div class="form-group">
 		<label for="tenant_id" class="control-label col-sm-4"><span style="color: red;">* </span>虚拟机数据中心：</label>
 		<div class="col-sm-5 col-sm">
-			<select id="tenant_id" name="tenant_id" class="dialog-form-control select tenant_id"></select>
+			<select id="tenant_id" name="tenant_id" class="dialog-form-control select tenant_id" value="{{network.tenant_id}}" readonly="readonly"></select>
 		</div>
 	</div>
 	<div class="form-group">
 		<label for="cidr" class="control-label col-sm-4"><span style="color: red;">* </span>网络地址范围（CIDR）：</label>
 		<div class="col-sm-5 col-sm">
-			<input type="text" class="dialog-form-control" id="cidr" name="cidr" value="">
+			<input type="text" class="dialog-form-control" id="cidr" name="cidr" value="{{network.cidr}}">
 		</div>
 	</div>
 	<div class="form-group">
 		<label for="admin_state_up" class="control-label col-sm-4"><span style="color: red;">* </span>管理状态：</label>
 		<div class="col-sm-5 col-sm">
-			<input type="checkbox"  id="admin_state_up" name="admin_state_up" >
+			<input type="checkbox"  id="admin_state_up" name="admin_state_up" {{if network.admin_state_up == true}}checked {{/if}}" >
 		</div>
 	</div>
 	<div class="form-group">
 		<label for="shared" class="control-label col-sm-4"><span style="color: red;">* </span>是否共享：</label>
 		<div class="col-sm-5 col-sm">
-			<input type="checkbox" id="shared" name="shared" >
+			<input type="checkbox" id="shared" name="shared" {{if network.shared == true}}checked {{/if}}>
 		</div>
 	</div>
 	<div class="form-group">
 		<label for="router:external" class="control-label col-sm-4"><span style="color: red;">* </span>是否外部网络：</label>
 		<div class="col-sm-5 col-sm">
-			<input type="checkbox"  id="router:external" name="router:external" value="">
+			<input type="checkbox"  id="router:external" name="router:external" {{if network["router:external"] == true}}checked {{/if}} readonly="readonly">
 		</div>
 	</div>
 </form>

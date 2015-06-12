@@ -3,7 +3,7 @@
 		<label class="control-label col-sm-3">
 	 	<span style="color: red;">* </span>子网名称：</label>
 	 	<div class="col-sm-7 col-sm">
-			<input type="text" class="dialog-form-control" name="name" value="{{name}}" readonly="readonly">
+			<input type="text" class="dialog-form-control" name="name" value="{{name}}">
 		</div>
 	</div>
 	<div class="form-group">
@@ -14,6 +14,16 @@
 		</div>
 	</div>
 	<div class="form-group">
+		<label for="ip_version" class="control-label col-sm-3">
+	 	<span style="color: red;">* </span>IP版本：</label>
+	 	<div class="col-sm-7 col-sm">
+			<select class="dialog-form-control select" name="ip_version">
+				<option value="4" {{if ip_version == '4'}} selected {{/if}}>IPV4</option>
+				<option value="6" {{if ip_version == '6'}} selected {{/if}}>IPV6</option>
+			</select>
+		</div>
+	</div>
+	<div class="form-group" id="gateway_ip" style="{{if gateway_ip == null}} display:none; {{/if}}">
 		<label for="gateway_ip" class="control-label col-sm-3">
 	 	<span style="color: red;">* </span>网关IP：</label>
 	 	<div class="col-sm-7 col-sm">
@@ -22,19 +32,31 @@
 	</div>
 	<div class="form-group">
 		<label for="server-name" class="control-label col-sm-3">
-	 	禁用网关：</label>
-	 	<div class="col-sm-7 col-sm">
-			<label><input type="checkbox" {{if os_conf=='IPV4'}}checked {{/if}}></label>
+	 	网关：</label>
+	 	<div class="col-sm-7 col-sm" id="enable_ip">
+	 		<p>
+		        <input type="checkbox" name="enable_ip" data-size="small" checked data-on-text="启用" data-off-text="禁用" {{if gateway_ip != null}} checked {{/if}}>
+		    </p>
 		</div>
 	</div>
 	<div class="form-group">
 		<label for="enable_dhcp" class="control-label col-sm-3">
-	 	激活DHCP：</label>
+	 	DHCP：</label>
 	 	<div class="col-sm-7 col-sm">
-			<label><input type="checkbox" {{if enable_dhcp == true}}checked {{/if}} name="enable_dhcp"></label>
+			<p>
+		        <input type="checkbox" name="enable_dhcp" data-size="small" data-on-text="激活" data-off-text="禁用" {{if enable_dhcp == '1'}} checked {{/if}}>
+		    </p>
 		</div>
 	</div>
 	<div class="form-group">
+		<label for="allocation_pools" class="control-label col-sm-3">
+	 	分配地址池：</label>
+	 	<div class="col-sm-7 col-sm">
+			<input type="text" class="dialog-form-control" name="start" value="" style="width: 45%;">&nbsp;-
+			<input type="text" class="dialog-form-control" name="end" value="" style="width: 45%;">
+		</div>
+	</div>
+	<!-- <div class="form-group">
 		<label for="server-name" class="control-label col-sm-3">
 	 	DNS域名解析服务：</label>
 	 	<div class="col-sm-7 col-sm">
@@ -47,5 +69,5 @@
 	 	<div class="col-sm-7 col-sm">
 			<input type="text" class="dialog-form-control" name="subnet-name" value="">
 		</div>
-	</div>
+	</div> -->
 </form>
