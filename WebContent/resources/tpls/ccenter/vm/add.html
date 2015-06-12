@@ -1,13 +1,13 @@
-<div class="wizard" id="create-server-wizard" data-title="创建数据中心">
+<div class="wizard" id="create-server-wizard" data-title="创建服务器">
 			<!-- 基本信息 -->
 			<div class="wizard-card" data-cardname="basci">
 				<h3>基本信息</h3>
 				<div class="wizard-card-content col-sm-8">
 					<div class="wizard-input-section">
 						<div class="form-group">
-							<label for="server-name" class="control-label col-sm-2"><span>* </span>名称：</label>
+							<label for="name" class="control-label col-sm-2"><span>* </span>名称：</label>
 							<div class="col-sm-7 col-sm">
-								<input type="text" class="wizard-form-control" id="server-name" name="server-name" placeholder="服务器名称">
+								<input type="text" class="wizard-form-control" id="name" name="name" placeholder="服务器名称">
 							</div>
 							<!-- <div class="col-sm-3 col-sm">
 					            <span class="help-block" style="color: #000000;padding-top: 10px;">请填写真实的邮箱</span>
@@ -46,7 +46,7 @@
 									{{/each}}
 								</div>
 							</div>
-							<input type="hidden" class="wizard-form-control" id="image-id" name="image-id">
+							<input type="hidden" class="wizard-form-control" id="imageRef" name="imageRef">
 						</div>
 					</div>
 				</div>
@@ -60,13 +60,13 @@
 			
 			<!--详细信息 -->
 			<div class="wizard-card" data-cardname="detail">
-				<h3>可用分区</h3>
+				<h3>详细配置</h3>
 				<div class="wizard-card-content col-sm-8">
 					<div class="wizard-input-section">
 						<div class="form-group">
-							<label for="select-vdc" class="control-label col-sm-3"><span>* </span>虚拟数据中心：</label>
+							<label for="tenant_id" class="control-label col-sm-3"><span>* </span>虚拟数据中心：</label>
 							<div id="select-vm" class="col-sm-7 col-sm">
-								<select name="select-vdc"  class="wizard-form-control select select-vdc">
+								<select name="tenant_id"  class="wizard-form-control select tenant_id">
 								    {{#uiSelectList(vdcList)}}
 								</select>
 							</div>
@@ -75,9 +75,9 @@
 					
 					<div class="wizard-input-section">
 						<div class="form-group">
-							<label for="select-available-zone" class="control-label col-sm-3"><span>* </span>可用域：</label>
+							<label for="availability_zone" class="control-label col-sm-3"><span>* </span>可用域：</label>
 							<div class="col-sm-7 col-sm">
-								<select name="select-available-zone"   class="wizard-form-control select select-available-zone">
+								<select name="availability_zone"   class="wizard-form-control select availability_zone">
 								</select>
 							</div>
 						</div>
@@ -85,9 +85,9 @@
 					
 					<div class="wizard-input-section">
 						<div class="form-group">
-							<label for="select-specs" class="control-label col-sm-3"><span>* </span>云主机规格：</label>
+							<label for="flavorRef" class="control-label col-sm-3"><span>* </span>云主机规格：</label>
 							<div class="col-sm-7 col-sm">
-			                    <select name="select-specs"  class="wizard-form-control select select-specs" tabindex="5">
+			                    <select name="flavorRef"  class="wizard-form-control select flavorRef" tabindex="5">
 			                    	{{each specsList as item i}}
 										<option data-root-disk="{{item.root_disk}}" data-tmp-disk="{{item.tmp_disk}}" data-memory="{{item.memory}}" data-core="{{item.core_num}}"  value="{{item.id}}">{{item.name}}</option>
 								  	{{/each}}
@@ -101,10 +101,10 @@
 					
 					<div class="wizard-input-section">
 						<div class="form-group">
-							<label for="vm-nums" class="control-label col-sm-3"><span>* </span>云主机数量：</label>
+							<label for="min_count" class="control-label col-sm-3"><span>* </span>云主机数量：</label>
 							<div class="col-sm-7 col-sm">
 								<div class="spinbox"  id="setVmNums">
-								  <input type="text" name="vm-nums" style="height:35px;"  class="wizard-form-control input-mini spinbox-input">
+								  <input type="text" name="min_count" style="height:35px;"  class="wizard-form-control input-mini spinbox-input">
 								  <div class="spinbox-buttons btn-group btn-group-vertical">
 								    <button type="button" class="btn btn-default spinbox-up btn-xs">
 								      <span class="glyphicon glyphicon-chevron-up"></span><span class="sr-only">Increase</span>
@@ -132,13 +132,13 @@
 					<p>属性的单选或多选框都能被赋予合适的样式。对于和多选或单选框联合使用的标签希望将悬停于上方的鼠标设置为“禁止点击”的样式</p>
 				</div>
 			</div>
-			<!-- 配额信息  -->
+			<!-- 网络  -->
 			<div class="wizard-card wizard-card-overlay" data-cardname="networks">
-			<h3>配额信息</h3>
+			<h3>网络</h3>
 				<div class="wizard-card-content col-sm-8">
 					<div class="wizard-input-section">
 						<div class="form-group">
-							<label for="available-network" class="control-label col-sm-2"><span>* </span>可用网络：</label>
+							<label for="available-network" class="control-label col-sm-2">可用网络：</label>
 							<div class="col-sm-9 col-sm">
 								<div class="list-group available-network">
 								</div>
@@ -148,37 +148,37 @@
 					
 					<div class="wizard-input-section">
 						<div class="form-group">
-							<label for="chosen-network" class="control-label col-sm-2"><span>* </span>已选网络：</label>
+							<label for="networks" class="control-label col-sm-2"><span>* </span>已选网络：</label>
 							<div class="col-sm-9 col-sm">
-								<div class="list-group chosen-network">
+								<div class="list-group networks">
 								</div>
 							</div>
-							<input type="hidden" class="wizard-form-control" id="chosen-network" name="chosen-network">
+							<input type="hidden" class="wizard-form-control" id="networks" name="networks">
 						</div>
 					</div>
 					
-					<div class="wizard-input-section">
+<!-- 					<div class="wizard-input-section">
 						<div class="form-group">
 							<label for="network-card-name" class="control-label col-sm-2"><span>* </span>网卡名称：</label>
 							<div class="col-sm-7 col-sm">
 								<input type="text" disabled class="wizard-form-control" name="network-card-name" placeholder="网卡名称">
 							</div>
 						</div>
-					</div>
+					</div> -->
 					<div class="wizard-input-section">
 						<div class="form-group">
-							<label for="select-sub-network" class="control-label col-sm-2"><span>* </span>指定子网：</label>
+							<label for="select-sub-network" class="control-label col-sm-2">指定子网：</label>
 							<div class="col-sm-7 col-sm">
-								<select disabled name="select-sub-network" class="wizard-form-control select">
+								<select disabled class="wizard-form-control select select-sub-network">
 								</select>
 							</div>
 						</div>
 					</div>
 					<div class="wizard-input-section">
 						<div class="form-group">
-							<label for="select-net-ip" class="control-label col-sm-2"><span>* </span>指定IP：</label>
+							<label for="fixed_ip" class="control-label col-sm-2">指定IP：</label>
 							<div class="col-sm-7 col-sm">
-								<select disabled name="select-net-ip" class="wizard-form-control select ">
+								<select disabled class="wizard-form-control select fixed_ip">
 								</select>
 							</div>
 						</div>
@@ -194,11 +194,11 @@
 				</div>
 			</div>
 			<div class="wizard-card wizard-card-overlay" data-cardname="security">
-				<h3>成员信息</h3>
+				<h3>访问安全</h3>
 				<div class="wizard-card-content col-sm-8">
 					<div class="wizard-input-section">
 						<div class="form-group">
-							<label for="login" class="control-label col-sm-2"><span>* </span>登陆信息：</label>
+							<label for="login" class="control-label col-sm-2">登陆信息：</label>
 							<div class="col-sm-9 col-sm">
 								<ul class="nav nav-pills security-type">
 								  <li class="active"><a href="javascript:void(0)"  data-type="secret-key">密钥</a></li>
@@ -208,7 +208,7 @@
 									<div class="usr clearfix">
 					                  <label class="col-sm-2" for="login-name">用户名: </label>
 					                  <div class="col-sm-9 col-sm">
-					                  	 <input type="text" value="root"  class="wizard-form-control" id="login-name" name="login-name">
+					                  	 <input type="text" value="root"  class="wizard-form-control" id="login-name">
 					                  </div>
 					                </div>
 					                <div class="pwd clearfix">
@@ -217,7 +217,7 @@
 						                  <span class="text-danger" style="line-height:30px;">暂无密钥, <a href="javascript:;"> 创建密钥</a></span>
 					                  </div>
 					                  <div data-for="password"  class="col-sm-9 col-sm" style="display:none">
-						                  <input type="password" name="login-pwd" class="wizard-form-control" placeholder="请输入密码">
+						                  <input type="password" nclass="wizard-form-control" placeholder="请输入密码">
 					                  </div>
 					                </div>
 								</div>
@@ -227,7 +227,7 @@
 					
 					<div class="wizard-input-section">
 						<div class="form-group">
-							<label class="control-label col-sm-2"><span>* </span>安全组：</label>
+							<label class="control-label col-sm-2">安全组：</label>
 							<div class="col-sm-9  security-group">
 							</div>
 						</div>
@@ -240,20 +240,20 @@
 			</div>
 
 			<div class="wizard-card" data-cardname="senior">
-				<h3>浮动IP</h3>
+				<h3>高级设置</h3>
 				<div class="wizard-card-content col-sm-8">
 					<div class="wizard-input-section">
 						<div class="form-group">
-							<label for="scripts" class="control-label col-sm-2"><span>* </span>自定义脚本：</label>
+							<label for="user_data" class="control-label col-sm-2">自定义脚本：</label>
 							<div class="col-sm-9 col-sm">
-								<textarea class="wizard-form-control" rows="8"  id="scripts" name="scripts" placeholder=""></textarea>
+								<textarea class="wizard-form-control" rows="8"  id="user_data" name="user_data" placeholder=""></textarea>
 							</div>
 						</div>
 					</div>
 					
 					<div class="wizard-input-section">
 						<div class="form-group">
-							<label  class="control-label col-sm-2"><span>* </span>上传：</label>
+							<label  class="control-label col-sm-2"></label>
 							<div class="col-sm-9 col-sm">
 								<button type="button" class="btn btn-info">上传脚本</button>
 							</div>
@@ -262,14 +262,14 @@
 					
 					<div class="wizard-input-section">
 						<div class="form-group">
-							<label  class="control-label col-sm-2"><span>* </span>磁盘分区：</label>
+							<label  class="control-label col-sm-2">磁盘分区：</label>
 							<div class="col-sm-9 col-sm">
 								<label>
-		                            <input name="radio-auto"  class="icheck-success" value="auto" type="radio">
+		                            <input name="auto_disk_config"  class="icheck-success" value=true type="radio" checked>
 		                            	自动
 	                        	</label>
 	                        	<label>
-		                            <input name="radio-auto"  class="icheck-success" value="non-auto" type="radio">
+		                            <input name="auto_disk_config"  class="icheck-success" value=false type="radio">
 		                            	手动
 	                        	</label>
 							</div>
