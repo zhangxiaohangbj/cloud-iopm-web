@@ -56,13 +56,13 @@ define(['Common','bs/modal','bs/wizard','bs/tooltip','jq/form/validator','jq/for
 				},
 				//云硬盘列表
 				getDisk : function(uid){
-					Common.xhr.ajax('/v2/{tenantId}/bootable-volumes',function(diskList){
+					Common.xhr.ajax('/v2/'+current_vdc_id+'/bootable-volumes',function(diskList){
 						renderData.diskList = diskList;
 					});
 				},
 				//云硬盘快照列表
 				getDiskSnapShot: function(uid){
-					Common.xhr.ajax('/v2/{tenantId}/bootable-snapshots',function(diskSnapList){
+					Common.xhr.ajax('/v2/'+current_vdc_id+'/bootable-snapshots',function(diskSnapList){
 						renderData.diskSnapList = diskSnapList;
 					});
 				},
@@ -75,8 +75,12 @@ define(['Common','bs/modal','bs/wizard','bs/tooltip','jq/form/validator','jq/for
 				},
 				//虚机规格
 				getSpecs: function(){
-					Common.xhr.ajax('/cloud/v2/'+current_vdc_id+'/flavors/detail',function(specsList){
-						renderData.specsList = specsList['flavors'];
+					Common.xhr.ajax('/cloud/v2/'+current_vdc_id+'/flavors/detail',function(flavors){
+						var flavorsData = flavors['flavors'];
+						for(var i=0;i<flavorsData.length;i++){
+							flavorsData[i]["ephemeral"] = flavorsData[i]["OS-FLV-EXT-DATA:ephemeral"]
+						}
+						renderData.specsList = flavorsData;
 					});
 				}
 		}
@@ -89,7 +93,7 @@ define(['Common','bs/modal','bs/wizard','bs/tooltip','jq/form/validator','jq/for
 		
 		//维护当前select的值以及云主机数量，为更新配额以及vdc相关的数据用
 		var currentChosenObj = {
-				vdc: null,	//当前vdc
+				vdc: current_vdc_id,	//当前vdc
 				az: null,
 				specs: null,	//当前选中规格
 				prevSpecs: null,//上一个选中规格
@@ -103,7 +107,7 @@ define(['Common','bs/modal','bs/wizard','bs/tooltip','jq/form/validator','jq/for
 		var DataIniter = {
 			//根据vdc获取可用域数据
 			initAvailableZone : function(){
-				var vdc_id = currentChosenObj.vdc.val() || $('select.tenant_id').children('option:selected').val();
+				var vdc_id = currentChosenObj.vdc || $('select.tenant_id').children('option:selected').val();
 				if(vdc_id){
 					Common.xhr.ajax('/v2/'+vdc_id+'/os-availability-zone',function(data){
 						var selectData = [];
@@ -119,19 +123,6 @@ define(['Common','bs/modal','bs/wizard','bs/tooltip','jq/form/validator','jq/for
 					Modal.error('尚未选择所属vdc');
 				}
 			},
-//			initFlavor : function(){
-//				var vdc_id = currentChosenObj.vdc.val() || $('select.tenant_id').children('option:selected').val();
-//				if(vdc_id){
-//					Common.xhr.ajax('/cloud/v2/'+vdc_id+'/flavors/detail',function(data){
-//						var html = Common.uiSelect(data.flavors);
-//				    	$('select.availability_zone').html(html);
-//				    	//同步currentChosenObj
-//				    	currentChosenObj.az = $('select.availability_zone').children('option:selected');
-//					});
-//				}else{
-//					Modal.error('尚未选择所属vdc');
-//				}				
-//			}
 			//init云主机规格的详细信息popver
 			initPopver : function(){
 				var current = currentChosenObj.specs || $('select.flavorRef').find('option:selected');
@@ -152,18 +143,18 @@ define(['Common','bs/modal','bs/wizard','bs/tooltip','jq/form/validator','jq/for
 			},
 			//vdc的可用配额
 			initQuatos : function(vdc_id){
-				vdc_id = vdc_id || currentChosenObj.vdc.val() || $('select.tenant_id').find('option:selected').val();
+				vdc_id = vdc_id || currentChosenObj.vdc || $('select.tenant_id').find('option:selected').val();
 				if(vdc_id){
 					//获取vdc的配额
-					Common.xhr.ajax('/v2.0/'+current_vdc_id+'/os-quota-sets/'+current_vdc_id,function(quotas){
+					Common.xhr.ajax('/v2.0/'+current_vdc_id+'/os-quota-sets/'+vdc_id,function(quotas){
 						quotas = quotas.quota_set
 						//获取vdc的配额使用情况
-						Common.xhr.ajax('/v2.0/'+current_vdc_id+'/limits',function(quotaUsages){
+						Common.xhr.ajax('/v2.0/'+vdc_id+'/limits',function(quotaUsages){
 							//当前配额 等于 当前vdc下总配额 减去  当前选中规格的额度
 							var current = currentChosenObj.specs;
 							if(current && current.length){
 								quotaUsages.cores = parseInt(quotaUsages.cores) + parseInt(current.attr('data-core'));
-								quotaUsages.memory = parseInt(quotaUsages.memory) + parseInt(current.attr('data-memory'));
+								quotaUsages.ram = parseInt(quotaUsages.ram) + parseInt(current.attr('data-memory'));
 							};
 							var getMathRound = function(used,total){
 								return Math.round((parseInt(used)/parseInt(total))*100);
@@ -172,7 +163,7 @@ define(['Common','bs/modal','bs/wizard','bs/tooltip','jq/form/validator','jq/for
 								return rate <= 30 ? 'progress-bar-success' : rate >= 80 ? 'progress-bar-danger' : 'progress-bar-info';
 							}
 							var rateCore = getMathRound(quotaUsages.cores,quotas.cores),
-							rateMemory = getMathRound(quotaUsages.memory,quotas.memory),
+							rateMemory = getMathRound(quotaUsages.ram,quotas.ram),
 							rateNums = getMathRound(quotaUsages.instances,quotas.instances),
 							styleCore = getClass(rateCore),styleMemory = getClass(rateMemory),styleNums=getClass(rateNums);
 							var renderData = {
@@ -180,7 +171,7 @@ define(['Common','bs/modal','bs/wizard','bs/tooltip','jq/form/validator','jq/for
 										total: quotas.cores, used: quotaUsages.cores, rate: rateCore, style: styleCore
 									},
 									memory: {
-										total: quotas.memory, used: quotaUsages.memory, rate: rateMemory, style: styleMemory
+										total: quotas.ram, used: quotaUsages.ram, rate: rateMemory, style: styleMemory
 									},
 									nums: {
 										total: quotas.instances, used: quotaUsages.instances, rate: rateNums, style: styleNums
@@ -198,8 +189,8 @@ define(['Common','bs/modal','bs/wizard','bs/tooltip','jq/form/validator','jq/for
 			},
 			//根据vdc可用网络信息
 			initAvailableNetWorks : function(){
-				var vdc_id = currentChosenObj.vdc.val() || $('select.tenant_id').children('option:selected').val();
-				Common.xhr.ajax('/v2.0/networks',function(data){
+				var vdc_id = currentChosenObj.vdc || $('select.tenant_id').children('option:selected').val();
+				Common.xhr.get('/v2.0/networks',{"vdcId":vdc_id},function(data){
 					var dataArr = [];
 					if(data){
 						var networks = data.networks;
@@ -316,6 +307,18 @@ define(['Common','bs/modal','bs/wizard','bs/tooltip','jq/form/validator','jq/for
 					});
 				
 				}
+			},
+			//密钥对
+			initKeyPairs: function(){
+				var vdc_id = currentChosenObj.vdc || $('select.tenant_id').children('option:selected').val();
+				if(vdc_id){
+					Common.xhr.ajax('/'+vdc_id+'/os-keypairs',function(keypairs){
+						var html = Common.uiSelect(keypairs);
+				    	$('select.keypairs').html(html);
+					});
+				}else{
+					Modal.error('尚未选择所属vdc');
+				}
 			}
 			
 		};
@@ -365,10 +368,11 @@ define(['Common','bs/modal','bs/wizard','bs/tooltip','jq/form/validator','jq/for
 				vdcChange : function(){
 					$('select.tenant_id').change(function(){
     					var current = $(this).children('option:selected');
-				    	currentChosenObj.vdc = current;//同步currentChosenObj
+				    	currentChosenObj.vdc = current.val();//同步currentChosenObj
 				    	DataIniter.initAvailableZone();//重新加载可用域的数据
 				    	DataIniter.initQuatos();//重新加载配额数据
 				    	DataIniter.initAvailableNetWorks();//重新获取可用网络数据
+				    	DataIniter.initKeyPairs();//加载可用密钥对
     				});
 				},
 				//规格change
@@ -489,7 +493,7 @@ define(['Common','bs/modal','bs/wizard','bs/tooltip','jq/form/validator','jq/for
 				
 				$('body').append(html);
 				//同步currentChosenObj
-		    	currentChosenObj.vdc = $('select.tenant_id').children('option:selected');
+		    	currentChosenObj.vdc = $('select.tenant_id').children('option:selected').val();
 		    	currentChosenObj.specs = $('select.flavorRef').find('option:selected');
 		    	//wizard show
     			$.fn.wizard.logging = true;
