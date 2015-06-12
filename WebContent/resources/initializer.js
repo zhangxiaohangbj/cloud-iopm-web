@@ -273,14 +273,10 @@ define('Common', ['PubView', 'bs/modal', 'json', 'template', 'jq/dataTables', 'j
         });
     }
 
-    var modalDefaults = {
+    // init defaultOptions
+    Modal.configDefaultOptions(['processing', 'info', 'warning', 'error', 'success'], {
         position: 'right 48'
-    };
-    Modal.processing.setDefaultOptions(modalDefaults);
-    Modal.info.setDefaultOptions(modalDefaults);
-    Modal.warning.setDefaultOptions(modalDefaults);
-    Modal.error.setDefaultOptions(modalDefaults);
-    Modal.success.setDefaultOptions(modalDefaults);
+    });
 
     return {
         hash: function() {
