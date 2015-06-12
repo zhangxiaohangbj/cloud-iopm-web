@@ -203,7 +203,7 @@ define('Common', ['PubView', 'bs/modal', 'json', 'template', 'jq/dataTables', 'j
                         },
                         {
                             text: '策略定义',
-                            link: '#strategy'
+                            link: '#task/strategy'
                         },
                         {
                             text: '任务分组',
