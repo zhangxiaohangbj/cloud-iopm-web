@@ -1,4 +1,4 @@
-define(['Common','bs/wizard','bs/tooltip'],function(Common){
+define(['Common','bs/wizard','jq/form/validator','jq/form/validator/addons/bs3','bs/tooltip'],function(Common){
     Common.requestCSS('css/wizard.css');
     var init = function(){
         Common.$pageContent.addClass("loading");
@@ -23,7 +23,7 @@ define(['Common','bs/wizard','bs/tooltip'],function(Common){
             );
             Common.$pageContent.removeClass("loading");
         });
-     //   $("[data-toggle='tooltip']").tooltip();
+        $("[data-toggle='tooltip']").tooltip();
 
         //icheck
         $('input[type="checkbox"]').iCheck({
@@ -42,32 +42,155 @@ define(['Common','bs/wizard','bs/tooltip'],function(Common){
         //初始化
         var wizard;
         var renderData = {};
-        var dataGetter={
-            //获取数据
-        };
-        var currentChosenObj = {
+        var currentChosenEnv = {
             type: null,	//虚拟环境类型
-            version: null,
-            vendor: null,	//提供者
-            region: null,//地区
+            region: null, //地区
+        };
+        var currentChosenConnector={
+            protocol: null,	//协议
+            period: null,//周期
+        }
+        var dataGetter={
+            //获取类型数据
+            getType:function(){
+                Common.xhr.ajax("/virtual-env/type",function(type){
+                    var selectData = [];
+                    for(var i=0;i<type.length;i++){
+                        selectData[i] = {"name":type[i]};
+                    }
+                    renderData.virtualEnvType = selectData;
+                    //currentChosenObj.type = $('select.select-env-type').children('option:selected');
+                });
+            },
+            //获取地区
+            getZone:function(){
+                //var vdcId = currentChosenObj.vdc.val() || $('select.select-vdc').children('option:selected').val();
+                //if(vdcId) {
+                //     Common.xhr.ajax("/v2/"+vdcId+"/os-availability-zone",function(zoneInfo){
+                //         alert(zoneInfo);
+                //     });
+                //}
+                Common.xhr.ajax("/resources/data/region.txt",function(region){
+                    renderData.region = region;
+                });
+            },
+            //获取协议
+            getProtocol:function(){
+                Common.xhr.ajax("/resources/data/protocol.txt",function(protocol){
+                    renderData.protocol = protocol;
+                    //同步currentChosenObj
+                    //currentChosenObj.protocol = $('select.select-protocol').children('option:selected');
+                });
+            },
+            //获取周期
+            getPeriod:function(){
+                Common.xhr.ajax("/resources/data/period.txt",function(period){
+                    renderData.period = period;
+                    //同步currentChosenObj
+                    //currentChosenObj.period = $('select.select-period').children('option:selected');
+                });
+            }
+
+        };
+        dataGetter.getType();
+        dataGetter.getZone();
+        dataGetter.getProtocol();
+        dataGetter.getPeriod();
+
+
+        var CheckHandler={
+            nameCheck:function(){
+                currentChosenEnv.name = $("#env-name").val();
+                 $("#env-name-confirm").val(currentChosenEnv.name);
+
+            },
+            typeChange:function(){
+                $('select.select-env-type').change(function(){
+                    currentChosenEnv.type =  $(this).children('option:selected').val();
+                });
+                $("#env-type-confirm").val(currentChosenEnv.type);
+            },
+            vendorCheck:function(){
+                currentChosenEnv.vendor = $("#env-name").val();
+                $("#env-vendor-confirm").val(currentChosenEnv.vendor);
+            },
+            versionCheck:function(){
+                currentChosenEnv.versoin = $("#env-name").val();
+                $("#env-version-confirm").val(currentChosenEnv.version);
+            },
+            regionChange:function(){
+                $('select.select-region').change(function(){
+                    currentChosenEnv.region =  $(this).children('option:selected').val();
+                });
+                $("#env-region-confirm").val(currentChosenEnv.region);
+            },
+            protocolChange:function(){
+                $('select.select-protocol').change(function(){
+                    currentChosenConnector.protocol =  $(this).children('option:selected').val();
+                });
+                $("#connector-protocol-confirm").val(currentChosenConnector.protocol);
+            },
+            ipCheck:function(){
+                currentChosenConnector.ip = $("#connector-ip").val();
+                $("#connector-ip-confirm").val(currentChosenConnector.ip);
+            },
+            portCheck:function(){
+                currentChosenConnector.port = $("#connector-port").val();
+                $("#connector-port-confirm").val(currentChosenConnector.port);
+            },
+            userCheck:function(){
+                currentChosenConnector.username = $("#connector-username").val();
+                $("#connector-username-confirm").val(currentChosenConnector.username);
+            },
+            paswCheck:function(){
+                currentChosenConnector.password = $("#connector-password").val();
+                $("#connector-password-confirm").val(currentChosenConnector.password);
+            },
+            paswConfirmCheck:function(){
+                //currentChosenConnector. = $("#env-name").val();
+            },
+            periodChange:function(){
+                $('select.select-period').change(function(){
+                    currentChosenConnector.period =  $(this).children('option:selected').val();
+                });
+                $("#connector-period-confirm").val(currentChosenConnector.period);
+            },
+            //表单校验
+            formValidator: function(){
+                $(".form-horizontal").validate({
+                    rules: {
+                        'env-name': {
+                            required: true,
+                            minlength: 4,
+                            maxlength:15
+                        }
+                    }
+                });
+            },
         };
 
         //重置CurrentChosenObj对象
         var resetCurrentChosenObj = function(){
-            for(var key in currentChosenObj){
-                currentChosenObj[key] = null;
+            for(var key in currentChosenEnv){
+                currentChosenEnv[key] = null;
             }
-            currentChosenObj.nums = 1;
+            currentChosenEnv.nums = 1;
+            for(var key in currentChosenConnector){
+                currentChosenConnector[key] = null;
+            }
+            currentChosenConnector.nums = 1;
         }
 
         //创建按钮
         $("#VirtualEnvTable_wrapper span.btn-add").on("click",function(){
-            Common.render('tpls/cresource/env/add.html',renderData,function(html){
-
+            var selectData= {"data":renderData};
+            Common.render('tpls/cresource/env/add.html',selectData,function(html){
                 $('body').append(html);
-                //同步currentChosenObj
-                currentChosenObj.type = $('select.select-env-type').children('option:selected');
-                //wizard show
+                //
+                currentChosenEnv.type = $('select.select-env-type option:selected').val();
+                currentChosenEnv.region = $('select.select-region option:selected').val();
+                currentChosenConnector.protocol = $('select.select-protocol option:selected').val();
+                currentChosenConnector.period = $('select.select-period option:selected').val();
                 $.fn.wizard.logging = true;
                 wizard = $('#create-virtualEnv-wizard').wizard({
                     keyboard : false,
@@ -83,8 +206,53 @@ define(['Common','bs/wizard','bs/tooltip'],function(Common){
                         submittingText: "提交中..."
                     }
                 });
-                debugger;
                 wizard.show();
+
+                //关闭弹窗
+                var closeWizard = function(){
+                    $('div.wizard').remove();
+                    $('div.modal-backdrop').remove();
+                    resetCurrentChosenObj();
+                }
+                //关闭后移出dom
+                wizard.on('closed', function() {
+                    closeWizard();
+                });
+
+                debugger;
+                wizard.on("next",function(){
+                    alert(1);
+                });
+                CheckHandler.formValidator();
+
+
+                //提交按钮
+                wizard.on("submit", function(wizard) {
+                    //var postDate={};
+                    //postDate.put(currentChosenEnv);
+
+
+                    CheckHandler.nameCheck();
+                    CheckHandler.ipCheck();
+                    CheckHandler.paswCheck();
+                    CheckHandler.paswConfirmCheck();
+                    CheckHandler.periodChange();
+                    CheckHandler.portCheck();
+                    CheckHandler.protocolChange();
+                    CheckHandler.regionChange();
+                    CheckHandler.typeChange();
+                    CheckHandler.userCheck();
+                    CheckHandler.vendorCheck();
+                    CheckHandler.versionCheck();
+                    debugger;
+                    currentChosenEnv["connector"] = currentChosenConnector;
+                    Common.xhr.postJSON('/v2/virtual-env',currentChosenEnv,function(data){
+                        wizard._submitting = false;
+                        wizard.updateProgressBar(100);
+                        closeWizard();
+                        Common.router.route();
+                    });
+                });
             });
         });
 

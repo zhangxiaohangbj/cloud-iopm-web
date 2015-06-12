@@ -7,7 +7,7 @@
                 <div class="form-group">
                     <label for="env-name" class="control-label col-sm-3"><span>* </span>名称：</label>
                     <div class="col-sm-5 col-sm">
-                        <input type="text" class="wizard-form-control" id="env-name" name="env-name" placeholder="虚拟化环境名称">
+                        <input type="text" class="wizard-form-control" id="env-name" name="env-name"  value="虚拟化环境名称1"/>
                     </div>
                 </div>
             </div>
@@ -17,7 +17,9 @@
                     <label for="select-env-type" class="control-label col-sm-3"><span>* </span>虚拟化类型：</label>
                     <div class="col-sm-5 col-sm">
                         <select name="select-env-type" id="select-env-type"  class="wizard-form-control select select-env-type">
-                            {{#uiSelectList(vdcList)}}
+                            {{each data.virtualEnvType as item i}}
+                            <option value="{{item.name}}">{{item.name}}</option>
+                            {{/each}}
                         </select>
                     </div>
                 </div>
@@ -25,18 +27,18 @@
 
             <div class="wizard-input-section">
                 <div class="form-group">
-                    <label for="select-version" class="control-label col-sm-3"><span>* </span>版本：</label>
+                    <label for="env-version" class="control-label col-sm-3"><span>* </span>版本：</label>
                     <div class="col-sm-5 col-sm">
-                        <input type="text" class="wizard-form-control" id="select-version" name="select-version" placeholder="1.0">
+                        <input type="text" class="wizard-form-control" id="env-version" name="env-version" placeholder="1.0"/>
                     </div>
                 </div>
             </div>
 
             <div class="wizard-input-section">
                 <div class="form-group">
-                    <label for="select-vendor" class="control-label col-sm-3"><span>* </span>提供者：</label>
+                    <label for="env-vendor" class="control-label col-sm-3"><span>* </span>提供者：</label>
                     <div class="col-sm-5 col-sm">
-                        <input type="text" class="wizard-form-control" id="select-vendor" name="select-vendor" placeholder="提供者名称/代号">
+                        <input type="text" class="wizard-form-control" id="env-vendor" name="env-vendor" placeholder="提供者名称/代号"/>
                     </div>
                 </div>
             </div>
@@ -46,7 +48,9 @@
                     <label for="select-region" class="control-label col-sm-3"><span>* </span>所属区域：</label>
                     <div class="col-sm-5 col-sm">
                         <select name="select-region" id="select-region"  class="wizard-form-control select select-region">
-                            {{#uiSelectList(vdcList)}}
+                            {{each data.region as item i}}
+                                <option value="{{item.name}}">{{item.name}}</option>
+                            {{/each}}
                         </select>
                     </div>
                 </div>
@@ -67,7 +71,9 @@
                     <label for="select-protocol" class="control-label col-sm-3"><span>* </span>接入协议：</label>
                     <div  class="col-sm-5 col-sm">
                         <select name="select-protocol" id="select-protocol"  class="wizard-form-control select select-protocol">
-                            {{#uiSelectList(vdcList)}}
+                            {{each data.protocol as item i}}
+                                <option value="{{item.name}}">{{item.name}}</option>
+                            {{/each}}
                         </select>
                     </div>
                 </div>
@@ -75,55 +81,57 @@
 
             <div class="wizard-input-section">
                 <div class="form-group">
-                    <label for="select-ip" class="control-label col-sm-3"><span>* </span>接入IP：</label>
+                    <label for="connector-ip" class="control-label col-sm-3"><span>* </span>接入IP：</label>
                     <div class="col-sm-5 col-sm">
-                        <input type="text" class="wizard-form-control" id="select-ip" name="select-ip" placeholder="IP">
+                        <input type="text" class="wizard-form-control" id="connector-ip" name="connector-ip" placeholder="IP"/>
                     </div>
                 </div>
             </div>
 
             <div class="wizard-input-section">
                 <div class="form-group">
-                    <label for="select-port" class="control-label col-sm-3"><span>* </span>端口：</label>
+                    <label for="connector-port" class="control-label col-sm-3"><span>* </span>端口：</label>
                     <div class="col-sm-5 col-sm">
-                        <input type="text" class="wizard-form-control" id="select-port" name="select-port" placeholder="端口">
+                        <input type="text" class="wizard-form-control" id="connector-port" name="connector-port" placeholder="端口"/>
                     </div>
                 </div>
             </div>
 
             <div class="wizard-input-section">
                 <div class="form-group">
-                    <label for="select-username" class="control-label col-sm-3"><span>* </span>用户名：</label>
+                    <label for="connector-username" class="control-label col-sm-3"><span>* </span>用户名：</label>
                     <div class="col-sm-5 col-sm">
-                        <input type="text" class="wizard-form-control" id="select-username" name="select-username" placeholder="用户名">
+                        <input type="text" class="wizard-form-control" id="connector-username" name="connector-username" placeholder="用户名"/>
                     </div>
                 </div>
             </div>
 
             <div class="wizard-input-section">
                 <div class="form-group">
-                    <label for="select-password" class="control-label col-sm-3"><span>* </span>密码：</label>
+                    <label for="connector-password" class="control-label col-sm-3"><span>* </span>密码：</label>
                     <div class="col-sm-5 col-sm">
-                        <input type="password" class="wizard-form-control" id="select-password" name="select-password" placeholder="密码">
+                        <input type="password" class="wizard-form-control" id="connector-password" name="connector-password" placeholder="密码"/>
                     </div>
                 </div>
             </div>
 
             <div class="wizard-input-section">
                 <div class="form-group">
-                    <label for="select-password-confirm" class="control-label col-sm-3"><span>* </span>确认密码：</label>
+                    <label for="connector-password-confirm" class="control-label col-sm-3"><span>* </span>确认密码：</label>
                     <div class="col-sm-5 col-sm">
-                        <input type="password" class="wizard-form-control" id="select-password-confirm" name="select-password-confirm" placeholder="确认密码">
+                        <input type="password" class="wizard-form-control" id="connector-password-confirm" name="connector-password-confirm" placeholder="确认密码"/>
                     </div>
                 </div>
             </div>
 
             <div class="wizard-input-section">
                 <div class="form-group">
-                    <label for="select-period" class="control-label col-sm-3"><span>* </span>同步周期：</label>
+                    <label for="connector-period" class="control-label col-sm-3"><span>* </span>同步周期：</label>
                     <div class="col-sm-5 col-sm">
-                        <select name="select-period" id="select-period"  class="wizard-form-control select select-period">
-                            {{#uiSelectList(vdcList)}}
+                        <select name="connector-period" id="connector-period"  class="wizard-form-control select select-period">
+                            {{each data.period as item i}}
+                                <option value="{{item.name}}">{{item.name}}</option>
+                            {{/each}}
                         </select>
                     </div>
                 </div>
@@ -140,90 +148,90 @@
         <div class="wizard-card-content col-sm-8">
             <div class="wizard-input-section">
                 <div class="form-group">
-                    <label for="env-name-confirm" class="control-label col-sm-3"><span>* </span>名称：</label>
+                    <label for="env-name-confirm" class="control-label col-sm-3">名称：</label>
                     <div class="col-sm-5 col-sm">
-                        <input type="text" class="wizard-form-control" id="env-name-confirm" name="env-name-confirm" placeholder="虚拟化环境名称">
+                        <input type="text" disabled class="wizard-form-control" id="env-name-confirm" name="env-name-confirm" placeholder="虚拟化环境名称"/>
                     </div>
                 </div>
             </div>
 
             <div class="wizard-input-section">
                 <div class="form-group">
-                    <label for="select-type-confirm" class="control-label col-sm-3"><span>* </span>虚拟化类型：</label>
+                    <label for="env-type-confirm" class="control-label col-sm-3">虚拟化类型：</label>
                     <div class="col-sm-5 col-sm">
-                        <input type="text" class="wizard-form-control" id="select-type-confirm" name="select-type-confirm" placeholder="虚拟化类型">
+                        <input type="text" disabled class="wizard-form-control" id="env-type-confirm" name="env-type-confirm" placeholder="虚拟化类型"/>
                     </div>
                 </div>
             </div>
 
             <div class="wizard-input-section">
                 <div class="form-group">
-                    <label for="select-version-confirm" class="control-label col-sm-3"><span>* </span>版本：</label>
+                    <label for="env-version-confirm" class="control-label col-sm-3">版本：</label>
                     <div class="col-sm-5 col-sm">
-                        <input type="text" class="wizard-form-control" id="select-version-confirm" name="select-version-confirm" placeholder="1.0">
+                        <input type="text" disabled class="wizard-form-control" id="env-version-confirm" name="env-version-confirm" placeholder="1.0"/>
                     </div>
                 </div>
             </div>
 
             <div class="wizard-input-section">
                 <div class="form-group">
-                    <label for="select-vendor-confirm" class="control-label col-sm-3"><span>* </span>提供者：</label>
+                    <label for="env-vendor-confirm" class="control-label col-sm-3">提供者：</label>
                     <div class="col-sm-5 col-sm">
-                        <input type="text" class="wizard-form-control" id="select-vendor-confirm" name="select-vendor-confirm" placeholder="提供者名称/代号">
+                        <input type="text" disabled class="wizard-form-control" id="env-vendor-confirm" name="env-vendor-confirm" placeholder="提供者名称/代号"/>
                     </div>
                 </div>
             </div>
 
             <div class="wizard-input-section">
                 <div class="form-group">
-                    <label for="select-region-confirm" class="control-label col-sm-3"><span>* </span>所属区域：</label>
+                    <label for="env-region-confirm" class="control-label col-sm-3">所属区域：</label>
                     <div class="col-sm-5 col-sm">
-                        <input type="text" class="wizard-form-control" name="select-region-confirm" id="select-region-confirm" placeholder="提供者名称/代号">
+                        <input type="text" disabled class="wizard-form-control" name="env-region-confirm" id="env-region-confirm" placeholder="提供者名称/代号"/>
                     </div>
                 </div>
             </div>
 
             <div class="wizard-input-section">
                 <div class="form-group">
-                    <label for="select-protocol-confirm" class="control-label col-sm-3"><span>* </span>接入协议：</label>
+                    <label for="connector-protocol-confirm" class="control-label col-sm-3">接入协议：</label>
                     <div  class="col-sm-5 col-sm">
-                        <input type="text" class="wizard-form-control" name="select-protocol-confirm" id="select-protocol-confirm" placeholder="提供者名称/代号">
+                        <input type="text" disabled class="wizard-form-control" name="connector-protocol-confirm" id="connector-protocol-confirm" placeholder="提供者名称/代号"/>
                     </div>
                 </div>
             </div>
 
             <div class="wizard-input-section">
                 <div class="form-group">
-                    <label for="select-ip-confirm" class="control-label col-sm-3"><span>* </span>接入IP：</label>
+                    <label for="connector-ip-confirm" class="control-label col-sm-3">接入IP：</label>
                     <div class="col-sm-5 col-sm">
-                        <input type="text" class="wizard-form-control" id="select-ip-confirm" name="select-ip-confirm" placeholder="IP">
+                        <input type="text" disabled class="wizard-form-control" id="connector-ip-confirm" name="connector-ip-confirm" placeholder="IP"/>
                     </div>
                 </div>
             </div>
 
             <div class="wizard-input-section">
                 <div class="form-group">
-                    <label for="select-port-confirm" class="control-label col-sm-3"><span>* </span>端口：</label>
+                    <label for="connector-port-confirm" class="control-label col-sm-3">端口：</label>
                     <div class="col-sm-5 col-sm">
-                        <input type="text" class="wizard-form-control" id="select-port-confirm" name="select-port-confirm" placeholder="端口">
+                        <input type="text" disabled class="wizard-form-control" id="connector-port-confirm" name="connector-port-confirm" placeholder="端口"/>
                     </div>
                 </div>
             </div>
 
             <div class="wizard-input-section">
                 <div class="form-group">
-                    <label for="select-username-confirm" class="control-label col-sm-3"><span>* </span>用户名：</label>
+                    <label for="connector-username-confirm" class="control-label col-sm-3">用户名：</label>
                     <div class="col-sm-5 col-sm">
-                        <input type="text" class="wizard-form-control" id="select-username-confirm" name="select-username-confirm" placeholder="用户名">
+                        <input type="text" disabled class="wizard-form-control" id="connector-username-confirm" name="connector-username-confirm" placeholder="用户名"/>
                     </div>
                 </div>
             </div>
 
             <div class="wizard-input-section">
                 <div class="form-group">
-                    <label for="select-pasw-confirm" class="control-label col-sm-3"><span>* </span>密码：</label>
+                    <label for="connector-pasw-confirm" class="control-label col-sm-3">密码：</label>
                     <div class="col-sm-5 col-sm">
-                        <input type="password" class="wizard-form-control" id="select-pasw-confirm" name="select-pasw-confirm" placeholder="密码">
+                        <input type="password" disabled class="wizard-form-control" id="connector-pasw-confirm" name="connector-pasw-confirm" placeholder="密码"/>
                     </div>
                 </div>
             </div>
@@ -231,9 +239,9 @@
 
             <div class="wizard-input-section">
                 <div class="form-group">
-                    <label for="select-period-confirm" class="control-label col-sm-3"><span>* </span>同步周期：</label>
+                    <label for="connector-period-confirm" class="control-label col-sm-3">同步周期：</label>
                     <div class="col-sm-5 col-sm">
-                        <input type="password" class="wizard-form-control" id="select-period-confirm" name="select-period-confirm" placeholder="密码">
+                        <input type="text" disabled class="wizard-form-control" id="connector-period-confirm" name="connector-period-confirm" placeholder="密码"/>
                     </div>
                 </div>
             </div>

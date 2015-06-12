@@ -265,7 +265,7 @@ define(['Common','bs/modal','bs/wizard','bs/tooltip','jq/form/validator','jq/for
 			initSubNet: function(){
 				var networkId = currentChosenObj.networkId;
 				if(networkId){
-					Common.xhr.ajax(/v2.0/subnets,function(data){
+					Common.xhr.ajax('/v2.0/subnets',function(data){
 						var selectData = {}
 						for(var i=0;i<data.length;i++){
 							selectData[i] = {"name":data[i]["zoneName"],"id":""}
