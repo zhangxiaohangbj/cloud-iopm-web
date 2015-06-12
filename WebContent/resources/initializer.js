@@ -54,6 +54,10 @@ define('Common', ['PubView', 'bs/modal', 'json', 'template', 'jq/dataTables', 'j
                     link: '#vm'
                 },
                 {
+                    text: '<i class="fa fa-tachometer"></i>云主机类型管理',
+                    link: '#vmtype'
+                },
+                {
                     text: '<i class="fa fa-database"></i>磁盘管理',
                     link: ''
                 },
