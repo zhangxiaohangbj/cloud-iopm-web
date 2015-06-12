@@ -287,8 +287,7 @@ define(['Common','bs/modal','bs/wizard','bs/tooltip','jq/form/validator','jq/for
 	    })
 	    //删除子网
 	     $("#SubnetTable_wrapper a.deleteSubnet").on("click",function(){
-	    	 var obj = $(this);
-	    	 var id = obj.attr("data");
+	    	 var id = $(this).attr("data");
 	    	 Dialog.confirm('确定要删除该子网吗?', function(result){
 	             if(result) {
 	            	 Common.xhr.del('/v2.0/subnets/'+id,
