@@ -21,18 +21,18 @@ define(['Common','bs/modal','bs/wizard','bs/tooltip','jq/form/validator','jq/for
 		$("[data-toggle='tooltip']").tooltip();
 		
 		//icheck
-	    $('input[type="checkbox"]').iCheck({
-	    	checkboxClass: "icheckbox-info",
-	        radioClass: "iradio-info"
-	    }).on('ifChecked',function(e){
-	    	if(e.target.className == 'selectAll'){
-	    		$('.table-primary').find('input[type=checkbox]').iCheck('check');
-	    	}
-	    }).on('ifUnchecked',function(e){
-	    	if(e.target.className == 'selectAll'){
-	    		$('.table-primary').find('input[type=checkbox]').iCheck('uncheck');
-	    	}
-	    });
+//	    $('input[type="checkbox"]').iCheck({
+//	    	checkboxClass: "icheckbox-info",
+//	        radioClass: "iradio-info"
+//	    }).on('ifChecked',function(e){
+//	    	if(e.target.className == 'selectAll'){
+//	    		$('.table-primary').find('input[type=checkbox]').iCheck('check');
+//	    	}
+//	    }).on('ifUnchecked',function(e){
+//	    	if(e.target.className == 'selectAll'){
+//	    		$('.table-primary').find('input[type=checkbox]').iCheck('uncheck');
+//	    	}
+//	    });
 	    //ip校验
 	    $.validator.addMethod("ip", function(value, element) {
 	    	return this.optional(element) || /^((\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.){3}(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])$/.test(value);
@@ -127,25 +127,13 @@ define(['Common','bs/modal','bs/wizard','bs/tooltip','jq/form/validator','jq/for
 				},
 				switcher:function(){
 					$("#addSubnet input[type=\"checkbox\"], input[type=\"radio\"]").not("[data-switch-no-init]").switcher();
-					$("[data-switch-set]").on("click", function() {
-			            var type;
-			            type = $(this).data("switch-set");
-			            $(this).parent().find(".btn-gray").removeClass("btn-gray");
-			            $(this).addClass("btn-gray");
-			            return $("#switch-" + type).switcher(type, $(this).data("switch-value"));
-			        });
 				},
 				enable_ip :function(){
-					$("#enable_ip .btn").on("click", function() {
-			            var btn_val = $(this).data("switch-value");
-			            $(this).parent().find(".btn-gray").removeClass("btn-gray");
-			            $(this).addClass("btn-gray");
-			            if(btn_val) {
-			            	$("#gateway_ip").css("display","none");
-			            	$("input[name='enable_ip']").val(1);
-			            }else {
+					$("#enable_ip span").on("click", function() {
+			            if($("[name='enable_ip']:checked").length) {
 			            	$("#gateway_ip").css("display","");
-			            	$("input[name='enable_ip']").val(0);
+			            }else {
+			            	$("#gateway_ip").css("display","none");
 			            }
 			        });
 				}
@@ -165,25 +153,17 @@ define(['Common','bs/modal','bs/wizard','bs/tooltip','jq/form/validator','jq/for
 		    	                action: function(dialog) {
 		    	                	var valid = $(".form-horizontal").valid();
 		    	            		if(!valid) return false;
-//		    	                	var serverData = {
-//		    	                			"id":"subnetid5",
-//		    	        					"name": $("#addSubnet [name='name']").val(),
-//		    	        					"cidr":  $("#addSubnet [name='cidr']").val(),
-//		    	        					"ip_version": $("#addSubnet [name='ip_version']").val(),
-//		    	        					"gateway_ip": $("#addSubnet [name='gateway_ip']").val(),
-//		    	        					"enable_dhcp":$("#addSubnet [name='enable_dhcp']:checked").length? 1:0
-//		    	        				};
 		    	                	var serverData = {
 		    	                		"subnet":{
 		    	                			"allocation_pools": [
 	           	    	                	      {
-	           	    	                	        "end": $("#addSubnet [name='end']").val()? $("#addSubnet [name='end']").val():254,
+	           	    	                	        "end": $("#addSubnet [name='end']").val()? $("#addSubnet [name='end']").val():255,
 	           	    	                	        "start": $("#addSubnet [name='start']").val()? $("#addSubnet [name='start']").val():1
 	           	    	                	      }
 	           	    	                	    ],
 	           	    	                	    "cidr":  $("#addSubnet [name='cidr']").val(),
 	           	    	                	    "enable_dhcp": $("#addSubnet [name='enable_dhcp']:checked").length? 1:0,
-	           	    	                	    "gateway_ip": $("input[name='enable_ip']").val()? null:$("#addSubnet [name='gateway_ip']").val(),
+	           	    	                	    "gateway_ip": $("[name='enable_ip']:checked").length? $("#addSubnet [name='gateway_ip']").val():null,
 	           	    	                	    "ip_version": $("#addSubnet [name='ip_version']").val(),
 	           	    	                	    "ipv6_address_mode": "",
 	           	    	                	    "ipv6_ra_mode": "",
@@ -227,14 +207,14 @@ define(['Common','bs/modal','bs/wizard','bs/tooltip','jq/form/validator','jq/for
 		    	                		"subnet":{
 		    	                			"allocation_pools": [
 	           	    	                	      {
-	           	    	                	        "end": $("#addSubnet [name='end']").val()? $("#addSubnet [name='end']").val():254,
+	           	    	                	        "end": $("#addSubnet [name='end']").val()? $("#addSubnet [name='end']").val():255,
 	           	    	                	        "start": $("#addSubnet [name='start']").val()? $("#addSubnet [name='start']").val():1,
 	           	    	                	        "id" :"",
 	           	    	                	        "subnet_id":id
 	           	    	                	      }
 	           	    	                	    ],
 	           	    	                	    "enable_dhcp": $("#addSubnet [name='enable_dhcp']:checked").length? 1:0,
-	           	    	                	    "gateway_ip": $("input[name='enable_ip']").val()? null:$("#addSubnet [name='gateway_ip']").val(),
+	           	    	                	    "gateway_ip": $("[name='enable_ip']:checked").length? $("#addSubnet [name='gateway_ip']").val():null,
 	           	    	                	    "ip_version": $("#addSubnet [name='ip_version']").val(),
 	           	    	                	    "ipv6_address_mode": "",
 	           	    	                	    "ipv6_ra_mode": "",
@@ -262,16 +242,16 @@ define(['Common','bs/modal','bs/wizard','bs/tooltip','jq/form/validator','jq/for
 	  //创建子网
 	    $("#SubnetTable_wrapper span.btn-add").on("click",function(){
 	    	EditData.AddSubnet(function(){
-	    		EventsHandler.enable_ip();
 	    		EventsHandler.switcher();
+	    		EventsHandler.enable_ip();
 	    		EventsHandler.formValidator();
 	    	});
 	    });
 	    //编辑子网
 	    $("#SubnetTable_wrapper a.btn-opt").on("click",function(){
 	    	EditData.EditSubnet($(this).attr("data"),function(){
-	    		EventsHandler.enable_ip();
 	    		EventsHandler.switcher();
+	    		EventsHandler.enable_ip();
 	    		EventsHandler.formValidator();
 	    	});
 	    });
@@ -279,7 +259,7 @@ define(['Common','bs/modal','bs/wizard','bs/tooltip','jq/form/validator','jq/for
 	    	Common.xhr.ajax('/v2.0/subnets/'+$(this).attr("data"),function(data){
 	    		Common.render('tpls/ccenter/vpc/subnetDetail.html',data.subnet,function(html){
 	    			$("#page-main .page-content").html(html);
-	    			EventsHandler.checkboxICheck();
+	    			EventsHandler.switcher();
 	    			//返回按钮
 	    		    $(".form-horizontal a.reload").on("click",function(){
 	    		    	Common.router.route();

@@ -5,8 +5,8 @@ define(['Common','bs/modal','bs/wizard','bs/tooltip','jq/form/validator','jq/for
 		Common.$pageContent.addClass("loading");
 		Common.render(true,{
 			tpl:'tpls/ccenter/vdc/list.html',
-			//data:'/v2.0/tenants/page/10/1',
-			data:'/resources/data/select.txt',
+			data:'/v2.0/tenants/page/10/1',
+			//data:'/resources/data/select.txt',
 			beforeRender: function(data){
 				return data.result;;
 			},
@@ -36,6 +36,7 @@ define(['Common','bs/modal','bs/wizard','bs/tooltip','jq/form/validator','jq/for
 	    	}
 	    });
 	    var renderData = {};
+	    var azList=[];
         //初始化加载，不依赖其他模块
 		var DataGetter = {
 				//虚拟化环境 virtural environment
@@ -99,7 +100,7 @@ define(['Common','bs/modal','bs/wizard','bs/tooltip','jq/form/validator','jq/for
     							$("#vdcAZ").find(".list-group-all").empty();
     							var listview=[];
     							for(var i=0;i<data.length;i++){
-    								listview.push('<a href="javascript:void(0);" class="list-group-item">',data[i]["name"],'<i class="fa fa-plus-circle fa-fw" style="float: right;display:none;"></i></a>')
+    								listview.push('<a href="javascript:void(0);" class="list-group-item">',data[i]["name"],'<i data-id = ',data[i]["id"],'class="fa fa-plus-circle fa-fw" style="float: right;display:none;"></i></a>')
     							}
     							$("#vdcAZ").find(".list-group-all").html(listview.join(""));
     							EventsHandler.azAddEvent();
@@ -138,7 +139,9 @@ define(['Common','bs/modal','bs/wizard','bs/tooltip','jq/form/validator','jq/for
     					//点击加号，添加可用分区
     					azAddEvent:function(){
     						$("#vdcAZ").find(".list-group-all").find(".fa-fw").click(function(e){
-    							alert(11);
+    							var $target = $(e.currentTarget);
+    							var id = $target.attr("data-id");
+    							alert(id);
     						}); 
     					}
     			}
@@ -175,6 +178,14 @@ define(['Common','bs/modal','bs/wizard','bs/tooltip','jq/form/validator','jq/for
 	    //可用分区
 	    $("ul.dropdown-menu a.vdcAz").on("click",function(){
 	    	more.AZ($(this).attr("data-env"),$(this).attr("data"));
+	    });
+	    //删除一个vdc
+	    $("ul.dropdown-menu a.deleteTenant").on("click",function(){
+	    	more.DeleteTenant($(this).attr("data"));
+	    });
+	   //编辑vdc
+	    $("ul.dropdown-menu a.editTenantBasic").on("click",function(){
+	    	more.EditTenantBasic($(this).attr("data"));
 	    });
     
 	    //更多
@@ -213,13 +224,13 @@ define(['Common','bs/modal','bs/wizard','bs/tooltip','jq/form/validator','jq/for
 			    	        				};
 			    	                	Common.xhr.putJSON('/v2.0/9cc717d8047e46e5bf23804fc4400247/os-quota-sets/'+id,serverData,function(data){
 			    	                		if(data){
-			    	                			alert("保存成功");
-			    	                			
-			    	                			dialog.close();
-											}else{
-												alert("保存失败");
-											}
-										})
+					                    		 Modal.success('保存成功')
+				 	                			 setTimeout(function(){Dialog.closeAll()},2000);
+					                    		 Common.router.route();//重新载入
+					                    	 }else{
+					                    		 Modal.warning ('保存失败')
+					                    	 }
+										});
 			    	                }
 			    	            }],
 			    	            onshown : function(){}
@@ -251,6 +262,61 @@ define(['Common','bs/modal','bs/wizard','bs/tooltip','jq/form/validator','jq/for
     	    		});
     			})		
     		})		
+    	 },
+    	//删除一个租户
+    	DeleteTenant : function(vdc_id){
+    		Modal.confirm('确定要删除该虚拟数据中心吗?', function(result){
+	             if(result) {
+	            	 Common.xhr.del('/v2.0/tenants/' + vdc_id,
+	                     function(data){
+	                    	 if(data){
+	                    		 Modal.success('删除成功')
+ 	                			 setTimeout(function(){Dialog.closeAll()},2000);
+	                    		 Common.router.route();//重新载入
+	                    	 }else{
+	                    		 Modal.warning ('删除失败')
+	                    	 }
+	                     });
+	             }else {
+	            	 Modal.closeAll();
+	             }
+	         });	
+    	 },
+    	//编辑租户的基本信息
+    	 EditTenantBasic : function(vdc_id){
+    		 Common.xhr.ajax('v2.0/tenants/' + vdc_id,function(data){
+    			 Common.render('tpls/ccenter/vdc/edit.html',data.tenants,function(html){
+      				Modal.show({
+  	    	            title: '虚拟数据中心信息',
+  	    	            message: html,
+  	    	            nl2br: false,
+  	    	            buttons: [{
+  	    	                label: '保存',
+  	    	                action: function(dialog) {
+  	    	                	var vdcData = {
+    	                			"tenant":{
+    	                				 "description": $("#editVdcBasic [name='description']").val(),
+    	                			     "enabled": $("#editVdcBasic [name='enabled']:checked").length? true:false,
+    	                			     "id": vdc_id,
+    	                			     "name": $("#editVdcBasic [name='name']").val()
+    	                			}
+  	    	                	};
+	  	    	              	Common.xhr.putJSON('v2.0/tenants/'+vdc_id,vdcData,function(data){
+		  	    	              	if(data){
+			                    		 Modal.success('保存成功')
+		 	                			 setTimeout(function(){Dialog.closeAll()},2000);
+			                    		 Common.router.route();//重新载入
+			                    	 }else{
+			                    		 Modal.warning ('保存失败')
+			                    	 }
+								});
+  	    	                	
+  	    	                }
+  	    	            }],
+  	    	            onshown : function(){}
+  	    	        });
+  	    		});
+    		 })		
     	 }
 	   }
 	}	

@@ -1,38 +1,71 @@
-<form class="form-horizontal" id="networkdetail">
-	<div class="form-group">
-		<label for="name" class="control-label col-sm-4"><span style="color: red;">* </span>VPC名称：</label>
-	 	<div class="col-sm-5 col-sm">
-			<input type="text" class="dialog-form-control" id="name" name="name" value="{{network.name}}" >
+<div class="page-header clearfix">
+	<ol class="breadcrumb">
+	  <li class="active">网络详情</li>
+	  <li class="active"><a href="javascript:void(0);" class="btn btn-default reload">返回</a></li>
+	</ol>
+</div>
+<div class="page-body">
+	<div class="pane">
+		<div class="pane-content">
+			<form id="networkdetail">
+				<div class="form-group" style="overflow: hidden;">
+					<label for="name" class="control-label col-sm-2">VPC名称：</label>
+				 	<div class="col-sm-3 col-sm">
+						<input type="text" class="dialog-form-control" id="name" name="name" value="{{network.name}}" readonly="true">
+					</div>
+				</div>
+				<div class="form-group" style="overflow: hidden;">
+					<label for="tenant_id" class="control-label col-sm-2">虚拟机数据中心：</label>
+					<div class="col-sm-3 col-sm">
+						<select id="tenant_id" name="tenant_id" class="dialog-form-control select tenant_id" value="{{network.tenant_id}}" readonly="readonly"></select>
+					</div>
+				</div>
+				<div class="form-group" style="overflow: hidden;">
+					<label for="cidr" class="control-label col-sm-2">网络地址范围（CIDR）：</label>
+					<div class="col-sm-3 col-sm">
+						<input type="text" class="dialog-form-control" id="cidr" name="cidr" value="{{network.cidr}}" readonly="true">
+					</div>
+				</div>
+				<div class="form-group" style="overflow: hidden;">
+					<label for="admin_state_up" class="control-label col-sm-2">管理状态：</label>
+					<div class="col-sm-3 col-sm">
+						<p>
+					        <input type="checkbox"  name="admin_state_up" checked data-size="small" data-on-text="启用" data-off-text="禁用" readonly="true" {{if network.admin_state_up == true}}checked {{/if}} >
+					    </p>
+					</div>
+				</div>
+				<div class="form-group" style="overflow: hidden;">
+					<label for="shared" class="control-label col-sm-2">共享状态：</label>
+					<div class="col-sm-3 col-sm">
+						<p>
+					        <input type="checkbox"  name="shared" checked data-size="small" data-on-text="启用" data-off-text="禁用" readonly="true" {{if network.shared == true}}checked {{/if}} >
+					    </p>
+					</div>
+				</div>
+				<div class="form-group" style="overflow: hidden;">
+					<label for="router:external" class="control-label col-sm-2">网络类型：</label>
+					<div class="col-sm-3 col-sm">
+						<p>
+					        <input type="checkbox"  name="router:external" data-size="small" data-on-text="外部" data-off-text="内部" readonly="true" {{if network["router:external"] == true}}checked {{/if}}>
+					    </p>
+					</div>
+				</div>
+				<div class="form-group" style="overflow: hidden;">
+					
+	  					<li class="active">子网信息</li>
+					
+					<div id="subnetTableDiv" style="overflow: hidden;"></div>
+				</div>
+				
+				<div class="form-group" style="overflow: hidden;">
+					<label for="server-name" class="control-label col-sm-3"></label>
+				 	<div class="col-sm-3 col-sm">
+						<a href="javascript:void(0);" class="btn btn-default reload">返回</a>
+					</div>
+				</div>
+			</form>
+
+			
 		</div>
 	</div>
-	<div class="form-group">
-		<label for="tenant_id" class="control-label col-sm-4"><span style="color: red;">* </span>虚拟机数据中心：</label>
-		<div class="col-sm-5 col-sm">
-			<select id="tenant_id" name="tenant_id" class="dialog-form-control select tenant_id" value="{{network.tenant_id}}" readonly="readonly"></select>
-		</div>
-	</div>
-	<div class="form-group">
-		<label for="cidr" class="control-label col-sm-4"><span style="color: red;">* </span>网络地址范围（CIDR）：</label>
-		<div class="col-sm-5 col-sm">
-			<input type="text" class="dialog-form-control" id="cidr" name="cidr" value="{{network.cidr}}">
-		</div>
-	</div>
-	<div class="form-group">
-		<label for="admin_state_up" class="control-label col-sm-4"><span style="color: red;">* </span>管理状态：</label>
-		<div class="col-sm-5 col-sm">
-			<input type="checkbox"  id="admin_state_up" name="admin_state_up" {{if network.admin_state_up == true}}checked {{/if}}" >
-		</div>
-	</div>
-	<div class="form-group">
-		<label for="shared" class="control-label col-sm-4"><span style="color: red;">* </span>是否共享：</label>
-		<div class="col-sm-5 col-sm">
-			<input type="checkbox" id="shared" name="shared" {{if network.shared == true}}checked {{/if}}>
-		</div>
-	</div>
-	<div class="form-group">
-		<label for="router:external" class="control-label col-sm-4"><span style="color: red;">* </span>是否外部网络：</label>
-		<div class="col-sm-5 col-sm">
-			<input type="checkbox"  id="router:external" name="router:external" {{if network["router:external"] == true}}checked {{/if}} readonly="readonly">
-		</div>
-	</div>
-</form>
+</div>

@@ -3,21 +3,21 @@
 		<label class="control-label col-sm-3">
 	 	<span style="color: red;">* </span>名称：</label>
 	 	<div class="col-sm-7 col-sm">
-			<input type="text" class="dialog-form-control" name="name" value="{{name}}">
+			<input type="text" class="dialog-form-control" name="name" value="{{name}}" style="width: 350px;">
 		</div>
 	</div>
 	<div class="form-group">
 		<label class="control-label col-sm-3">
 	 	</span>描述：</label>
 	 	<div class="col-sm-7 col-sm">
-			<textarea rows="" cols="" class="dialog-form-control" name="description" value="description"></textarea>
+			<textarea rows="5" cols="" class="dialog-form-control" name="description" value="{{description}}" style="width: 350px;height:60px"></textarea>
 		</div>
 	</div>
 	<div class="form-group">
 		<label for="server-name" class="control-label col-sm-3">
-	 	禁用网关：</label>
+	 	激活：</label>
 	 	<div class="col-sm-7 col-sm">
-			<label><input type="checkbox" {{if enabled=='1'}}checked {{/if}}></label>
+			<label><input type="checkbox" name="enabled" {{if enabled=='1'}}checked {{/if}}></label>
 		</div>
 	</div>
 </form>

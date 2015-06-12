@@ -34,25 +34,18 @@
 		<label for="server-name" class="control-label col-sm-3">
 	 	网关：</label>
 	 	<div class="col-sm-7 col-sm" id="enable_ip">
-			<input type="hidden" name="enable_ip">
-			<div class="btn-group">
-                <button type="button" data-switch-value="false" class="btn btn-default {{if gateway_ip != null}} btn-gray {{/if}}">启用</button>
-                <button type="button" data-switch-value="true" class="btn btn-default {{if gateway_ip == null}} btn-gray {{/if}}">禁用</button>
-            </div>
+	 		<p>
+		        <input type="checkbox" name="enable_ip" data-size="small" checked data-on-text="启用" data-off-text="禁用" {{if gateway_ip != null}} checked {{/if}}>
+		    </p>
 		</div>
 	</div>
 	<div class="form-group">
 		<label for="enable_dhcp" class="control-label col-sm-3">
 	 	DHCP：</label>
-	 	<div class="col-sm-7 col-sm" id="enable_dhcp">
-			<!-- <label><input type="checkbox" name="enable_dhcp"></label> -->
-			<p style="display:none;">
-		        <input id="switch-state" type="checkbox" name="enable_dhcp" {{if enable_dhcp == '1'}} checked {{/if}}/>
+	 	<div class="col-sm-7 col-sm">
+			<p>
+		        <input type="checkbox" name="enable_dhcp" data-size="small" data-on-text="激活" data-off-text="禁用" {{if enable_dhcp == '1'}} checked {{/if}}>
 		    </p>
-			<div class="btn-group">
-                <button type="button" data-switch-set="state" data-switch-value="false" class="btn btn-default {{if enable_dhcp == '0'}} btn-gray {{/if}}">禁用</button>
-                <button type="button" data-switch-set="state" data-switch-value="true" class="btn btn-default {{if enable_dhcp == '1'}} btn-gray {{/if}}">激活</button>
-            </div>
 		</div>
 	</div>
 	<div class="form-group">
