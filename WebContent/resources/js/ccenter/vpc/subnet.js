@@ -36,7 +36,7 @@ define(['Common','bs/modal','bs/wizard','bs/tooltip','jq/form/validator','jq/for
 	    //ip校验
 	    $.validator.addMethod("ip", function(value, element) {
 	    	return this.optional(element) || /^((\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.){3}(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])$/.test(value);
-	    }, "请填写正确的网关IP");
+	    }, "请填写正确的IP地址");
 	    //cidr校验
 	    $.validator.addMethod("cidr", function(value, element) {
 	    	return this.optional(element) || /^((\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.){3}(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\/\d{1,2}$/.test(value);
@@ -50,13 +50,13 @@ define(['Common','bs/modal','bs/wizard','bs/tooltip','jq/form/validator','jq/for
 	    	}
 	    	var cidr = $("#addSubnet [name='cidr']").val();
 	    	if(cidr == "" || cidr ==null) return true;
-	    	var cidr = cidr.substring(0,cidr.lastIndexOf("."));
+	    	cidr = cidr.substring(0,cidr.lastIndexOf("."));
 	    	var regx = new RegExp(cidr+"\.([1-9]\d{0,1}|1\d\d|2[0-4]\d|25[0-5])");
 	    	 if(!regx.test(value)){
 	    		 return false;
 	    	 }else return true;
 	    	
-	    }, "请根据CIDR地址填写网关IP");
+	    }, "请根据CIDR地址填写IP地址");
 	    //地址池校验
 	    $.validator.addMethod("pools_end", function(value, element) {
 	    	var optionalValue = this.optional(element);
@@ -66,11 +66,11 @@ define(['Common','bs/modal','bs/wizard','bs/tooltip','jq/form/validator','jq/for
 	    	}
 	    	var start = $("#addSubnet [name='start']").val();
 	    	if(start == "" || start ==null) return true;
-	    	 if(parseInt(value) < parseInt(start)){
+	    	 if(parseInt(value.substring(value.lastIndexOf(".")+1)) < parseInt(start.substring(start.lastIndexOf(".")+1))){
 	    		 return false;
 	    	 }else return true;
 	    	
-	    }, "地址池结束值应大于开始值");
+	    }, "请输入正确的地址池结束值");
 	    $.validator.addMethod("pools_start", function(value, element) {
 	    	var optionalValue = this.optional(element);
 	    	// Element is optional
@@ -79,11 +79,12 @@ define(['Common','bs/modal','bs/wizard','bs/tooltip','jq/form/validator','jq/for
 	    	}
 	    	var end = $("#addSubnet [name='end']").val();
 	    	if(end == "" || end ==null) return true;
-	    	 if(parseInt(value) > parseInt(end)){
+	    	
+	    	 if(parseInt(value.substring(value.lastIndexOf(".")+1)) > parseInt(end.substring(end.lastIndexOf(".")+1))){
 	    		 return false;
 	    	 }else return true;
 	    	
-	    }, "地址池开始值应小于结束值");
+	    }, "请输入正确的地址池开始值");
 	    
 	    var EventsHandler = {
 	    		//表单校验
@@ -105,16 +106,14 @@ define(['Common','bs/modal','bs/wizard','bs/tooltip','jq/form/validator','jq/for
 			                    ip_rule: true
 			                },
 			                'end':{
-			                	max:255,
-			                	min:1,
-			                	pools_end:true,
-			                	digits:true
+			                	ip:true,
+			                	ip_rule:true,
+			                	pools_end:true
 			                },
 			                'start':{
-			                	max:255,
-			                	min:1,
-			                	pools_start:true,
-			                	digits:true
+			                	ip:true,
+			                	ip_rule:true,
+			                	pools_start:true
 			                }
 			            }
 			        });
@@ -153,12 +152,22 @@ define(['Common','bs/modal','bs/wizard','bs/tooltip','jq/form/validator','jq/for
 		    	                action: function(dialog) {
 		    	                	var valid = $(".form-horizontal").valid();
 		    	            		if(!valid) return false;
+		    	            		var end = $("#addSubnet [name='end']").val(), start = $("#addSubnet [name='start']").val();
+		    	            		var cidr = $("#addSubnet [name='cidr']").val();
+		    	            		cidr = cidr.substring(0,cidr.lastIndexOf("."));
+		    	            		if(!end){
+		    	            			end=cidr+".255";
+		    	            		}
+		    	            		if(!start){
+		    	            			start=cidr+".1";
+		    	            		}
+		    	        	    	
 		    	                	var serverData = {
 		    	                		"subnet":{
 		    	                			"allocation_pools": [
 	           	    	                	      {
-	           	    	                	        "end": $("#addSubnet [name='end']").val()? $("#addSubnet [name='end']").val():255,
-	           	    	                	        "start": $("#addSubnet [name='start']").val()? $("#addSubnet [name='start']").val():1
+	           	    	                	        "end": end,
+	           	    	                	        "start": start
 	           	    	                	      }
 	           	    	                	    ],
 	           	    	                	    "cidr":  $("#addSubnet [name='cidr']").val(),
@@ -203,12 +212,21 @@ define(['Common','bs/modal','bs/wizard','bs/tooltip','jq/form/validator','jq/for
 	    	                action: function(dialog) {
 	    	                	var valid = $(".form-horizontal").valid();
 	    	            		if(!valid) return false;
+	    	            		var end = $("#addSubnet [name='end']").val(), start = $("#addSubnet [name='start']").val();
+	    	            		var cidr = $("#addSubnet [name='cidr']").val();
+	    	            		cidr = cidr.substring(0,cidr.lastIndexOf("."));
+	    	            		if(!end){
+	    	            			end=cidr+".255";
+	    	            		}
+	    	            		if(!start){
+	    	            			start=cidr+".1";
+	    	            		}
 	    	            		var serverData = {
 		    	                		"subnet":{
 		    	                			"allocation_pools": [
 	           	    	                	      {
-	           	    	                	        "end": $("#addSubnet [name='end']").val()? $("#addSubnet [name='end']").val():255,
-	           	    	                	        "start": $("#addSubnet [name='start']").val()? $("#addSubnet [name='start']").val():1,
+	           	    	                	        "end": end,
+	           	    	                	        "start": start,
 	           	    	                	        "id" :"",
 	           	    	                	        "subnet_id":id
 	           	    	                	      }
