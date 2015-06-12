@@ -8,7 +8,7 @@
 	<div class="form-group">
 		<label for="tenant_id" class="control-label col-sm-4"><span style="color: red;">* </span>虚拟机数据中心：</label>
 		<div class="col-sm-5 col-sm">
-			<select id="tenant_id" name="tenant_id" class="dialog-form-control select tenant_id" value="{{network.tenant_id}}" readonly="readonly"></select>
+			<select id="tenant_id" name="tenant_id" class="dialog-form-control select tenant_id" data="{{network.tenant_id}}" readonly="readonly"></select>
 		</div>
 	</div>
 	<div class="form-group">
@@ -18,21 +18,27 @@
 		</div>
 	</div>
 	<div class="form-group">
-		<label for="admin_state_up" class="control-label col-sm-4"><span style="color: red;">* </span>管理状态：</label>
+		<label for="admin_state_up" class="control-label col-sm-4">管理状态：</label>
 		<div class="col-sm-5 col-sm">
-			<input type="checkbox"  id="admin_state_up" name="admin_state_up" {{if network.admin_state_up == true}}checked {{/if}}" >
+			<p>
+		        <input type="checkbox"  name="admin_state_up" checked data-size="small" data-on-text="启用" data-off-text="禁用" {{if network.admin_state_up == true}}checked {{/if}} >
+		    </p>
 		</div>
 	</div>
 	<div class="form-group">
-		<label for="shared" class="control-label col-sm-4"><span style="color: red;">* </span>是否共享：</label>
+		<label for="shared" class="control-label col-sm-4">共享状态：</label>
 		<div class="col-sm-5 col-sm">
-			<input type="checkbox" id="shared" name="shared" {{if network.shared == true}}checked {{/if}}>
+			<p>
+		        <input type="checkbox"  name="shared" checked data-size="small" data-on-text="启用" data-off-text="禁用" {{if network.shared == true}}checked {{/if}} >
+		    </p>
 		</div>
 	</div>
 	<div class="form-group">
-		<label for="router:external" class="control-label col-sm-4"><span style="color: red;">* </span>是否外部网络：</label>
+		<label for="router:external" class="control-label col-sm-4">网络类型：</label>
 		<div class="col-sm-5 col-sm">
-			<input type="checkbox"  id="router:external" name="router:external" {{if network["router:external"] == true}}checked {{/if}} readonly="readonly">
+			<p>
+		        <input type="checkbox"  name="router:external" data-size="small" data-on-text="外部" data-off-text="内部" {{if network["router:external"] == true}}checked {{/if}}>
+		    </p>
 		</div>
 	</div>
 </form>
