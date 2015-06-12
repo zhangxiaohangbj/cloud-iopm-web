@@ -54,6 +54,10 @@ define('Common', ['PubView', 'bs/modal', 'json', 'template', 'jq/dataTables', 'j
                     link: '#vm'
                 },
                 {
+                    text: '<i class="fa fa-tachometer"></i>云主机类型管理',
+                    link: '#vmtype'
+                },
+                {
                     text: '<i class="fa fa-database"></i>磁盘管理',
                     link: ''
                 },
@@ -273,6 +277,11 @@ define('Common', ['PubView', 'bs/modal', 'json', 'template', 'jq/dataTables', 'j
         });
     }
 
+    // init defaultOptions
+    Modal.configDefaultOptions(['processing', 'info', 'warning', 'error', 'success'], {
+        position: 'right 48'
+    });
+
     return {
         hash: function() {
             return _getHash();
@@ -453,6 +462,10 @@ define('Common', ['PubView', 'bs/modal', 'json', 'template', 'jq/dataTables', 'j
         _router: function() {
             var that = this;
             var Router = function() {
+                //默认路由入口前缀
+                this.ctrlPrefix = 'js/';
+                //默认路由入口
+                this.ctrlDef = 'index';
                 //路由表
                 this.table = {
                     path: [], ctrl:[]
@@ -469,10 +482,6 @@ define('Common', ['PubView', 'bs/modal', 'json', 'template', 'jq/dataTables', 'j
                     this.table.ctrl.unshift(ctrl);
                     return this;
                 };
-                //默认路由入口前缀
-                this.ctrlPrefix = 'js/';
-                //默认路由入口
-                this.ctrlDef = 'index';
                 //获取默认的路由入口文件路径
                 this.getDefaultCtrl = function(hash) {
                     hash = hash || that.hash;
@@ -520,10 +529,10 @@ define('Common', ['PubView', 'bs/modal', 'json', 'template', 'jq/dataTables', 'j
                 };
                 //加载控制器,并默认执行init初始化
                 this.loadctrl = function(ctrl){
-                    Modal.loader();
+                    Modal.loading();
                     var onLoad = function() {
                         that.resetSideBar();
-                        Modal.loader('remove');
+                        Modal.loading('remove');
                     };
                     that.Deferred(onLoad);
                     var ctrlList = [];
@@ -550,12 +559,12 @@ define('Common', ['PubView', 'bs/modal', 'json', 'template', 'jq/dataTables', 'j
                         that.resolve();
                         if(e.requireType) {
                             if(e.requireMap) {
-                                Modal.danger('Script error for ' + e.requireMap.id + ': ' + e.message);
+                                Modal.error('Script error for ' + e.requireMap.id + ': ' + e.message);
                             } else {
-                                Modal.danger(e.message.split('\n')[0] + '. Can not load this Control Module');
+                                Modal.error(e.message.split('\n')[0] + '. Can not load this Control Module');
                             }
                         } else {
-                            Modal.danger(e.message);
+                            Modal.error(e.message);
                         }
                     });
                     return this;
@@ -614,11 +623,11 @@ define('Common', ['PubView', 'bs/modal', 'json', 'template', 'jq/dataTables', 'j
                                 }
                             }catch(e){
                                 that.resolve();
-                                Modal.danger(e.message);
+                                Modal.error(e.message);
                             }
                         }, function(e) {
                             that.resolve();
-                            Modal.danger("Template load error: " + e.message.split(' ')[0]);
+                            Modal.error("Template load error: " + e.message.split(' ')[0]);
                         });
                     };
                     var filterData = function(data) {
@@ -646,7 +655,7 @@ define('Common', ['PubView', 'bs/modal', 'json', 'template', 'jq/dataTables', 'j
                     }
                 } catch (e) {
                     that.resolve();
-                    Modal.danger(e.message);
+                    Modal.error(e.message);
                 }
             }
         },
@@ -663,7 +672,7 @@ define('Common', ['PubView', 'bs/modal', 'json', 'template', 'jq/dataTables', 'j
                     this._initComponents($parent);
                 }
             } catch (e) {
-                Modal.danger('Common html error: '+ e.message);
+                Modal.error('Common html error: '+ e.message);
             }
         },
         componentsDefaults: {
@@ -707,7 +716,7 @@ define('Common', ['PubView', 'bs/modal', 'json', 'template', 'jq/dataTables', 'j
                         return inHtml;
                     }
                 } catch (e) {
-                    Modal.danger(e.message);
+                    Modal.error(e.message);
                     if(this._deferred) {
                         this.resolve(false);
                     }
@@ -735,7 +744,7 @@ define('Common', ['PubView', 'bs/modal', 'json', 'template', 'jq/dataTables', 'j
                     var resolve = function(msg) {
                         that._inRender && (that._inRender = false);
                         that._deferred && that.resolve();
-                        msg && Modal.danger(msg);
+                        msg && Modal.error(msg);
                     };
                     if(url) {
                         var object;
@@ -924,7 +933,7 @@ define('Common', ['PubView', 'bs/modal', 'json', 'template', 'jq/dataTables', 'j
                             'success': _success
                         });
                     } catch (e) {
-                        Modal.danger("Ajax postJSON Error: data param parse error.");
+                        Modal.error("Ajax postJSON Error: data param parse error.");
                     }
                 };
                 this.postJSONSync = function(url, data, success) {
@@ -946,7 +955,7 @@ define('Common', ['PubView', 'bs/modal', 'json', 'template', 'jq/dataTables', 'j
                             'success': _success
                         });
                     } catch (e) {
-                        Modal.danger("Ajax postJSONSync Error: data param parse error.");
+                        Modal.error("Ajax postJSONSync Error: data param parse error.");
                     }
                 };
                 this.putJSON = function(url, data, success) {
@@ -967,7 +976,7 @@ define('Common', ['PubView', 'bs/modal', 'json', 'template', 'jq/dataTables', 'j
                             'success': _success
                         });
                     } catch (e) {
-                        Modal.danger("Ajax putJSON Error: data param parse error.");
+                        Modal.error("Ajax putJSON Error: data param parse error.");
                     }
                 };
                 this.putJSONSync = function(url, data, success) {
@@ -988,7 +997,7 @@ define('Common', ['PubView', 'bs/modal', 'json', 'template', 'jq/dataTables', 'j
                             'success': _success
                         });
                     } catch (e) {
-                        Modal.danger("Ajax putJSONSync Error: data param parse error.");
+                        Modal.error("Ajax putJSONSync Error: data param parse error.");
                     }
                 };
                 this._getFullUrl = function(url, isResource) {

@@ -94,6 +94,9 @@ input[disabled], select[disabled], textarea[disabled], input[readonly], select[r
  	margin:0;
  	padding:0;
  }
+ .wizard-card .wizard-card-content.none-desc{
+ 	border-right:0;
+ } 
  .wizard-card .wizard-card-desc p{
  	line-height:1.5em;
  	padding:30px 10px;
@@ -284,4 +287,57 @@ input[disabled], select[disabled], textarea[disabled], input[readonly], select[r
  .chosen-container-active.chosen-with-drop .chosen-single{
  	outline:none;
  	box-shadow:0;
+ }
+ .wizard-input-section .panel .list-group{
+ 	height:290px;overflow-y:auto;
+ 	border:1px solid #ddd;
+ 	overflow-x:hidden;
+ }
+ .wizard-card[data-cardname="members"] .wizard-input-section .panel .list-group{
+ 	height:320px;
+ }
+ .wizard-input-section .panel, .wizard-input-section .panel-default{
+ 	border:0;
+ 	-webkit-box-shadow:0;
+ 	box-shadow:0;
+ }
+ .wizard-input-section .panel-default>.panel-heading{
+ 	background-color:#fff;border:0;
+ 	padding:10px 0 10px 10px;
+ }
+ .wizard-input-section .panel-default>.panel-body{
+ 	border:1px solid #ddd;border-bottom:0;
+ 	padding:0;
+ }
+ .wizard-input-section .panel-default>.panel-body .form-search{
+ 	padding:5px 10px;
+ }
+ .panel-body .form-search .search-query{
+ 	height:26px;width:96%;
+ }
+ .panel-body .form-search i{
+ 	margin-left:-22px;
+ 	color:#BDBBBB;
+ }
+.wizard-input-section .panel .list-group{
+	border-top:0;
+}
+.wizard-input-section .panel .list-group>ul:hover{
+	background-color:#F2F2F2;
+	
+}
+.wizard-input-section .panel .list-group .list-group-item{
+ 	border :0;padding:6px 15px;
+ }
+ .wizard-input-section .panel .list-group .list-group-item .dropdown .btn-default{
+ 	padding:3px;border-radius:0;
+ }
+ .wizard-input-section .panel .list-group div.dropdown,
+ .open>.dropdown-menu-right a{
+ 	font-size:13px;
+ }
+ .open>.dropdown-menu-right{
+ 	right:0;left:inherit;
+ }
+ .wizard-input-section .panel .list-group .list-group-item i{
  }
