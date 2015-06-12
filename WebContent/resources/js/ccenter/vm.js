@@ -75,7 +75,7 @@ define(['Common','bs/modal','bs/wizard','bs/tooltip','jq/form/validator','jq/for
 				},
 				//虚机规格
 				getSpecs: function(){
-					Common.xhr.ajax('/cloud/v2/'+current_vdc_id+'/flavors/detail',function(flavors){
+					Common.xhr.ajax('/v2/'+current_vdc_id+'/flavors/detail',function(flavors){
 						var flavorsData = flavors['flavors'];
 						for(var i=0;i<flavorsData.length;i++){
 							flavorsData[i]["ephemeral"] = flavorsData[i]["OS-FLV-EXT-DATA:ephemeral"]
@@ -728,6 +728,12 @@ define(['Common','bs/modal','bs/wizard','bs/tooltip','jq/form/validator','jq/for
 		    		EventsHandler.specsChange();
 		    	});
 	    	})
+	    });
+	    
+	    //修改云主机名称
+	    $("ul.dropdown-menu a.delete").on("click",function(){
+	    	require(['css!'+PubView.rqBaseUrl+'/css/dialog.css']);
+	    	Modal.confirm("");
 	    });
 	}	
 	return {
