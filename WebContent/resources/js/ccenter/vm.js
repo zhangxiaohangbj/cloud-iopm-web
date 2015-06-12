@@ -566,7 +566,7 @@ define(['Common','bs/modal','bs/wizard','bs/tooltip','jq/form/validator','jq/for
 	    						"fixed_ip": '192.168.0.115'//$("#fixed_ip").val()
     					}]
     				}
-    				Common.xhr.postJSON('/9cc717d8047e46e5bf23804fc4400247/servers',serverData,function(data){
+    				Common.xhr.postJSON('/'+current_vdc_id+'/servers',serverData,function(data){
     					wizard._submitting = false;
     					wizard.updateProgressBar(100);
     					closeWizard();
@@ -732,8 +732,16 @@ define(['Common','bs/modal','bs/wizard','bs/tooltip','jq/form/validator','jq/for
 	    
 	    //修改云主机名称
 	    $("ul.dropdown-menu a.delete").on("click",function(){
+	    	var serverName = $(this).parents('tr:first').find('td.vm_name').html();
+	    	var serverId = $(this).attr("data");
 	    	require(['css!'+PubView.rqBaseUrl+'/css/dialog.css']);
-	    	Modal.confirm("");
+	    	Modal.confirm("你已经选择了 【"+serverName+"】 。 请确认您的选择。终止的实例均无法恢复。",function(result){
+	            if(result) {
+	                Common.xhr.del('/'+current_vdc_id+'/servers/'+serverId,function(data){
+	                	Modal.success("云主机【"+serverName+"】已删除！");
+	                });	    		
+	            }
+	    	});
 	    });
 	}	
 	return {
