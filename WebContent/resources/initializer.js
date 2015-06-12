@@ -19,7 +19,7 @@ define('Common', ['PubView', 'bs/modal', 'json', 'template', 'jq/dataTables', 'j
         },
         {
             text: '基础环境',
-            link: '#'
+            link: '#cresource'
         },
         {
             text: '云中心',
@@ -40,7 +40,58 @@ define('Common', ['PubView', 'bs/modal', 'json', 'template', 'jq/dataTables', 'j
     ];
     var sideBarItems = [
         null,
-        null,
+        {
+            title: '<i class="fa fa-codepen fa-fw"></i>基础环境',
+            current: [2],
+            items:[
+                {
+                    text: '<i class="fa fa-th-large"></i>设备管理<i class="fa icon-arrow"></i>',
+                    link:'#device',
+                    items: [
+                        {
+                            text: '<i class="fa fa-cloud"></i>服务器',
+                            link: '#vdc'
+                        },
+                        {
+                            text: '<i class="fa fa-cloud"></i>存储设备',
+                            link: '#vdc'
+                        },
+                        {
+                            text: '<i class="fa fa-cloud"></i>交换机',
+                            link: '#vdc'
+                        },
+                        {
+                            text: '<i class="fa fa-cloud"></i>防火墙',
+                            link: '#vdc'
+                        },
+                        {
+                            text: '<i class="fa fa-cloud"></i>负载均衡设备',
+                            link: '#vdc'
+                        },
+                        {
+                            text: '<i class="fa fa-cloud"></i>路由器',
+                            link: '#vdc'
+                        },
+                    ]
+                },
+                {
+                    text: '<i class="fa fa-cloud"></i>物理区域',
+                    link: '#host'
+                },
+                {
+                    text: '<i class="fa fa-cloud"></i>虚拟化环境',
+                    link: '#env'
+                },
+                {
+                    text: '<i class="fa fa-cloud"></i>可用分区',
+                    link: '#zone'
+                },
+                {
+                    text: '<i class="fa fa-cloud"></i>资源标签',
+                    link: '#tag'
+                }
+            ]
+        },
         {
             title: '<i class="fa fa-codepen fa-fw"></i>云中心',
             current: [2],
@@ -203,7 +254,7 @@ define('Common', ['PubView', 'bs/modal', 'json', 'template', 'jq/dataTables', 'j
                         },
                         {
                             text: '策略定义',
-                            link: '#strategy'
+                            link: '#task/strategy'
                         },
                         {
                             text: '任务分组',
@@ -1056,6 +1107,7 @@ require(['PubView', 'Common'], function(PubView, Common) {
     with(Common.router){
         when("^#ccenter(!.*)?$", ['js/ccenter/vm']);
         when("^#monitor(!.*)?$", ['js/monitor/task/strategyGroup']);
+        when("^#cresource(!.*)?$", ['js/cresource/env']);
     }
 
     //路由当前页面

@@ -1,0 +1,71 @@
+<div class="page-header clearfix">
+    <ol class="breadcrumb">
+        <li class="active">虚拟化环境列表</li>
+    </ol>
+</div>
+<div class="page-body">
+    <div class="pane">
+        <div class="pane-content">
+            <table class="table table-primary table-striped" id="VirtualEnvTable">
+                <thead>
+                <tr>
+                    <th class="c1">
+                        <label><input type="checkbox" class="selectAll"></label>
+                    </th>
+                    <th class="c2">名称</th>
+                    <th class="c2">虚拟化类型</th>
+                    <th class="c2">版本</th>
+                    <th class="c2">区域</th>
+                    <th class="c2">连接状态</th>
+                    <th class="c2">更新状态</th>
+                    <th class="c2">同步周期</th>
+                    <th class="c1 sorting_disabled" style="width:180px;">操作</th>
+                </tr>
+                </thead>
+                <tbody>
+                {{each data as item i}}
+                <tr>
+                    <td><label><input type="checkbox"></label></td>
+                    <td>{{item.name}}</td>
+                    <td>{{item.type}}</td>
+                    <td>{{item.version}}</td>
+                    <td>{{item.regionId}}</td>
+                    <td>
+                        {{if item.connectStatus == '1'}}
+                        <span class="text-success">连接成功</span>
+                        {{else}}
+                        <span class="text-danger">连接失败</span>
+                        {{/if}}
+                    </td>
+                    <td>
+                        {{if item.updateStatus == '1'}}
+                        <span class="text-success">更新成功</span>
+                        {{else}}
+                        <span class="text-danger">更新失败</span>
+                        {{/if}}
+                    </td>
+                    <td>{{item.refreshCycle}}</td>
+                    <td>
+                        <a class="btn-opt pull-left log-info" data-toggle="tooltip" data-act="log" style="margin: 0 5px;" data="{{item.id}}">日志信息</a>
+                        <a class="btn-opt pull-left edit" data-toggle="tooltip" data-act="edit" style="margin: 0 5px;" data="{{item.id}}">编辑</a>
+                        <a class="btn-opt pull-left delete" data-toggle="tooltip" data-act="delete" style="margin: 0 5px;" data="{{item.id}}">删除</a>
+                    </td>
+                </tr>
+                {{/each}}
+                </tbody>
+                <tfoot>
+                <tr>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                </tfoot>
+            </table>
+        </div>
+    </div>
+</div>

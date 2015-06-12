@@ -2,7 +2,7 @@
 	<div class="form-group">
 		<label for="name" class="control-label col-sm-4"><span style="color: red;">* </span>VPC名称：</label>
 	 	<div class="col-sm-5 col-sm">
-			<input type="text" class="dialog-form-control" id="name" name="name" value="">
+			<input type="text" class="dialog-form-control" id="name" name="name" value="" >
 		</div>
 	</div>
 	<div class="form-group">
@@ -18,21 +18,27 @@
 		</div>
 	</div>
 	<div class="form-group">
-		<label for="admin_state_up" class="control-label col-sm-4"><span style="color: red;">* </span>管理状态：</label>
+		<label for="admin_state_up" class="control-label col-sm-4">管理状态：</label>
 		<div class="col-sm-5 col-sm">
-			<input type="checkbox"  id="admin_state_up" name="admin_state_up" >
+			<p>
+		        <input type="checkbox"  name="admin_state_up" checked data-size="small" data-on-text="启用" data-off-text="禁用">
+		    </p>
 		</div>
 	</div>
 	<div class="form-group">
-		<label for="shared" class="control-label col-sm-4"><span style="color: red;">* </span>是否共享：</label>
+		<label for="shared" class="control-label col-sm-4">共享状态：</label>
 		<div class="col-sm-5 col-sm">
-			<input type="checkbox" id="shared" name="shared" >
+			<p>
+		        <input type="checkbox"  name="shared" data-size="small" data-on-text="启用" data-off-text="禁用">
+		    </p>
 		</div>
 	</div>
 	<div class="form-group">
-		<label for="router:external" class="control-label col-sm-4"><span style="color: red;">* </span>是否外部网络：</label>
+		<label for="router:external" class="control-label col-sm-4">网络类型：</label>
 		<div class="col-sm-5 col-sm">
-			<input type="checkbox"  id="router:external" name="router:external" value="">
+			<p>
+		        <input type="checkbox"  name="router:external" data-size="small" data-on-text="外部" data-off-text="内部">
+		    </p>
 		</div>
 	</div>
 </form>

@@ -15,6 +15,7 @@ buildscript {
 apply plugin: 'groovy'
 apply plugin: 'maven'
 apply plugin: 'war'
+apply plugin: 'idea'
 apply plugin: 'eclipse-wtp'
 apply from: 'gradle/scripts/wtp-eclipse.gradle'
 apply from: 'gradle/scripts/web-common.gradle'
