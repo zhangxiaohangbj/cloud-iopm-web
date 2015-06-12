@@ -16,8 +16,8 @@
 	<mvc:view-controller path="/auth/commons/error" view-name="auth/commons/error"/>
 	<mvc:view-controller path="/tab-blank" view-name="tab-blank"/>
 
-	<mvc:resources mapping="/iop/**/*.html" location="/iop/" />
-	
+	<mvc:resources mapping="/yfjs/**" location="/,classpath:META-INF/yfjs/examples/" />
+
 	<mvc:resources mapping="swagger-ui.html" location="classpath:/META-INF/resources/" />
 	<mvc:resources mapping="/webjars/**" location="classpath:/META-INF/resources/webjars/" />
 
