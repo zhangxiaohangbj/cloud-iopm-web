@@ -5,8 +5,8 @@ define(['Common','bs/modal','bs/wizard','bs/tooltip','jq/form/validator','jq/for
 		Common.$pageContent.addClass("loading");
 		Common.render(true,{
 			tpl:'tpls/ccenter/vdc/list.html',
-			//data:'/v2.0/tenants/page/10/1',
-			data:'/resources/data/select.txt',
+			data:'/v2.0/tenants/page/10/1',
+			//data:'/resources/data/select.txt',
 			beforeRender: function(data){
 				return data.result;;
 			},
@@ -179,6 +179,10 @@ define(['Common','bs/modal','bs/wizard','bs/tooltip','jq/form/validator','jq/for
 	    $("ul.dropdown-menu a.vdcAz").on("click",function(){
 	    	more.AZ($(this).attr("data-env"),$(this).attr("data"));
 	    });
+	    //删除一个租户
+	    $("ul.dropdown-menu a.deleteTenant").on("click",function(){
+	    	more.DeleteTenant($(this).attr("data"));
+	    });
     
 	    //更多
 	    var more = {
@@ -254,6 +258,25 @@ define(['Common','bs/modal','bs/wizard','bs/tooltip','jq/form/validator','jq/for
     	    		});
     			})		
     		})		
+    	 },
+    	//删除一个租户
+    	DeleteTenant : function(vdc_id){
+    		Modal.confirm('确定要删除该租户吗?', function(result){
+	             if(result) {
+	            	 Common.xhr.del('/v2.0/tenants/' + vdc_id,
+	                     function(data){
+	                    	 if(data){
+	                    		 Modal.success('删除成功')
+ 	                			 setTimeout(function(){Dialog.closeAll()},2000);
+	                    		 Common.router.route();//重新载入
+	                    	 }else{
+	                    		 Modal.warning ('删除失败')
+	                    	 }
+	                     });
+	             }else {
+	            	 Modal.closeAll();
+	             }
+	         });	
     	 }
 	   }
 	}	
