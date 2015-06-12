@@ -36,6 +36,7 @@ define(['Common','bs/modal','bs/wizard','bs/tooltip','jq/form/validator','jq/for
 	    	}
 	    });
 	    var renderData = {};
+	    var azList=[];
         //初始化加载，不依赖其他模块
 		var DataGetter = {
 				//虚拟化环境 virtural environment
@@ -99,7 +100,7 @@ define(['Common','bs/modal','bs/wizard','bs/tooltip','jq/form/validator','jq/for
     							$("#vdcAZ").find(".list-group-all").empty();
     							var listview=[];
     							for(var i=0;i<data.length;i++){
-    								listview.push('<a href="javascript:void(0);" class="list-group-item">',data[i]["name"],'<i class="fa fa-plus-circle fa-fw" style="float: right;display:none;"></i></a>')
+    								listview.push('<a href="javascript:void(0);" class="list-group-item">',data[i]["name"],'<i data-id = ',data[i]["id"],'class="fa fa-plus-circle fa-fw" style="float: right;display:none;"></i></a>')
     							}
     							$("#vdcAZ").find(".list-group-all").html(listview.join(""));
     							EventsHandler.azAddEvent();
@@ -138,7 +139,9 @@ define(['Common','bs/modal','bs/wizard','bs/tooltip','jq/form/validator','jq/for
     					//点击加号，添加可用分区
     					azAddEvent:function(){
     						$("#vdcAZ").find(".list-group-all").find(".fa-fw").click(function(e){
-    							alert(11);
+    							var $target = $(e.currentTarget);
+    							var id = $target.attr("data-id");
+    							alert(id);
     						}); 
     					}
     			}

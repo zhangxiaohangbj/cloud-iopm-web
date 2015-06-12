@@ -54,6 +54,10 @@ define('Common', ['PubView', 'bs/modal', 'json', 'template', 'jq/dataTables', 'j
                     link: '#vm'
                 },
                 {
+                    text: '<i class="fa fa-tachometer"></i>云主机类型管理',
+                    link: '#vmtype'
+                },
+                {
                     text: '<i class="fa fa-database"></i>磁盘管理',
                     link: ''
                 },
@@ -203,7 +207,7 @@ define('Common', ['PubView', 'bs/modal', 'json', 'template', 'jq/dataTables', 'j
                         },
                         {
                             text: '任务分组',
-                            link: '#taskGroup'
+                            link: '#task/taskGroup'
                         },
                         {
                             text: '策略分组',
@@ -272,6 +276,11 @@ define('Common', ['PubView', 'bs/modal', 'json', 'template', 'jq/dataTables', 'j
             }
         });
     }
+
+    // init defaultOptions
+    Modal.configDefaultOptions(['processing', 'info', 'warning', 'error', 'success'], {
+        position: 'right 48'
+    });
 
     return {
         hash: function() {
