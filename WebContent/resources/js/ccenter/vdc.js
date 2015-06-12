@@ -96,29 +96,32 @@ define(['Common','bs/modal','bs/wizard','bs/tooltip','jq/form/validator','jq/for
     					var ve_id = currentChosenObj.ve.val() || $('select.select-ve').children('option:selected').val();
     					if(ve_id){
     						Common.xhr.ajax('/v2/os-availability-zone/virtualEnv/' + ve_id,function(data){
-    							var selectData = [];
+    							$("#vdcAZ").find(".list-group-all").empty();
+    							var listview=[];
     							for(var i=0;i<data.length;i++){
-    								selectData[i] = {"name":data[i]["zoneName"]};
+    								listview.push('<a href="javascript:void(0);" class="list-group-item">',data[i]["name"],'<i class="fa fa-plus-circle fa-fw" style="float: right;display:none;"></i></a>')
     							}
-    							var html = Common.uiSelect(selectData);
-    					    	$('select.select-available-zone').html(html);
-    					    	//同步currentChosenObj
-    					    	currentChosenObj.az = $('select.select-available-zone').children('option:selected');
+    							$("#vdcAZ").find(".list-group-all").html(listview.join(""));
+    							EventsHandler.azAddEvent();
     						});
-    						EventsHandler.azEvent();
+    						
     					}else{
     						Modal.danger('尚未选择所属虚拟化环境');
     					}
     				}
     			}
+    			
     			//载入后的事件
     			var EventsHandler = {
     					//虚拟化环境change事件
     					veChange: function(){
-    						//同步
-    						currentChosenObj.ve = $('select.select-ve').children('option:selected');
-    						//重新载入可用分区数据
-    						DataIniter.initAz();
+    						$('select.select-ve').change(function(){
+    							//同步
+        						currentChosenObj.ve = $('select.select-ve').children('option:selected');
+        						//重新载入可用分区数据
+        						DataIniter.initAz();
+    	    				});
+    						
     					},
     					//初始化可用分区所需的事件
     					azEvent: function(){
@@ -131,6 +134,12 @@ define(['Common','bs/modal','bs/wizard','bs/tooltip','jq/form/validator','jq/for
     								 $(this).find('.fa').hide();
     							 }
     						});
+    					},
+    					//点击加号，添加可用分区
+    					azAddEvent:function(){
+    						$("#vdcAZ").find(".list-group-all").find(".fa-fw").click(function(e){
+    							alert(11);
+    						}); 
     					}
     			}
 				//同步currentChosenObj
@@ -138,6 +147,8 @@ define(['Common','bs/modal','bs/wizard','bs/tooltip','jq/form/validator','jq/for
 		    	currentChosenObj.netId = $('select.select-net').find('option:selected');
 		    	//载入依赖数据
 		    	DataIniter.initAz();
+		    	EventsHandler.azEvent();
+				EventsHandler.veChange();
 		    	//
     			wizard = $('#create-vdc-wizard').wizard({
     				keyboard : false,

@@ -136,9 +136,9 @@
 				<div class="wizard-card-content  col-sm-8">
 					<div class="wizard-input-section">
 						<div class="form-group">
-							<label for="select-vdc" class="control-label col-sm-3"><span>* </span>虚拟化环境：</label>
-							<div id="select-vm" class="col-sm-7 col-sm">
-								<select name="select-vdc"  class="wizard-form-control select select-ve">
+							<label for="select-ve" class="control-label col-sm-3"><span>* </span>虚拟化环境：</label>
+							<div  class="col-sm-7 col-sm">
+								<select name="select-ve"  class="wizard-form-control select select-ve">
 								    {{#uiSelectList(veList)}}
 								</select>
 							</div>
@@ -146,7 +146,7 @@
 					</div>
 					
 					<div class="wizard-input-section">
-						<div class="chose-az">
+						<div class="chose-az" id="vdcAZ">
 							<div class="col-sm-6 col-sm">
 								<div class="panel panel-default">
 								  <!-- Default panel contents -->
@@ -156,53 +156,9 @@
 									  	<input type="text" class="search-query">
 									  	<i class="fa fa-search"></i>
 								  	</form>
-								  </div>
-								
+								  </div>								
 								  <!-- List group -->
-								  <div class="list-group">
-								  
-									  <a href="javascript:void(0);" class="list-group-item">
-										  Dapibus ac facilisis in
-										  <i class="fa fa-plus-circle fa-fw"></i>
-									  </a>
-									  <a href="#" class="list-group-item">
-										  Morbi leo risus
-										  <i class="fa fa-plus-circle fa-fw"></i>
-									  </a>
-									  <a href="javascript:void(0);" class="list-group-item">
-										  Dapibus ac facilisis in
-										  <i class="fa fa-plus-circle fa-fw"></i>
-									  </a>
-									  <a href="#" class="list-group-item">
-										  Morbi leo risus
-										  <i class="fa fa-plus-circle fa-fw"></i>
-									  </a><a href="javascript:void(0);" class="list-group-item">
-										  Dapibus ac facilisis in
-										  <i class="fa fa-plus-circle fa-fw"></i>
-									  </a>
-									  <a href="#" class="list-group-item">
-										  Morbi leo risus
-										  <i class="fa fa-plus-circle fa-fw"></i>
-									  </a><a href="javascript:void(0);" class="list-group-item">
-										  Dapibus ac facilisis in
-										  <i class="fa fa-plus-circle fa-fw"></i>
-									  </a>
-									  <a href="#" class="list-group-item">
-										  Morbi leo risus
-										  <i class="fa fa-plus-circle fa-fw"></i>
-									  </a>
-									  <a href="#" class="list-group-item">
-										  Porta ac consectetur ac
-										  <i class="fa fa-plus-circle fa-fw"></i>
-									  </a>
-									  <a href="#" class="list-group-item">
-										  Vestibulum at eros
-										  <i class="fa fa-plus-circle fa-fw"></i>
-									  </a>
-									  <a href="#" class="list-group-item">
-										  Dapibus ac facilisis in
-										  <i class="fa fa-plus-circle fa-fw"></i>
-									  </a>
+								  <div class="list-group list-group-all">
 								  </div>
 								</div>
 							</div>
@@ -218,13 +174,13 @@
 								  </div>
 								
 								  <!-- List group -->
-								  <div class="list-group">
-									  <a href="javascript:void(0);" class="list-group-item">
+								  <div class="list-group list-group-select">
+									 <!--  <a href="javascript:void(0);" class="list-group-item">
 										  Dapibus ac facilisis in
 									  </a>
 									  <a href="#" class="list-group-item">
 										  Morbi leo risus
-									  </a>
+									  </a> -->
 								  </div>
 								</div>
 							</div>
