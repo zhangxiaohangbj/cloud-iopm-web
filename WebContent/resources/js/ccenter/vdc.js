@@ -331,14 +331,6 @@ define(['Common','bs/modal','bs/wizard','bs/tooltip','jq/form/validator','jq/for
 	    $("ul.dropdown-menu a.editTenantBasic").on("click",function(){
 	    	more.EditTenantBasic($(this).attr("data"));
 	    });
-	    //删除一个vdc
-	    $("ul.dropdown-menu a.deleteTenant").on("click",function(){
-	    	more.DeleteTenant($(this).attr("data"));
-	    });
-	   //编辑vdc
-	    $("ul.dropdown-menu a.editTenantBasic").on("click",function(){
-	    	more.EditTenantBasic($(this).attr("data"));
-	    });
     
 	    //更多
 	    var more = {
