@@ -246,11 +246,11 @@ define('Common', ['PubView', 'bs/modal', 'json', 'template', 'jq/dataTables', 'j
                     items: [
                         {
                             text: '任务定义',
-                            link: '#task'
+                            link: '#task/task'
                         },
                         {
                             text: '任务监控',
-                            link: '#monitor'
+                            link: '#task/monitor'
                         },
                         {
                             text: '策略定义',
