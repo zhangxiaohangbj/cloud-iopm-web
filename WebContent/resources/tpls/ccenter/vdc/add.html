@@ -1,105 +1,5 @@
 <div class="wizard" id="create-vdc-wizard" data-title="创建服务器">
-			<div class="wizard-card wizard-card-overlay" data-cardname="members">
-				<h3>成员信息</h3>
-				<div class="wizard-card-content none-desc col-sm-12">
-					<div class="wizard-input-section">
-						<div class="chose-az">
-							<div class="col-sm-5 col-sm">
-								<div class="panel panel-default">
-								  <!-- Default panel contents -->
-								  <div class="panel-heading clearfix">全部</div>
-								 <div class="panel-body clearfix">
-								   <form class="form-search">
-									  	<input type="text" class="search-query">
-									  	<i class="fa fa-search"></i>
-								  	</form>
-								  </div>
-								
-								  <!-- List group -->
-								  <div class="list-group">
-										<ul class="nav nav-pills btn-group btn-group-sm dark_stripe list-group-item">
-											<li class="member" data-update_members-id="">
-											<span class="display_name">ceilometer</span></li>
-											<li class="dropdown role_options" style="display: none;">
-												<a class="dropdown-toggle btn btn-default" data-toggle="dropdown" href="#" aria-haspopup="true" aria-expanded="false">
-													<span class="roles_display">不存在任何角色</span><span class="caret"></span>
-												</a>
-												<ul class="dropdown-menu role_dropdown clearfix">
-											      <li data-role-id="116f8fbad9fd4041b216ab8b46342f4c"><i class="fa fa-check"></i>  admin</li>
-											      <li data-role-id="7608c7b62a444839a1f892b7aa7e62f7"><i class="fa fa-check"></i>  ResellerAdmin</li>
-											      <li data-role-id="9fe2ff9ee4384b1894a90878d3e92bab"><i class="fa fa-check"></i>  _member_</li>
-											      <li data-role-id="b42432fbee8d47eeb36a1c6cc77c0e5c"><i class="fa fa-check"></i>  heat_stack_user</li>
-											      <li data-role-id="d91d521016654f71875abbd5cc423120"><i class="fa fa-check"></i>  角色名称1</li>
-											      <li data-role-id="f1ed11a0226d4f6e90216ae426b044af"><i class="fa fa-check"></i>  heat_stack_owner</li>
-											    </ul>
-										    </li>
-									    </ul>
-									    <ul class="nav nav-pills btn-group btn-group-sm dark_stripe list-group-item">
-											<li class="member" data-update_members-id="">
-											<span class="display_name">ceilometer</span></li>
-											<li class="dropdown role_options" style="display: none;">
-												<div class="dropdown">
-												  <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-expanded="true">
-												    Dropdown
-												    <span class="caret"></span>
-												  </button>
-												  <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
-												    <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Action</a></li>
-												    <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Another action</a></li>
-												    <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Something else here</a></li>
-												    <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Separated link</a></li>
-												  </ul>
-												</div>
-										    </li>
-									    </ul>								  
-							    	</div>
-								</div>
-							</div>
-							<div class="col-sm-7 col-sm">
-								<div class="panel panel-default">
-								  <!-- Default panel contents -->
-								  <div class="panel-heading clearfix">已选择</div>
-								 <div class="panel-body clearfix">
-								   <form class="form-search">
-									  	<input type="text" class="search-query">
-									  	<i class="fa fa-search"></i>
-								  	</form>
-								  </div>
-								
-								  <!-- List group -->
-								  <div class="list-group">
-								   <ul class="nav nav-pills btn-group btn-group-sm dark_stripe list-group-item">
-											<li class="member" data-update_members-id="">
-												<span class="display_name">ceilometer</span>
-											</li>
-											<li class="pull-right"><i class="fa fa-minus-circle"></i></li>
-											<li class="dropdown role_options pull-right" >
-												<div class="dropdown">
-												  <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-expanded="true">
-												    Dropdown
-												    <span class="caret"></span>
-												  </button>
-												  <ul class="dropdown-menu dropdown-menu-right" role="menu" aria-labelledby="dropdownMenu1">
-												    <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Action</a></li>
-												    <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Another action</a></li>
-												    <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Something else here</a></li>
-												    <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Separated link</a></li>
-												  </ul>
-												</div>
-										    </li>
-									  </ul>
-									 </div>
-								</div>
-							</div>
-						</div>
-					</div>
-					
-				</div>
-				
-			</div>
-
-
-
+			
 			<!-- 基本信息 -->
 			<div class="wizard-card" data-cardname="basci">
 				<h3>基本信息</h3>
@@ -158,7 +58,7 @@
 					</div>
 					
 					<div class="wizard-input-section">
-						<div class="chose-az" id="vdcAZ">
+						<div class="chose-az choose-style  clearfix"  id="vdcAZ">
 							<div class="col-sm-6 col-sm">
 								<div class="panel panel-default">
 								  <!-- Default panel contents -->
@@ -268,7 +168,73 @@
 						默认情况下，自动选择子网和DHCP方式</p>
 				</div>
 			</div>
-			
+			<div class="wizard-card wizard-card-overlay" data-cardname="members">
+				<h3>成员信息</h3>
+				<div class="wizard-card-content none-desc col-sm-12">
+					<div class="wizard-input-section">
+						<div class="choose-members choose-style  clearfix">
+							<div class="show-all col-sm-5 col-sm">
+								<div class="panel panel-default">
+								  <!-- Default panel contents -->
+								  <div class="panel-heading clearfix">全部</div>
+								 <div class="panel-body clearfix">
+								   <form class="form-search">
+									  	<input type="text" class="search-query">
+									  	<i class="fa fa-search"></i>
+								  	</form>
+								  </div>
+								
+								  <!-- List group -->
+								  <div class="list-group all-users">
+								  	{{each userList as item i}}
+								  	<ul class="nav nav-pills btn-group btn-group-sm dark_stripe list-group-item">
+										<li class="member adjust" data-update_members-id="">
+											<span class="display_name">{{item.name}}</span>
+										</li>
+										<li class="pull-right adjust icon"><i class="fa fa-plus-circle"></i></li>
+										<li class="dropdown pull-right opt" >
+											<div class="dropdown">
+											  <button class="btn btn-default dropdown-toggle ellipsis" type="button"  data-toggle="dropdown" aria-expanded="true">
+											    {{roleList[0].name}}
+											    <span class="caret"></span>
+											  </button>
+											  <ul class="dropdown-menu dropdown-menu-right" role="menu" >
+											  	{{each roleList as opt i}}
+											    	<li><a href="javascript:void(0);"><i class="fa fa-check fa-fw"></i>{{opt.name}}</a></li>
+											    {{/each}}
+											  </ul>
+											</div>
+									      </li>
+								  	</ul>
+								  	{{/each}}
+								  	<a class="loadmore" href="javascript:void(0)">
+								  		加载更多...
+								    </a>	
+							    </div>
+							  </div>
+							</div>
+							<div class="show-selected col-sm-7 col-sm">
+								<div class="panel panel-default">
+								  <!-- Default panel contents -->
+								  <div class="panel-heading clearfix">已选择</div>
+								 <div class="panel-body clearfix">
+								   <form class="form-search">
+									  	<input type="text" class="search-query">
+									  	<i class="fa fa-search"></i>
+								  	</form>
+								  </div>
+								
+								  <!-- List group -->
+								  <div class="list-group choosen-users">
+								  </div>
+								</div>
+							</div>
+						</div>
+					</div>
+					
+				</div>
+				
+			</div>
 
 			<div class="wizard-card" data-cardname="senior">
 				<h3>浮动IP</h3>
