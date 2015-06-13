@@ -300,6 +300,7 @@ input[disabled], select[disabled], textarea[disabled], input[readonly], select[r
  	border:0;
  	-webkit-box-shadow:0;
  	box-shadow:0;
+ 	margin-bottom:0;
  }
 .choose-style .panel-default>.panel-heading{
  	background-color:#fff;border:0;
