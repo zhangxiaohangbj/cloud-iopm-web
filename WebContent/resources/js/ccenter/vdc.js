@@ -1,4 +1,4 @@
-define(['Common','bs/modal','bs/wizard','bs/tooltip','jq/form/validator','jq/form/validator/addons/bs3'],function(Common,Modal){
+define(['Common','bs/modal','bs/wizard','bs/tooltip','jq/form/validator-bs3'],function(Common,Modal){
 	Common.requestCSS('css/wizard.css');
 	//Common.requestCSS('css/dialog.css');
 	var cacheData = {};	//缓存数据
@@ -18,7 +18,7 @@ define(['Common','bs/modal','bs/wizard','bs/tooltip','jq/form/validator','jq/for
 		//dataTables
 		Common.initDataTable($('#VdcTable'),function($tar){
 			$tar.prev().find('.left-col:first').append(
-					'<span class="btn btn-add">接 入</span>'
+					'<span class="btn btn-add">创建</span>'
 				);
 			Common.$pageContent.removeClass("loading");
 		});
@@ -65,13 +65,15 @@ define(['Common','bs/modal','bs/wizard','bs/tooltip','jq/form/validator','jq/for
 				},
 				//获取成员信息
 				getUsers : function(index,size){
-					Common.xhr.ajax('/resources/data/arrays.txt',function(userList){
+					///'cloud/am/user/page/'+index + '/'+size
+					Common.xhr.ajax('resources/data/arrays.txt',function(userList){
 						renderData.userList = userList;
 					});
 				},
 				//获取及对应的角色
 				getRoles : function(){
-					Common.xhr.ajax('/resources/data/select.txt',function(roleList){
+					//"//cloud/am/role/lis"
+					Common.xhr.ajax('resources/data/select.txt',function(roleList){
 						renderData.roleList = roleList;
 						cacheData.roleList = roleList;
 					});
@@ -123,6 +125,7 @@ define(['Common','bs/modal','bs/wizard','bs/tooltip','jq/form/validator','jq/for
 				//配额的表单验证
 				vdc_quota_form:function(){
 					return $(".vdc_quota").validate({
+						errorContainer: $(".vdc_quota"),
 						rules:{
 							'metadata_items': {
 			                    required: true,
@@ -293,6 +296,7 @@ define(['Common','bs/modal','bs/wizard','bs/tooltip','jq/form/validator','jq/for
     	            }
     			});
     			wizard.show();
+    			//wizard.disableNextButton();
     			//重置CurrentChosenObj对象
     			var resetCurrentChosenObj = function(){
     				for(var key in currentChosenObj){
@@ -320,14 +324,6 @@ define(['Common','bs/modal','bs/wizard','bs/tooltip','jq/form/validator','jq/for
 	    //可用分区
 	    $("ul.dropdown-menu a.vdcAz").on("click",function(){
 	    	more.AZ($(this).attr("data-env"),$(this).attr("data"));
-	    });
-	    //删除一个vdc
-	    $("ul.dropdown-menu a.deleteTenant").on("click",function(){
-	    	more.DeleteTenant($(this).attr("data"));
-	    });
-	   //编辑vdc
-	    $("ul.dropdown-menu a.editTenantBasic").on("click",function(){
-	    	more.EditTenantBasic($(this).attr("data"));
 	    });
 	    //删除一个vdc
 	    $("ul.dropdown-menu a.deleteTenant").on("click",function(){
