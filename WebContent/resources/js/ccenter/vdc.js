@@ -18,7 +18,7 @@ define(['Common','bs/modal','bs/wizard','bs/tooltip','jq/form/validator','jq/for
 		//dataTables
 		Common.initDataTable($('#VdcTable'),function($tar){
 			$tar.prev().find('.left-col:first').append(
-					'<span class="btn btn-add">接 入</span>'
+					'<span class="btn btn-add">创建</span>'
 				);
 			Common.$pageContent.removeClass("loading");
 		});
@@ -295,6 +295,7 @@ define(['Common','bs/modal','bs/wizard','bs/tooltip','jq/form/validator','jq/for
     	            }
     			});
     			wizard.show();
+    			//wizard.disableNextButton();
     			//重置CurrentChosenObj对象
     			var resetCurrentChosenObj = function(){
     				for(var key in currentChosenObj){
