@@ -1,4 +1,4 @@
-define(['Common','bs/modal','bs/wizard','bs/tooltip','jq/form/validator','jq/form/validator/addons/bs3'],function(Common,Modal){
+define(['Common','bs/modal','bs/wizard','bs/tooltip','jq/form/validator-bs3'],function(Common,Modal){
 	Common.requestCSS('css/wizard.css');
 	//Common.requestCSS('css/dialog.css');
 	var cacheData = {};	//缓存数据
@@ -125,6 +125,7 @@ define(['Common','bs/modal','bs/wizard','bs/tooltip','jq/form/validator','jq/for
 				//配额的表单验证
 				vdc_quota_form:function(){
 					return $(".vdc_quota").validate({
+						errorContainer: $(".vdc_quota"),
 						rules:{
 							'metadata_items': {
 			                    required: true,
