@@ -5,8 +5,8 @@ define(['Common','bs/modal','bs/wizard','bs/tooltip','jq/form/validator','jq/for
 		Common.$pageContent.addClass("loading");
 		//先获取数据，进行加工后再去render
 		Common.render(true,{
-			tpl:'tpls/monitor/task/strategy/list.html',
-			data:'/cloud/task/strategy?deleted=false',
+			tpl:'tpls/monitor/task/task/list.html',
+			data:'/cloud/task/task?deleted=false',
 			beforeRender: function(data){
 				return data;
 			},
@@ -28,7 +28,7 @@ define(['Common','bs/modal','bs/wizard','bs/tooltip','jq/form/validator','jq/for
 		var renderData = {};
         //初始化加载，不依赖其他模块
 		var DataGetter = {
-				//策略分组列表
+				//任务分组列表
 				getStrategyGroupList: function(type){
 					Common.xhr.get('/cloud/task/strategy-group',{'deleted':'false'},function(list){
 						renderData.strategyGroupList = list;
@@ -73,7 +73,7 @@ define(['Common','bs/modal','bs/wizard','bs/tooltip','jq/form/validator','jq/for
 	    		//需要修改为真实数据源
 				Common.render('tpls/monitor/task/strategy/add.html',renderData,function(html){
 					Modal.show({
-	    	            title: '新建策略',
+	    	            title: '新建任务',
 	    	            message: html,
 	    	            nl2br: false,
 	    	            buttons: [{
@@ -115,7 +115,7 @@ define(['Common','bs/modal','bs/wizard','bs/tooltip','jq/form/validator','jq/for
 	    			data.strategyGroupList=renderData.strategyGroupList;
 	    			Common.render('tpls/monitor/task/strategy/add.html',data,function(html){
 						Modal.show({
-		    	            title: '编辑策略',
+		    	            title: '编辑任务',
 		    	            message: html,
 		    	            nl2br: false,
 		    	            buttons: [{

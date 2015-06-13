@@ -1,6 +1,6 @@
 <div class="page-header clearfix">
 	<ol class="breadcrumb">
-	  <li class="active">策略列表</li>
+	  <li class="active">任务列表</li>
 	</ol>
 </div>
 <div class="page-body">
@@ -12,11 +12,11 @@
 						<th class="c2">
 							<label><input type="checkbox" class="selectAll"></label>
 						</th>
-						<th class="c4">策略分组</th>
-						<th class="c4">策略名称</th>
-						<th class="c4">策略描述</th>
-						<th class="c6">策略实现类</th>
-						<th class="c6">策略实现方法</th>
+						<th class="c4">任务分组</th>
+						<th class="c4">任务名称</th>
+						<th class="c4">任务描述</th>
+						<th class="c6">任务实现类</th>
+						<th class="c6">任务实现方法</th>
 						<th class="c2">创建时间</th>
 						<th class="c6 sorting_disabled">操作</th>
 					</tr>
@@ -25,7 +25,7 @@
 				{{each list as item i}}
 					<tr>
 						<td><label><input type="checkbox"></label></td>
-						<td>{{item.strategyGroup.name}}</td>
+						<td>{{item.taskGroup.name}}</td>
 						<td>{{item.name}}</td>
 						<td>{{item.memo}}</td>
 						<td>{{item.className}}</td>
