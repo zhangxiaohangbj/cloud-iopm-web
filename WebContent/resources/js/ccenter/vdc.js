@@ -1,6 +1,7 @@
-define(['Common','bs/modal','bs/wizard','bs/tooltip','jq/form/validator','jq/form/validator/addons/bs3'],function(Common,Modal){
+define(['Common','bs/modal','bs/wizard','bs/tooltip','jq/form/validator-bs3'],function(Common,Modal){
 	Common.requestCSS('css/wizard.css');
 	//Common.requestCSS('css/dialog.css');
+	var cacheData = {};	//缓存数据
 	var init = function(){
 		Common.$pageContent.addClass("loading");
 		Common.render(true,{
@@ -8,17 +9,16 @@ define(['Common','bs/modal','bs/wizard','bs/tooltip','jq/form/validator','jq/for
 			data:'/v2.0/tenants/page/10/1',
 			//data:'/resources/data/select.txt',
 			beforeRender: function(data){
-				return data.result;;
+				return data.result;
 			},
 			callback: bindEvent
 		});
 	};
-	
 	var bindEvent = function(){
 		//dataTables
 		Common.initDataTable($('#VdcTable'),function($tar){
 			$tar.prev().find('.left-col:first').append(
-					'<span class="btn btn-add">接 入</span>'
+					'<span class="btn btn-add">创建</span>'
 				);
 			Common.$pageContent.removeClass("loading");
 		});
@@ -37,6 +37,12 @@ define(['Common','bs/modal','bs/wizard','bs/tooltip','jq/form/validator','jq/for
 	    });
 	    var renderData = {};
 	    var azList=[];
+	  //维护当前select的值
+		var currentChosenObj = {
+				ve: null,	//当前虚拟化环境
+				az: null,
+				netId: null
+		};
         //初始化加载，不依赖其他模块
 		var DataGetter = {
 				//虚拟化环境 virtural environment
@@ -46,15 +52,30 @@ define(['Common','bs/modal','bs/wizard','bs/tooltip','jq/form/validator','jq/for
 					});
 				},
 				//根据虚拟化环境获取可用az
-				getAz:  function(){
-					Common.xhr.ajax('/resources/data/select.txt',function(azList){
-						renderData.azList = azList;
+				getAz:  function(env_id){
+					Common.xhr.ajax('/v2/os-availability-zone/virtualEnv/' + env_id,function(azList){
+						$("#vdcAZ").find(".list-group-all").empty();
+						var listview=[];
+						for(var i=0;i<azList.length;i++){
+							listview.push('<a href="javascript:void(0);" class="list-group-item">'+azList[i]["name"]+' <i data-id = '+azList[i]["id"]+' class="fa fa-plus-circle fa-fw" style="float: right;"></i></a>')
+						}
+						$("#vdcAZ").find(".list-group-all").html(listview.join(""));
+						EventsHandler.azAddEvent();
 					});
 				},
-				//获取成员信息及对应的角色
-				getUsers : function(){
-					Common.xhr.ajax('/resources/data/select.txt',function(userList){
+				//获取成员信息
+				getUsers : function(index,size){
+					///'cloud/am/user/page/'+index + '/'+size
+					Common.xhr.ajax('resources/data/arrays.txt',function(userList){
 						renderData.userList = userList;
+					});
+				},
+				//获取及对应的角色
+				getRoles : function(){
+					//"//cloud/am/role/lis"
+					Common.xhr.ajax('resources/data/select.txt',function(roleList){
+						renderData.roleList = roleList;
+						cacheData.roleList = roleList;
 					});
 				},
 				//获取网络资源池
@@ -64,17 +85,184 @@ define(['Common','bs/modal','bs/wizard','bs/tooltip','jq/form/validator','jq/for
 					});
 				},
 				//根据网络资源池获取等待分配的IP列表
-				getIps:function(){
+				getIps:function(net_id){
 					Common.xhr.ajax('/resources/data/select.txt',function(ipList){
 						renderData.ipList = ipList;
 					});
 				}
 		}
-		DataGetter.getVe();
-		DataGetter.getAz();
-		DataGetter.getUsers();
-		DataGetter.getNetPool();
-		DataGetter.getIps();
+		DataGetter.getVe();//获取所有的虚拟化环境
+		DataGetter.getUsers(1,20);//初始化用户列表
+		DataGetter.getNetPool();//获取所有的网络资源池
+		DataGetter.getRoles();	
+		//载入后的事件
+		var EventsHandler = {
+				//虚拟化环境change事件
+				veChange: function(){
+					$('select.select-ve').change(function(){
+						//同步
+						currentChosenObj.ve = $('select.select-ve').children('option:selected');
+						//重新载入可用分区数据
+						DataIniter.initAz();
+    				});
+					
+				},
+				//点击加号，添加可用分区
+				azAddEvent:function(){
+					require(['js/common/domchoose'],function(domchoose){
+						var leftOption = {
+								appendWrapper: '.az-all',
+								clone: 'a.list-group-item'
+							},
+							rightOption = {
+								appendWrapper: '.az-chosen',
+								clone: 'a.list-group-item',//相对clickSelector获取元素
+								clickSelector: 'i.fa-minus-circle'
+							};
+						domchoose.initChoose(leftOption,rightOption);
+					});
+				},
+				//配额的表单验证
+				vdc_quota_form:function(){
+					return $(".vdc_quota").validate({
+						errorContainer: $(".vdc_quota"),
+						rules:{
+							'metadata_items': {
+			                    required: true,
+			                    digits:true
+			                },
+			                'cores': {
+			                    required: true,
+			                    digits:true
+			                },
+			                'instances': {
+			                    required: true,
+			                    digits:true
+			                },
+			                'injected_files': {
+			                    required: true,
+			                    digits:true
+			                },
+			                'injected_file_content_bytes': {
+			                    required: true,
+			                    digits:true
+			                },
+			                'disks': {
+			                    required: true,
+			                    digits:true
+			                },
+			                'diskSnapshots': {
+			                    required: true,
+			                    digits:true
+			                },
+			                'diskTotalSizes': {
+			                    required: true,
+			                    digits:true
+			                },
+			                'ram': {
+			                    required: true,
+			                    digits:true
+			                },
+			                'security_groups': {
+			                    required: true,
+			                    digits:true
+			                },
+			                'security_group_rules': {
+			                    required: true,
+			                    digits:true
+			                },
+			                'floating_ips': {
+			                    required: true,
+			                    digits:true
+			                },
+			                'network': {
+			                    required: true,
+			                    digits:true
+			                },
+			                'port': {
+			                    required: true,
+			                    digits:true
+			                },
+			                'route': {
+			                    required: true,
+			                    digits:true
+			                },
+			                'subnet': {
+			                    required: true,
+			                    digits:true
+			                }
+						}
+					})
+				},
+				//vdc 基本信息表单
+				vdc_basic_form:function(){
+					return $(".vdc_basic").validate({
+						   rules: {
+				            	'name': {
+				                    required: true,
+				                    maxlength:10
+				                }
+				            }
+					})
+				},
+				//初始化选择用户相关的事件
+				userChosen: function(){
+					require(['js/common/domchoose'],function(domchoose){
+						var leftOption = {
+								appendWrapper: '.all-users',
+								clone: 'ul.list-group-item'//相对clickSelector获取元素
+								//clickSelector: 'ul.list-group-item',
+							},
+							rightOption = {
+								appendWrapper: '.choosen-users',
+								clone: 'ul.list-group-item',//相对clickSelector获取元素
+								clickSelector: 'i.fa-minus-circle',
+								callback: function($this){
+									$this.find('ul.dropdown-menu a').each(function(i){
+										if(i != 0){
+											$(this).find('i').css('opacity',0);
+										}
+									});
+								}
+							};
+						domchoose.initChoose(leftOption,rightOption);
+					})
+					//选择角色
+					$(document).off("click",".choosen-users ul.dropdown-menu a");
+					$(document).on("click",".choosen-users ul.dropdown-menu a",function(event){
+						var i = $(this).find('i');
+						i.css('opacity') == 0 ? i.css('opacity',1) : i.css('opacity',0);
+						return false;
+					});
+					$('.list-group .loadmore').on('click',function(){
+						Common.xhr.ajax('/resources/data/arrays.txt',function(userList){
+							var data = {};
+							data.userList = userList;
+							data.roleList = cacheData.roleList;
+							Common.render('tpls/ccenter/vdc/loadmore.html',data,function(html){
+								if(html){
+									$('.all-users').find('ul.list-group-item:last').after(html);
+								}else{
+									$('.list-group .loadmore').html('数据已全部加载');
+									$('.list-group .loadmore').off('click');
+								}
+	    					});
+						});
+					});
+				}
+		}
+		//载入默认的数据 inits,创建数据载入类
+		var DataIniter = {
+			//根据ve_id获取可用分区
+			initAz : function(){
+				var ve_id = currentChosenObj.ve.val() || $('select.select-ve').children('option:selected').val();
+				if(ve_id){
+					DataGetter.getAz(ve_id);
+				}else{
+					Modal.danger('尚未选择所属虚拟化环境');
+				}
+			}
+		}
 	  //增加按钮
 	    $("#VdcTable_wrapper span.btn-add").on("click",function(){
 	    	//需要修改为真实数据源
@@ -84,73 +272,13 @@ define(['Common','bs/modal','bs/wizard','bs/tooltip','jq/form/validator','jq/for
     			$.fn.wizard.logging = true;
     			var wizard;
     			
-    			//维护当前select的值
-    			var currentChosenObj = {
-    					ve: null,	//当前虚拟化环境
-    					az: null,
-    					netId: null
-    			};
-    			//载入默认的数据 inits,创建数据载入类
-    			var DataIniter = {
-    				//根据ve_id获取可用分区
-    				initAz : function(){
-    					var ve_id = currentChosenObj.ve.val() || $('select.select-ve').children('option:selected').val();
-    					if(ve_id){
-    						Common.xhr.ajax('/v2/os-availability-zone/virtualEnv/' + ve_id,function(data){
-    							$("#vdcAZ").find(".list-group-all").empty();
-    							var listview=[];
-    							for(var i=0;i<data.length;i++){
-    								listview.push('<a href="javascript:void(0);" class="list-group-item">',data[i]["name"],'<i data-id = ',data[i]["id"],'class="fa fa-plus-circle fa-fw" style="float: right;display:none;"></i></a>')
-    							}
-    							$("#vdcAZ").find(".list-group-all").html(listview.join(""));
-    							EventsHandler.azAddEvent();
-    						});
-    						
-    					}else{
-    						Modal.danger('尚未选择所属虚拟化环境');
-    					}
-    				}
-    			}
-    			
-    			//载入后的事件
-    			var EventsHandler = {
-    					//虚拟化环境change事件
-    					veChange: function(){
-    						$('select.select-ve').change(function(){
-    							//同步
-        						currentChosenObj.ve = $('select.select-ve').children('option:selected');
-        						//重新载入可用分区数据
-        						DataIniter.initAz();
-    	    				});
-    						
-    					},
-    					//初始化可用分区所需的事件
-    					azEvent: function(){
-    						//滑过出现添加图标
-    						$(document).off("mouseover mouseout",".chose-az a.list-group-item");
-    						$(document).on("mouseover mouseout",".chose-az a.list-group-item",function(event){
-    							if(event.type == "mouseover"){
-    								$(this).find('.fa').show();
-    							 }else if(event.type == "mouseout"){
-    								 $(this).find('.fa').hide();
-    							 }
-    						});
-    					},
-    					//点击加号，添加可用分区
-    					azAddEvent:function(){
-    						$("#vdcAZ").find(".list-group-all").find(".fa-fw").click(function(e){
-    							var $target = $(e.currentTarget);
-    							var id = $target.attr("data-id");
-    							alert(id);
-    						}); 
-    					}
-    			}
 				//同步currentChosenObj
 		    	currentChosenObj.ve = $('select.select-ve').children('option:selected');
 		    	currentChosenObj.netId = $('select.select-net').find('option:selected');
 		    	//载入依赖数据
 		    	DataIniter.initAz();
-		    	EventsHandler.azEvent();
+		    	//载入事件
+		    	EventsHandler.userChosen();
 				EventsHandler.veChange();
 		    	//
     			wizard = $('#create-vdc-wizard').wizard({
@@ -168,6 +296,24 @@ define(['Common','bs/modal','bs/wizard','bs/tooltip','jq/form/validator','jq/for
     	            }
     			});
     			wizard.show();
+    			//wizard.disableNextButton();
+    			//重置CurrentChosenObj对象
+    			var resetCurrentChosenObj = function(){
+    				for(var key in currentChosenObj){
+    					currentChosenObj[key] = null;
+    				}
+    				currentChosenObj.nums = 1;
+    			}
+    			//关闭弹窗
+				var closeWizard = function(){
+    				$('div.wizard').remove();
+    				$('div.modal-backdrop').remove();
+    				resetCurrentChosenObj();
+    			}
+				//关闭后移出dom
+    			wizard.on('closed', function() {
+    				closeWizard();
+    			});
 			});
 	    });
 	    
@@ -202,6 +348,8 @@ define(['Common','bs/modal','bs/wizard','bs/tooltip','jq/form/validator','jq/for
 			    	            buttons: [{
 			    	                label: '保存',
 			    	                action: function(dialog) {
+			    	                	var valid = $(".vdc_quota").valid();
+			    	            		if(!valid) return false;
 			    	                	var serverData = {
 				    	            			"quota_set":{
 				    	        					"metadata_items": $("#vdcQuota [name='metadata_items']").val(),
@@ -233,7 +381,13 @@ define(['Common','bs/modal','bs/wizard','bs/tooltip','jq/form/validator','jq/for
 										});
 			    	                }
 			    	            }],
-			    	            onshown : function(){}
+			    	            onshown : function(dialog){
+			    	            	dialog.setData('vdc_quota_form', EventsHandler.vdc_quota_form());	
+			    	            },
+			    				onhide : function(dialog){
+			    					dialog.getData("vdc_quota_form").hideErrors();
+			    	            }
+		    				
 			    	        });
 			    		});
 		    		})	
@@ -313,7 +467,12 @@ define(['Common','bs/modal','bs/wizard','bs/tooltip','jq/form/validator','jq/for
   	    	                	
   	    	                }
   	    	            }],
-  	    	            onshown : function(){}
+      				    onshown : function(dialog){
+	    	            	dialog.setData('vdc_basic_form', EventsHandler.vdc_basic_form());	
+	    	            },
+	    				onhide : function(dialog){
+	    					dialog.getData("vdc_basic_form").hideErrors();
+	    	            }
   	    	        });
   	    		});
     		 })		
