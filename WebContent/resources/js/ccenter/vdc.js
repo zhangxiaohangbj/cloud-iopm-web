@@ -188,11 +188,11 @@ define(['Common','bs/modal','bs/wizard','bs/tooltip','jq/form/validator','jq/for
 				},
 				//vdc 基本信息表单
 				vdc_basic_form:function(){
-					$(".vdc_basic").validate({
+					return $(".vdc_basic").validate({
 						   rules: {
 				            	'name': {
 				                    required: true,
-				                    maxlength:255
+				                    maxlength:10
 				                }
 				            }
 					})
@@ -525,7 +525,12 @@ define(['Common','bs/modal','bs/wizard','bs/tooltip','jq/form/validator','jq/for
   	    	                	
   	    	                }
   	    	            }],
-  	    	            onshown : function(){}
+      				    onshown : function(dialog){
+	    	            	dialog.setData('vdc_basic_form', EventsHandler.vdc_basic_form());	
+	    	            },
+	    				onhide : function(dialog){
+	    					dialog.getData("vdc_basic_form").hideErrors();
+	    	            }
   	    	        });
   	    		});
     		 })		
