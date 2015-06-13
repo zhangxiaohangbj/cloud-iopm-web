@@ -364,6 +364,7 @@ input[disabled], select[disabled], textarea[disabled], input[readonly], select[r
  }
 .choose-style .panel .list-group .list-group-item i{
  	color:#CB6A6A;
+ 	float:right;
  }
  .choose-style .show-all>.panel .list-group .list-group-item i{
  	color:#519857;
