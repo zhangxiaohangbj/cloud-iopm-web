@@ -101,25 +101,20 @@ define(['Common','bs/modal','bs/wizard','bs/tooltip','jq/form/validator','jq/for
     				});
 					
 				},
-				//初始化可用分区所需的事件
-				azEvent: function(){
-					//滑过出现添加图标
-					$(document).off("mouseover mouseout",".chose-az a.list-group-item");
-					$(document).on("mouseover mouseout",".chose-az a.list-group-item",function(event){
-						if(event.type == "mouseover"){
-							$(this).find('.fa').show();
-						 }else if(event.type == "mouseout"){
-							 $(this).find('.fa').hide();
-						 }
-					});
-				},
 				//点击加号，添加可用分区
 				azAddEvent:function(){
-					$("#vdcAZ").find(".list-group-all").find(".fa-fw").click(function(e){
-						var $target = $(e.currentTarget);
-						var id = $target.attr("data-id");
-						alert(id);
-					}); 
+					require(['js/common/domchoose'],function(domchoose){
+						var leftOption = {
+								appendWrapper: '.az-all',
+								clone: 'a.list-group-item'
+							},
+							rightOption = {
+								appendWrapper: '.az-chosen',
+								clone: 'a.list-group-item',//相对clickSelector获取元素
+								clickSelector: 'i.fa-minus-circle'
+							};
+						domchoose.initChoose(leftOption,rightOption);
+					});
 				},
 				//配额的表单验证
 				vdc_quota_form:function(){
@@ -207,13 +202,14 @@ define(['Common','bs/modal','bs/wizard','bs/tooltip','jq/form/validator','jq/for
 				userChosen: function(){
 					require(['js/common/domchoose'],function(domchoose){
 						var leftOption = {
-								clickSelector: '.all-users ul.list-group-item',
-								appendWrapper: '.all-users'
+								appendWrapper: '.all-users',
+								clone: 'ul.list-group-item'//相对clickSelector获取元素
+								//clickSelector: 'ul.list-group-item',
 							},
 							rightOption = {
-								clickSelector: '.choosen-users ul.list-group-item i.fa-minus-circle',
-								clone: 'ul:first',//相对clickSelector获取元素
 								appendWrapper: '.choosen-users',
+								clone: 'ul.list-group-item',//相对clickSelector获取元素
+								clickSelector: 'i.fa-minus-circle',
 								callback: function($this){
 									$this.find('ul.dropdown-menu a').each(function(i){
 										if(i != 0){
@@ -258,7 +254,7 @@ define(['Common','bs/modal','bs/wizard','bs/tooltip','jq/form/validator','jq/for
 						$("#vdcAZ").find(".list-group-all").empty();
 						var listview=[];
 						for(var i=0;i<data.length;i++){
-							listview.push('<a href="javascript:void(0);" class="list-group-item">',data[i]["name"],'<i data-id = ',data[i]["id"],'class="fa fa-plus-circle fa-fw" style="float: right;display:none;"></i></a>')
+							listview.push('<a href="javascript:void(0);" class="list-group-item">'+data[i]["name"]+'<i data-id = '+data[i]["id"]+' class="fa fa-plus-circle fa-fw" style="float: right;"></i></a>')
 						}
 						$("#vdcAZ").find(".list-group-all").html(listview.join(""));
 						EventsHandler.azAddEvent();
@@ -285,7 +281,6 @@ define(['Common','bs/modal','bs/wizard','bs/tooltip','jq/form/validator','jq/for
 		    	DataIniter.initAz();
 		    	//载入事件
 		    	EventsHandler.userChosen();
-		    	EventsHandler.azEvent();
 				EventsHandler.veChange();
 		    	//
     			wizard = $('#create-vdc-wizard').wizard({
