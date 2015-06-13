@@ -65,13 +65,15 @@ define(['Common','bs/modal','bs/wizard','bs/tooltip','jq/form/validator','jq/for
 				},
 				//获取成员信息
 				getUsers : function(index,size){
-					Common.xhr.ajax('/resources/data/arrays.txt',function(userList){
+					///'cloud/am/user/page/'+index + '/'+size
+					Common.xhr.ajax('resources/data/arrays.txt',function(userList){
 						renderData.userList = userList;
 					});
 				},
 				//获取及对应的角色
 				getRoles : function(){
-					Common.xhr.ajax('/resources/data/select.txt',function(roleList){
+					//"//cloud/am/role/lis"
+					Common.xhr.ajax('resources/data/select.txt',function(roleList){
 						renderData.roleList = roleList;
 						cacheData.roleList = roleList;
 					});
