@@ -1,4 +1,4 @@
-define(['Common','bs/modal','bs/wizard','bs/tooltip','jq/form/validator','jq/form/validator/addons/bs3'],function(Common,Modal){
+define(['Common','bs/modal','bs/wizard','bs/tooltip','jq/form/validator-bs3'],function(Common,Modal){
 	Common.requestCSS('css/wizard.css');
 	//Common.requestCSS('css/dialog.css');
 	var cacheData = {};	//缓存数据
@@ -18,7 +18,7 @@ define(['Common','bs/modal','bs/wizard','bs/tooltip','jq/form/validator','jq/for
 		//dataTables
 		Common.initDataTable($('#VdcTable'),function($tar){
 			$tar.prev().find('.left-col:first').append(
-					'<span class="btn btn-add">接 入</span>'
+					'<span class="btn btn-add">创建</span>'
 				);
 			Common.$pageContent.removeClass("loading");
 		});
@@ -52,20 +52,28 @@ define(['Common','bs/modal','bs/wizard','bs/tooltip','jq/form/validator','jq/for
 					});
 				},
 				//根据虚拟化环境获取可用az
-				getAz:  function(){
-					Common.xhr.ajax('/resources/data/select.txt',function(azList){
-						renderData.azList = azList;
+				getAz:  function(env_id){
+					Common.xhr.ajax('/v2/os-availability-zone/virtualEnv/' + env_id,function(azList){
+						$("#vdcAZ").find(".list-group-all").empty();
+						var listview=[];
+						for(var i=0;i<azList.length;i++){
+							listview.push('<a href="javascript:void(0);" class="list-group-item">'+azList[i]["name"]+' <i data-id = '+azList[i]["id"]+' class="fa fa-plus-circle fa-fw" style="float: right;"></i></a>')
+						}
+						$("#vdcAZ").find(".list-group-all").html(listview.join(""));
+						EventsHandler.azAddEvent();
 					});
 				},
 				//获取成员信息
-				getUsers : function(){
-					Common.xhr.ajax('/resources/data/arrays.txt',function(userList){
+				getUsers : function(index,size){
+					///'cloud/am/user/page/'+index + '/'+size
+					Common.xhr.ajax('resources/data/arrays.txt',function(userList){
 						renderData.userList = userList;
 					});
 				},
 				//获取及对应的角色
 				getRoles : function(){
-					Common.xhr.ajax('/resources/data/select.txt',function(roleList){
+					//"//cloud/am/role/lis"
+					Common.xhr.ajax('resources/data/select.txt',function(roleList){
 						renderData.roleList = roleList;
 						cacheData.roleList = roleList;
 					});
@@ -77,18 +85,16 @@ define(['Common','bs/modal','bs/wizard','bs/tooltip','jq/form/validator','jq/for
 					});
 				},
 				//根据网络资源池获取等待分配的IP列表
-				getIps:function(){
+				getIps:function(net_id){
 					Common.xhr.ajax('/resources/data/select.txt',function(ipList){
 						renderData.ipList = ipList;
 					});
 				}
 		}
-		DataGetter.getVe();
-		DataGetter.getAz();
-		DataGetter.getUsers();
-		DataGetter.getNetPool();
-		DataGetter.getRoles();
-		DataGetter.getIps();		
+		DataGetter.getVe();//获取所有的虚拟化环境
+		DataGetter.getUsers(1,20);//初始化用户列表
+		DataGetter.getNetPool();//获取所有的网络资源池
+		DataGetter.getRoles();	
 		//载入后的事件
 		var EventsHandler = {
 				//虚拟化环境change事件
@@ -101,29 +107,25 @@ define(['Common','bs/modal','bs/wizard','bs/tooltip','jq/form/validator','jq/for
     				});
 					
 				},
-				//初始化可用分区所需的事件
-				azEvent: function(){
-					//滑过出现添加图标
-					$(document).off("mouseover mouseout",".chose-az a.list-group-item");
-					$(document).on("mouseover mouseout",".chose-az a.list-group-item",function(event){
-						if(event.type == "mouseover"){
-							$(this).find('.fa').show();
-						 }else if(event.type == "mouseout"){
-							 $(this).find('.fa').hide();
-						 }
-					});
-				},
 				//点击加号，添加可用分区
 				azAddEvent:function(){
-					$("#vdcAZ").find(".list-group-all").find(".fa-fw").click(function(e){
-						var $target = $(e.currentTarget);
-						var id = $target.attr("data-id");
-						alert(id);
-					}); 
+					require(['js/common/domchoose'],function(domchoose){
+						var leftOption = {
+								appendWrapper: '.az-all',
+								clone: 'a.list-group-item'
+							},
+							rightOption = {
+								appendWrapper: '.az-chosen',
+								clone: 'a.list-group-item',//相对clickSelector获取元素
+								clickSelector: 'i.fa-minus-circle'
+							};
+						domchoose.initChoose(leftOption,rightOption);
+					});
 				},
 				//配额的表单验证
 				vdc_quota_form:function(){
 					return $(".vdc_quota").validate({
+						errorContainer: $(".vdc_quota"),
 						rules:{
 							'metadata_items': {
 			                    required: true,
@@ -207,13 +209,14 @@ define(['Common','bs/modal','bs/wizard','bs/tooltip','jq/form/validator','jq/for
 				userChosen: function(){
 					require(['js/common/domchoose'],function(domchoose){
 						var leftOption = {
-								clickSelector: '.all-users ul.list-group-item',
-								appendWrapper: '.all-users'
+								appendWrapper: '.all-users',
+								clone: 'ul.list-group-item'//相对clickSelector获取元素
+								//clickSelector: 'ul.list-group-item',
 							},
 							rightOption = {
-								clickSelector: '.choosen-users ul.list-group-item i.fa-minus-circle',
-								clone: 'ul:first',//相对clickSelector获取元素
 								appendWrapper: '.choosen-users',
+								clone: 'ul.list-group-item',//相对clickSelector获取元素
+								clickSelector: 'i.fa-minus-circle',
 								callback: function($this){
 									$this.find('ul.dropdown-menu a').each(function(i){
 										if(i != 0){
@@ -254,16 +257,7 @@ define(['Common','bs/modal','bs/wizard','bs/tooltip','jq/form/validator','jq/for
 			initAz : function(){
 				var ve_id = currentChosenObj.ve.val() || $('select.select-ve').children('option:selected').val();
 				if(ve_id){
-					Common.xhr.ajax('/v2/os-availability-zone/virtualEnv/' + ve_id,function(data){
-						$("#vdcAZ").find(".list-group-all").empty();
-						var listview=[];
-						for(var i=0;i<data.length;i++){
-							listview.push('<a href="javascript:void(0);" class="list-group-item">',data[i]["name"],'<i data-id = ',data[i]["id"],'class="fa fa-plus-circle fa-fw" style="float: right;display:none;"></i></a>')
-						}
-						$("#vdcAZ").find(".list-group-all").html(listview.join(""));
-						EventsHandler.azAddEvent();
-					});
-					
+					DataGetter.getAz(ve_id);
 				}else{
 					Modal.danger('尚未选择所属虚拟化环境');
 				}
@@ -285,7 +279,6 @@ define(['Common','bs/modal','bs/wizard','bs/tooltip','jq/form/validator','jq/for
 		    	DataIniter.initAz();
 		    	//载入事件
 		    	EventsHandler.userChosen();
-		    	EventsHandler.azEvent();
 				EventsHandler.veChange();
 		    	//
     			wizard = $('#create-vdc-wizard').wizard({
@@ -303,6 +296,7 @@ define(['Common','bs/modal','bs/wizard','bs/tooltip','jq/form/validator','jq/for
     	            }
     			});
     			wizard.show();
+    			//wizard.disableNextButton();
     			//重置CurrentChosenObj对象
     			var resetCurrentChosenObj = function(){
     				for(var key in currentChosenObj){
@@ -330,14 +324,6 @@ define(['Common','bs/modal','bs/wizard','bs/tooltip','jq/form/validator','jq/for
 	    //可用分区
 	    $("ul.dropdown-menu a.vdcAz").on("click",function(){
 	    	more.AZ($(this).attr("data-env"),$(this).attr("data"));
-	    });
-	    //删除一个vdc
-	    $("ul.dropdown-menu a.deleteTenant").on("click",function(){
-	    	more.DeleteTenant($(this).attr("data"));
-	    });
-	   //编辑vdc
-	    $("ul.dropdown-menu a.editTenantBasic").on("click",function(){
-	    	more.EditTenantBasic($(this).attr("data"));
 	    });
 	    //删除一个vdc
 	    $("ul.dropdown-menu a.deleteTenant").on("click",function(){
