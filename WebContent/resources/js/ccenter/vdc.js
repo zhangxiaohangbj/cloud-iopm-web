@@ -52,13 +52,19 @@ define(['Common','bs/modal','bs/wizard','bs/tooltip','jq/form/validator','jq/for
 					});
 				},
 				//根据虚拟化环境获取可用az
-				getAz:  function(){
-					Common.xhr.ajax('/resources/data/select.txt',function(azList){
-						renderData.azList = azList;
+				getAz:  function(env_id){
+					Common.xhr.ajax('/v2/os-availability-zone/virtualEnv/' + env_id,function(azList){
+						$("#vdcAZ").find(".list-group-all").empty();
+						var listview=[];
+						for(var i=0;i<azList.length;i++){
+							listview.push('<a href="javascript:void(0);" class="list-group-item">',azList[i]["name"],'<i data-id = ',azList[i]["id"],'class="fa fa-plus-circle fa-fw" style="float: right;display:none;"></i></a>')
+						}
+						$("#vdcAZ").find(".list-group-all").html(listview.join(""));
+						EventsHandler.azAddEvent();
 					});
 				},
 				//获取成员信息
-				getUsers : function(){
+				getUsers : function(index,size){
 					Common.xhr.ajax('/resources/data/arrays.txt',function(userList){
 						renderData.userList = userList;
 					});
@@ -77,18 +83,16 @@ define(['Common','bs/modal','bs/wizard','bs/tooltip','jq/form/validator','jq/for
 					});
 				},
 				//根据网络资源池获取等待分配的IP列表
-				getIps:function(){
+				getIps:function(net_id){
 					Common.xhr.ajax('/resources/data/select.txt',function(ipList){
 						renderData.ipList = ipList;
 					});
 				}
 		}
-		DataGetter.getVe();
-		DataGetter.getAz();
-		DataGetter.getUsers();
-		DataGetter.getNetPool();
-		DataGetter.getRoles();
-		DataGetter.getIps();		
+		DataGetter.getVe();//获取所有的虚拟化环境
+		DataGetter.getUsers(1,20);//初始化用户列表
+		DataGetter.getNetPool();//获取所有的网络资源池
+		DataGetter.getRoles();	
 		//载入后的事件
 		var EventsHandler = {
 				//虚拟化环境change事件
@@ -254,16 +258,7 @@ define(['Common','bs/modal','bs/wizard','bs/tooltip','jq/form/validator','jq/for
 			initAz : function(){
 				var ve_id = currentChosenObj.ve.val() || $('select.select-ve').children('option:selected').val();
 				if(ve_id){
-					Common.xhr.ajax('/v2/os-availability-zone/virtualEnv/' + ve_id,function(data){
-						$("#vdcAZ").find(".list-group-all").empty();
-						var listview=[];
-						for(var i=0;i<data.length;i++){
-							listview.push('<a href="javascript:void(0);" class="list-group-item">',data[i]["name"],'<i data-id = ',data[i]["id"],'class="fa fa-plus-circle fa-fw" style="float: right;display:none;"></i></a>')
-						}
-						$("#vdcAZ").find(".list-group-all").html(listview.join(""));
-						EventsHandler.azAddEvent();
-					});
-					
+					DataGetter.getAz(ve_id);					
 				}else{
 					Modal.danger('尚未选择所属虚拟化环境');
 				}
