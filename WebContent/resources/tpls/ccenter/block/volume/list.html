@@ -1,0 +1,90 @@
+<div class="page-header clearfix">
+	<ol class="breadcrumb">
+	  <li class="active">磁盘列表</li>
+	</ol>
+</div>
+<div class="page-body">
+	<div class="pane">
+		<div class="pane-content">
+			<table class="table table-primary table-striped" id="VolumeTable">
+				<thead>
+					<tr>
+						<th class="c1">
+							<label><input type="checkbox" class="selectAll"></label>
+						</th>
+						<th class="c2">名称</th>
+						<th class="c1">容量</th>
+						<th class="c2">状态</th>
+						<th class="c3">挂载主机</th>
+						<th class="c1">卷类型</th>
+						<th class="c2">虚拟数据中心</th>
+						<th class="c2">可用域</th>
+						<th class="c1">只读</th>
+						<th class="c3">描述</th>
+						<th class="c3">操作</th>
+					</tr>
+				</thead>
+				<tbody>
+				{{each list as item i}}
+					<tr>
+						<td><label><input type="checkbox"></label></td>
+						<td>{{item.name}}</td>
+						<td>{{item.size}}</td>
+						<td>
+			 			{{if item.status == 'in-use'}}
+			 				<span class="text-success">使用中</span>
+			 				{{else if item.status == 'available'}}
+			 					<span class="text-info">可用</span>
+			 						{{else}}
+			 							<span class="text-danger">已删除</span>
+			 			{{/if}}
+			 			</td>
+						<td>{{item.vm_id}}</td>
+						<td>{{item.type}}</td>
+						<td>{{item.vdc_id}}</td>
+						<td>{{item.available_zone}}</td>
+						<td>
+			 			{{if item.read_only == '1'}}
+			 				<span class="text-success">是</span>
+			 				{{else}}
+			 				<span class="text-danger">否</span>
+			 			{{/if}}
+			 			</td>
+			 			<td>{{item.description}}</td>
+						<td>
+						<a class="btn-opt" data-toggle="tooltip" title="创建快照"  style="margin: 0;"><i class="fa fa-camera"></i></a>
+						<div class="dropdown">
+							<span class="btn btn-more dropdown-toggle" data-toggle="dropdown" aria-expanded="false">更 多 <i class="fa fa-angle-down fa-fw"></i></span>
+							<ul class="dropdown-menu" style="right: 0;left: initial;">
+								<li><a href="javascript:void(0)"><i class="fa fa-file-text fa-fw"></i>挂载到虚机</a></li>
+								<li><a href="javascript:void(0)"><i class="fa fa-gear fa-fw"></i>从虚机卸载</a></li>
+								<li><a href="javascript:void(0)" class="" data="{{item.name}}"><i class="fa fa-file-text fa-fw"></i>扩展容量</a></li>
+								<li><a href="javascript:void(0)" class="" data="{{item.id}}"><i class="fa fa-file-text fa-fw"></i>设置为只读</a></li>
+								<li><a href="javascript:void(0)"><i class="fa fa-file-text fa-fw"></i>设置为读写</a></li>
+								<li><a href="javascript:void(0)"><i class="fa fa-file-text fa-fw"></i>备份</a></li>
+								<li><a href="javascript:void(0)"><i class="fa fa-file-text fa-fw"></i>删除</a></li>
+							</ul>
+						</div>	
+						</td>
+					</tr>
+    			{{/each}}
+				</tbody>
+				<tfoot>
+					<tr>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+					</tr>
+				</tfoot>
+			</table>
+		</div>
+	</div>
+</div>
