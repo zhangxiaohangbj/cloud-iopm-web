@@ -9,7 +9,7 @@ define(['Common','bs/modal','bs/wizard','bs/tooltip','jq/form/validator','jq/for
 			data:'/v2.0/tenants/page/10/1',
 			//data:'/resources/data/select.txt',
 			beforeRender: function(data){
-				return data.result;;
+				return data.result;
 			},
 			callback: bindEvent
 		});
@@ -37,6 +37,12 @@ define(['Common','bs/modal','bs/wizard','bs/tooltip','jq/form/validator','jq/for
 	    });
 	    var renderData = {};
 	    var azList=[];
+	  //维护当前select的值
+		var currentChosenObj = {
+				ve: null,	//当前虚拟化环境
+				az: null,
+				netId: null
+		};
         //初始化加载，不依赖其他模块
 		var DataGetter = {
 				//虚拟化环境 virtural environment
@@ -196,6 +202,50 @@ define(['Common','bs/modal','bs/wizard','bs/tooltip','jq/form/validator','jq/for
 				                }
 				            }
 					})
+				},
+				//初始化选择用户相关的事件
+				userChosen: function(){
+					require(['js/common/domchoose'],function(domchoose){
+						var leftOption = {
+								clickSelector: '.all-users ul.list-group-item',
+								appendWrapper: '.all-users'
+							},
+							rightOption = {
+								clickSelector: '.choosen-users ul.list-group-item i.fa-minus-circle',
+								clone: 'ul:first',//相对clickSelector获取元素
+								appendWrapper: '.choosen-users',
+								callback: function($this){
+									$this.find('ul.dropdown-menu a').each(function(i){
+										if(i != 0){
+											$(this).find('i').css('opacity',0);
+										}
+									});
+								}
+							};
+						domchoose.initChoose(leftOption,rightOption);
+					})
+					//选择角色
+					$(document).off("click",".choosen-users ul.dropdown-menu a");
+					$(document).on("click",".choosen-users ul.dropdown-menu a",function(event){
+						var i = $(this).find('i');
+						i.css('opacity') == 0 ? i.css('opacity',1) : i.css('opacity',0);
+						return false;
+					});
+					$('.list-group .loadmore').on('click',function(){
+						Common.xhr.ajax('/resources/data/arrays.txt',function(userList){
+							var data = {};
+							data.userList = userList;
+							data.roleList = cacheData.roleList;
+							Common.render('tpls/ccenter/vdc/loadmore.html',data,function(html){
+								if(html){
+									$('.all-users').find('ul.list-group-item:last').after(html);
+								}else{
+									$('.list-group .loadmore').html('数据已全部加载');
+									$('.list-group .loadmore').off('click');
+								}
+	    					});
+						});
+					});
 				}
 		}
 		//载入默认的数据 inits,创建数据载入类
@@ -228,100 +278,6 @@ define(['Common','bs/modal','bs/wizard','bs/tooltip','jq/form/validator','jq/for
     			$.fn.wizard.logging = true;
     			var wizard;
     			
-    			//维护当前select的值
-    			var currentChosenObj = {
-    					ve: null,	//当前虚拟化环境
-    					az: null,
-    					netId: null
-    			};
-    			//载入默认的数据 inits,创建数据载入类
-    			var DataIniter = {
-    				//根据ve获取可用分区
-    				initAz : function(){
-    					var ve_id = currentChosenObj.ve.val() || $('select.select-ve').children('option:selected').val();
-    					if(ve_id){
-    						/*Common.xhr.ajax('/v2/'+vdc_id+'/os-availability-zone',function(data){
-    							var selectData = [];
-    							for(var i=0;i<data.length;i++){
-    								selectData[i] = {"name":data[i]["zoneName"]};
-    							}
-    							var html = Common.uiSelect(selectData);
-    					    	$('select.select-available-zone').html(html);
-    					    	//同步currentChosenObj
-    					    	currentChosenObj.az = $('select.select-available-zone').children('option:selected');
-    						});*/
-    						EventsHandler.azEvent();
-    					}else{
-    						Modal.danger('尚未选择所属虚拟化环境');
-    					}
-    				}
-    			}
-    			//载入后的事件
-    			var EventsHandler = {
-    					//虚拟化环境change事件
-    					veChange: function(){
-    						//同步
-    						currentChosenObj.ve = $('select.select-ve').children('option:selected');
-    						//重新载入可用分区数据
-    						DataIniter.initAz();
-    					},
-    					//初始化可用分区所需的事件
-    					azEvent: function(){
-    						//滑过出现添加图标
-    						$(document).off("mouseover mouseout",".chose-az a.list-group-item");
-    						$(document).on("mouseover mouseout",".chose-az a.list-group-item",function(event){
-    							if(event.type == "mouseover"){
-    								$(this).find('.fa').show();
-    							 }else if(event.type == "mouseout"){
-    								 $(this).find('.fa').hide();
-    							 }
-    						});
-    					},
-    					//初始化选择用户相关的事件
-    					userChosen: function(){
-    						require(['js/common/domchoose'],function(domchoose){
-    							var leftOption = {
-    									clickSelector: '.all-users ul.list-group-item',
-    									appendWrapper: '.all-users'
-    								},
-    								rightOption = {
-    									clickSelector: '.choosen-users ul.list-group-item i.fa-minus-circle',
-    									clone: 'ul:first',//相对clickSelector获取元素
-    									appendWrapper: '.choosen-users',
-    									callback: function($this){
-    										$this.find('ul.dropdown-menu a').each(function(i){
-    											if(i != 0){
-    												$(this).find('i').css('opacity',0);
-    											}
-    										});
-    									}
-    								};
-    							domchoose.initChoose(leftOption,rightOption);
-    						})
-    						//选择角色
-    						$(document).off("click",".choosen-users ul.dropdown-menu a");
-    						$(document).on("click",".choosen-users ul.dropdown-menu a",function(event){
-    							var i = $(this).find('i');
-    							i.css('opacity') == 0 ? i.css('opacity',1) : i.css('opacity',0);
-    							return false;
-    						});
-    						$('.list-group .loadmore').on('click',function(){
-    							Common.xhr.ajax('/resources/data/arrays.txt',function(userList){
-    								var data = {};
-    								data.userList = userList;
-    								data.roleList = cacheData.roleList;
-    								Common.render('tpls/ccenter/vdc/loadmore.html',data,function(html){
-    									if(html){
-    										$('.all-users').find('ul.list-group-item:last').after(html);
-    									}else{
-    										$('.list-group .loadmore').html('数据已全部加载');
-    										$('.list-group .loadmore').off('click');
-    									}
-    		    					});
-    							});
-    						});
-    					}
-    			}
 				//同步currentChosenObj
 		    	currentChosenObj.ve = $('select.select-ve').children('option:selected');
 		    	currentChosenObj.netId = $('select.select-net').find('option:selected');
