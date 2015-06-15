@@ -1,4 +1,4 @@
-define(['Common','bs/modal','bs/wizard','bs/tooltip','jq/form/validator','jq/form/validator/addons/bs3','bs/switcher'],function(Common,Dialog){
+define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3','bs/switcher'],function(Common,Dialog){
 	Common.requestCSS('css/wizard.css');
 	Common.requestCSS('css/dialog.css');
 	var init = function(){

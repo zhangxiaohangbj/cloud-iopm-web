@@ -1,4 +1,4 @@
-define(['Common','bs/modal','bs/wizard','bs/tooltip','jq/form/validator-bs3'],function(Common,Modal){
+define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3'],function(Common,Modal){
 	Common.requestCSS('css/wizard.css');
 	var current_vdc_id = '9cc717d8047e46e5bf23804fc4400247';
 	var init = function(){
