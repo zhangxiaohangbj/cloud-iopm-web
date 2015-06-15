@@ -702,7 +702,7 @@ define('Common', ['PubView', 'bs/modal', 'json', 'template', 'jq/dataTables-bs3'
                         _callback = _data;
                         doRender();
                     } else {
-                        doRender();
+                        doRender(_data);
                     }
                 } catch (e) {
                     that.resolve();

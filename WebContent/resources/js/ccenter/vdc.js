@@ -1,13 +1,14 @@
 define(['Common','bs/modal','bs/wizard','bs/tooltip','jq/form/validator-bs3'],function(Common,Modal){
 	Common.requestCSS('css/wizard.css');
-	//Common.requestCSS('css/dialog.css');
-	var cacheData = {};	//缓存数据
+	var cacheData = {
+			roleList: null,
+			userList:null
+	};	//缓存数据
 	var init = function(){
 		Common.$pageContent.addClass("loading");
 		Common.render(true,{
 			tpl:'tpls/ccenter/vdc/list.html',
 			data:'/v2.0/tenants/page/10/1',
-			//data:'/resources/data/select.txt',
 			beforeRender: function(data){
 				return data.result;
 			},
@@ -86,21 +87,21 @@ define(['Common','bs/modal','bs/wizard','bs/tooltip','jq/form/validator-bs3'],fu
 				},
 				//根据虚拟化环境获取可用az
 				getAz:  function(env_id){
-					Common.xhr.ajax('/v2/os-availability-zone/virtualEnv/' + env_id,function(azList){
+					/*Common.xhr.ajax('/v2/os-availability-zone/virtualEnv/' + env_id,function(azList){
 						$("#vdcAZ").find(".list-group-all").empty();
 						var listview=[];
 						for(var i=0;i<azList.length;i++){
 							listview.push('<a href="javascript:void(0);" class="list-group-item">'+azList[i]["name"]+' <i data-id = '+azList[i]["id"]+' class="fa fa-plus-circle fa-fw" style="float: right;"></i></a>')
 						}
 						$("#vdcAZ").find(".list-group-all").html(listview.join(""));
-						EventsHandler.azAddEvent();
-					});
+					});*/
 				},
 				//获取成员信息
 				getUsers : function(index,size){
 					///'cloud/am/user/page/'+index + '/'+size
 					Common.xhr.ajax('resources/data/arrays.txt',function(userList){
 						renderData.userList = userList;
+						cacheData.userList = userList;
 					});
 				},
 				//获取及对应的角色
@@ -127,7 +128,7 @@ define(['Common','bs/modal','bs/wizard','bs/tooltip','jq/form/validator-bs3'],fu
 		DataGetter.getVe();//获取所有的虚拟化环境
 		DataGetter.getUsers(1,20);//初始化用户列表
 		DataGetter.getNetPool();//获取所有的网络资源池
-		DataGetter.getRoles();	
+		DataGetter.getRoles();
 		//载入后的事件
 		var EventsHandler = {
 				//虚拟化环境change事件
@@ -141,20 +142,17 @@ define(['Common','bs/modal','bs/wizard','bs/tooltip','jq/form/validator-bs3'],fu
 					
 				},
 				//点击加号，添加可用分区
-				azAddEvent:function(){
-					require(['js/common/domchoose'],function(domchoose){
-						var leftOption = {
-								appendWrapper: '.az-all',
-								clone: 'a.list-group-item'
-							},
-							rightOption = {
-								appendWrapper: '.az-chosen',
-								clone: 'a.list-group-item',//相对clickSelector获取元素
-								clickSelector: 'i.fa-minus-circle'
-							};
-						domchoose.initChoose(leftOption,rightOption);
+				/*azAddEvent:function(){
+					require(['js/common/choose'],function(choose){
+						var options = {
+								loadmore: true,
+								addCall: null,
+								delCall: null,
+								list: []
+						};
+						//choose.initChoose(options);
 					});
-				},
+				},*/
 				//配额的表单验证
 				vdc_quota_form:function(){
 					return $(".vdc_quota").validate({
@@ -240,41 +238,21 @@ define(['Common','bs/modal','bs/wizard','bs/tooltip','jq/form/validator-bs3'],fu
 				},
 				//初始化选择用户相关的事件
 				userChosen: function(){
-					require(['js/common/domchoose'],function(domchoose){
-						var leftOption = {
-								appendWrapper: '.all-users',
-								clone: 'ul.list-group-item'//相对clickSelector获取元素
-								//clickSelector: 'ul.list-group-item',
-							},
-							rightOption = {
-								appendWrapper: '.choosen-users',
-								clone: 'ul.list-group-item',//相对clickSelector获取元素
-								clickSelector: 'i.fa-minus-circle',
-								callback: function($this){
-									$this.find('ul.dropdown-menu a').each(function(i){
-										if(i != 0){
-											$(this).find('i').css('opacity',0);
-										}
-									});
-								}
-							};
-						domchoose.initChoose(leftOption,rightOption);
-					})
 					//选择角色
-					$(document).off("click",".choosen-users ul.dropdown-menu a");
-					$(document).on("click",".choosen-users ul.dropdown-menu a",function(event){
+					$(document).off("click","#vdc-users ul.dropdown-menu a");
+					$(document).on("click","#vdc-users ul.dropdown-menu a",function(event){
 						var i = $(this).find('i');
 						i.css('opacity') == 0 ? i.css('opacity',1) : i.css('opacity',0);
 						return false;
 					});
-					$('.list-group .loadmore').on('click',function(){
+					$(document).off("click",".list-group .loadmore");
+					$(document).on("click",".list-group .loadmore",function(event){
 						Common.xhr.ajax('/resources/data/arrays.txt',function(userList){
 							var data = {};
 							data.userList = userList;
-							data.roleList = cacheData.roleList;
 							Common.render('tpls/ccenter/vdc/loadmore.html',data,function(html){
 								if(html){
-									$('.all-users').find('ul.list-group-item:last').after(html);
+									$('#vdc-users .list-group-all').children("*:last").before(html);
 								}else{
 									$('.list-group .loadmore').html('数据已全部加载');
 									$('.list-group .loadmore').off('click');
@@ -290,10 +268,44 @@ define(['Common','bs/modal','bs/wizard','bs/tooltip','jq/form/validator-bs3'],fu
 			initAz : function(){
 				var ve_id = currentChosenObj.ve.val() || $('select.select-ve').children('option:selected').val();
 				if(ve_id){
-					DataGetter.getAz(ve_id);
+					Common.xhr.ajax('/v2/os-availability-zone/virtualEnv/' + ve_id,function(azList){
+						require(['js/common/choose'],function(choose){
+							var options = {
+									selector: '#vdcAZ',
+									list: azList
+							};
+							choose.initChoose(options);
+						})
+					});
 				}else{
-					Modal.danger('尚未选择所属虚拟化环境');
-				}
+					Modal.error('尚未选择所属虚拟化环境');
+				};
+			},
+			//调用公共组件加载
+			initUsers: function(){
+				require(['js/common/choose'],function(choose){
+					var options = {
+							selector: '#vdc-users',
+							loadmore: true,
+							groupSelectedClass: 'col-sm-7',
+							groupAllClass: 'col-sm-5',
+							addCall: function($clone){
+								//添加角色窗及对应的事件
+								var dtd = $.Deferred();
+								Common.render('tpls/ccenter/vdc/userChoose.html',cacheData.roleList,function(html){
+									$clone.append(html);
+									dtd.resolve();
+								});
+								return dtd.promise();
+							},
+							delCall: function($clone){
+								//去除角色窗及取消事件绑定
+								$clone.children("li:last").remove();
+							},
+							list: cacheData.userList
+					};
+					choose.initChoose(options);
+				})
 			}
 		}
 	  //增加按钮
@@ -310,6 +322,7 @@ define(['Common','bs/modal','bs/wizard','bs/tooltip','jq/form/validator-bs3'],fu
 		    	currentChosenObj.netId = $('select.select-net').find('option:selected');
 		    	//载入依赖数据
 		    	DataIniter.initAz();
+		    	DataIniter.initUsers();
 		    	//载入事件
 		    	EventsHandler.userChosen();
 				EventsHandler.veChange();
