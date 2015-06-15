@@ -1,5 +1,6 @@
-define(['Common','bs/wizard','jq/form/validator','jq/form/validator/addons/bs3','bs/tooltip'],function(Common){
+define(['Common','bs/modal','bs/wizard','jq/form/validator','jq/form/validator/addons/bs3','bs/tooltip'],function(Common,Dialog){
     Common.requestCSS('css/wizard.css');
+    Common.requestCSS('css/dialog.css');
     var init = function(){
         Common.$pageContent.addClass("loading");
         //Common.render(true, 'tpls/cresource/virtualEnv.html','/resources/data/env.txt', function() {
@@ -157,7 +158,7 @@ define(['Common','bs/wizard','jq/form/validator','jq/form/validator/addons/bs3',
                 $('select.select-period').change(function(){
                     currentChosenEnv.refreshCycle =  $(this).children('option:selected').val();
                 });
-                $("#connector-period-confirm").val(currentChosenEnv.refreshCycle);
+                $("#select-period-confirm").val(currentChosenEnv.refreshCycle);
             },
             //表单校验
             formValidator: function(){
@@ -293,28 +294,114 @@ define(['Common','bs/wizard','jq/form/validator','jq/form/validator/addons/bs3',
         //操作按钮
         //日志按钮
         $("a.log-info").on("click",function(){
-            alert($(this).attr("data"));
+            var data = $(this).attr("data");
+            Common.xhr.ajax("/v2/virtual-env/"+data,function(env){
+                var selectData2= {"data":renderData,"virtualEnv":env};
+                Common.render('tpls/cresource/env/loginfo.html',selectData2,function(html){
+                    Dialog.show({
+                        title: '日志信息',
+                        message: html,
+                        nl2br: false,
+                        onshown : ""
+                    });
+
+                });
+            });
         });
         //编辑按钮
-        $("a.log-info").on("click",function(){
-            alert($(this).attr("data"));
+
+        $("a.edit").on("click",function(){
+            var data = $(this).attr("data");
+            Common.xhr.ajax("/v2/virtual-env/"+data,function(env){
+                var selectData2= {"data":renderData,"virtualEnv":env};
+                Common.render('tpls/cresource/env/edit.html',selectData2,function(html){
+                    Dialog.show({
+                        title: '编辑虚拟化环境',
+                        message: html,
+                        nl2br: false,
+                        buttons: [{
+                            label:'取消',
+                            action:function(dialog){
+                                dialog.close();
+                            }
+                        },
+                        {
+                            label: '保存',
+                            action: function(dialog) {
+                                var valid = $(".form-horizontal").valid();
+                                if(!valid) return false;
+
+                                var envData ={
+                                    "id":env.id,
+                                    "name": $("#edit-env-name").val(),
+                                    "type": $('#edit-env-type option:selected').val(),
+                                    "version":  $('#edit-env-version').val(),
+                                    "regionId":  $('#edit-env-region option:selected').val(),
+                                    "refreshCycle":  $('#edit-env-period option:selected').val(),
+                                    "vendor": $("#edit-env-vendor").val()
+                                }
+                                debugger;
+                                Common.xhr.putJSON('/v2/virtual-env',envData,function(data){
+                                    if(data){
+                                        Dialog.success('保存成功');
+                                        setTimeout(function(){Dialog.closeAll()},2000);
+                                        Common.router.route();
+                                    }else{
+                                        Dialog.warning ('保存失败')
+                                    }
+                                })
+                            }
+                        }],
+                        onshown : ""
+                    });
+
+                });
+            });
+
         });
         //删除按钮
 
         $("a.delete").on("click",function(){
             var data = $(this).attr("data");
-            var del={
-                url:"v2/virtual-env/"+data,
-                type:"delete"
-            }
-            Common.xhr.ajax(del,function(data){
-                if(data){
 
-                    Common.router.reload();
-                }else{
-                    alert("failed");
-                }
+            Common.render('tpls/cresource/env/delete.html',"",function(html){
+                Dialog.show({
+                    title: '删除',
+                    message: html,
+                    nl2br: false,
+                    buttons: [{
+                        label: '取消',
+                        action: function (dialog) {
+                            dialog.close();
+                        }
+                    },{
+                        label:'确定',
+                        action:function(dialog){
+                            var valid = $(".form-horizontal").valid();
+                            if(!valid) return false;
+
+                            var del={
+                                url:"v2/virtual-env/"+data,
+                                type:"delete"
+                            }
+                            Common.xhr.ajax(del,function(data){
+                                if(data){
+                                    Dialog.success('保存成功') ;
+
+                                    setTimeout(function(){Dialog.closeAll()},2000);
+                                    Common.router.reload();
+                                }else{
+                                    alert("failed");
+                                }
+                            });
+                        }
+                    }],
+                    onshown : ""
+                });
+
             });
+
+
         });
     }
     return {

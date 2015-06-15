@@ -1,0 +1,70 @@
+<form class="form-horizontal" id="addSubnet">
+    <div class="form-group">
+        <label for="edit-env-name" class="control-label col-sm-3">
+            <span style="color: red;">* </span>名称：</label>
+        <div class="col-sm-7 col-sm">
+            <input type="text" class="dialog-form-control" id="edit-env-name" value="{{ virtualEnv.name}}"/>
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="edit-env-type" class="control-label col-sm-3">
+            <span style="color: red;">* </span>虚拟化类型：</label>
+        <div class="col-sm-7 col-sm">
+            <select class="dialog-form-control select" id="edit-env-type">
+                {{each data.virtualEnvType as item i}}
+                    {{if item.name == virtualEnv.type}}
+                        <option value="{{item.name}}" selected>{{item.name}}</option>
+                    {{else}}
+                         <option value="{{item.name}}">{{item.name}}</option>
+                    {{/if}}
+                {{/each}}
+            </select>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label for="edit-env-version" class="control-label col-sm-3">
+            版本：</label>
+        <div class="col-sm-7 col-sm">
+            <input type="text" class="dialog-form-control" id="edit-env-version" value="{{virtualEnv.version}}">
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="edit-env-vendor" class="control-label col-sm-3">
+            提供者：</label>
+        <div class="col-sm-7 col-sm">
+            <input type="text" class="dialog-form-control" id="edit-env-vendor" value="{{virtualEnv.vendor}}">
+        </div>
+    </div>
+    <div class="form-group" id="gateway_ip">
+        <label for="edit-env-region" class="control-label col-sm-3">
+            <span style="color: red;">* </span>所属区域：</label>
+        <div class="col-sm-7 col-sm">
+            <select class="dialog-form-control select" id="edit-env-region">
+                {{each data.region as item i}}
+                {{if item.name == virtualEnv.regionId}}
+                <option value="{{item.name}}" selected>{{item.name}}</option>
+                {{else}}
+                <option value="{{item.name}}">{{item.name}}</option>
+                {{/if}}
+                {{/each}}
+            </select>
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="edit-env-period" class="control-label col-sm-3">
+            同步周期：</label>
+        <div class="col-sm-7 col-sm" id="enable_ip">
+            <select class="dialog-form-control select" id="edit-env-period">
+                {{each data.period as item i}}
+                    {{if item.name ==virtualEnv.refreshCycle}}
+                    <option value="{{item.name}}" selected>{{item.name}}</option>
+                    {{else}}
+                    <option value="{{item.name}}">{{item.name}}</option>
+                    {{/if}}
+                {{/each}}
+            </select>
+        </div>
+    </div>
+
+</form>

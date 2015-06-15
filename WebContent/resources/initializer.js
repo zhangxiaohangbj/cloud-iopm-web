@@ -42,7 +42,7 @@ define('Common', ['PubView', 'bs/modal', 'json', 'template', 'jq/dataTables', 'j
         null,
         {
             title: '<i class="fa fa-codepen fa-fw"></i>基础环境',
-            current: [2],
+            current: [3],
             items:[
                 {
                     text: '<i class="fa fa-th-large"></i>设备管理<i class="fa icon-arrow"></i>',
