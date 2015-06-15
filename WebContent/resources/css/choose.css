@@ -90,4 +90,8 @@
  .choose-wrapper .show-selected>.panel .list-group>ul>li.opt{
  	margin:0 10px;
  }
- 
+ .choose-wrapper select{
+ 	height:24px;line-height:24px;
+ 	width:100px;padding:0;
+ 	margin:0 15px;font-size:12px;
+ }
