@@ -1,0 +1,96 @@
+.chosen-container-active .chosen-choices, 
+.chosen-container-active .chosen-single,
+ .chosen-container-active.chosen-with-drop .chosen-single{
+ 	outline:none;
+ 	box-shadow:0;
+ }
+.choose-style .panel .list-group{
+ 	height:290px;overflow-y:auto;
+ 	border:1px solid #ddd;
+ 	overflow-x:hidden;
+ }
+.choose-style .panel, .choose-style .panel-default{
+ 	border:0;
+ 	-webkit-box-shadow:0;
+ 	box-shadow:0;
+ 	margin-bottom:0;
+ }
+.choose-style .panel-default>.panel-heading{
+ 	background-color:#fff;border:0;
+ 	padding:10px 0 10px 10px;
+ }
+.choose-style .panel-default>.panel-body{
+ 	border:1px solid #ddd;border-bottom:0;
+ 	padding:0;
+ }
+.choose-style .panel-default>.panel-body .form-search{
+ 	padding:5px 10px;
+ }
+ .choose-style .panel-body .form-search .search-query{
+ 	height:26px;width:96%;
+ }
+ .choose-style .panel-body .form-search i{
+ 	margin-left:-22px;
+ 	color:#BDBBBB;
+ }
+.choose-style .panel .list-group{
+	border-top:0;
+}
+.choose-style .panel .list-group>ul:hover{
+	background-color:#F2F2F2;
+}
+.choose-style .panel .list-group .list-group-item{
+ 	border :0;padding:3px 6px;
+ 	cursor:pointer;
+ }
+ .choose-style .panel .list-group a.loadmore{
+ 	line-height:32px;
+ 	height:32px;
+ 	display:block;
+ 	width:100%;
+ 	text-align:center;
+ }
+ .choose-style .panel .list-group a.loadmore:hover{
+ 	text-decoration:none;
+ }
+.choose-style .panel .list-group .list-group-item .adjust{
+	margin:3px;
+}
+.choose-style .panel .list-group .list-group-item .dropdown .btn-default{
+ 	padding:3px;border-radius:0;
+ }
+.choose-style .panel .list-group button,
+.open>.dropdown-menu-right a{
+ 	font-size:13px;
+ }
+ .open>.dropdown-menu-right{
+ 	right:0;left:inherit;
+ }
+ .open>.dropdown-menu-right a{
+ 	padding:3px 10px;
+ }
+  .open>.dropdown-menu-right a i{
+ 	margin-right:3px;
+ 	opacity: 0;
+ }
+ .open>.dropdown-menu-right li:first-child a i{
+ 	opacity: 1;
+ }
+.choose-style .panel .list-group .list-group-item i{
+ 	color:#CB6A6A;
+ 	float:right;
+ }
+ .choose-style .show-all>.panel .list-group .list-group-item i{
+ 	color:#519857;
+ }
+/*  .choose-style .show-all>.panel .list-group ul>li.icon, */
+ .choose-style .show-all>.panel .list-group ul>li.opt{
+ 	display:none;
+ }
+  .choose-style .panel .list-group>.list-group-item{
+  	height:32px;
+  }
+ .choose-style .show-selected>.panel .list-group>ul>li.opt{
+ 	margin:0 10px;
+ }
+ 
