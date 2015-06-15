@@ -1,0 +1,13 @@
+<li class="dropdown pull-right opt" >
+	<div class="dropdown">
+	  <button class="btn btn-default dropdown-toggle ellipsis" type="button"  data-toggle="dropdown" aria-expanded="true">
+	   {{list[0].name || list[0].id }}
+	    <span class="caret"></span>
+	  </button>
+	  <ul class="dropdown-menu dropdown-menu-right" role="menu" >
+	  	{{each list as item i}}
+	    	<li><a href="javascript:void(0);" data-id="{{item.id}}"><i class="fa fa-check fa-fw"></i>{{item.name}}</a></li>
+	    {{/each}}
+	  </ul>
+	</div>
+</li>
