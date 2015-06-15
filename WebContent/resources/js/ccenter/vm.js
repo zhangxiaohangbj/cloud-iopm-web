@@ -570,7 +570,7 @@ define(['Common','bs/modal','bs/wizard','bs/tooltip','jq/form/validator','jq/for
     					wizard._submitting = false;
     					wizard.updateProgressBar(100);
     					closeWizard();
-    					Common.router.route();
+    					Common.router.reload();
     				})
     			});
 
@@ -730,15 +730,20 @@ define(['Common','bs/modal','bs/wizard','bs/tooltip','jq/form/validator','jq/for
 	    	})
 	    });
 	    
-	    //修改云主机名称
+	    //删除云主机
 	    $("ul.dropdown-menu a.delete").on("click",function(){
 	    	var serverName = $(this).parents('tr:first').find('td.vm_name').html();
 	    	var serverId = $(this).attr("data");
 	    	require(['css!'+PubView.rqBaseUrl+'/css/dialog.css']);
-	    	Modal.confirm("你已经选择了 【"+serverName+"】 。 请确认您的选择。终止的实例均无法恢复。",function(result){
+	    	Modal.confirm("你已经选择了 【"+serverName+"】 。 请确认您的选择。终止的云主机均无法恢复。",function(result){
 	            if(result) {
 	                Common.xhr.del('/'+current_vdc_id+'/servers/'+serverId,function(data){
-	                	Modal.success("云主机【"+serverName+"】已删除！");
+	                	if(data.success||data.code==404){
+	                		Modal.success("云主机【"+serverName+"】已终止！");
+	                	}else{
+	                		Modal.error("云主机【"+serverName+"】终止失败！");
+	                	}
+	                	Common.router.reload();
 	                });	    		
 	            }
 	    	});
