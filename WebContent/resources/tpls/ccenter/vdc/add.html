@@ -272,7 +272,7 @@
 						  	{{each userList as item i}}
 						  	<ul class="nav nav-pills btn-group btn-group-sm dark_stripe list-group-item">
 								<li class="member adjust" data-update_members-id="">
-									<span class="display_name">{{item.name}}</span>
+									<span class="display_name" data-id="{{item.id}}">{{item.name}}</span>
 								</li>
 								<li class="pull-right adjust icon"><i class="fa fa-plus-circle"></i></li>
 								<li class="dropdown pull-right opt" >
@@ -283,7 +283,7 @@
 									  </button>
 									  <ul class="dropdown-menu dropdown-menu-right" role="menu" >
 									  	{{each roleList as opt i}}
-									    	<li><a href="javascript:void(0);"><i class="fa fa-check fa-fw"></i>{{opt.name}}</a></li>
+									    	<li><a href="javascript:void(0);"><i class="fa fa-check fa-fw" data-id="{{opt.id}}"></i>{{opt.name}}</a></li>
 									    {{/each}}
 									  </ul>
 									</div>
@@ -308,7 +308,7 @@
 						  </div>
 						
 						  <!-- List group -->
-						  <div class="list-group choosen-users">
+						  <div class="list-group choosen-users" id="choosen-users">
 						  </div>
 						</div>
 					</div>
