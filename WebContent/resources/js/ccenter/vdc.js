@@ -47,7 +47,7 @@ define(['Common','bs/modal','bs/wizard','bs/tooltip','jq/form/validator-bs3'],fu
 		var jsonData = {
 				azJson:function(obj){
 					var azList = [];
-					$(obj).find("i").each(function(i,element){
+					$(obj).find("li.member").each(function(i,element){
 						var id = $(element).attr("data-id");
 						azList.push({"azId":id});
 					});
@@ -377,8 +377,8 @@ define(['Common','bs/modal','bs/wizard','bs/tooltip','jq/form/validator-bs3'],fu
     			});
     			//创建提交数据
     			wizard.on("submit", function(wizard) {
-    				jsonData.azJson("#vdc-az-chosen");
-    				jsonData.userJson("#choosen-users");
+    				jsonData.azJson("#vdcAZ .list-group-select");
+    				//jsonData.userJson("#choosen-users");
 //    				var serverData = {"server":{
 //    					"name": $("#name").val(),
 //    					"imageRef": 'ed18e2ce-a574-4ff0-8a00-6ef9d7dc4c2b',//$("#imageRef").val(),
