@@ -1,9 +1,9 @@
-<form class="form-horizontal" id="editStrategy">
+<form class="form-horizontal" id="editTask">
 	<div class="form-group">
-		<label for="strategyGroupId" class="control-label col-sm-4"><span style="color: red;">* </span>任务分组：</label>
+		<label for="taskGroupId" class="control-label col-sm-4"><span style="color: red;">* </span>任务分组：</label>
 	 	<div class="col-sm-5 col-sm">
-		 	<select class="dialog-form-control select" name="strategyGroupId" value="{{strategyGroupId}}">
-			 	{{each strategyGroupList as item i}}
+		 	<select class="dialog-form-control select" name="taskGroupId" value="{{taskGroupId}}">
+			 	{{each taskGroupList as item i}}
 			 		<option value="{{item.id}}">{{item.name}}</option>
 			 	{{/each}}
 		 	</select>
