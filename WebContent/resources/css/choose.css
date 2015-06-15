@@ -73,9 +73,6 @@
  	margin-right:3px;
  	opacity: 0;
  }
- .open>.dropdown-menu-right li:first-child a i{
- 	opacity: 1;
- }
 .choose-wrapper .panel .list-group .list-group-item i{
  	color:#CB6A6A;
  	float:right;
