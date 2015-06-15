@@ -224,10 +224,8 @@ define(['Common','bs/modal','bs/wizard','bs/tooltip','jq/form/validator','jq/for
 			    	                	var valid = $(".form-horizontal").valid();
 			    	            		if(!valid) return false;
 			    	                	var serverData = {
-	    	                				  "id": "",
-	    	                				  "portId": "",
-	    	                				  "subnetId": $("[name='subnetId']").val(),
-	    	                				  "tenantId": ""
+	    	                				  "port_id": null,
+	    	                				  "subnet_id": $("[name='subnetId']").val(),
 			    	                	  };
 			    	                	Common.xhr.putJSON('/v2.0/routers/'+id+'/add_router_interface',serverData,function(data){ //需修改接口
 			    	                		if(data){
@@ -245,44 +243,9 @@ define(['Common','bs/modal','bs/wizard','bs/tooltip','jq/form/validator','jq/for
 			    		});
 		    		
 		    	},
-		    	//子网连接编辑
-		    	EditRouterSubnet:function(id,cb){
-		    		Common.xhr.ajax('/v2.0/routers/'+id,function(data){  //需修改接口
-			    		Common.render('tpls/ccenter/vpc/editroutersubnet.html',data.router,function(html){
-				    	Dialog.show({
-				            title: '连接子网',
-				            message: html,
-				            nl2br: false,
-				            buttons: [{
-				                label: '确定',
-				                action: function(dialog) {
-				                	var valid = $(".form-horizontal").valid();
-				            		if(!valid) return false;
-				            		var serverData = {
-	    	                				  "id": "",
-	    	                				  "portId": "",
-	    	                				  "subnetId": $("[name='subnetId']").val(),
-	    	                				  "tenantId": ""
-			    	                	  };
-				                	Common.xhr.putJSON('/v2.0/routers/'+id+'/add_router_interface',serverData,function(data){ //需修改接口
-				                		if(data){
-				                			Dialog.success('保存成功')
-				                			setTimeout(function(){Dialog.closeAll()},2000);
-				                			EditData.GetSubnetList(id);
-										}else{
-											 Dialog.warning ('保存失败')
-										}
-									})
-				                }
-				            }],
-				            onshown : cb
-				        });
-			    		})
-			    	});
-		    	},
 		    	//获取子网连接列表
 		    	GetSubnetList :function(id){
-		    		Common.render(true,'tpls/ccenter/vpc/routersubnet.html','/v2.0/routers',function(html){ //需修改接口
+		    		Common.render(true,'tpls/ccenter/vpc/routersubnet.html','/v2.0/ports?device_owner=network&device_id='+id,function(html){ //需修改接口
 			    		Common.initDataTable($('#subnetTable'),function($tar){
 			    			$tar.prev().find('.left-col:first').append(
 			    					'<span class="btn btn-add">添加子网连接</span>'
@@ -298,20 +261,18 @@ define(['Common','bs/modal','bs/wizard','bs/tooltip','jq/form/validator','jq/for
 				    			EventsHandler.formValidator();
 				    		})
 				    	});
-				    	//编辑子网连接
-					    $("#subnetTable_wrapper a.btn-edit").on("click",function(){
-					    	var id= $(this).attr("data");
-					    	EditData.EditRouterSubnet(id,function(){
-					    		DataIniter.initSubnetList();
-				    			EventsHandler.formValidator();
-				    		})
-					    });
 					    //删除子网连接
 					    $("#subnetTable_wrapper a.btn-delete").on("click",function(){
-					    	var id= $(this).attr("data");
+					    	var portId= $(this).attr("data");
+					    	var subnetId= $(this).attr("datasubnet");
 					    	Dialog.confirm('确定要删除该子网连接吗?', function(result){
 					             if(result) {
-					            	 Common.xhr.del('/v2.0/routers/'+id+'/add_router_interface',  //需修改接口
+					            	 var serverData = {
+	    	                				  "router_id": id,
+	    	                				  "subnet_id": subnetId,
+	    	                				  "port_id": portId
+			    	                	  };
+					            	 Common.xhr.putJSON('/v2.0/routers/'+id+'/remove_router_interface',serverData,  //需修改接口
 					                     function(data){
 					                    	 if(data){
 					                    		 Dialog.success('删除成功')
