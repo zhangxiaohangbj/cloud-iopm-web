@@ -46,9 +46,12 @@ define(['Common','bs/modal','bs/wizard','bs/tooltip','jq/form/validator-bs3'],fu
 		};
 		var jsonData = {
 				azJson:function(obj){
-					$(obj).find("i").each(function(i){
-						var id = $()
+					var azList = [];
+					$(obj).find("li.member").each(function(i,element){
+						var id = $(element).attr("data-id");
+						azList.push({"azId":id});
 					});
+					return azList;
 				},
 				quotaSetsJson:function(obj){
 					return {
@@ -71,7 +74,19 @@ define(['Common','bs/modal','bs/wizard','bs/tooltip','jq/form/validator-bs3'],fu
         				}
 				},
 				userJson:function(obj){
-					
+					var memberList = [];
+					$(obj).find(".nav").each(function(i,user){
+						var uid = $(user).find(".display_name").attr("data-id");
+						var userRoleList = [];
+						$(user).find(".fa-check").each(function(i,role){
+							if($(role).css('opacity') == '1'){
+								var roleId = $(role).attr("data-id"); 
+								userRoleList.push({"uid":uid,"roleId":roleId});
+							}
+						});
+						memberList.push({"uid":uid,"userRoleList":userRoleList});
+					});
+					return memberList;
 				},
 				floatIpJson:function(obj){
 					
@@ -338,7 +353,7 @@ define(['Common','bs/modal','bs/wizard','bs/tooltip','jq/form/validator-bs3'],fu
     	                cancelText: "取消",
     	                nextText: "下一步",
     	                backText: "上一步",
-    	                submitText: "提交",
+    	                submitText: "创建",
     	                submittingText: "提交中..."
     	            }
     			});
@@ -360,6 +375,38 @@ define(['Common','bs/modal','bs/wizard','bs/tooltip','jq/form/validator-bs3'],fu
 				//关闭后移出dom
     			wizard.on('closed', function() {
     				closeWizard();
+    			});
+    			//创建提交数据
+    			wizard.on("submit", function(wizard) {
+    				jsonData.azJson("#vdcAZ .list-group-select");
+    				//jsonData.userJson("#choosen-users");
+//    				var serverData = {"server":{
+//    					"name": $("#name").val(),
+//    					"imageRef": 'ed18e2ce-a574-4ff0-8a00-6ef9d7dc4c2b',//$("#imageRef").val(),
+//    					"flavorRef": '3',//$("#flavorRef").val(),
+//    					"networks": [{
+//    						"uuid": 'af8c1f42-b21c-4d13-bc92-1852e22f4f98'//,//$("#networks").val(),
+//    						//"fixed_ip": '192.168.0.115'//$("#fixed_ip").val()
+//    					}]
+//    				}};
+    				/*var serverData = {server:$(".form-horizontal").serializeObject()};
+    				serverData.server.networks=[{
+						"uuid": 'af8c1f42-b21c-4d13-bc92-1852e22f4f98'
+						//"fixed_ip": '192.168.0.115'//$("#fixed_ip").val()
+					}]
+    				var fixed_ip = $("#fixed_ip").val();
+    				if(fixed_ip!=null&&fixed_ip!="DHCP"){
+    					serverData.server.networks=[{
+	    						"uuid": 'af8c1f42-b21c-4d13-bc92-1852e22f4f98',
+	    						"fixed_ip": '192.168.0.115'//$("#fixed_ip").val()
+    					}]
+    				}*/
+    				/*Common.xhr.postJSON('/'+current_vdc_id+'/servers',serverData,function(data){
+    					wizard._submitting = false;
+    					wizard.updateProgressBar(100);
+    					closeWizard();
+    					Common.router.reload();
+    				})*/
     			});
 			});
 	    });
