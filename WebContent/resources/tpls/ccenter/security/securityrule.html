@@ -1,0 +1,53 @@
+<div class="page-header clearfix">
+	<ol class="breadcrumb">
+	  <li class="active">规则列表</li>
+	  <a href="javascript:void(0);" class="reload" style="padding: 6px 12px;font-size: 14px;">返回安全组列表</a>
+	</ol>
+</div>
+<div class="page-body">
+	<div class="pane">
+		<div class="pane-content">
+			<table class="table table-primary table-striped" id="SecurityruleTable">
+				<thead>
+					<tr>
+						<th class="c1">
+							<label><input type="checkbox" class="selectAll"></label>
+						</th>
+						<th class="c3">方向</th>
+						<th class="c3">输入类型</th>
+						<th class="c3">IP协议</th>
+						<th class="c2">端口范围</th>
+						<th class="c2">远程</th>
+						<th class="c2 sorting_disabled">操作</th>
+					</tr>
+				</thead>
+				<tbody>
+				{{each security_group.security_group_rules as item i}}
+					<tr>
+						<td><label><input type="checkbox"></label></td>
+						<td><a href="javascript:void(0);" class="router-name" data="{{item.id}}">{{item.direction}}</a></td>
+						<td>{{item.ethertype}}</td>
+						<td>{{item.protocol}}</td>
+						<td>{{item.port_range_min}}-{{item.port_range_max}}</td>
+						<td>{{item.remote_ip_prefix}}</td>
+						<td>
+							<a class="btn-delete" data-toggle="tooltip" title="删除" href="javascript:void(0)" data="{{item.id}}"><i class="fa fa-trash-o fa-fw"></i></a>	
+						</td>
+					</tr>
+    			{{/each}}
+				</tbody>
+				<tfoot>
+					<tr>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+					</tr>
+				</tfoot>
+			</table>
+		</div>
+	</div>
+</div>

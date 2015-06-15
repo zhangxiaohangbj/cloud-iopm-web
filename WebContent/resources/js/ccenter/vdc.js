@@ -269,6 +269,7 @@ define(['Common','bs/modal','bs/wizard','bs/tooltip','jq/form/validator-bs3'],fu
 					$(document).on("click","#vdc-users ul.dropdown-menu a",function(event){
 						var i = $(this).find('i');
 						i.css('opacity') == 0 ? i.css('opacity',1) : i.css('opacity',0);
+						$(this).attr('in-use') == '1' ? $(this).attr('in-use','0') : $(this).attr('in-use','1');
 						return false;
 					});
 					$(document).off("click",".list-group .loadmore");
@@ -318,7 +319,7 @@ define(['Common','bs/modal','bs/wizard','bs/tooltip','jq/form/validator-bs3'],fu
 							addCall: function($clone){
 								//添加角色窗及对应的事件
 								var dtd = $.Deferred();
-								Common.render('tpls/ccenter/vdc/userChoose.html',cacheData.roleList,function(html){
+								Common.render('tpls/ccenter/vdc/role.html',cacheData.roleList,function(html){
 									$clone.append(html);
 									dtd.resolve();
 								});
