@@ -55,6 +55,20 @@
                     </div>
                 </div>
             </div>
+
+            <div class="wizard-input-section">
+                <div class="form-group">
+                    <label for="select-period" class="control-label col-sm-3"><span>* </span>同步周期：</label>
+                    <div class="col-sm-5 col-sm">
+                        <select name="select-period" id="select-period"  class="wizard-form-control select select-period">
+                            {{each data.period as item i}}
+                            <option value="{{item.name}}">{{item.name}}</option>
+                            {{/each}}
+                        </select>
+                    </div>
+                </div>
+            </div>
+
         </div>
         <div class="wizard-card-desc col-sm-4">
             <p>此处有说明，省略100字；</p>
@@ -124,18 +138,7 @@
                 </div>
             </div>
 
-            <div class="wizard-input-section">
-                <div class="form-group">
-                    <label for="connector-period" class="control-label col-sm-3"><span>* </span>同步周期：</label>
-                    <div class="col-sm-5 col-sm">
-                        <select name="connector-period" id="connector-period"  class="wizard-form-control select select-period">
-                            {{each data.period as item i}}
-                                <option value="{{item.name}}">{{item.name}}</option>
-                            {{/each}}
-                        </select>
-                    </div>
-                </div>
-            </div>
+
 
         </div>
         <div class="wizard-card-desc col-sm-4">
@@ -239,9 +242,9 @@
 
             <div class="wizard-input-section">
                 <div class="form-group">
-                    <label for="connector-period-confirm" class="control-label col-sm-3">同步周期：</label>
+                    <label for="select-period-confirm" class="control-label col-sm-3">同步周期：</label>
                     <div class="col-sm-5 col-sm">
-                        <input type="text" disabled class="wizard-form-control" id="connector-period-confirm" name="connector-period-confirm" />
+                        <input type="text" disabled class="wizard-form-control" id="select-period-confirm" name="connector-period-confirm" />
                     </div>
                 </div>
             </div>
