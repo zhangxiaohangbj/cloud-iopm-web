@@ -129,16 +129,17 @@ define(['Common','bs/modal','bs/wizard','bs/tooltip','jq/form/validator-bs3'],fu
 				},
 				//获取网络资源池
 				getNetPool: function(){
-					Common.xhr.ajax('/resources/data/select.txt',function(netList){
-						renderData.netList = netList;
+					Common.xhr.get('/v2.0/networks',{'isExternalNetwork':true},function(netList){
+						renderData.netList = netList.networks;
 					});
 				},
 				//根据网络资源池获取等待分配的IP列表
-				getIps:function(net_id){
-					Common.xhr.ajax('/resources/data/select.txt',function(ipList){
-						renderData.ipList = ipList;
+				/*getIps:function(net_id){
+					Common.xhr.get('/v2.0/networks',{'floatingNetworkId':net_id},function(ipList){
+						debugger;
+						renderData.ipList = ipList.floatingIpService;
 					});
-				}
+				}*/
 		}
 		DataGetter.getVe();//获取所有的虚拟化环境
 		DataGetter.getUsers(1,20);//初始化用户列表
@@ -153,6 +154,16 @@ define(['Common','bs/modal','bs/wizard','bs/tooltip','jq/form/validator-bs3'],fu
 						currentChosenObj.ve = $('select.select-ve').children('option:selected');
 						//重新载入可用分区数据
 						DataIniter.initAz();
+    				});
+					
+				},
+				//网络池change事件
+				netChange: function(){
+					$('select.select-net').change(function(){
+						//同步
+						currentChosenObj.netId = $('select.select-net').children('option:selected');
+						//重新载入可用分区数据
+						DataIniter.initFloatIP();
     				});
 					
 				},
@@ -321,6 +332,28 @@ define(['Common','bs/modal','bs/wizard','bs/tooltip','jq/form/validator-bs3'],fu
 					};
 					choose.initChoose(options);
 				})
+			},
+			//根据net_id获取浮动IP
+			initFloatIP : function(){
+				var net_id = currentChosenObj.netId.val() || $('select.select-net').children('option:selected').val();
+				if(net_id){
+					Common.xhr.get('/v2.0/floatingIps',{'floatingNetworkId':net_id},function(ipList){
+						debugger;
+						for(var key in ipList.floatingips ){
+							var obj = ipList.floatingips[key];
+							obj.name = obj.floating_ip_address;
+						}
+						require(['js/common/choose'],function(choose){
+							var options = {
+									selector: '#vdcFloatIP',
+									list: ipList.floatingips
+							};
+							choose.initChoose(options);
+						})
+					});
+				}else{
+					Modal.error('尚未选择所属虚拟化环境');
+				};
 			}
 		}
 	  //增加按钮
@@ -338,9 +371,11 @@ define(['Common','bs/modal','bs/wizard','bs/tooltip','jq/form/validator-bs3'],fu
 		    	//载入依赖数据
 		    	DataIniter.initAz();
 		    	DataIniter.initUsers();
+		    	DataIniter.initFloatIP();
 		    	//载入事件
 		    	EventsHandler.userChosen();
 				EventsHandler.veChange();
+				EventsHandler.netChange();
 		    	//
     			wizard = $('#create-vdc-wizard').wizard({
     				keyboard : false,
@@ -378,7 +413,7 @@ define(['Common','bs/modal','bs/wizard','bs/tooltip','jq/form/validator-bs3'],fu
     			//创建提交数据
     			wizard.on("submit", function(wizard) {
     				jsonData.azJson("#vdcAZ .list-group-select");
-    				//jsonData.userJson("#choosen-users");
+    				jsonData.userJson("#vdc-users .list-group-select");
 //    				var serverData = {"server":{
 //    					"name": $("#name").val(),
 //    					"imageRef": 'ed18e2ce-a574-4ff0-8a00-6ef9d7dc4c2b',//$("#imageRef").val(),
