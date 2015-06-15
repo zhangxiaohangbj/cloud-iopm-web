@@ -1,4 +1,4 @@
-define(['Common','bs/modal','bs/wizard','bs/tooltip','jq/form/validator','jq/form/validator/addons/bs3'],function(Common,Modal){
+define(['Common','bs/modal','bs/wizard','bs/tooltip','jq/form/validator-bs3'],function(Common,Modal){
 	Common.requestCSS('css/wizard.css');
 	//Common.requestCSS('css/dialog.css');
 	var cacheData = {};	//缓存数据
@@ -43,6 +43,39 @@ define(['Common','bs/modal','bs/wizard','bs/tooltip','jq/form/validator','jq/for
 				az: null,
 				netId: null
 		};
+		var jsonData = {
+				azJson:function(obj){
+					$(obj).find("i").each(function(i){
+						var id = $()
+					});
+				},
+				quotaSetsJson:function(obj){
+					return {
+    					"metadata_items": $(obj + " [name='metadata_items']").val(),
+    					"cores": $(obj + " [name='cores']").val(),
+    					"instances": $(obj + " [name='instances']").val(),
+    					"injected_file_content_bytes": $(obj +" [name='injected_file_content_bytes']").val(),
+    					"disks": $(obj + " [name='disks']").val(),
+    					"diskSnapshots": $(obj +" [name='diskSnapshots']").val(),
+    					"diskTotalSizes": $(obj +" [name='diskTotalSizes']").val(),
+    					"ram": $(obj +"s [name='ram']").val(),
+    					"security_group_rules": $(obj +" [name='security_group_rules']").val(),
+    					"floating_ips": $(obj +" [name='floating_ips']").val(),
+    					"network": $(obj +" [name='network']").val(),
+    					"port": $(obj +" [name='port']").val(),
+    					"route": $(obj +" [name='route']").val(),
+    					"subnet": $(obj +" [name='subnet']").val(),
+    					"injected_files": $(obj +" [name='injected_files']").val(),
+    					"security_groups": $(obj +" [name='security_groups']").val(),
+        				}
+				},
+				userJson:function(obj){
+					
+				},
+				floatIpJson:function(obj){
+					
+				}
+		}
         //初始化加载，不依赖其他模块
 		var DataGetter = {
 				//虚拟化环境 virtural environment
@@ -125,6 +158,7 @@ define(['Common','bs/modal','bs/wizard','bs/tooltip','jq/form/validator','jq/for
 				//配额的表单验证
 				vdc_quota_form:function(){
 					return $(".vdc_quota").validate({
+						errorContainer: $(".vdc_quota"),
 						rules:{
 							'metadata_items': {
 			                    required: true,
@@ -350,24 +384,7 @@ define(['Common','bs/modal','bs/wizard','bs/tooltip','jq/form/validator','jq/for
 			    	                	var valid = $(".vdc_quota").valid();
 			    	            		if(!valid) return false;
 			    	                	var serverData = {
-				    	            			"quota_set":{
-				    	        					"metadata_items": $("#vdcQuota [name='metadata_items']").val(),
-				    	        					"cores": $("#vdcQuota [name='cores']").val(),
-				    	        					"instances": $("#vdcQuota [name='instances']").val(),
-				    	        					"injected_file_content_bytes": $("#vdcQuota [name='injected_file_content_bytes']").val(),
-				    	        					"disks": $("#vdcQuota [name='disks']").val(),
-				    	        					"diskSnapshots": $("#vdcQuota [name='diskSnapshots']").val(),
-				    	        					"diskTotalSizes": $("#vdcQuota [name='diskTotalSizes']").val(),
-				    	        					"ram": $("#vdcQuota [name='ram']").val(),
-				    	        					"security_group_rules": $("#vdcQuota [name='security_group_rules']").val(),
-				    	        					"floating_ips": $("#vdcQuota [name='floating_ips']").val(),
-				    	        					"network": $("#vdcQuota [name='network']").val(),
-				    	        					"port": $("#vdcQuota [name='port']").val(),
-				    	        					"route": $("#vdcQuota [name='route']").val(),
-				    	        					"subnet": $("#vdcQuota [name='subnet']").val(),
-				    	        					"injected_files": $("#vdcQuota [name='injected_files']").val(),
-				    	        					"security_groups": $("#vdcQuota [name='security_groups']").val(),
-				    	            				}
+				    	            			"quota_set":jsonData.quotaSetsJson("#vdcQuota")
 			    	        				};
 			    	                	Common.xhr.putJSON('/v2.0/9cc717d8047e46e5bf23804fc4400247/os-quota-sets/'+id,serverData,function(data){
 			    	                		if(data){
