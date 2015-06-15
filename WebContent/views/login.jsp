@@ -23,20 +23,18 @@
 		</div>
 	</div>
 	<div class="signin-body">
-		<form id="form-signin" class="form-signin" action="#" method="post">
-			<input type="hidden" name="action" value="login" />
+		<form id="login_form" class="form-signin" action="/am/tokens" method="post">
 			<div class="input-group">
 				<span class="signin-icons signin-icon-input signin-icon-user">
 					<i class="signin-icons signin-icon-br"></i>
 				</span>
-				<input id="account" class="form-control" name="account" type="text" />
+				<input id="loginName" class="form-control" name="loginName" type="text" />
 			</div>
 			<div class="input-group">
 				<span class="signin-icons signin-icon-input signin-icon-pwd">
 					<i class="signin-icons signin-icon-br"></i>
 				</span>
-				<input class="form-control" type="hidden" name="password" value="" />
-				<input id="password" class="form-control" name="password_org" type="password" />
+				<input id="password" class="form-control" name="password" type="password" />
 			</div>
 			<div class="checkbox">
 				<label>
@@ -46,37 +44,65 @@
 					<input type="checkbox" name="save_signin" value="1"> 自动登录
 				</label>
 			</div>
-			<button id="signin-btn" type="button" class="btn btn-primary" onclick="submitForm()">登&emsp;&emsp;录</button>
+			<button id="signin-btn" type="button" class="btn btn-primary" >登&emsp;&emsp;录</button>
 		</form>
 	</div>
 	<i class="signin-stamp"></i>
 </div>   
 </body>
 <script type="text/javascript">
-require(['jq/form'], function() {
-	$().ajaxSubmit({
+
+	require(['json'], function(JSON) {
 		
+		$(document).on('keydown', '#password', function() {
+			var e = event || window.event || arguments.callee.caller.arguments[0];
+			if (e && e.keyCode == 13) { // enter 键
+				submitForm();
+			}
+		});
+		$(document).on('keydown', '#loginName', function() {
+			var e = event || window.event || arguments.callee.caller.arguments[0];
+			if (e && e.keyCode == 13) { // enter 键
+				document.getElementById('password').focus();
+			}
+		});
+		//光标定位到账号输入框
+		document.getElementById('loginName').focus();
+		
+		$(document).on('click', '#signin-btn', function() {
+			submitForm();
+		});
+		function submitForm() {
+			var url = "${pageContext.request.contextPath}/cloud/am/tokens";
+			var data = {
+					 'auth': {
+					        'tenantId': "",
+					        'passwordCredentials': {
+					            'username': $('#loginName').val(),
+					            'password':  $('#password').val()
+					        }
+					    }
+			}
+			$.ajax({
+	            'type': 'POST',
+	            'url': url,
+	            'data': JSON.stringify(data),
+	            'dataType': 'json',
+		        'contentType': 'application/json',
+	            'success': callbackSuccess,
+	            'error':callbackErr
+	        });
+		}
+		function callbackSuccess(res){
+			if(res != null && res.error_code == null && res.token != null){
+				window.location.href="${pageContext.request.contextPath}";
+			}else{
+				alert("错误代码："+res.error_code+"\n错误描述: "+res.error_desc);
+			}
+		}
+		function callbackErr(res){
+			alert("登录失败！"+res);
+		}
 	});
-});
- function submitForm(){
-	
-}
- 
- $(document).ready(function() {
-	 document.getElementById('password').onkeydown=function(event){
-		    var e = event || window.event || arguments.callee.caller.arguments[0];   
-		     if(e && e.keyCode==13){ // enter 键
-		    	 submitForm();
-		    }
-		}; 
-	 document.getElementById('account').onkeydown=function(event){
-		    var e = event || window.event || arguments.callee.caller.arguments[0];   
-		     if(e && e.keyCode==13){ // enter 键
-		    	 document.getElementById('password').focus();
-		    }
-		}; 
-	//光标定位到账号输入框
-	document.getElementById('account').focus();
-	 });
 </script>
 </html>

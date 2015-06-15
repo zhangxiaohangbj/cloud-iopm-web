@@ -28,7 +28,7 @@
 				{{each list as item i}}
 					<tr>
 						<td><label><input type="checkbox"></label></td>
-						<td>{{item.name}}</td>
+						<td class="vm_name">{{item.name}}</td>
 						<td>{{item.inner_ip}}</td>
 						<td>{{item.float_ip}}</td>
 						<td>{{item.os_conf}}</td>
@@ -68,7 +68,7 @@
 								<li><a href="#"><i class="fa fa-file-text fa-fw"></i>硬重启</a></li>
 								<li><a href="#"><i class="fa fa-file-text fa-fw"></i>关闭</a></li>
 								<li><a href="#"><i class="fa fa-file-text fa-fw"></i>重建</a></li>
-								<li><a href="#"><i class="fa fa-file-text fa-fw"></i>终止</a></li>
+								<li><a href="javascript:void(0)" class="delete" data="{{item.id}}"><i class="fa fa-file-text fa-fw"></i>终止</a></li>
 							</ul>
 						</div>	
 						</td>
