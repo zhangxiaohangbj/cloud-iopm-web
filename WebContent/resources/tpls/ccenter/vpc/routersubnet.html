@@ -1,6 +1,7 @@
 <div class="page-header clearfix">
 	<ol class="breadcrumb">
 	  <li class="active">子网连接</li>
+	  <a href="javascript:void(0);" class="reload" style="padding: 6px 12px;font-size: 14px;">返回路由列表</a>
 	</ol>
 </div>
 <div class="page-body">
@@ -26,7 +27,7 @@
 					<tr>
 						<td><label><input type="checkbox"></label></td>
 						<td>{{item.gw_port_id}}</td>
-						<td>subnet1</td>
+						<td>子网1</td>
 						<td>{{item.gw_port_id }}</td>
 						<td>{{item.status}}</td>
 						<td>{{if item.enable_snat == 1}} 网关 {{else}} 内部网络 {{/if}}</td>

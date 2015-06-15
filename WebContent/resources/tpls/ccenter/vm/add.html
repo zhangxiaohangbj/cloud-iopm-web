@@ -149,64 +149,44 @@
 			</div>
 			<!-- 网络  -->
 			<div class="wizard-card wizard-card-overlay" data-cardname="networks">
-			<h3>网络</h3>
-				<div class="wizard-card-content col-sm-8">
+				<h3>网络</h3>
+				<div class="wizard-card-content none-desc col-sm-12">
 					<div class="wizard-input-section">
-						<div class="form-group">
-							<label for="available-network" class="control-label col-sm-2">可用网络：</label>
-							<div class="col-sm-9 col-sm">
-								<div class="list-group available-network">
+						<div class="choose-members choose-style  clearfix">
+							<div class="show-all col-sm-5 col-sm">
+								<div class="panel panel-default">
+								  <!-- Default panel contents -->
+								  <div class="panel-heading clearfix">全部</div>
+								 <div class="panel-body clearfix">
+								   <form class="form-search">
+									  	<input type="text" class="search-query">
+									  	<i class="fa fa-search"></i>
+								  	</form>
+								  </div>
+								
+								  <!-- List group -->
+								  <div class="list-group all-users">
+								  		
+							    	</div>
+							  	</div>
+							</div>
+							<div class="show-selected col-sm-7 col-sm">
+								<div class="panel panel-default">
+								  <!-- Default panel contents -->
+								  <div class="panel-heading clearfix">已选择</div>
+									 <div class="panel-body clearfix">
+									   <form class="form-search">
+										  	<input type="text" class="search-query">
+										  	<i class="fa fa-search"></i>
+									  	</form>
+									  </div>
+								  <!-- List group -->
+								  <div class="list-group choosen-users">
+								  </div>
 								</div>
 							</div>
 						</div>
 					</div>
-					
-					<div class="wizard-input-section">
-						<div class="form-group">
-							<label for="networks" class="control-label col-sm-2"><span>* </span>已选网络：</label>
-							<div class="col-sm-9 col-sm">
-								<div class="list-group networks">
-								</div>
-							</div>
-							<input type="hidden" class="wizard-form-control" id="networks" name="networks">
-						</div>
-					</div>
-					
-<!-- 					<div class="wizard-input-section">
-						<div class="form-group">
-							<label for="network-card-name" class="control-label col-sm-2"><span>* </span>网卡名称：</label>
-							<div class="col-sm-7 col-sm">
-								<input type="text" disabled class="wizard-form-control" name="network-card-name" placeholder="网卡名称">
-							</div>
-						</div>
-					</div> -->
-					<div class="wizard-input-section">
-						<div class="form-group">
-							<label for="select-sub-network" class="control-label col-sm-2">指定子网：</label>
-							<div class="col-sm-7 col-sm">
-								<select disabled class="wizard-form-control select select-sub-network">
-								</select>
-							</div>
-						</div>
-					</div>
-					<div class="wizard-input-section">
-						<div class="form-group">
-							<label for="fixed_ip" class="control-label col-sm-2">指定IP：</label>
-							<div class="col-sm-7 col-sm">
-								<select disabled class="wizard-form-control select fixed_ip">
-								</select>
-							</div>
-						</div>
-					</div>
-					
-				</div>
-				
-				<div class="wizard-card-desc col-sm-4">
-					<p>
-					<b>网卡</b>：
-					<br>通过按按钮或者拖拽释放来在选择可用网络中选择网络,当然也可以通过拖拽释放来改变nic的顺序.
-					<br>选择网卡后，可指定子网和fixedIP。
-					<br>默认情况下，自动选择默认子网和DHCP方式</p>
 				</div>
 			</div>
 			<div class="wizard-card wizard-card-overlay" data-cardname="security">
