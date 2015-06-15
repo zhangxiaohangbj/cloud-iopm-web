@@ -1,6 +1,6 @@
 <form class="form-horizontal" id="editStrategy">
 	<div class="form-group">
-		<label for="strategyGroupId" class="control-label col-sm-4"><span style="color: red;">* </span>策略分组：</label>
+		<label for="strategyGroupId" class="control-label col-sm-4"><span style="color: red;">* </span>任务分组：</label>
 	 	<div class="col-sm-5 col-sm">
 		 	<select class="dialog-form-control select" name="strategyGroupId" value="{{strategyGroupId}}">
 			 	{{each strategyGroupList as item i}}
@@ -10,13 +10,13 @@
 		</div>
 	</div>
 	<div class="form-group">
-		<label for="name" class="control-label col-sm-4"><span style="color: red;">* </span>策略名称：</label>
+		<label for="name" class="control-label col-sm-4"><span style="color: red;">* </span>任务名称：</label>
 	 	<div class="col-sm-5 col-sm">
 			<input type="text" class="dialog-form-control" name="name" value="{{name}}">
 		</div>
 	</div>
 	<div class="form-group">
-		<label for="memo" class="control-label col-sm-4">策略描述：</label>
+		<label for="memo" class="control-label col-sm-4">任务描述：</label>
 	 	<div class="col-sm-5 col-sm">
 			<textarea class="wizard-form-control" style="height:auto;" rows="4" name="memo" placeholder="">{{memo}}</textarea>
 		</div>
