@@ -176,7 +176,7 @@
 					                <div class="pwd clearfix">
 					                  <label  class="col-sm-2" for="login-key">密钥: </label>
 					                  <div data-for="secret-key" class="col-sm-9 col-sm">
-										<select name="keypairs"   class="wizard-form-control select keypairs">
+										<select name="key_name"   class="wizard-form-control select keypairs">
 										</select>			                  
 						                <span class="text-danger" style="line-height:30px;"><a href="javascript:;"> 创建密钥</a></span>
 					                  </div>
@@ -245,5 +245,61 @@
 					<p>磁盘分区：自动：全部磁盘是一个分区，自动调整大小。手动：快速创建，但是需要手动分区。</p>
 				</div>
 			</div>
-			
+
+			<div class="wizard-card" data-cardname="confirm">
+				<h3>确认信息</h3>
+				<div class="wizard-card-content none-desc col-sm-12">
+				<p>即将创建的云主机信息如下：</p>
+					<div class="wizard-input-section">
+						<div class="form-group">
+							<label for="name" class="control-label col-sm-6">名称：</label>
+							<label for="name" class="col-sm-6 name-confirm">server1</label>
+						</div>
+						<div class="form-group">
+							<label for="name" class="control-label col-sm-6">镜像：</label>
+							<label for="name" class="col-sm-6">centos-7</label>
+						</div>
+						<div class="form-group">
+							<label for="name" class="control-label col-sm-6">虚拟数据中心：</label>
+							<label for="name" class="col-sm-6">admin</label>
+						</div>
+						<div class="form-group">
+							<label for="name" class="control-label col-sm-6">可用域：</label>
+							<label for="name" class="col-sm-6">gao</label>
+						</div>
+						<div class="form-group">
+							<label for="name" class="control-label col-sm-6">云主机规格：</label>
+							<label for="name" class="col-sm-6">medium</label>
+						</div>
+						<div class="form-group">
+							<label for="name" class="control-label col-sm-6">数量：</label>
+							<label for="name" class="col-sm-6">1</label>
+						</div>
+						<div class="form-group">
+							<label for="name" class="control-label col-sm-6">网络：</label>
+							<label for="name" class="col-sm-6">网络1</label>
+						</div>
+						<div class="form-group">
+							<label for="name" class="control-label col-sm-6">子网：</label>
+							<label for="name" class="col-sm-6">private1</label>
+						</div>
+						<div class="form-group">
+							<label for="name" class="control-label col-sm-6">IP：</label>
+							<label for="name" class="col-sm-6">192.168.11.22</label>
+						</div>
+						<div class="form-group">
+							<label for="name" class="control-label col-sm-6">密钥对：</label>
+							<label for="name" class="col-sm-6">key1</label>
+						</div>
+						<div class="form-group">
+							<label for="name" class="control-label col-sm-6">自定义脚本：</label>
+							<label for="name" class="col-sm-6">xxxxxxxxxxxxx</label>
+						</div>
+						<div class="form-group">
+							<label for="name" class="control-label col-sm-6">磁盘分区：</label>
+							<label for="name" class="col-sm-6">自动</label>
+						</div>
+						
+					</div>
+				</div>						
 		</div>

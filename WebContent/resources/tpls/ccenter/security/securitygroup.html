@@ -23,16 +23,16 @@
 				{{each result as item i}}
 					<tr>
 						<td><label><input type="checkbox"></label></td>
-						<td><a href="javascript:void(0);" class="router-name" data="{{item.id}}">{{item.name}}</a></td>
+						<td>{{item.name}}</td>
 						<td>{{item.description}}</td>
 						<td>{{item.tenant_id}}</td>
-						<td></td>
+						<td>启用</td>
 						<td>
 							<span class="btn btn-more securityrule" data="{{item.id}}" style="margin-right: 8px;">管理规则</span>
 							<div class="dropdown">
 								<span class="btn btn-more dropdown-toggle" data-toggle="dropdown" aria-expanded="false">更多 <i class="fa fa-angle-down fa-fw"></i></span>
 								<ul class="dropdown-menu" style="right: 0;left: initial;">
-									<li><a href="javascript:void(0)" class="editRouter" data="{{item.id}}"><i class="fa fa-pencil fa-fw"></i>编辑安全组</a></li>
+									<!-- <li><a href="javascript:void(0)" class="editRouter" data="{{item.id}}"><i class="fa fa-pencil fa-fw"></i>编辑安全组</a></li> -->
 									<li><a href="javascript:void(0)" class="deleteSecurityGroup" data="{{item.id}}"><i class="fa fa-trash-o fa-fw"></i>删除安全组</a></li>
 								</ul>
 							</div>	

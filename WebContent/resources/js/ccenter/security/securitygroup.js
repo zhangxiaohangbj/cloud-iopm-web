@@ -38,6 +38,24 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 				    	
 					})
 				},
+				//安全组列表
+				initSecurityGroupList : function(){
+					Common.xhr.ajax('/v2.0/security-groups',function(data){
+						var securitygroups = data.security_groups;
+						var id = $('select.remote_group_id').attr("data");
+						if(id!=null){
+							for (var i=0;i<securitygroups.length;i++) {
+								if (securitygroups[i].id==id) {
+									securitygroups[i].selected="selected";
+								}
+							}
+						}				
+						var html = Common.uiSelect(securitygroups);
+				    	$('select.remote_group_id').html(html);
+				    	
+					})
+				}
+				
 		};
 		//cidr校验
 	    $.validator.addMethod("cidr", function(value, element) {
@@ -226,6 +244,9 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 					    		    	var value=$("[name='remote']").val();
 					    		    	$("div.remote").css("display","none");
 					    		    	$("div."+value).css("display","");
+					    		    	if(!$('select.remote_group_id').html()){
+					    		    		DataIniter.initSecurityGroupList();
+					    		    	}
 					    		    })
 					    			EventsHandler.formValidator();
 					    		})
