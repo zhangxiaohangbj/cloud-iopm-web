@@ -136,10 +136,6 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 				getRoles : function(){
 					//"//cloud/am/roles",'resources/data/select.txt'
 					Common.xhr.ajax("/cloud/am/roles",function(roleList){
-						for(var key in roleList){
-							var obj = roleList[key];
-							obj.name = obj.roleName;
-						}
 						renderData.roleList = roleList;
 						cacheData.roleList = roleList;
 					});
