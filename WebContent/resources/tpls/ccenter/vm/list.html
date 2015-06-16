@@ -37,16 +37,21 @@
 						<td>{{item.floatingIps}}</td>
 						<td>{{item.os_conf}}</td>
 						<td>
-			 			{{if item.active_status == 'actived'}}
+						{{if item.flavor != null}}
+							{{item.flavor.ram}}MB|{{item.flavor.vcpus}}CPUs|{{item.flavor.disk}}GB
+						{{/if}}
+						</td>
+						<td>
+			 			{{if item.vmState == 'actived'}}
 			 				<span class="text-success">已激活</span>
 			 				{{else}}
 			 				<span class="text-danger">待激活</span>
 			 			{{/if}}
 			 			</td>
-						<td>{{item.available_zone}}</td>
-						<td>{{item.vdc}}</td>
+						<td>{{item.availability_zone}}</td>
+						<td>{{item.tenant_id}}</td>
 						<td>
-			 			{{if item.power_status == 'on'}}
+			 			{{if item.powerState == 'on'}}
 			 				<span class="text-success">运行中</span>
 			 				{{else}}
 			 				<span class="text-danger">未启动</span>
