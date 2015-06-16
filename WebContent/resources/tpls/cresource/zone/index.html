@@ -14,35 +14,26 @@
                     <th class="c2">所属虚拟化环境</th>
                     <th class="c2">区域</th>
                     <th class="c2">资源容量</th>
-                    <th class="c1 sorting_disabled" style="width:180px;">操作</th>
+                    <th class="c2 sorting_disabled" >操作</th>
                 </tr>
                 </thead>
                 <tbody>
-                {{each availabilityZoneInfo as item i}}
+                {{each zone.availabilityZoneInfo as item i}}
                 <tr>
                     <td><label><input type="radio"></label></td>
                     <td>{{item.zoneName}}</td>
-                    <td>{{item.zoneName}}</td>
-                    <td>{{item.zoneName}}</td>
+                    <td>{{item.virtualEnvId}}</td>
+                    <td>{{item.regionId}}</td>
                     <td>{{item.zoneName}}</td>
                     <td>
-                        <a class="btn-opt pull-left add-resource" data-toggle="tooltip" data-act="log" style="margin: 0 5px;" data="{{item.zoneName}}">增加资源</a>
-                        <a class="btn-opt pull-left edit" data-toggle="tooltip" data-act="edit" style="margin: 0 5px;" data="{{item.zoneName}}">编辑</a>
-                        <a class="btn-opt pull-left delete" data-toggle="tooltip" data-act="delete" style="margin: 0 5px;" data="{{item.zoneName}}">删除</a>
+                        <a class="btn-opt pull-left add-resource" data-toggle="tooltip" data-act="log" style="margin: 0 5px;" data="{{item.id}}">增加资源</a>
+                        <a class="btn-opt pull-left edit" data-toggle="tooltip" data-act="edit" style="margin: 0 5px;" data="{{item.id}}">编辑</a>
+                        <a class="btn-opt pull-left delete" data-toggle="tooltip" data-act="delete" style="margin: 0 5px;" data="{{item.id}}">删除</a>
                     </td>
                 </tr>
                 {{/each}}
                 </tbody>
-                <tfoot>
-                <tr>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                </tr>
-                </tfoot>
+
             </table>
         </div>
     </div>

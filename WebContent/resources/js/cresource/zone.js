@@ -1,13 +1,25 @@
-define(['Common','bs/modal','jq/form/wizard','jq/form/validator-bs3','bs/tooltip'],function(Common,Dialog) {
+define(['Common','bs/modal','jq/form/wizard','jq/form/validator-bs3','bs/tooltip'],function(Common,Modal) {
     Common.requestCSS('css/wizard.css');
-    Common.requestCSS('css/dialog.css');
+
+    //初始化
+    var wizard;
+    var renderData = {};
+    var currentResourceList={};
+    var currentZone={
+        name:null,
+        virtualEnvId:null,
+        regionId:null,
+        description:null
+    };
+
 
     var init = function(){
         Common.$pageContent.addClass("loading");
 
         //真实请求的数据
         Common.xhr.ajax('/v2/tenant_id/os-availability-zone/detail',function(data){
-            Common.render(true,'tpls/cresource/zone/index.html',data,function(){
+            var indexData = {"zone":data,"data":renderData};
+            Common.render(true,'tpls/cresource/zone/index.html',indexData,function(){
                 bindEvent();
             });
         });
@@ -23,16 +35,6 @@ define(['Common','bs/modal','jq/form/wizard','jq/form/validator-bs3','bs/tooltip
         $("[data-toggle='tooltip']").tooltip();
 
 
-        //初始化
-        var wizard;
-        var renderData = {};
-        var currentResourceList={};
-        var currentZone={
-            name:null,
-            virtualEnvId:null,
-            regionId:null,
-            description:null
-        };
 
         var resetCurrentChosenObj = function(){
             for(var key in currentZone){
@@ -77,7 +79,7 @@ define(['Common','bs/modal','jq/form/wizard','jq/form/validator-bs3','bs/tooltip
             })
             Common.xhr.ajax(link,function(data){
                 var dataList = data.data;
-                var resourceListElem = $("#choseResource").find(".list-group-all");
+                /*var resourceListElem = $("#choseResource").find(".list-group-all");
                 var chosenList  = $("#resource-chosen");
                 resourceListElem.empty();
                 var listview=[];
@@ -87,7 +89,14 @@ define(['Common','bs/modal','jq/form/wizard','jq/form/validator-bs3','bs/tooltip
                     }
                 }
                 resourceListElem.html(listview.join(""));
-                EventsHandler.resourceAddEvent(resourceType);
+                EventsHandler.resourceAddEvent(resourceType);*/
+                require(['js/common/choose'],function(choose){
+                    var options = {
+                        selector: '#choseResource',
+                        list: dataList
+                    };
+                    choose.initChoose(options);
+                })
             });
         }
         var CheckHandler = {
@@ -145,7 +154,7 @@ define(['Common','bs/modal','jq/form/wizard','jq/form/validator-bs3','bs/tooltip
         var EventsHandler = {
             //点击加号，添加可用分区
             resourceAddEvent:function(type){
-                require(['js/common/domchoose'],function(domchoose){
+               /* require(['js/common/domchoose'],function(domchoose){
                     var leftOption = {
                             appendWrapper: '.resource-all',
                             clone: 'a.'+type
@@ -156,7 +165,7 @@ define(['Common','bs/modal','jq/form/wizard','jq/form/validator-bs3','bs/tooltip
                             clickSelector: 'i.fa-minus-circle'
                         };
                     domchoose.initChoose(leftOption,rightOption);
-                });
+                });*/
 
                 //刷新状态
                 var resourceListElem = $("#resource-chosen").find(".list-group-item");
@@ -176,6 +185,7 @@ define(['Common','bs/modal','jq/form/wizard','jq/form/validator-bs3','bs/tooltip
             var selectData= {"data":renderData};
             Common.render('tpls/cresource/zone/add.html',selectData,function(html){
                 $('body').append(html);
+
                 //
                 currentZone.virtualEnvId = $("#select-env option:selected").val();
                 currentZone.regionId = $("#select-region option:selected").val();
@@ -254,6 +264,83 @@ define(['Common','bs/modal','jq/form/wizard','jq/form/validator-bs3','bs/tooltip
                         Common.router.route();
                     });
                 });
+            });
+        });
+
+        //编辑按钮
+        $("a.edit").on("click",function(){
+
+            var data = $(this).attr("data");
+            Common.xhr.ajax("/v2/os-availability-zone/"+data,function(zone){
+                var selectData2= {"data":renderData,"availableZone":zone};
+                Common.render('tpls/cresource/zone/edit.html',selectData2,function(html){
+                    Modal.show({
+                        title: '编辑可用区域',
+                        message: html,
+                        nl2br: false,
+                        buttons: [{
+                            label:'取消',
+                            action:function(Modal){
+                                Modal.close();
+                            }
+                        },
+                            {
+                                label: '保存',
+                                action: function(Modal) {
+                                    var valid = $(".form-horizontal").valid();
+                                    if(!valid) return false;
+
+                                    var azone ={
+                                        "id":zone.id,
+                                        "name": $("#edit-zone-name").val(),
+                                        "virtualEnvId": $('#edit-env option:selected').val(),
+                                        "regionId":  $('#edit-region option:selected').val(),
+                                        "description": $("#edit-zone-description").val()
+                                    }
+                                    debugger;
+                                    Common.xhr.putJSON('/v2/tenant_id/os-availability-zone',azone,function(data){
+                                        if(data){
+                                            Modal.success('保存成功');
+                                            setTimeout(function(){Modal.closeAll()},2000);
+                                            Common.router.route();
+                                        }else{
+                                            Modal.warning ('保存失败')
+                                        }
+                                    })
+                                }
+                            }],
+                        onshown : function(){
+
+                        }
+                    });
+
+                });
+            });
+
+
+        });
+        //增加资源按钮
+        $("a.add-resource").on("click",function(){
+
+        });
+        //删除按钮
+        $("a.delete").on("click",function(){
+            var data = $(this).attr("data");
+            Modal.confirm('确定要删除该可用分区吗?',function(result){
+                if(result) {
+                    Common.xhr.del("/v2/tenant_id/os-availability-zone/"+data,
+                        function(data){
+                            if(data){
+                                Modal.success('删除成功')
+                                setTimeout(function(){Dialog.closeAll()},2000);
+                                Common.router.route();//重新载入
+                            }else{
+                                Modal.warning ('删除失败')
+                            }
+                        });
+                }else {
+                    Modal.closeAll();
+                }
             });
         });
 

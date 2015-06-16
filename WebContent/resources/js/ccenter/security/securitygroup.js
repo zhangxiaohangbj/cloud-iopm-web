@@ -4,7 +4,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 	var init = function(){
 		Common.$pageContent.addClass("loading");
 		//render获取的数据
-		Common.render(true,'tpls/ccenter/security/securitygroup.html','/v2.0/security-groups/page/1/10',function(){
+		Common.render(true,'tpls/ccenter/security/securitygroup/list.html','/v2.0/security-groups/page/1/10',function(){
 			bindEvent();
 		});
 	};
@@ -38,6 +38,24 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 				    	
 					})
 				},
+				//安全组列表
+				initSecurityGroupList : function(){
+					Common.xhr.ajax('/v2.0/security-groups',function(data){
+						var securitygroups = data.security_groups;
+						var id = $('select.remote_group_id').attr("data");
+						if(id!=null){
+							for (var i=0;i<securitygroups.length;i++) {
+								if (securitygroups[i].id==id) {
+									securitygroups[i].selected="selected";
+								}
+							}
+						}				
+						var html = Common.uiSelect(securitygroups);
+				    	$('select.remote_group_id').html(html);
+				    	
+					})
+				}
+				
 		};
 		//cidr校验
 	    $.validator.addMethod("cidr", function(value, element) {
@@ -101,7 +119,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 		//增加按钮
 		$("#SecuritygroupTable_wrapper span.btn-add").on("click",function(){
 	    	//需要修改为真实数据源
-			Common.render('tpls/ccenter/security/addsecuritygroup.html','',function(html){
+			Common.render('tpls/ccenter/security/securitygroup/add.html','',function(html){
 				Dialog.show({
     	            title: '新建安全组',
     	            message: html,
@@ -165,7 +183,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 		var EditData = {
 		    	//添加规则
 				AddSecurityRule : function(id,cb){
-		    			Common.render('tpls/ccenter/security/addrule.html',function(html){
+		    			Common.render('tpls/ccenter/security/securitygroup/addrule.html',function(html){
 			    			Dialog.show({
 			    	            title: '添加规则',
 			    	            message: html,
@@ -201,7 +219,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 		    	GetRuleList :function(id){
 		    		var param = {"security_group_id":id};
 		    		Common.xhr.get('/v2.0/security-group-rules',param,function(data){  //获取规则列表接口，参数未起作用
-		    			Common.render(true,'tpls/ccenter/security/securityrule.html',data,function(html){
+		    			Common.render(true,'tpls/ccenter/security/securitygroup/rulelist.html',data,function(html){
 				    		Common.initDataTable($('#SecurityruleTable'),function($tar){
 				    			$tar.prev().find('.left-col:first').append(
 				    					'<span class="btn btn-add">添加规则</span>'
@@ -226,6 +244,9 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 					    		    	var value=$("[name='remote']").val();
 					    		    	$("div.remote").css("display","none");
 					    		    	$("div."+value).css("display","");
+					    		    	if(!$('select.remote_group_id').html()){
+					    		    		DataIniter.initSecurityGroupList();
+					    		    	}
 					    		    })
 					    			EventsHandler.formValidator();
 					    		})
