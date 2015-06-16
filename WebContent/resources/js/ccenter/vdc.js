@@ -122,11 +122,8 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 				//获取成员信息
 				getUsers : function(index,size){
 					///'cloud/am/user/page/'+index + '/'+size,resources/data/arrays.txt'
-					Common.xhr.ajax('/cloud/am/user/page/'+index + '/'+size,function(userList){
-						for(var key in userList.result){
-							var obj = userList.result[key];
-							obj.name = obj.trueName;
-						}
+					Common.xhr.ajax('/v2.0/users/page/'+index + '/'+size,function(userList){
+						debugger;
 						renderData.userList = userList.result;
 						cacheData.userList = userList.result;
 						userTotalSize = userList.totalCount;
@@ -134,8 +131,8 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 				},
 				//获取及对应的角色
 				getRoles : function(){
-					//"//cloud/am/roles",'resources/data/select.txt'
-					Common.xhr.ajax("/cloud/am/roles",function(roleList){
+					//"//v2.0/OS-KSADM/roles",'resources/data/select.txt'
+					Common.xhr.ajax("/v2.0/OS-KSADM/roles/",function(roleList){
 						renderData.roleList = roleList;
 						cacheData.roleList = roleList;
 					});
@@ -281,12 +278,8 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 					});
 					$(document).off("click",".list-group .loadmore");
 					$(document).on("click",".list-group .loadmore",function(event){
-						Common.xhr.ajax('/cloud/am/user/page/'+(userIndex + 1) + '/'+userSize,function(userList){
+						Common.xhr.ajax('/v2.0/users/page/'+(userIndex + 1) + '/'+userSize,function(userList){
 							var data = {};
-							for(var key in userList.result){
-								var obj = userList.result[key];
-								obj.name = obj.trueName;
-							}
 							data.userList = userList.result;
 							//data.roleList = cacheData.roleList;
 							userTotalSize = userList.totalCount;
@@ -417,10 +410,10 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
     	            },
     	            validate: {
 	            		0: function(){
-	            			return this.el.find('.form-horizontal').valid();
+	            			return this.el.find('form').valid();
 	            		},
 	            		2: function(){
-	            			return this.el.find('.form-horizontal').valid();
+	            			return this.el.find('form').valid();
 	            		}
     	            }
     			});
