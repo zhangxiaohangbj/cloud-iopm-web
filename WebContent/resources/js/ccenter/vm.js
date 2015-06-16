@@ -458,32 +458,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 				    	checkboxClass: "icheckbox-info",
 				        radioClass: "iradio-info"
 				    })
-				},
-				//表单校验
-				formValidator: function(){
-					$(".form-horizontal").validate({
-			            rules: {
-			            	'name': {
-			                    required: true,
-			                    minlength: 4,
-			                    maxlength:15
-			                }
-			            }
-			        });
-				},
-				oninput: function(){
-					$('.form-horizontal input[type=text],.form-horizontal input[type=password]').on('input propertychange',function(){
-						var id = $(this).attr('id');
-						if($("#"+id) && $("#"+id).length){
-							if($(this).prop("disabled") == false && !$(".form-horizontal").validate().element("#"+id)){
-								wizard.disableNextButton();
-							}else{
-								wizard.enableNextButton();
-							}
-						}
-					});
 				}
-				
 		};
 		
 		//重置CurrentChosenObj对象
@@ -517,21 +492,36 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
     	                backText: "上一步",
     	                submitText: "提交",
     	                submittingText: "提交中..."
+    	            },
+    	            validate: {
+	            		0: function(){
+	            			return this.el.find('form').valid();
+	            		}
     	            }
     			});
-		    	
-		    	
+    			wizard.cards.basci.on('selected',function(card){
+				});
+    			wizard.on('show',function(){
+    				wizard.form.validate({
+    						errorContainer: '_form',
+    			            rules: {
+    			            	'name': {
+    			                    required: true,
+    			                    minlength: 4,
+    			                    maxlength:15
+    			                }
+    			            }
+    				});
+    			});
     			DataIniter.initAvailableZone();
     			DataIniter.initPopver();
     			DataIniter.initQuatos();
     			DataIniter.initSecurityGroup();
     			DataIniter.initAvailableNetWorks();
     			
-    			//展现wizard，禁用下一步按钮
+    			//展现wizard，
     			
     			wizard.show();
-    			wizard.disableNextButton();
-    			
     			EventsHandler.bindBasicWizard();
     			EventsHandler.vdcChange();
     			EventsHandler.specsChange();
@@ -539,8 +529,6 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 				//spinbox
 				EventsHandler.VmNumsSpinbox();
 				EventsHandler.securitySetting();
-				EventsHandler.formValidator();
-				EventsHandler.oninput();
 				//关闭弹窗
 				var closeWizard = function(){
     				$('div.wizard').remove();
@@ -562,7 +550,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 //    						//"fixed_ip": '192.168.0.115'//$("#fixed_ip").val()
 //    					}]
 //    				}};
-    				var serverData = {server:$(".form-horizontal").serializeObject()};
+    				var serverData = {server:wizard.serializeObject()};
     				serverData.server.networks=[{
 						"uuid": 'af8c1f42-b21c-4d13-bc92-1852e22f4f98'
 						//"fixed_ip": '192.168.0.115'//$("#fixed_ip").val()
