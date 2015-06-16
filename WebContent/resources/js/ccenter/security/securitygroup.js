@@ -129,17 +129,12 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 			    	                	var valid = $(".form-horizontal").valid();
 			    	            		if(!valid) return false;
 			    	            		var data = $("#addSecurityRule").serializeArray();
-			    	                	var postData={"security_group":{}};
-			    	                	var security_group_rules = {};
+			    	                	var postData={"security_group_rule":{}};
 			    	                	for(var i=0;i<data.length;i++){
-			    	                		security_group_rules[data[i]["name"]]=data[i]["value"];
-			    	                		
+			    	                		postData.security_group_rule[data[i]["name"]]=data[i]["value"];
 			    						}
-			    	                	var security_group_rules_array=new Array();
-			    	                	security_group_rules_array[0] = security_group_rules;
-			    	                	postData.security_group["security_group_rules"] = security_group_rules_array;
-			    	                	postData.security_group["id"]=id;
-			    	                	Common.xhr.putJSON('/v2.0/security-groups/'+id,postData,function(data){ //需修改接口
+			    	                	postData.security_group_rule["security_group_id"] = id;
+			    	                	Common.xhr.postJSON('/v2.0/security-group-rules',postData,function(data){ //接口保存失败
 			    	                		if(data){
 			    	                			Dialog.success('保存成功')
 			    	                			setTimeout(function(){Dialog.closeAll()},2000);
@@ -157,56 +152,60 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 		    	},
 		    	//获取规则列表
 		    	GetRuleList :function(id){
-		    		Common.render(true,'tpls/ccenter/security/securityrule.html','/v2.0/security-groups/'+id,function(html){ //需修改接口
-			    		Common.initDataTable($('#SecurityruleTable'),function($tar){
-			    			$tar.prev().find('.left-col:first').append(
-			    					'<span class="btn btn-add">添加规则</span>'
-			    				);
-			    		});
-			    		$("a.reload").on("click",function(){
-		    		    	Common.router.route();
-		    		    })
-			    		//添加规则
-				    	$("#SecurityruleTable_wrapper span.btn-add").on("click",function(){
-				    		EditData.AddSecurityRule(id,function(){
-				    			$("[name='ethertype']").on("change",function(){
-				    		    	var value=$("[name='ethertype']").val();
-				    		    	if(value == 1){
-				    		    		$("#port").html('<input type="text" class="" name="port_range_min" value=""> ~ <input'
-				    		    					+' type="text" class="" name="port_range_max" value="">');
-				    		    	}else{
-				    		    		$("#port").html('<input type="text" class="" name="port_range_min" value="">');
-				    		    	}
-				    		    })
-				    			$("[name='remote']").on("change",function(){
-				    		    	var value=$("[name='remote']").val();
-				    		    	$("div.remote").css("display","none");
-				    		    	$("div."+value).css("display","");
-				    		    })
-				    			EventsHandler.formValidator();
-				    		})
+		    		var param = {"security_group_id":id};
+		    		Common.xhr.get('/v2.0/security-group-rules',param,function(data){  //获取规则列表接口，参数未起作用
+		    			Common.render(true,'tpls/ccenter/security/securityrule.html',data,function(html){
+				    		Common.initDataTable($('#SecurityruleTable'),function($tar){
+				    			$tar.prev().find('.left-col:first').append(
+				    					'<span class="btn btn-add">添加规则</span>'
+				    				);
+				    		});
+				    		$("a.reload").on("click",function(){
+			    		    	Common.router.route();
+			    		    })
+				    		//添加规则
+					    	$("#SecurityruleTable_wrapper span.btn-add").on("click",function(){
+					    		EditData.AddSecurityRule(id,function(){
+					    			$("[name='port_range']").on("change",function(){
+					    		    	var value=$("[name='port_range']").val();
+					    		    	if(value == 1){
+					    		    		$("#port").html('<input type="text" class="" name="port_range_min" value=""> ~ <input'
+					    		    					+' type="text" class="" name="port_range_max" value="">');
+					    		    	}else{
+					    		    		$("#port").html('<input type="text" class="" name="port_range_min" value="">');
+					    		    	}
+					    		    })
+					    			$("[name='remote']").on("change",function(){
+					    		    	var value=$("[name='remote']").val();
+					    		    	$("div.remote").css("display","none");
+					    		    	$("div."+value).css("display","");
+					    		    })
+					    			EventsHandler.formValidator();
+					    		})
+					    	});
+						    //删除规则,删除为物理删除，非逻辑删
+						    $("#SecurityruleTable_wrapper a.btn-delete").on("click",function(){
+						    	var id= $(this).attr("data");
+						    	Dialog.confirm('确定要删除该规则吗?', function(result){
+						             if(result) {
+						            	 Common.xhr.del('/v2.0/security-group-rules/'+id,
+						                     function(data){
+						                    	 if(data){
+						                    		 Dialog.success('删除成功')
+						                			 setTimeout(function(){Dialog.closeAll()},2000);
+						                    		 EditData.GetRuleList(id);
+						                    	 }else{
+						                    		 Dialog.warning ('删除失败')
+						                    	 }
+						                     });
+						             }else {
+						            	 Dialog.closeAll();
+						             }
+						         });
+						    });
 				    	});
-					    //删除规则
-					    $("#SecurityruleTable_wrapper a.btn-delete").on("click",function(){
-					    	var id= $(this).attr("data");
-					    	Dialog.confirm('确定要删除该规则吗?', function(result){
-					             if(result) {
-					            	 Common.xhr.del('/v2.0/security-groups/'+id,  //需修改接口
-					                     function(data){
-					                    	 if(data){
-					                    		 Dialog.success('删除成功')
-					                			 setTimeout(function(){Dialog.closeAll()},2000);
-					                    		 EditData.GetRuleList(id);
-					                    	 }else{
-					                    		 Dialog.warning ('删除失败')
-					                    	 }
-					                     });
-					             }else {
-					            	 Dialog.closeAll();
-					             }
-					         });
-					    });
-			    	});
+		    		})
+		    		
 		    	}
 		}
 		//连接子网

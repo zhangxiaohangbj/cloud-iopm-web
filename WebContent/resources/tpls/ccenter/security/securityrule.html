@@ -22,10 +22,10 @@
 					</tr>
 				</thead>
 				<tbody>
-				{{each security_group.security_group_rules as item i}}
+				{{each security_group_rules as item i}}
 					<tr>
 						<td><label><input type="checkbox"></label></td>
-						<td><a href="javascript:void(0);" class="router-name" data="{{item.id}}">{{item.direction}}</a></td>
+						<td>{{if item.direction=='egress'}}出口{{else}}入口{{/if}}</td>
 						<td>{{item.ethertype}}</td>
 						<td>{{item.protocol}}</td>
 						<td>{{item.port_range_min}}-{{item.port_range_max}}</td>

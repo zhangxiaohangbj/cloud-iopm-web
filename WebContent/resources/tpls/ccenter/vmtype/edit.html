@@ -1,4 +1,4 @@
-<form class="form-horizontal vdc_basic" id="editFlavor">
+<form class="form-horizontal flavor_basic" id="editFlavor">
 	<div class="form-group">
 		<label class="control-label col-sm-3">
 	 	<span style="color: red;">* </span>名称：</label>
@@ -43,6 +43,14 @@
             </span>交换空间(MB)：</label>
         <div class="col-sm-7 col-sm">
             <input type="text" class="dialog-form-control" name="swap" value="{{flavor.swap}}" style="width: 350px;">
+        </div>
+    </div>
+
+    <div class="form-group ">
+        <label class="control-label col-sm-3">
+            </span>带宽比率：</label>
+        <div class="col-sm-7 col-sm">
+            <input type="text" class="dialog-form-control" name="rxtx_factor" value="{{flavor.rxtx_factor}}" style="width: 350px;">
         </div>
     </div>
 
