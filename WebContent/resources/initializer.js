@@ -647,6 +647,7 @@ define('Common', ['PubView', 'bs/modal', 'json', 'template', 'jq/dataTables-bs3'
                         } else {
                             Modal.error(e.message);
                         }
+                        console.error(e);
                     });
                     return this;
                 };
@@ -705,6 +706,7 @@ define('Common', ['PubView', 'bs/modal', 'json', 'template', 'jq/dataTables-bs3'
                             }catch(e){
                                 that.resolve();
                                 Modal.error(e.message);
+                                console.error(e);
                             }
                         }, function(e) {
                             that.resolve();
@@ -737,6 +739,7 @@ define('Common', ['PubView', 'bs/modal', 'json', 'template', 'jq/dataTables-bs3'
                 } catch (e) {
                     that.resolve();
                     Modal.error(e.message);
+                    console.error(e);
                 }
             }
         },
