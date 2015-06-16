@@ -215,7 +215,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 									},
 									delCall: function($clone){
 										//去除角色窗及取消事件绑定
-										$clone.children("li.subip").remove();
+										$clone.children("li.fixedip").remove();
 										$clone.children("li.subnet").remove();
 									},
 									list: networks
@@ -399,7 +399,6 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 								var html = Common.uiSelect(selectData);
 								that.parents('.list-group-item:first').find('select.select-subip').html(html);
 							}
-						}
 					});
 				},
 				//访问安全事件
@@ -475,8 +474,10 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
     				});
     			});
     			//确认信息卡片被选中的监听
-    			wizard.cards.basic.on('selected',function(card){
+    			wizard.cards.confirm.on('selected',function(card){
     				//获取上几步中填写的值
+    				var serverData = wizard.serializeObject()
+    				$('.name-confirm').text(serverData.name)
 				});
     			DataIniter.initAvailableZone();
     			DataIniter.initPopver();
@@ -516,20 +517,18 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 //                });
     			
     			wizard.on("submit", function(wizard) {
-//    				var serverData = {"server":{
-//    					"name": $("#name").val(),
-//    					"imageRef": 'ed18e2ce-a574-4ff0-8a00-6ef9d7dc4c2b',//$("#imageRef").val(),
-//    					"flavorRef": '3',//$("#flavorRef").val(),
-//    					"networks": [{
-//    						"uuid": 'af8c1f42-b21c-4d13-bc92-1852e22f4f98'//,//$("#networks").val(),
-//    						//"fixed_ip": '192.168.0.115'//$("#fixed_ip").val()
-//    					}]
-//    				}};
+    				
     				var serverData = {server:wizard.serializeObject()};
-    				serverData.server.networks=[{
-						"uuid": 'af8c1f42-b21c-4d13-bc92-1852e22f4f98'
-						//"fixed_ip": '192.168.0.115'//$("#fixed_ip").val()
-					}]
+    				//取网络相关的数据
+    				var networkData = [];
+    				$('#vm-networks .list-group-select').children().each(function(i,item){
+    					var network = {};
+    					network.uuid = $(item).find('li:first').attr('data-id');
+    					network.fixed_ip = $(item).find('select.select-fixedip').children('option:selected').val();
+    					networkData.push(network);
+    				});
+    				
+    				serverData.server.networks=networkData;
     				var fixed_ip = $("#fixed_ip").val();
     				if(fixed_ip!=null&&fixed_ip!="DHCP"){
     					serverData.server.networks=[{

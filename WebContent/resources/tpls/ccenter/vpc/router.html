@@ -24,11 +24,15 @@
 						<td><label><input type="checkbox"></label></td>
 						<td><a href="javascript:void(0);" class="router-name" data="{{item.id}}">{{item.name}}</a></td>
 						<td>{{item.status}}</td>
-						<td>{{item.gw_port_id}}</td>
+						<td>{{item.external_gateway_info.network_id}}</td>
 						<td>
 							<!-- <a class="btn-opt pull-left" data-toggle="tooltip" title="编辑" data-act="stop" style="margin: 0;" data="{{item.id}}"><i class="glyphicon glyphicon-edit"></i></a> -->
 							<span class="btn btn-more subnet" data="{{item.id}}" style="margin-right: 8px;">连接子网</span>
+							{{if item.external_gateway_info.network_id!=null}}
 							<span class="btn btn-more deleteGateway" data="{{item.id}}">清除网关</span>
+							{{else}}
+							<span class="btn btn-more setGateway" data="{{item.id}}">设置网关</span>
+							{{/if}}
 							<div class="dropdown">
 								<span class="btn btn-more dropdown-toggle" data-toggle="dropdown" aria-expanded="false">更多 <i class="fa fa-angle-down fa-fw"></i></span>
 								<ul class="dropdown-menu" style="right: 0;left: initial;">
