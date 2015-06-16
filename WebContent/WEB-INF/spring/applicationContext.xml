@@ -99,7 +99,7 @@
 		</property>
     </bean>
     
-       	<bean id="handlerExceptionResolver"
+    <!-- <bean id="handlerExceptionResolver"
 	        class="com.inspur.cloudframework.spring.web.servlet.handler.MappingExceptionResolver">
 	        <property name="defaultErrorView" value="/auth/commons/error" />
 	        <property name="exceptionMappings">
@@ -115,7 +115,7 @@
 	            </list>
 	        </property>
 	    </bean>
-    
+     -->   	
 	<bean id="uuidGenerator" class="com.inspur.persistence.id.UUIdGenerator"></bean>
 	
 	
