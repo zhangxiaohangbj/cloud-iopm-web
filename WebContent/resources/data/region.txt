@@ -1,11 +1,14 @@
 [
 	{
-		"name" : "jinan"
+		"id" : "jinan",
+		"name" : "济南"
 	},
 	{
-		"name" : "beijing"
+		"id" : "beijing",
+		"name" : "北京"
 	},
 	{
-		"name" : "shanghai"
+		"id" : "shanghai",
+		"name" : "上海"
 	}
 ]

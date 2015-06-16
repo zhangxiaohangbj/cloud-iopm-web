@@ -4,7 +4,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 	var init = function(){
 		Common.$pageContent.addClass("loading");
 		//render获取的数据
-		Common.render(true,'tpls/ccenter/vpc/subnet.html','/v2.0/subnets/page/1/10',function(){
+		Common.render(true,'tpls/ccenter/vpc/subnet/list.html','/v2.0/subnets/page/1/10',function(){
 			bindEvent();
 		});
 	};
@@ -142,7 +142,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 	    	AddSubnet : function(cb){
 	    		//先获取vpc后，再render
 	    		Common.xhr.ajax('/v2.0/networks',function(data){
-	    			Common.render('tpls/ccenter/vpc/addSubnet.html',data,function(html){
+	    			Common.render('tpls/ccenter/vpc/subnet/add.html',data,function(html){
 		    			Dialog.show({
 		    	            title: '子网创建',
 		    	            message: html,
@@ -202,7 +202,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 	    	//编辑子网弹框
 	    	EditSubnet : function(id,cb){
 	    		Common.xhr.ajax('/v2.0/subnets/'+id,function(data){
-	    		Common.render('tpls/ccenter/vpc/editSubnet.html',data.subnet,function(html){
+	    		Common.render('tpls/ccenter/vpc/subnet/edit.html',data.subnet,function(html){
 	    			Dialog.show({
 	    	            title: '子网编辑',
 	    	            message: html,
@@ -275,7 +275,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 	    });
 	    $("#SubnetTable_wrapper a.subnet-name").on("click",function(){
 	    	Common.xhr.ajax('/v2.0/subnets/'+$(this).attr("data"),function(data){
-	    		Common.render('tpls/ccenter/vpc/subnetDetail.html',data.subnet,function(html){
+	    		Common.render('tpls/ccenter/vpc/subnet/detail.html',data.subnet,function(html){
 	    			$("#page-main .page-content").html(html);
 	    			EventsHandler.switcher();
 	    			//返回按钮

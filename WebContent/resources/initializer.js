@@ -35,7 +35,7 @@ define('Common', ['PubView', 'bs/modal', 'json', 'template', 'jq/dataTables-bs3'
         },
         {
             text: '系统管理',
-            link: '#'
+            link: '#sysmanagement'
         }
     ];
     var sideBarItems = [
@@ -110,7 +110,7 @@ define('Common', ['PubView', 'bs/modal', 'json', 'template', 'jq/dataTables-bs3'
                 },
                 {
                     text: '<i class="fa fa-database"></i>磁盘管理',
-                    link: ''
+                    link: '#block'
                 },
                 {
                     text: '<i class="fa fa-cube"></i>镜像管理',
@@ -272,7 +272,33 @@ define('Common', ['PubView', 'bs/modal', 'json', 'template', 'jq/dataTables-bs3'
                 }
             ]
         },
-        null
+        {
+            title: '<i class="fa fa-codepen fa-fw"></i>系统管理',
+            current: [1],
+            items: [
+                {
+                    text: '<i class="fa fa-user"></i>用户管理',
+                    link: '#task/task'
+                },
+                {
+                    text: '<i class="fa fa-street-view"></i>角色管理',
+                    link: '#task/task'
+                },
+                {
+                    text: '<i class="fa fa-puzzle-piece"></i>功能管理',
+                    link: '#task/task'
+                },
+                {
+                    text: '<i class="fa fa-bars"></i>URL管理',
+                    link: '#task/task'
+                },
+                {
+                    text: '<i class="fa fa-sitemap"></i>组织机构管理',
+                    link: '#task/task'
+                }
+            ]
+        
+        }
     ];
     var sideBarDataMap = function() {
         var initItemsLink = function(prefix, item, level) {

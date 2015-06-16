@@ -16,6 +16,9 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 		});
 	};
 	var bindEvent = function(){
+		var userIndex = 1;//用户列表的起始页码
+		var userSize = 10;//
+		var userTotalSize = 0;
 		//dataTables
 		Common.initDataTable($('#VdcTable'),function($tar){
 			$tar.prev().find('.left-col:first').append(
@@ -76,10 +79,10 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 				userJson:function(obj){
 					var memberList = [];
 					$(obj).find(".nav").each(function(i,user){
-						var uid = $(user).find(".display_name").attr("data-id");
+						var uid = $(user).find(".member").attr("data-id");
 						var userRoleList = [];
-						$(user).find(".fa-check").each(function(i,role){
-							if($(role).css('opacity') == '1'){
+						$(user).find("ul.dropdown-menu a").each(function(i,role){
+							if($(role).attr('in-use') == '1' ){
 								var roleId = $(role).attr("data-id"); 
 								userRoleList.push({"uid":uid,"roleId":roleId});
 							}
@@ -89,7 +92,12 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 					return memberList;
 				},
 				floatIpJson:function(obj){
-					
+					var floatIpList = [];
+					$(obj).find("li.member").each(function(i,element){
+						var id = $(element).attr("data-id");
+						floatIpList.push({"id":id});
+					});
+					return floatIpList;
 				}
 		}
         //初始化加载，不依赖其他模块
@@ -113,16 +121,25 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 				},
 				//获取成员信息
 				getUsers : function(index,size){
-					///'cloud/am/user/page/'+index + '/'+size
-					Common.xhr.ajax('resources/data/arrays.txt',function(userList){
-						renderData.userList = userList;
-						cacheData.userList = userList;
+					///'cloud/am/user/page/'+index + '/'+size,resources/data/arrays.txt'
+					Common.xhr.ajax('/cloud/am/user/page/'+index + '/'+size,function(userList){
+						for(var key in userList.result){
+							var obj = userList.result[key];
+							obj.name = obj.trueName;
+						}
+						renderData.userList = userList.result;
+						cacheData.userList = userList.result;
+						userTotalSize = userList.totalCount;
 					});
 				},
 				//获取及对应的角色
 				getRoles : function(){
-					//"//cloud/am/role/lis"
-					Common.xhr.ajax('resources/data/select.txt',function(roleList){
+					//"//cloud/am/roles",'resources/data/select.txt'
+					Common.xhr.ajax("/cloud/am/roles",function(roleList){
+						for(var key in roleList){
+							var obj = roleList[key];
+							obj.name = obj.roleName;
+						}
 						renderData.roleList = roleList;
 						cacheData.roleList = roleList;
 					});
@@ -142,7 +159,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 				}*/
 		}
 		DataGetter.getVe();//获取所有的虚拟化环境
-		DataGetter.getUsers(1,20);//初始化用户列表
+		DataGetter.getUsers(userIndex,userSize);//初始化用户列表
 		DataGetter.getNetPool();//获取所有的网络资源池
 		DataGetter.getRoles();
 		//载入后的事件
@@ -180,9 +197,9 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 					});
 				},*/
 				//配额的表单验证
-				vdc_quota_form:function(){
-					return $(".vdc_quota").validate({
-						errorContainer: $(".vdc_quota"),
+				vdc_form:function(){
+					return $(".form-horizontal").validate({
+						errorContainer: $("_form"),
 						rules:{
 							'metadata_items': {
 			                    required: true,
@@ -247,19 +264,13 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 			                'subnet': {
 			                    required: true,
 			                    digits:true
+			                },
+			                'vdc-name': {
+			                    required: true,
+			                    maxlength:50,
+			                    minlength:4
 			                }
 						}
-					})
-				},
-				//vdc 基本信息表单
-				vdc_basic_form:function(){
-					return $(".vdc_basic").validate({
-						   rules: {
-				            	'name': {
-				                    required: true,
-				                    maxlength:10
-				                }
-				            }
 					})
 				},
 				//初始化选择用户相关的事件
@@ -274,17 +285,26 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 					});
 					$(document).off("click",".list-group .loadmore");
 					$(document).on("click",".list-group .loadmore",function(event){
-						Common.xhr.ajax('/resources/data/arrays.txt',function(userList){
+						Common.xhr.ajax('/cloud/am/user/page/'+(userIndex + 1) + '/'+userSize,function(userList){
 							var data = {};
-							data.userList = userList;
+							for(var key in userList.result){
+								var obj = userList.result[key];
+								obj.name = obj.trueName;
+							}
+							data.userList = userList.result;
+							//data.roleList = cacheData.roleList;
+							userTotalSize = userList.totalCount;
+							
 							Common.render('tpls/ccenter/vdc/loadmore.html',data,function(html){
-								if(html){
-									$('#vdc-users .list-group-all').children("*:last").before(html);
-								}else{
-									$('.list-group .loadmore').html('数据已全部加载');
-									$('.list-group .loadmore').off('click');
-								}
+							 $('#vdc-users .list-group-all').children("*:last").before(html);
+								
+								userIndex = userIndex +1;
 	    					});
+							if(userList.result.length < userSize){
+								$('.list-group .loadmore').html('数据已全部加载');
+								$(document).off("click",".list-group .loadmore");
+								$(".list-group .loadmore").css("cursor","default");
+							}
 						});
 					});
 				}
@@ -311,9 +331,13 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 			//调用公共组件加载
 			initUsers: function(){
 				require(['js/common/choose'],function(choose){
+					var loadmore = false;
+					if(userTotalSize > userSize * userIndex){
+						loadmore = true;
+					}
 					var options = {
 							selector: '#vdc-users',
-							loadmore: true,
+							loadmore: loadmore,
 							groupSelectedClass: 'col-sm-7',
 							groupAllClass: 'col-sm-5',
 							addCall: function($clone){
@@ -338,8 +362,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 			initFloatIP : function(){
 				var net_id = currentChosenObj.netId.val() || $('select.select-net').children('option:selected').val();
 				if(net_id){
-					Common.xhr.get('/v2.0/floatingIps',{'floatingNetworkId':net_id},function(ipList){
-						debugger;
+					Common.xhr.get('/v2.0/floatingips',{'floatingNetworkId':net_id},function(ipList){
 						for(var key in ipList.floatingips ){
 							var obj = ipList.floatingips[key];
 							obj.name = obj.floating_ip_address;
@@ -361,6 +384,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 	    $("#VdcTable_wrapper span.btn-add").on("click",function(){
 	    	//需要修改为真实数据源
 			Common.render('tpls/ccenter/vdc/add.html',renderData,function(html){
+				userIndex = 1;
 				$('body').append(html);
 				//wizard show
     			$.fn.wizard.logging = true;
@@ -377,22 +401,40 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 		    	EventsHandler.userChosen();
 				EventsHandler.veChange();
 				EventsHandler.netChange();
-		    	//
+				
     			wizard = $('#create-vdc-wizard').wizard({
     				keyboard : false,
     				contentHeight : 526,
     				contentWidth : 900,
     				showCancel: true,
     				backdrop: 'static',
+    				/*formClass: {
+    				          '_default': "form-horizontal",
+    				           0: "form-inline",
+    				       }*/
     				buttons: {
     	                cancelText: "取消",
     	                nextText: "下一步",
     	                backText: "上一步",
     	                submitText: "创建",
     	                submittingText: "提交中..."
+    	            },
+    	            validate: {
+	            		0: function(){
+	            			return this.el.find('.form-horizontal').valid();
+	            		},
+	            		2: function(){
+	            			return this.el.find('.form-horizontal').valid();
+	            		}
     	            }
     			});
+    			//加载时载入validate
+    			wizard.on('show',function(){
+    				EventsHandler.vdc_form();
+    			});
     			wizard.show();
+    			
+    			
     			//wizard.disableNextButton();
     			//重置CurrentChosenObj对象
     			var resetCurrentChosenObj = function(){
@@ -410,38 +452,32 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 				//关闭后移出dom
     			wizard.on('closed', function() {
     				closeWizard();
+    				
     			});
     			//创建提交数据
     			wizard.on("submit", function(wizard) {
-    				jsonData.azJson("#vdcAZ .list-group-select");
-    				jsonData.userJson("#vdc-users .list-group-select");
-//    				var serverData = {"server":{
-//    					"name": $("#name").val(),
-//    					"imageRef": 'ed18e2ce-a574-4ff0-8a00-6ef9d7dc4c2b',//$("#imageRef").val(),
-//    					"flavorRef": '3',//$("#flavorRef").val(),
-//    					"networks": [{
-//    						"uuid": 'af8c1f42-b21c-4d13-bc92-1852e22f4f98'//,//$("#networks").val(),
-//    						//"fixed_ip": '192.168.0.115'//$("#fixed_ip").val()
-//    					}]
-//    				}};
-    				/*var serverData = {server:$(".form-horizontal").serializeObject()};
-    				serverData.server.networks=[{
-						"uuid": 'af8c1f42-b21c-4d13-bc92-1852e22f4f98'
-						//"fixed_ip": '192.168.0.115'//$("#fixed_ip").val()
-					}]
-    				var fixed_ip = $("#fixed_ip").val();
-    				if(fixed_ip!=null&&fixed_ip!="DHCP"){
-    					serverData.server.networks=[{
-	    						"uuid": 'af8c1f42-b21c-4d13-bc92-1852e22f4f98',
-	    						"fixed_ip": '192.168.0.115'//$("#fixed_ip").val()
-    					}]
-    				}*/
-    				/*Common.xhr.postJSON('/'+current_vdc_id+'/servers',serverData,function(data){
+    				var name = $("#editVdcBasic [name='vdc-name']").val();
+    				var description =  $("#editVdcBasic [name='description']").val();
+    				var enabled = $("#editVdcBasic [name='enabled']:checked").length? true:false;
+    				var virtualEnvId = currentChosenObj.ve.val() || $('select.select-ve').children('option:selected').val();
+    				var vdcData={
+    						"tenant":{
+    							"name":name,
+    							"description":description,
+    							"enabled":enabled,
+    							"quota_set":jsonData.quotaSetsJson("#vdcQuota .list-group-select"),
+    							"available_zones":jsonData.azJson("#vdcAZ .list-group-select"),
+    							"members":jsonData.userJson("#vdc-users .list-group-select"),
+    							"float_ips":jsonData.floatIpJson("#vdcFloatIP .list-group-select"),
+    							"virtualEnvId":virtualEnvId
+    						}
+    				};
+    				Common.xhr.postJSON('/v2.0/tenants',vdcData,function(data){
     					wizard._submitting = false;
     					wizard.updateProgressBar(100);
     					closeWizard();
     					Common.router.reload();
-    				})*/
+    				})
     			});
 			});
 	    });
@@ -477,7 +513,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 			    	            buttons: [{
 			    	                label: '保存',
 			    	                action: function(dialog) {
-			    	                	var valid = $(".vdc_quota").valid();
+			    	                	var valid = $(".form-horizontal").valid();
 			    	            		if(!valid) return false;
 			    	                	var serverData = {
 				    	            			"quota_set":jsonData.quotaSetsJson("#vdcQuota")
@@ -494,7 +530,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 			    	                }
 			    	            }],
 			    	            onshown : function(dialog){
-			    	            	dialog.setData('vdc_quota_form', EventsHandler.vdc_quota_form());	
+			    	            	dialog.setData('vdc_quota_form', EventsHandler.vdc_form());	
 			    	            },
 			    				onhide : function(dialog){
 			    					dialog.getData("vdc_quota_form").hideErrors();
@@ -535,9 +571,9 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 	             if(result) {
 	            	 Common.xhr.del('/v2.0/tenants/' + vdc_id,
 	                     function(data){
-	                    	 if(data){
+	                    	 if(data.success||data.code==404){
 	                    		 Modal.success('删除成功')
- 	                			 setTimeout(function(){Dialog.closeAll()},2000);
+ 	                			 setTimeout(function(){Dialog.closeAll()},1000);
 	                    		 Common.router.route();//重新载入
 	                    	 }else{
 	                    		 Modal.warning ('删除失败')
@@ -559,12 +595,14 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
   	    	            buttons: [{
   	    	                label: '保存',
   	    	                action: function(dialog) {
+  	    	                	var valid = $(".form-horizontal").valid();
+	    	            		if(!valid) return false;
   	    	                	var vdcData = {
     	                			"tenant":{
     	                				 "description": $("#editVdcBasic [name='description']").val(),
     	                			     "enabled": $("#editVdcBasic [name='enabled']:checked").length? true:false,
     	                			     "id": vdc_id,
-    	                			     "name": $("#editVdcBasic [name='name']").val()
+    	                			     "name": $("#editVdcBasic [name='vdc-name']").val()
     	                			}
   	    	                	};
 	  	    	              	Common.xhr.putJSON('v2.0/tenants/'+vdc_id,vdcData,function(data){
@@ -580,7 +618,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
   	    	                }
   	    	            }],
       				    onshown : function(dialog){
-	    	            	dialog.setData('vdc_basic_form', EventsHandler.vdc_basic_form());	
+	    	            	dialog.setData('vdc_basic_form', EventsHandler.vdc_form());	
 	    	            },
 	    				onhide : function(dialog){
 	    					dialog.getData("vdc_basic_form").hideErrors();
