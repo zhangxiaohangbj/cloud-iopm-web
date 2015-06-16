@@ -18,13 +18,13 @@
                     </tr>
                 </thead>
                 <tbody class="table-body">
-                {{each list as item i}}
+                {{each keypairs as item}}
                     <tr>
-                        <td><label myval="{{item.id}}"><input type="checkbox"></label></td>
-                        <td><a href="javascript:void(0);" class="keypair-name" data="{{item.id}}">{{item.name}}</td>
-                        <td>{{item.fingerprint}}</td>
+                        <td><label><input type="checkbox" myval="{{item.keypair.id}}"></label></td>
+                        <td><a href="javascript:void(0);" class="keypair-name" data="{{item.keypair.id}}">{{item.keypair.name}}</td>
+                        <td>{{item.keypair.fingerprint}}</td>
                         <td>                        
-                        <a class="btn-opt keypair-del" data-toggle="tooltip" title="删除密钥对" data="{{item.id}}" style="margin: 0;"><i class="fa fa-trash-o fa-fw"></i></a>
+                        <a class="btn-opt keypair-del" data-toggle="tooltip" title="删除密钥对" data="{{item.keypair.id}}" style="margin: 0;"><i class="fa fa-trash-o fa-fw"></i></a>
                         </td>
                     </tr>
                 {{/each}}
