@@ -3,10 +3,11 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 	Common.requestCSS('css/dialog.css');
 	var init = function(){
 		Common.$pageContent.addClass("loading");
+		
 		//先获取数据，进行加工后再去render
 		Common.render(true,{
-			tpl:'tpls/monitor/task/monitor/list.html',
-			data:'/cloud/task/instance?deleted=false',
+			tpl:'tpls/monitor/task/monitor/taskList.html',
+			data:'/cloud/task/task?deleted=false',
 			beforeRender: function(data){
 				return data;
 			},
@@ -20,12 +21,20 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 		Common.initDataTable($('#monitorTable'),function($tar){debugger
 			
 			$tar.prev().find('.left-col:first').append(
-					'<span class="btn btn-add">批量删除</span>'
+					'<span class="btn btn-add" name="day">一天</span>'
+			);
+			$tar.prev().find('.left-col:first').append(
+					'<span class="btn btn-add" name="week">一周</span>'
+			);
+			$tar.prev().find('.left-col:first').append(
+					'<span class="btn btn-add" name="month">一月</span>'
 			);
 			//这个必须添加，不然就是隐藏的效果，看不到页面
 			Common.$pageContent.removeClass("loading");
 		});
 		$("[data-toggle='tooltip']").tooltip();
+		
+		$("[name=day]").css({"background-color":"#8F8F8F"});
 		
 		var renderData = {};
         //初始化加载，不依赖其他模块
@@ -62,25 +71,19 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 	    	});
 	    });
 	    
-	    //删除
-	    $("#monitorTable_wrapper a.delete").on("click",function(){
+	    //running  failed  success
+	    $("#monitorTable_wrapper a.instanceList").on("click",function(){
 	    	debugger;
 	    	var id = $(this).attr("data");
-	    	Modal.confirm('确定要删除吗?', function(result){
-	    		if(result) {
-	    			Common.xhr.del('/cloud/task/instance/'+id,"",function(data){
-    					if(data){
-                			Modal.alert("删除成功",function(){
-	                			Common.router.reload();
-                			});
-						}else{
-							Modal.alert("删除失败",function(){
-	                			
-                			});
-						}
-					})
-	    		}
-	    	});
+	    	var name = $(this).attr("name");
+	    	Common.render(true,{
+				tpl:'tpls/monitor/task/monitor/list.html',
+				data:'/cloud/task/instance?deleted=false',
+				beforeRender: function(data){
+					return data;
+				},
+				callback: bindEvent
+			});
 	    })
 	}	
 	return {
