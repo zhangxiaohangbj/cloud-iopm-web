@@ -39,6 +39,38 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 					})
 				},
 		};
+		//cidr校验
+	    $.validator.addMethod("cidr", function(value, element) {
+	    	return this.optional(element) || /^((\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.){3}(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\/\d{1,2}$/.test(value);
+	    }, "请填写正确的CIDR地址");
+	    //端口范围校验
+	    $.validator.addMethod("port_max", function(value, element) {
+	    	var optionalValue = this.optional(element);
+	    	// Element is optional
+	    	if (optionalValue) {
+	    		return optionalValue;
+	    	}
+	    	var start = $("[name='port_range_min']").val();
+	    	if(start == "" || start ==null) return true;
+	    	 if(parseInt(value) < parseInt(start)){
+	    		 return false;
+	    	 }else return true;
+	    	
+	    }, "请输入正确的端口最大值");
+	    $.validator.addMethod("port_min", function(value, element) {
+	    	var optionalValue = this.optional(element);
+	    	// Element is optional
+	    	if (optionalValue) {
+	    		return optionalValue;
+	    	}
+	    	var end = $("[name='port_range_max']").val();
+	    	if(end == "" || end ==null) return true;
+	    	
+	    	 if(parseInt(value) > parseInt(end)){
+	    		 return false;
+	    	 }else return true;
+	    	
+	    }, "请输入正确的端口最小值");
 		var EventsHandler = {
 	    		//表单校验
 				formValidator: function(){
@@ -47,6 +79,20 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 			            	'name': {
 			                    required: true,
 			                    maxlength:255
+			                },
+			                'port_range_min':{
+			                	digits:true,
+			                	port_min:true
+			                },
+			                'port_range_max':{
+			                	digits:true,
+			                	port_max:true
+			                },
+			                'remote_ip_prefix':{
+			                	cidr:true
+			                },
+			                'remote_group_id':{
+			                	maxlength:36
 			                }
 			            }
 			        });
@@ -71,6 +117,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
     	                	for(var i=0;i<data.length;i++){
     	                		postData.security_group[data[i]["name"]] = data[i]["value"];
     						}
+    	                	postData.security_group["is_deleted"] = 0;
     	                	Common.xhr.postJSON('/v2.0/security-groups',postData,function(data){
     	                		if(data){
     	                			Dialog.success('保存成功')
@@ -129,17 +176,12 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 			    	                	var valid = $(".form-horizontal").valid();
 			    	            		if(!valid) return false;
 			    	            		var data = $("#addSecurityRule").serializeArray();
-			    	                	var postData={"security_group":{}};
-			    	                	var security_group_rules = {};
+			    	                	var postData={"security_group_rule":{}};
 			    	                	for(var i=0;i<data.length;i++){
-			    	                		security_group_rules[data[i]["name"]]=data[i]["value"];
-			    	                		
+			    	                		postData.security_group_rule[data[i]["name"]]=data[i]["value"];
 			    						}
-			    	                	var security_group_rules_array=new Array();
-			    	                	security_group_rules_array[0] = security_group_rules;
-			    	                	postData.security_group["security_group_rules"] = security_group_rules_array;
-			    	                	postData.security_group["id"]=id;
-			    	                	Common.xhr.putJSON('/v2.0/security-groups/'+id,postData,function(data){ //需修改接口
+			    	                	postData.security_group_rule["security_group_id"] = id;
+			    	                	Common.xhr.postJSON('/v2.0/security-group-rules',postData,function(data){ //接口保存失败
 			    	                		if(data){
 			    	                			Dialog.success('保存成功')
 			    	                			setTimeout(function(){Dialog.closeAll()},2000);
@@ -157,56 +199,60 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 		    	},
 		    	//获取规则列表
 		    	GetRuleList :function(id){
-		    		Common.render(true,'tpls/ccenter/security/securityrule.html','/v2.0/security-groups/'+id,function(html){ //需修改接口
-			    		Common.initDataTable($('#SecurityruleTable'),function($tar){
-			    			$tar.prev().find('.left-col:first').append(
-			    					'<span class="btn btn-add">添加规则</span>'
-			    				);
-			    		});
-			    		$("a.reload").on("click",function(){
-		    		    	Common.router.route();
-		    		    })
-			    		//添加规则
-				    	$("#SecurityruleTable_wrapper span.btn-add").on("click",function(){
-				    		EditData.AddSecurityRule(id,function(){
-				    			$("[name='ethertype']").on("change",function(){
-				    		    	var value=$("[name='ethertype']").val();
-				    		    	if(value == 1){
-				    		    		$("#port").html('<input type="text" class="" name="port_range_min" value=""> ~ <input'
-				    		    					+' type="text" class="" name="port_range_max" value="">');
-				    		    	}else{
-				    		    		$("#port").html('<input type="text" class="" name="port_range_min" value="">');
-				    		    	}
-				    		    })
-				    			$("[name='remote']").on("change",function(){
-				    		    	var value=$("[name='remote']").val();
-				    		    	$("div.remote").css("display","none");
-				    		    	$("div."+value).css("display","");
-				    		    })
-				    			EventsHandler.formValidator();
-				    		})
+		    		var param = {"security_group_id":id};
+		    		Common.xhr.get('/v2.0/security-group-rules',param,function(data){  //获取规则列表接口，参数未起作用
+		    			Common.render(true,'tpls/ccenter/security/securityrule.html',data,function(html){
+				    		Common.initDataTable($('#SecurityruleTable'),function($tar){
+				    			$tar.prev().find('.left-col:first').append(
+				    					'<span class="btn btn-add">添加规则</span>'
+				    				);
+				    		});
+				    		$("a.reload").on("click",function(){
+			    		    	Common.router.route();
+			    		    })
+				    		//添加规则
+					    	$("#SecurityruleTable_wrapper span.btn-add").on("click",function(){
+					    		EditData.AddSecurityRule(id,function(){
+					    			$("[name='port_range']").on("change",function(){
+					    		    	var value=$("[name='port_range']").val();
+					    		    	if(value == 1){
+					    		    		$("#port").html('<input type="text" class="" name="port_range_min" value=""> ~ <input'
+					    		    					+' type="text" class="" name="port_range_max" value="">');
+					    		    	}else{
+					    		    		$("#port").html('<input type="text" class="" name="port_range_min" value="">');
+					    		    	}
+					    		    })
+					    			$("[name='remote']").on("change",function(){
+					    		    	var value=$("[name='remote']").val();
+					    		    	$("div.remote").css("display","none");
+					    		    	$("div."+value).css("display","");
+					    		    })
+					    			EventsHandler.formValidator();
+					    		})
+					    	});
+						    //删除规则,删除为物理删除，非逻辑删
+						    $("#SecurityruleTable_wrapper a.btn-delete").on("click",function(){
+						    	var id= $(this).attr("data");
+						    	Dialog.confirm('确定要删除该规则吗?', function(result){
+						             if(result) {
+						            	 Common.xhr.del('/v2.0/security-group-rules/'+id,
+						                     function(data){
+						                    	 if(data){
+						                    		 Dialog.success('删除成功')
+						                			 setTimeout(function(){Dialog.closeAll()},2000);
+						                    		 EditData.GetRuleList(id);
+						                    	 }else{
+						                    		 Dialog.warning ('删除失败')
+						                    	 }
+						                     });
+						             }else {
+						            	 Dialog.closeAll();
+						             }
+						         });
+						    });
 				    	});
-					    //删除规则
-					    $("#SecurityruleTable_wrapper a.btn-delete").on("click",function(){
-					    	var id= $(this).attr("data");
-					    	Dialog.confirm('确定要删除该规则吗?', function(result){
-					             if(result) {
-					            	 Common.xhr.del('/v2.0/security-groups/'+id,  //需修改接口
-					                     function(data){
-					                    	 if(data){
-					                    		 Dialog.success('删除成功')
-					                			 setTimeout(function(){Dialog.closeAll()},2000);
-					                    		 EditData.GetRuleList(id);
-					                    	 }else{
-					                    		 Dialog.warning ('删除失败')
-					                    	 }
-					                     });
-					             }else {
-					            	 Dialog.closeAll();
-					             }
-					         });
-					    });
-			    	});
+		    		})
+		    		
 		    	}
 		}
 		//连接子网

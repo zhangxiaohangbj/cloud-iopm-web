@@ -1,4 +1,4 @@
-define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3'],function(Common,Modal){
+define(['Common','bs/modal','bs/wizard','bs/tooltip','jq/form/validator-bs3'],function(Common,Modal){
 	Common.requestCSS('css/wizard.css');
 	Common.requestCSS('css/dialog.css');
 	var init = function(){
@@ -42,105 +42,181 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
         //初始化加载，不依赖其他模块
 		var DataGetter = {
 				//虚拟化环境 virtural environment
-				getVe: function(){
-					Common.xhr.ajax('/v2/virtual-env',function(veList){///v2/images
-						renderData.veList = veList;
-					});
-				}
+			getVdc: function(){
+				Common.xhr.ajax('/v2.0/tenants/page/10/1',function(pageVdcList){///v2/images
+                    var vdcList = pageVdcList.result;
+                    renderData.vdcList = vdcList;
+                    debugger
+                    $("#flavorVdcAccess").find(".list-group-all").empty();
+                    var listView=[];
+                    for(var i=0;i<vdcList.length;i++){
+                        listView.push('<a href="javascript:void(0);" class="list-group-item">'+vdcList[i]["name"]+' <i data-id = '+vdcList[i]["id"]+' class="fa fa-plus-circle fa-fw" style="float: right;"></i></a>')
+                    }
+                    $("#flavorVdcAccess").find(".list-group-all").html(listView.join(""));
+                    EventsHandler.flavorAddEvent();
+				});
+			},
+
+            getFlavorAccess: function(id){
+                Common.xhr.ajax('/v2/123/flavors/'+id+"/os-flavor-access",function(pageVdcList){///v2/images
+                    var vdcList = pageVdcList.result;
+                    renderData.vdcList = vdcList;
+                    debugger
+                    $("#flavorVdcAccess").find(".list-group-all").empty();
+                    var listView=[];
+                    for(var i=0;i<vdcList.length;i++){
+                        listView.push('<a href="javascript:void(0);" class="list-group-item">'+vdcList[i]["name"]+' <i data-id = '+vdcList[i]["id"]+' class="fa fa-plus-circle fa-fw" style="float: right;"></i></a>')
+                    }
+                    $("#flavorVdcAccess").find(".list-group-all").html(listView.join(""));
+                    EventsHandler.flavorAddEvent();
+                });
+            }
 
 		}
-		DataGetter.getVe();
+		DataGetter.getVdc();
+
+        var currentChosenObj = {
+
+        };
 
 	  //增加按钮
-	    $("#vmtypeTable_wrapper span.btn-add").on("click",function(){
-	    	//需要修改为真实数据源
-			Common.render('tpls/ccenter/vmtype/add.html',renderData,function(html){
-				$('body').append(html);
-				//wizard show
-    			$.fn.wizard.logging = true;
-    			var wizard;
-    			
-    			//维护当前select的值
-    			var currentChosenObj = {
-    					ve: null,	//当前虚拟化环境
-    					az: null,
-    					netId: null
-    			};
-    			//载入默认的数据 inits,创建数据载入类
-    			var DataIniter = {
-    				//根据ve获取可用分区
-    				initAz : function(){
-    					var ve_id = currentChosenObj.ve.val() || $('select.select-ve').children('option:selected').val();
-    					if(ve_id){
-    						/*Common.xhr.ajax('/v2/'+vdc_id+'/os-availability-zone',function(data){
-    							var selectData = [];
-    							for(var i=0;i<data.length;i++){
-    								selectData[i] = {"name":data[i]["zoneName"]};
-    							}
-    							var html = Common.uiSelect(selectData);
-    					    	$('select.select-available-zone').html(html);
-    					    	//同步currentChosenObj
-    					    	currentChosenObj.az = $('select.select-available-zone').children('option:selected');
-    						});*/
-    						EventsHandler.azEvent();
-    					}else{
-    						Modal.danger('尚未选择所属虚拟化环境');
-    					}
-    				}
-    			}
-    			//载入后的事件
-    			var EventsHandler = {
-    					//虚拟化环境change事件
-    					veChange: function(){
-    						//同步
-    						currentChosenObj.ve = $('select.select-ve').children('option:selected');
-    						//重新载入可用分区数据
-    						DataIniter.initAz();
-    					},
-    					//初始化可用分区所需的事件
-    					azEvent: function(){
-    						//滑过出现添加图标
-    						$(document).off("mouseover mouseout",".chose-az a.list-group-item");
-    						$(document).on("mouseover mouseout",".chose-az a.list-group-item",function(event){
-    							if(event.type == "mouseover"){
-    								$(this).find('.fa').show();
-    							 }else if(event.type == "mouseout"){
-    								 $(this).find('.fa').hide();
-    							 }
-    						});
-    					}
-    			}
-				//同步currentChosenObj
-		    	currentChosenObj.ve = $('select.select-ve').children('option:selected');
-		    	currentChosenObj.netId = $('select.select-net').find('option:selected');
-		    	//载入依赖数据
-		    	DataIniter.initAz();
-		    	//
-    			wizard = $('#create-vdc-wizard').wizard({
-    				keyboard : false,
-    				contentHeight : 526,
-    				contentWidth : 900,
-    				showCancel: true,
-    				backdrop: 'static',
-    				buttons: {
-    	                cancelText: "取消",
-    	                nextText: "下一步",
-    	                backText: "上一步",
-    	                submitText: "提交",
-    	                submittingText: "提交中..."
-    	            }
-    			});
-    			wizard.show();
-			});
-	    });
-	    
-	    //更新配额
-	    //$("ul.dropdown-menu a.updateFlavor").on("click",function(){
-	    //	more.QuotaSets($(this).attr("data"));
-	    //});
+        $("#vmtypeTable_wrapper span.btn-add").on("click",function(){
+            //需要修改为真实数据源
+            Common.render('tpls/ccenter/vmtype/add.html',renderData,function(html){
+
+                $('body').append(html);
+
+                DataGetter.getVdc();
+                //同步currentChosenObj
+
+                //wizard show
+                $.fn.wizard.logging = true;
+                wizard = $('#create-flavor-wizard').wizard({
+                    keyboard : false,
+                    contentHeight : 526,
+                    contentWidth : 900,
+                    showCancel: true,
+                    backdrop: 'static',
+                    buttons: {
+                        cancelText: "取消",
+                        nextText: "下一步",
+                        backText: "上一步",
+                        submitText: "提交",
+                        submittingText: "提交中..."
+                    }
+                });
+
+                //展现wizard，禁用下一步按钮
+
+                wizard.show();
+                //wizard.disableNextButton();
+
+                EventsHandler.flavorFormValidator();
+                //关闭弹窗
+                var closeWizard = function(){
+                    $('div.wizard').remove();
+                    $('div.modal-backdrop').remove();
+
+                }
+
+                //关闭后移出dom
+                wizard.on('closed', function() {
+                    closeWizard();
+                });
+
+                wizard.on("submit", function(wizard) {
+                    var flavorData = {
+                        "flavor":{
+                            "name": $("#addFlavor [name='name']").val(),
+                            "vcpus": $("#addFlavor [name='vcpus']").val(),
+                            "ram": $("#addFlavor [name='ram']").val(),
+                            "disk": $("#addFlavor [name='disk']").val(),
+                            //"OS-FLV-EXT-DATA:ephemera": $("#addFlavor [name='ephemera']").val(),
+                            "swap": $("#addFlavor [name='swap']").val()
+                        }
+                    };
+//
+                    Common.xhr.postJSON('/v2/123/flavors/',flavorData,function(data){
+                        wizard._submitting = false;
+                        wizard.updateProgressBar(100);
+                        closeWizard();
+                        Common.router.route();
+                    })
+                });
+
+            })
+        });
+
+
+        var EventsHandler = {
+            flavorAddEvent:function(){
+                require(['js/common/domchoose'],function(domchoose){
+                    var leftOption = {
+                            appendWrapper: '.vdc-all',
+                            clone: 'a.list-group-item'
+                        },
+                        rightOption = {
+                            appendWrapper: '.vdc-chosen',
+                            clone: 'a.list-group-item',//相对clickSelector获取元素
+                            clickSelector: 'i.fa-minus-circle'
+                        };
+                    domchoose.initChoose(leftOption,rightOption);
+                });
+            },
+            flavorAccessEvent:function(){
+                require(['js/common/domchoose'],function(domchoose){
+                    var leftOption = {
+                            appendWrapper: '.vdc-all',
+                            clone: 'a.list-group-item'
+                        },
+                        rightOption = {
+                            appendWrapper: '.vdc-chosen',
+                            clone: 'a.list-group-item',//相对clickSelector获取元素
+                            clickSelector: 'i.fa-minus-circle'
+                        };
+                    domchoose.initChoose(leftOption,rightOption);
+                });
+            },
+            //表单校验
+            flavorFormValidator: function(){
+                return $(".form-horizontal").validate({
+                    rules: {
+                        'name': {
+                            required: true,
+                            minlength: 4,
+                            maxlength:15
+                        },
+                        'vcpus': {
+                            required: true,
+                            digits:true
+                        },
+                        'ram': {
+                            required: true,
+                            digits:true
+                        },
+                        'disk': {
+                            required: true,
+                            digits:true
+                        },
+                        'ephemera': {
+                            digits:true
+                        },
+                        'swap': {
+                            digits:true
+                        },
+                        'rxtx_factor': {
+                            number:true,
+                            max:1.0,
+                            min:0.0
+                        }
+                    }
+                });
+            }
+        }
+
+
         $(".updateFlavor").on("click",function(){
-            //alert($(this).attr("data")
-	    	more.updateFlavor($(this).attr("data"));
+            more.updateFlavor($(this).attr("data"));
 	    });
 
         //更新配额
@@ -151,7 +227,6 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 	    var more = {
 		    	//配额管理
                 updateFlavor : function(id){
-
 		    		Common.xhr.ajax('/v2/123/flavors/'+id,function(data){
 		    			Common.render('tpls/ccenter/vmtype/edit.html',data,function(html){
 		    				Modal.show({
@@ -169,7 +244,8 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 				    	        					"ram": $("#editFlavor [name='ram']").val(),
 				    	        					"disk": $("#editFlavor [name='disk']").val(),
 				    	        					//"OS-FLV-EXT-DATA:ephemera": $("#editFlavor [name='ephemera']").val(),
-				    	        					"swap": $("#editFlavor [name='swap']").val()
+				    	        					"swap": $("#editFlavor [name='swap']").val(),
+                                                    "rxtx_factor": $("#editFlavor [name='rxtx_factor']").val()
 				    	            				}
 			    	        				};
 			    	                	Common.xhr.putJSON('/v2/123/flavors/',flavorData,function(data){
@@ -183,15 +259,18 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 										})
 			    	                }
 			    	            }],
-			    	            onshown : function(){}
+			    	            onshown : function(){
+                                    EventsHandler.flavorAccessEvent();
+                                }
 			    	        });
 			    		});
 		    		})
 		    		
 		    	},
 
-                deleteFlavor : function(id){
+            deleteFlavor : function(id){
                     Modal.confirm('确定要删除该云主机类型吗?', function(result){
+                        debugger
                         if(result) {
                             Common.xhr.del('/v2/123/flavors/'+id,
                                 function(data){
@@ -208,7 +287,39 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
                         }
                     });
 
-                }
+                },
+
+            accessFlavor : function(id){
+                Common.xhr.ajax('/v2/123/flavors/'+id+"/os-flavor-access",function(data){
+                    Common.render('tpls/ccenter/vmtype/flavorAccess.html',data,function(html){
+                        Modal.show({
+                            title: '访问授权',
+                            message: html,
+                            nl2br: false,
+                            buttons: [{
+                                label: '保存',
+                                action: function(dialog) {
+
+                                    Common.xhr.putJSON('/v2/123/flavors/','',function(data){
+                                        if(data){
+                                            alert("保存成功");
+
+                                            dialog.close();
+                                        }else{
+                                            alert("保存失败");
+                                        }
+                                    })
+                                }
+                            }],
+                            onshown : function(){
+
+                            }
+                        });
+
+                    });
+                })
+
+            }
 	    }
 	}	
 	return {
