@@ -410,7 +410,9 @@ define(['Common','bs/modal','jq/form/wizard','jq/form/validator-bs3','bs/tooltip
                             });
                         }
                     }],
-                    onshown : ""
+                    onshown : function(){
+
+                    }
                 });
 
             });
