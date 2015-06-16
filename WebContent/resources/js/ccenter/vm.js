@@ -499,8 +499,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 	            		}
     	            }
     			});
-    			wizard.cards.basci.on('selected',function(card){
-				});
+    			//加载时载入validate
     			wizard.on('show',function(){
     				wizard.form.validate({
     						errorContainer: '_form',
@@ -513,6 +512,10 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
     			            }
     				});
     			});
+    			//确认信息卡片被选中的监听
+    			wizard.cards.query.on('selected',function(card){
+    				//获取上几步中填写的值
+				});
     			DataIniter.initAvailableZone();
     			DataIniter.initPopver();
     			DataIniter.initQuatos();
