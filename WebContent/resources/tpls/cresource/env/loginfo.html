@@ -1,0 +1,39 @@
+<form class="form-horizontal" id="logifo">
+    <div class="pane">
+        <div class="pane-content">
+            <table class="table table-primary table-striped" id="VirtualEnvLogTable">
+                <thead>
+                <tr>
+                    <th class="c2">对象类型</th>
+                    <th class="c2">新增个数</th>
+                    <th class="c2">更新个数</th>
+                    <th class="c2">删除个数</th>
+                    <th class="c2">更新时间</th>
+                    <th class="c1 sorting_disabled" style="width:180px;">更新结果</th>
+                </tr>
+                </thead>
+                <tbody>
+                {{each data as item i}}
+                <tr>
+                    <td>{{item.name}}</td>
+                    <td>{{item.type}}</td>
+                    <td>{{item.version}}</td>
+                    <td>{{item.regionId}}</td>
+                    <td>
+                        <span class="text-success">{{item.updatedAt}}</span>
+                    </td>
+                    <td>
+                        {{if item.updateStatus == '1'}}
+                        <span class="text-success">更新成功</span>
+                        {{else}}
+                        <span class="text-danger">更新失败</span>
+                        {{/if}}
+                    </td>
+                </tr>
+                {{/each}}
+                </tbody>
+
+            </table>
+        </div>
+    </div>
+</form>

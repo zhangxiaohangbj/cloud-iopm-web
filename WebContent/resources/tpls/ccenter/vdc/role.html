@@ -1,0 +1,17 @@
+<li class="dropdown pull-right opt" >
+	<div class="dropdown">
+	  <button class="btn btn-default dropdown-toggle ellipsis" type="button"  data-toggle="dropdown" aria-expanded="true">
+	   {{list[0].name || list[0].id }}
+	    <span class="caret"></span>
+	  </button>
+	  <ul class="dropdown-menu dropdown-menu-right" role="menu" >
+	  	{{each list as item i}}
+	  		{{if i == 0}}
+	    	<li><a in-use="1" href="javascript:void(0);"><i class="fa fa-check fa-fw" style="opacity:1;"></i>{{item.name}}</a></li>
+	    	  {{else}}
+	    	<li><a href="javascript:void(0);"><i class="fa fa-check fa-fw"></i>{{item.name}}</a></li>  
+	    	{{/if}}
+	    {{/each}}
+	  </ul>
+	</div>
+</li>

@@ -12,8 +12,11 @@
 						<th class="c2">
 							<label><input type="checkbox" class="selectAll"></label>
 						</th>
-						<th class="c4">分组名称</th>
-						<th class="c6">描述</th>
+						<th class="c4">策略分组</th>
+						<th class="c4">策略名称</th>
+						<th class="c4">策略描述</th>
+						<th class="c6">策略实现类</th>
+						<th class="c6">策略实现方法</th>
 						<th class="c2">创建时间</th>
 						<th class="c6 sorting_disabled">操作</th>
 					</tr>
@@ -22,8 +25,11 @@
 				{{each list as item i}}
 					<tr>
 						<td><label><input type="checkbox"></label></td>
+						<td>{{item.strategyGroup.name}}</td>
 						<td>{{item.name}}</td>
 						<td>{{item.memo}}</td>
+						<td>{{item.className}}</td>
+						<td>{{item.methodName}}</td>
 						<td>{{item.createdAt}}</td>
 						<td>
 						<a class="btn-opt" data-toggle="tooltip" title="编辑分组" href="javascript:void(0)" data="{{item.id}}" data-act="stop" style="margin: 0;"><li class="glyphicon glyphicon-edit"></li></a>
@@ -39,6 +45,9 @@
 				</tbody>
 				<tfoot>
 					<tr>
+						<td></td>
+						<td></td>
+						<td></td>
 						<td></td>
 						<td></td>
 						<td></td>

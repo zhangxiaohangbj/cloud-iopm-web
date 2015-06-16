@@ -92,6 +92,7 @@ dependencies {
 	runtime("com.inspur.cloud:cloud-vpc:1.2.0-SNAPSHOT")
 	runtime("com.inspur.cloud:cloud-image:1.2.0-SNAPSHOT")
 	runtime("com.inspur.cloud:cloud-vdc:1.2.0-SNAPSHOT")
+	runtime("com.inspur.cloud:cloud-am:1.2.0-SNAPSHOT")
 }
 
 ext.excludeRegexs = []

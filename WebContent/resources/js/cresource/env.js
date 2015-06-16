@@ -1,5 +1,6 @@
-define(['Common','bs/wizard','jq/form/validator','jq/form/validator/addons/bs3','bs/tooltip'],function(Common){
+define(['Common','bs/modal','jq/form/wizard','jq/form/validator-bs3','bs/tooltip'],function(Common,Dialog){
     Common.requestCSS('css/wizard.css');
+    Common.requestCSS('css/dialog.css');
     var init = function(){
         Common.$pageContent.addClass("loading");
         //Common.render(true, 'tpls/cresource/virtualEnv.html','/resources/data/env.txt', function() {
@@ -55,6 +56,8 @@ define(['Common','bs/wizard','jq/form/validator','jq/form/validator/addons/bs3',
             vendor:"default"//default
         };
         var currentChosenConnector={
+            version:'2.0',
+            type:null,
             ip:null,
             port:null,
             username:null,
@@ -107,15 +110,16 @@ define(['Common','bs/wizard','jq/form/validator','jq/form/validator/addons/bs3',
         var CheckHandler={
             nameCheck:function(){
                 currentChosenEnv.name = $("#env-name").val();
-
                  $("#env-name-confirm").val(currentChosenEnv.name);
-
             },
             typeChange:function(){
                 $('select.select-env-type').change(function(){
-                    currentChosenEnv.type =  $(this).children('option:selected').val();
+                    var curEnv = $(this).children('option:selected');
+                    currentChosenEnv.type =  curEnv.val();
+                    currentChosenConnector.type = curEnv.val();
+                    $("#env-type-confirm").val(curEnv.text());
                 });
-                $("#env-type-confirm").val(currentChosenEnv.type);
+                $("#env-type-confirm").val($('select.select-env-type option:selected').text());
             },
             vendorCheck:function(){
                 currentChosenEnv.vendor = $("#env-vendor").val();
@@ -123,19 +127,26 @@ define(['Common','bs/wizard','jq/form/validator','jq/form/validator/addons/bs3',
             },
             versionCheck:function(){
                 currentChosenEnv.version = $("#env-version").val();
+                currentChosenConnector.version = $("#env-version").val();
                 $("#env-version-confirm").val(currentChosenEnv.version);
             },
             regionChange:function(){
                 $('select.select-region').change(function(){
-                    currentChosenEnv.regionId =  $(this).children('option:selected').val();
+                    var curRegion = $(this).children('option:selected');
+                    currentChosenEnv.regionId =  curRegion.val();
+                    $("#env-region-confirm").val(curRegion.text());
                 });
-                $("#env-region-confirm").val(currentChosenEnv.regionId);
+                $("#env-region-confirm").val($('select.select-region option:selected').text());
+
             },
             protocolChange:function(){
                 $('select.select-protocol').change(function(){
-                    currentChosenConnector.protocol =  $(this).children('option:selected').val();
+                    var curPro = $(this).children('option:selected');
+                    currentChosenConnector.protocol =  curPro.val();
+                    $("#connector-protocol-confirm").val(curPro.text());
                 });
-                $("#connector-protocol-confirm").val(currentChosenConnector.protocol);
+                $("#connector-protocol-confirm").val($('select.select-protocol option:selected').text());
+
             },
             ipCheck:function(){
                 currentChosenConnector.ip = $("#connector-ip").val();
@@ -155,9 +166,12 @@ define(['Common','bs/wizard','jq/form/validator','jq/form/validator/addons/bs3',
             },
             periodChange:function(){
                 $('select.select-period').change(function(){
-                    currentChosenEnv.refreshCycle =  $(this).children('option:selected').val();
+                    var curPeriod = $(this).children('option:selected');
+                    currentChosenEnv.refreshCycle =  curPeriod.val();
+                    $("#select-period-confirm").val(curPeriod.text());
                 });
-                $("#connector-period-confirm").val(currentChosenEnv.refreshCycle);
+                $("#select-period-confirm").val($('select.select-period option:selected').text());
+
             },
             //表单校验
             formValidator: function(){
@@ -221,6 +235,7 @@ define(['Common','bs/wizard','jq/form/validator','jq/form/validator/addons/bs3',
                 //
                 currentChosenEnv.type = $('select.select-env-type option:selected').val();
                 currentChosenEnv.regionId = $('select.select-region option:selected').val();
+                currentChosenConnector.type = $('select.select-env-type option:selected').val();
                 currentChosenConnector.protocol = $('select.select-protocol option:selected').val();
                 currentChosenEnv.refreshCycle = $('select.select-period option:selected').val();
 
@@ -259,21 +274,21 @@ define(['Common','bs/wizard','jq/form/validator','jq/form/validator/addons/bs3',
                     switch (index){
                         case 1:
                             CheckHandler.nameCheck();
-                            CheckHandler.regionChange();
-                            CheckHandler.typeChange();
                             CheckHandler.vendorCheck();
                             CheckHandler.versionCheck();
                             break;
                         case 2:
                             CheckHandler.ipCheck();
                             CheckHandler.paswCheck();
-                            CheckHandler.periodChange();
                             CheckHandler.portCheck();
-                            CheckHandler.protocolChange();
                             CheckHandler.userCheck();
                             break;
                     }
                 });
+                CheckHandler.typeChange();
+                CheckHandler.regionChange();
+                CheckHandler.periodChange();
+                CheckHandler.protocolChange();
                 CheckHandler.formValidator();
 
                 //提交按钮
@@ -293,28 +308,114 @@ define(['Common','bs/wizard','jq/form/validator','jq/form/validator/addons/bs3',
         //操作按钮
         //日志按钮
         $("a.log-info").on("click",function(){
-            alert($(this).attr("data"));
+            var data = $(this).attr("data");
+            Common.xhr.ajax("/v2/virtual-env/"+data,function(env){
+                var selectData2= {"data":renderData,"virtualEnv":env};
+                Common.render('tpls/cresource/env/loginfo.html',selectData2,function(html){
+                    Dialog.show({
+                        title: '日志信息',
+                        message: html,
+                        nl2br: false,
+                        onshown : ""
+                    });
+
+                });
+            });
         });
         //编辑按钮
-        $("a.log-info").on("click",function(){
-            alert($(this).attr("data"));
+
+        $("a.edit").on("click",function(){
+            var data = $(this).attr("data");
+            Common.xhr.ajax("/v2/virtual-env/"+data,function(env){
+                var selectData2= {"data":renderData,"virtualEnv":env};
+                Common.render('tpls/cresource/env/edit.html',selectData2,function(html){
+                    Dialog.show({
+                        title: '编辑虚拟化环境',
+                        message: html,
+                        nl2br: false,
+                        buttons: [{
+                            label:'取消',
+                            action:function(dialog){
+                                dialog.close();
+                            }
+                        },
+                        {
+                            label: '保存',
+                            action: function(dialog) {
+                                var valid = $(".form-horizontal").valid();
+                                if(!valid) return false;
+
+                                var envData ={
+                                    "id":env.id,
+                                    "name": $("#edit-env-name").val(),
+                                    "type": $('#edit-env-type option:selected').val(),
+                                    "version":  $('#edit-env-version').val(),
+                                    "regionId":  $('#edit-env-region option:selected').val(),
+                                    "refreshCycle":  $('#edit-env-period option:selected').val(),
+                                    "vendor": $("#edit-env-vendor").val()
+                                }
+                                debugger;
+                                Common.xhr.putJSON('/v2/virtual-env',envData,function(data){
+                                    if(data){
+                                        Dialog.success('保存成功');
+                                        setTimeout(function(){Dialog.closeAll()},2000);
+                                        Common.router.route();
+                                    }else{
+                                        Dialog.warning ('保存失败')
+                                    }
+                                })
+                            }
+                        }],
+                        onshown : ""
+                    });
+
+                });
+            });
+
         });
         //删除按钮
 
         $("a.delete").on("click",function(){
             var data = $(this).attr("data");
-            var del={
-                url:"v2/virtual-env/"+data,
-                type:"delete"
-            }
-            Common.xhr.ajax(del,function(data){
-                if(data){
 
-                    Common.router.reload();
-                }else{
-                    alert("failed");
-                }
+            Common.render('tpls/cresource/env/delete.html',"",function(html){
+                Dialog.show({
+                    title: '删除',
+                    message: html,
+                    nl2br: false,
+                    buttons: [{
+                        label: '取消',
+                        action: function (dialog) {
+                            dialog.close();
+                        }
+                    },{
+                        label:'确定',
+                        action:function(dialog){
+                            var valid = $(".form-horizontal").valid();
+                            if(!valid) return false;
+
+                            var del={
+                                url:"v2/virtual-env/"+data,
+                                type:"delete"
+                            }
+                            Common.xhr.ajax(del,function(data){
+                                if(data){
+                                    Dialog.success('保存成功') ;
+
+                                    setTimeout(function(){Dialog.closeAll()},2000);
+                                    Common.router.reload();
+                                }else{
+                                    alert("failed");
+                                }
+                            });
+                        }
+                    }],
+                    onshown : ""
+                });
+
             });
+
+
         });
     }
     return {

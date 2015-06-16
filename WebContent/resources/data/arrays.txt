@@ -1,5 +1,6 @@
 [
         {
+        	"id" : "1",
             "name" : "Tiger Nixon",
             "os_type":"Linux_centeros",
             "inner_ip": "192.168.100.4",
@@ -12,6 +13,7 @@
             "run_time":"2天14小时"
         },
         {
+        	"id" : "2",
             "name" : "Tiger Nixon",
             "os_type":"Linux_centeros",
             "inner_ip": "192.168.100.4",
@@ -24,6 +26,111 @@
             "run_time":"1天3小时"
         },
         {
+        	"id" : "3",
+            "name" : "Tiger Nixon",
+            "os_type":"Linux_centeros",
+            "inner_ip": "192.168.100.4",
+            "float_ip": "10.65.25.66",
+            "os_conf": "4GB | 2CPU | 40GB",
+            "active_status" : "actived",
+            "available_zone": "WDK1",
+            "vdc":"service",
+            "power_status":"running",
+            "run_time":"16小时"
+        },
+        {
+        	"id" : "4",
+            "name" : "Tiger Nixon",
+            "os_type":"Linux_centeros",
+            "inner_ip": "192.168.100.4",
+            "float_ip": "10.65.25.66",
+            "os_conf": "4GB | 2CPU | 40GB",
+            "active_status" : "wait",
+            "available_zone": "WDK2",
+            "vdc":"service",
+            "power_status":"running",
+            "run_time":"1天3小时"
+        },
+        {
+        	"id" : "5",
+            "name" : "Tiger Nixon",
+            "os_type":"Linux_centeros",
+            "inner_ip": "192.168.100.4",
+            "float_ip": "10.65.25.66",
+            "os_conf": "4GB | 2CPU | 40GB",
+            "active_status" : "actived",
+            "available_zone": "WDK1",
+            "vdc":"service",
+            "power_status":"running",
+            "run_time":"16小时"
+        },
+        {
+        	"id" : "6",
+            "name" : "Tiger Nixon",
+            "os_type":"Linux_centeros",
+            "inner_ip": "192.168.100.4",
+            "float_ip": "10.65.25.66",
+            "os_conf": "4GB | 2CPU | 40GB",
+            "active_status" : "wait",
+            "available_zone": "WDK2",
+            "vdc":"service",
+            "power_status":"running",
+            "run_time":"1天3小时"
+        },
+        {
+        	"id" : "7",
+            "name" : "Tiger Nixon",
+            "os_type":"Linux_centeros",
+            "inner_ip": "192.168.100.4",
+            "float_ip": "10.65.25.66",
+            "os_conf": "4GB | 2CPU | 40GB",
+            "active_status" : "actived",
+            "available_zone": "WDK1",
+            "vdc":"service",
+            "power_status":"running",
+            "run_time":"16小时"
+        },
+        {
+        	"id" : "8",
+            "name" : "Tiger Nixon",
+            "os_type":"Linux_centeros",
+            "inner_ip": "192.168.100.4",
+            "float_ip": "10.65.25.66",
+            "os_conf": "4GB | 2CPU | 40GB",
+            "active_status" : "wait",
+            "available_zone": "WDK2",
+            "vdc":"service",
+            "power_status":"running",
+            "run_time":"1天3小时"
+        },
+        {
+        	"id" : "9",
+            "name" : "Tiger Nixon",
+            "os_type":"Linux_centeros",
+            "inner_ip": "192.168.100.4",
+            "float_ip": "10.65.25.66",
+            "os_conf": "4GB | 2CPU | 40GB",
+            "active_status" : "actived",
+            "available_zone": "WDK1",
+            "vdc":"service",
+            "power_status":"running",
+            "run_time":"16小时"
+        },
+        {
+        	"id" : "10",
+            "name" : "Tiger Nixon",
+            "os_type":"Linux_centeros",
+            "inner_ip": "192.168.100.4",
+            "float_ip": "10.65.25.66",
+            "os_conf": "4GB | 2CPU | 40GB",
+            "active_status" : "wait",
+            "available_zone": "WDK2",
+            "vdc":"service",
+            "power_status":"running",
+            "run_time":"1天3小时"
+        },
+        {
+        	"id" : "11",
             "name" : "Tiger Nixon",
             "os_type":"Linux_centeros",
             "inner_ip": "192.168.100.4",

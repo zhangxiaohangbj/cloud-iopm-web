@@ -1,4 +1,4 @@
-define(['Common','bs/modal','bs/wizard','bs/tooltip','jq/form/validator','jq/form/validator/addons/bs3'],function(Common,Modal){
+define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3'],function(Common,Modal){
 	Common.requestCSS('css/wizard.css');
 	var current_vdc_id = '9cc717d8047e46e5bf23804fc4400247';
 	var init = function(){
@@ -194,15 +194,34 @@ define(['Common','bs/modal','bs/wizard','bs/tooltip','jq/form/validator','jq/for
 					var dataArr = [];
 					if(data){
 						var networks = data.networks;
-						if(networks.length){
-							for(var i=0,l=networks.length;i<l;i++){
-								dataArr.push('<a href="javascript:void(0);" data-index="'+(i+1)+'" class="list-group-item">');
-								dataArr.push(''+networks[i].name+' (<span>'+networks[i].id+'</span>)');
-								dataArr.push('<i class="fa fa-plus-circle fa-fw"></i></a>');
-							}
-							$('div.available-network').html(dataArr.join(''));
-							EventsHandler.networkChosen();
-						}
+						require(['js/common/choose'],function(choose){
+							var options = {
+									selector: '#vm-networks',
+									groupSelectedClass: 'col-sm-7',
+									groupAllClass: 'col-sm-5',
+									addCall: function($clone){
+										//添加角色窗及对应的事件
+										var dtd = $.Deferred();
+										var netId = $clone.find('li:first').attr('data-id');
+										//请求subnet
+										Common.xhr.ajax('resources/data/select.txt',function(subNetList){
+											var html = Common.uiSelect({list:subNetList,className:'select-subnet'});
+											$clone.append('<li class="pull-right subip"><select class="select-subip"><option>默认DHCP</option></select></li>');
+											$clone.append('<li class="pull-right subnet">'+html+'</li>');
+											dtd.resolve();
+										});
+										return dtd.promise();
+									},
+									delCall: function($clone){
+										//去除角色窗及取消事件绑定
+										$clone.children("li.subip").remove();
+										$clone.children("li.subnet").remove();
+									},
+									list: networks
+							};
+							choose.initChoose(options);
+						});
+						EventsHandler.networkChosen();
 					}
 				})
 			},
@@ -389,38 +408,30 @@ define(['Common','bs/modal','bs/wizard','bs/tooltip','jq/form/validator','jq/for
 				},
 				//可用网络选择事件
 				networkChosen : function(){
-					//滑过出现添加图标
-					$(document).off("mouseover mouseout",".available-network a.list-group-item");
-					$(document).on("mouseover mouseout",".available-network a.list-group-item",function(event){
-						if(event.type == "mouseover"){
-							$(this).find('.fa').show();
-						 }else if(event.type == "mouseout"){
-							 $(this).find('.fa').hide();
-						 }
-					});
 					//选择可用网络绑定点击事件,先移出之前绑定的事件，防止多次执行
-					$(document).off("click",".available-network .list-group-item");
-					$(document).on("click",".available-network .list-group-item",function(event){
-						var clone = $(this).clone();
-						clone.find('i').hide();
-						$(this).remove();
-						wizard.el.find('.networks').append(clone);
-						//网卡 指定子网和指定ip置为可用,
-						EventsHandler.changeNetworkDetailStatus(false);
+					$(document).off("change","#vm-networks .select-subnet");
+					$(document).on("change","#vm-networks .select-subnet",function(event){
+						var that = $(this),
+							subnet_id = that.children('option:selected').val();
+						if(subnet_id){
+							Common.xhr.ajax('resources/data/select.txt',function(ipList){
+								var html = Common.uiSelect(ipList);
+								that.parents('.list-group-item:first').find('select.select-subip').html(html);
+							});
+						}
 					});
 					//载入拖拽效果
-					require(['jq/dragsort'], function() {
+					/*require(['jq/dragsort'], function() {
 						 $(".available-network,.networks").dragsort({defaultSelector:"a", dragBetween: true,  placeHolderTemplate: "<a class='list-group-item'></a>",dragEnd: function(){
 							 //拖下来
 							 if($(this).parent().attr('data-listidx') == "1"){
 								 $(this).find('i').hide();
 								 currentChosenObj.networkId = $(this).find('span').html();
-								 EventsHandler.changeNetworkDetailStatus(false);
 								 DataIniter.initSubNet();
 							 }
 							 
 						 } });
-					})
+					})*/
 				},
 				subnetChange : function(){
 					$('select.select-sub-network').change(function(){
@@ -428,9 +439,6 @@ define(['Common','bs/modal','bs/wizard','bs/tooltip','jq/form/validator','jq/for
 				    	currentChosenObj.subnets = current;//同步currentChosenObj
 						DataIniter.initFixedIp();
 					})
-				},
-				changeNetworkDetailStatus : function(disabled){
-					 $('input[name=network-card-name],select.select-sub-network,select.fixed_ip').prop('disabled',disabled);
 				},
 				//访问安全事件
 				securitySetting : function(){
@@ -566,11 +574,11 @@ define(['Common','bs/modal','bs/wizard','bs/tooltip','jq/form/validator','jq/for
 	    						"fixed_ip": '192.168.0.115'//$("#fixed_ip").val()
     					}]
     				}
-    				Common.xhr.postJSON('/9cc717d8047e46e5bf23804fc4400247/servers',serverData,function(data){
+    				Common.xhr.postJSON('/'+current_vdc_id+'/servers',serverData,function(data){
     					wizard._submitting = false;
     					wizard.updateProgressBar(100);
     					closeWizard();
-    					Common.router.route();
+    					Common.router.reload();
     				})
     			});
 
@@ -730,10 +738,23 @@ define(['Common','bs/modal','bs/wizard','bs/tooltip','jq/form/validator','jq/for
 	    	})
 	    });
 	    
-	    //修改云主机名称
+	    //删除云主机
 	    $("ul.dropdown-menu a.delete").on("click",function(){
+	    	var serverName = $(this).parents('tr:first').find('td.vm_name').html();
+	    	var serverId = $(this).attr("data");
 	    	require(['css!'+PubView.rqBaseUrl+'/css/dialog.css']);
-	    	Modal.confirm("");
+	    	Modal.confirm("你已经选择了 【"+serverName+"】 。 请确认您的选择。终止的云主机均无法恢复。",function(result){
+	            if(result) {
+	                Common.xhr.del('/'+current_vdc_id+'/servers/'+serverId,function(data){
+	                	if(data.success||data.code==404){
+	                		Modal.success("云主机【"+serverName+"】已终止！");
+	                	}else{
+	                		Modal.error("云主机【"+serverName+"】终止失败！");
+	                	}
+	                	Common.router.reload();
+	                });	    		
+	            }
+	    	});
 	    });
 	}	
 	return {

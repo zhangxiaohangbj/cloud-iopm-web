@@ -1,0 +1,54 @@
+[
+        {
+            "name" : "Tiger Nixon",
+            "size":"20GB",
+            "status": "in-use",
+            "vm_id": "private",
+            "type": "ceth(分布式)",
+            "vdc_id" : "vdc1",
+            "available_zone": "WDK1",
+            "read_only":"1",
+            "description":"可用磁盘数据"
+        },
+        {
+            "name" : "Hadoop data",
+            "size":"500GB",
+            "status": "available",
+            "vm_id": "private",
+            "type": "iscsi",
+            "vdc_id" : "vdc2",
+            "available_zone": "WDK2",
+            "read_only":"1",
+            "description":"磁盘数据"
+        },{
+            "name" : "磁盘分区",
+            "size":"120GB",
+            "status": "deleted",
+            "vm_id": "private",
+            "type": "ceth(分布式)",
+            "vdc_id" : "vdc1",
+            "available_zone": "WDK1",
+            "read_only":"0",
+            "description":"可用磁盘数据"
+        },{
+            "name" : "Hadoop data2",
+            "size":"30GB",
+            "status": "in-use",
+            "vm_id": "private",
+            "type": "ceth(分布式)",
+            "vdc_id" : "vdc1",
+            "available_zone": "WDK1",
+            "read_only":"1",
+            "description":"可用磁盘数据"
+        },{
+            "name" : "Tiger",
+            "size":"60GB",
+            "status": "in-use",
+            "vm_id": "private",
+            "type": "ceth(分布式)",
+            "vdc_id" : "vdc1",
+            "available_zone": "WDK1",
+            "read_only":"0",
+            "description":"可用磁盘数据"
+        }
+]

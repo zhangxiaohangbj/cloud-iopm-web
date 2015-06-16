@@ -1,4 +1,4 @@
-define(['Common','bs/modal','bs/wizard','bs/tooltip','jq/form/validator','jq/form/validator/addons/bs3','bs/switcher'],function(Common,Dialog){
+define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3','bs/switcher'],function(Common,Dialog){
 	Common.requestCSS('css/wizard.css');
 	Common.requestCSS('css/dialog.css');
 	var init = function(){
@@ -287,8 +287,7 @@ define(['Common','bs/modal','bs/wizard','bs/tooltip','jq/form/validator','jq/for
 	    })
 	    //删除子网
 	     $("#SubnetTable_wrapper a.deleteSubnet").on("click",function(){
-	    	 var obj = $(this);
-	    	 var id = obj.attr("data");
+	    	 var id = $(this).attr("data");
 	    	 Dialog.confirm('确定要删除该子网吗?', function(result){
 	             if(result) {
 	            	 Common.xhr.del('/v2.0/subnets/'+id,

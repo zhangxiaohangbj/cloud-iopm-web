@@ -1,7 +1,7 @@
 /**
  * 初始化对象,包含公共的初始化加载方法和全局的方法，包括路由注册
  */
-define('Common', ['PubView', 'bs/modal', 'json', 'template', 'jq/dataTables', 'jq/dataTables/themes/bs3', 'bs/popover'], function(PubView, Modal, JSON, template) {
+define('Common', ['PubView', 'bs/modal', 'json', 'template', 'jq/dataTables-bs3', 'bs/popover'], function(PubView, Modal, JSON, template) {
     //获取hash
     var _getHash = function(url){
         if(!url && typeof window.location.hash !== "undefined") {
@@ -42,7 +42,7 @@ define('Common', ['PubView', 'bs/modal', 'json', 'template', 'jq/dataTables', 'j
         null,
         {
             title: '<i class="fa fa-codepen fa-fw"></i>基础环境',
-            current: [2],
+            current: [3],
             items:[
                 {
                     text: '<i class="fa fa-th-large"></i>设备管理<i class="fa icon-arrow"></i>',
@@ -250,11 +250,11 @@ define('Common', ['PubView', 'bs/modal', 'json', 'template', 'jq/dataTables', 'j
                     items: [
                         {
                             text: '任务定义',
-                            link: '#task'
+                            link: '#task/task'
                         },
                         {
                             text: '任务监控',
-                            link: '#monitor'
+                            link: '#task/monitor'
                         },
                         {
                             text: '策略定义',
@@ -706,7 +706,7 @@ define('Common', ['PubView', 'bs/modal', 'json', 'template', 'jq/dataTables', 'j
                         _callback = _data;
                         doRender();
                     } else {
-                        doRender();
+                        doRender(_data);
                     }
                 } catch (e) {
                     that.resolve();

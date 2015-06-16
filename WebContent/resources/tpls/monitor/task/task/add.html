@@ -1,0 +1,42 @@
+<form class="form-horizontal" id="editTask">
+	<div class="form-group">
+		<label for="taskGroupId" class="control-label col-sm-4"><span style="color: red;">* </span>任务分组：</label>
+	 	<div class="col-sm-5 col-sm">
+		 	<select class="dialog-form-control select" name="taskGroupId" value="{{taskGroupId}}">
+			 	{{each taskGroupList as item i}}
+			 		<option value="{{item.id}}">{{item.name}}</option>
+			 	{{/each}}
+		 	</select>
+		</div>
+	</div>
+	<div class="form-group">
+		<label for="name" class="control-label col-sm-4"><span style="color: red;">* </span>任务名称：</label>
+	 	<div class="col-sm-5 col-sm">
+			<input type="text" class="dialog-form-control" name="name" value="{{name}}">
+		</div>
+	</div>
+	<div class="form-group">
+		<label for="memo" class="control-label col-sm-4">任务描述：</label>
+	 	<div class="col-sm-5 col-sm">
+			<textarea class="wizard-form-control" style="height:auto;" rows="4" name="memo" placeholder="">{{memo}}</textarea>
+		</div>
+	</div>
+	<div class="form-group">
+		<label for="className" class="control-label col-sm-4"><span style="color: red;">* </span>实现类：</label>
+	 	<div class="col-sm-5 col-sm">
+			<input type="text" class="dialog-form-control" name="className" value="{{className}}">
+		</div>
+	</div>
+	<div class="form-group">
+		<label for="methodName" class="control-label col-sm-4"><span style="color: red;">* </span>实现方法：</label>
+	 	<div class="col-sm-5 col-sm">
+			<input type="text" class="dialog-form-control" name="methodName" value="{{methodName}}">
+		</div>
+	</div>
+	<div class="form-group">
+		<label for="paramsMemo" class="control-label col-sm-4">参数描述：</label>
+	 	<div class="col-sm-5 col-sm">
+			<textarea class="wizard-form-control" style="height:auto;" rows="4" name="paramsMemo" placeholder="">{{paramsMemo}}</textarea>
+		</div>
+	</div>
+</form>
