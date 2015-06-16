@@ -1,4 +1,4 @@
-define(['Common','bs/modal','bs/wizard','jq/form/validator','jq/form/validator/addons/bs3','bs/tooltip'],function(Common,Dialog){
+define(['Common','bs/modal','jq/form/wizard','jq/form/validator-bs3','bs/tooltip'],function(Common,Dialog){
     Common.requestCSS('css/wizard.css');
     Common.requestCSS('css/dialog.css');
     var init = function(){
@@ -56,6 +56,8 @@ define(['Common','bs/modal','bs/wizard','jq/form/validator','jq/form/validator/a
             vendor:"default"//default
         };
         var currentChosenConnector={
+            version:'2.0',
+            type:null,
             ip:null,
             port:null,
             username:null,
@@ -108,15 +110,16 @@ define(['Common','bs/modal','bs/wizard','jq/form/validator','jq/form/validator/a
         var CheckHandler={
             nameCheck:function(){
                 currentChosenEnv.name = $("#env-name").val();
-
                  $("#env-name-confirm").val(currentChosenEnv.name);
-
             },
             typeChange:function(){
                 $('select.select-env-type').change(function(){
-                    currentChosenEnv.type =  $(this).children('option:selected').val();
+                    var curEnv = $(this).children('option:selected');
+                    currentChosenEnv.type =  curEnv.val();
+                    currentChosenConnector.type = curEnv.val();
+                    $("#env-type-confirm").val(curEnv.text());
                 });
-                $("#env-type-confirm").val(currentChosenEnv.type);
+                $("#env-type-confirm").val($('select.select-env-type option:selected').text());
             },
             vendorCheck:function(){
                 currentChosenEnv.vendor = $("#env-vendor").val();
@@ -124,19 +127,26 @@ define(['Common','bs/modal','bs/wizard','jq/form/validator','jq/form/validator/a
             },
             versionCheck:function(){
                 currentChosenEnv.version = $("#env-version").val();
+                currentChosenConnector.version = $("#env-version").val();
                 $("#env-version-confirm").val(currentChosenEnv.version);
             },
             regionChange:function(){
                 $('select.select-region').change(function(){
-                    currentChosenEnv.regionId =  $(this).children('option:selected').val();
+                    var curRegion = $(this).children('option:selected');
+                    currentChosenEnv.regionId =  curRegion.val();
+                    $("#env-region-confirm").val(curRegion.text());
                 });
-                $("#env-region-confirm").val(currentChosenEnv.regionId);
+                $("#env-region-confirm").val($('select.select-region option:selected').text());
+
             },
             protocolChange:function(){
                 $('select.select-protocol').change(function(){
-                    currentChosenConnector.protocol =  $(this).children('option:selected').val();
+                    var curPro = $(this).children('option:selected');
+                    currentChosenConnector.protocol =  curPro.val();
+                    $("#connector-protocol-confirm").val(curPro.text());
                 });
-                $("#connector-protocol-confirm").val(currentChosenConnector.protocol);
+                $("#connector-protocol-confirm").val($('select.select-protocol option:selected').text());
+
             },
             ipCheck:function(){
                 currentChosenConnector.ip = $("#connector-ip").val();
@@ -156,9 +166,12 @@ define(['Common','bs/modal','bs/wizard','jq/form/validator','jq/form/validator/a
             },
             periodChange:function(){
                 $('select.select-period').change(function(){
-                    currentChosenEnv.refreshCycle =  $(this).children('option:selected').val();
+                    var curPeriod = $(this).children('option:selected');
+                    currentChosenEnv.refreshCycle =  curPeriod.val();
+                    $("#select-period-confirm").val(curPeriod.text());
                 });
-                $("#select-period-confirm").val(currentChosenEnv.refreshCycle);
+                $("#select-period-confirm").val($('select.select-period option:selected').text());
+
             },
             //表单校验
             formValidator: function(){
@@ -222,6 +235,7 @@ define(['Common','bs/modal','bs/wizard','jq/form/validator','jq/form/validator/a
                 //
                 currentChosenEnv.type = $('select.select-env-type option:selected').val();
                 currentChosenEnv.regionId = $('select.select-region option:selected').val();
+                currentChosenConnector.type = $('select.select-env-type option:selected').val();
                 currentChosenConnector.protocol = $('select.select-protocol option:selected').val();
                 currentChosenEnv.refreshCycle = $('select.select-period option:selected').val();
 
@@ -260,21 +274,21 @@ define(['Common','bs/modal','bs/wizard','jq/form/validator','jq/form/validator/a
                     switch (index){
                         case 1:
                             CheckHandler.nameCheck();
-                            CheckHandler.regionChange();
-                            CheckHandler.typeChange();
                             CheckHandler.vendorCheck();
                             CheckHandler.versionCheck();
                             break;
                         case 2:
                             CheckHandler.ipCheck();
                             CheckHandler.paswCheck();
-                            CheckHandler.periodChange();
                             CheckHandler.portCheck();
-                            CheckHandler.protocolChange();
                             CheckHandler.userCheck();
                             break;
                     }
                 });
+                CheckHandler.typeChange();
+                CheckHandler.regionChange();
+                CheckHandler.periodChange();
+                CheckHandler.protocolChange();
                 CheckHandler.formValidator();
 
                 //提交按钮

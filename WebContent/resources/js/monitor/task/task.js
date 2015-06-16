@@ -1,4 +1,4 @@
-define(['Common','bs/modal','bs/wizard','bs/tooltip','jq/form/validator','jq/form/validator/addons/bs3'],function(Common,Modal){
+define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3'],function(Common,Modal){
 	Common.requestCSS('css/wizard.css');
 	Common.requestCSS('css/dialog.css');
 	var init = function(){
@@ -16,7 +16,7 @@ define(['Common','bs/modal','bs/wizard','bs/tooltip','jq/form/validator','jq/for
 	
 	var bindEvent = function(){
 		//dataTables
-		Common.initDataTable($('#strategyTable'),function($tar){
+		Common.initDataTable($('#taskTable'),function($tar){
 			$tar.prev().find('.left-col:first').append(
 					'<span class="btn btn-add">新 建</span>'
 			);
@@ -29,13 +29,13 @@ define(['Common','bs/modal','bs/wizard','bs/tooltip','jq/form/validator','jq/for
         //初始化加载，不依赖其他模块
 		var DataGetter = {
 				//任务分组列表
-				getStrategyGroupList: function(type){
-					Common.xhr.get('/cloud/task/strategy-group',{'deleted':'false'},function(list){
-						renderData.strategyGroupList = list;
+				getTaskGroupList: function(type){
+					Common.xhr.get('/cloud/task/task-group',{'deleted':'false'},function(list){
+						renderData.taskGroupList = list;
 					});
 				},
 		}
-		DataGetter.getStrategyGroupList();
+		DataGetter.getTaskGroupList();
 		
 		//事件处理
 		var EventsHandler = {
@@ -71,7 +71,7 @@ define(['Common','bs/modal','bs/wizard','bs/tooltip','jq/form/validator','jq/for
 	    	//创建弹框
 	    	Add : function(cb){
 	    		//需要修改为真实数据源
-				Common.render('tpls/monitor/task/strategy/add.html',renderData,function(html){
+				Common.render('tpls/monitor/task/task/add.html',renderData,function(html){
 					Modal.show({
 	    	            title: '新建任务',
 	    	            message: html,
@@ -83,7 +83,7 @@ define(['Common','bs/modal','bs/wizard','bs/tooltip','jq/form/validator','jq/for
 	    	            		if(!valid) return false;
 	    	            		Modal.confirm('确定要保存吗?', function(result){
 	    	            			if(result) {
-	    	            				Common.xhr.postJSON('/cloud/task/strategy',$("#editStrategy").serializeObject(),function(data){
+	    	            				Common.xhr.postJSON('/cloud/task/task',$("#editTask").serializeObject(),function(data){
 	    	    	                		if(data){
 	    	    	                			Modal.alert("保存成功",function(){
 		    	    	                			dialog.close();
@@ -111,9 +111,9 @@ define(['Common','bs/modal','bs/wizard','bs/tooltip','jq/form/validator','jq/for
 	    	
 	    	//编辑弹框
 	    	Edit : function(id,cb){
-	    		Common.xhr.ajax('/cloud/task/strategy/'+id,function(data){
-	    			data.strategyGroupList=renderData.strategyGroupList;
-	    			Common.render('tpls/monitor/task/strategy/add.html',data,function(html){
+	    		Common.xhr.ajax('/cloud/task/task/'+id,function(data){
+	    			data.taskGroupList=renderData.taskGroupList;
+	    			Common.render('tpls/monitor/task/task/add.html',data,function(html){
 						Modal.show({
 		    	            title: '编辑任务',
 		    	            message: html,
@@ -125,7 +125,7 @@ define(['Common','bs/modal','bs/wizard','bs/tooltip','jq/form/validator','jq/for
 		    	            		if(!valid) return false;
 		    	            		Modal.confirm('确定要保存吗?', function(result){
 		    	            			if(result) {
-		    	            				Common.xhr.putJSON('/cloud/task/strategy/'+id,$("#editStrategy").serializeObject(),function(data){
+		    	            				Common.xhr.putJSON('/cloud/task/task/'+id,$("#editTask").serializeObject(),function(data){
 		    	            					if(data){
 		    	    	                			Modal.alert("保存成功",function(){
 			    	    	                			dialog.close();
@@ -154,26 +154,26 @@ define(['Common','bs/modal','bs/wizard','bs/tooltip','jq/form/validator','jq/for
 	    }
 		
 		//新建
-		$("#strategyTable_wrapper span.btn-add").on("click",function(){
+		$("#taskTable_wrapper span.btn-add").on("click",function(){
 	    	EditData.Add(function(){
 	    		EventsHandler.formValidator();
 	    	});
 	    });
 		
 	    //编辑
-	    $("#strategyTable_wrapper a.btn-opt").on("click",function(){
+	    $("#taskTable_wrapper a.btn-opt").on("click",function(){
 	    	EditData.Edit($(this).attr("data"),function(){
 	    		EventsHandler.formValidator();
 	    	});
 	    });
 	    
 	    //删除
-	    $("#strategyTable_wrapper a.delete").on("click",function(){
+	    $("#taskTable_wrapper a.delete").on("click",function(){
 	    	debugger;
 	    	var id = $(this).attr("data");
 	    	Modal.confirm('确定要删除吗?', function(result){
 	    		if(result) {
-	    			Common.xhr.del('/cloud/task/strategy/'+id,"",function(data){
+	    			Common.xhr.del('/cloud/task/task/'+id,"",function(data){
     					if(data){
                 			Modal.alert("删除成功",function(){
 	                			Common.router.reload();

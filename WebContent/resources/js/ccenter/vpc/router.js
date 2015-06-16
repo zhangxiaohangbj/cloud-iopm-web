@@ -1,4 +1,4 @@
-define(['Common','bs/modal','bs/wizard','bs/tooltip','jq/form/validator','jq/form/validator/addons/bs3','bs/switcher'],function(Common,Dialog){
+define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3','bs/switcher'],function(Common,Dialog){
 	Common.requestCSS('css/wizard.css');
 	Common.requestCSS('css/dialog.css');
 	var init = function(){
@@ -31,13 +31,53 @@ define(['Common','bs/modal','bs/wizard','bs/tooltip','jq/form/validator','jq/for
 			        });
 				}
 		}
+		 //载入默认的数据 inits,创建数据载入类
+		var DataIniter = {
+				//子网列表
+				initSubnetList : function(){
+					Common.xhr.ajax('/v2.0/subnets',function(data){
+						var subnets = data.subnets;
+						var id = $("[name='subnetId']").attr("data");
+						if(id!=null){
+							for (var i=0;i<subnets.length;i++) {
+								if (subnets[i].id==id) {
+									subnets[i].selected="selected";
+								}
+							}
+						}				
+						var html = Common.uiSelect(subnets);
+				    	$("[name='subnetId']").html(html);
+				    	
+					})
+				},
+				//vpc列表
+				initNetworkList : function(){
+					Common.xhr.ajax('/v2.0/networks',function(data){
+						var networks = data.networks;
+						var id = $("[name='networkId']").attr("data");
+						if(id!=null){
+							for (var i=0;i<networks.length;i++) {
+								if (networks[i].id==id) {
+									networks[i].selected="selected";
+								}
+							}
+						}				
+						var html = Common.uiSelect(networks);
+				    	$("[name='networkId']").html(html);
+				    	
+					})
+				}
+		};
 		//创建路由
 	    $("#RouterTable_wrapper span.btn-add").on("click",function(){
 	    	Dialog.show({
 	            title: '路由创建',
 	            message: '<form class="form-horizontal" id="addRouter"><div class="form-group"><label for="name" class="control-label col-sm-3">'
 	            	+'<span style="color: red;">* </span>路由名称：</label><div class="col-sm-7 col-sm">'
-	    			+'<input type="text" class="dialog-form-control" name="name" value=""></div></div></form>',
+	    			+'<input type="text" class="dialog-form-control" name="name" value=""></div></div>'
+	    			+'<div class="form-group"><label for="network_id" class="control-label col-sm-3">'
+	    		 	+'<span style="color: red;">* </span>VPC：</label><div class="col-sm-7 col-sm">'
+	    		 	+'<select class="dialog-form-control select" name="networkId"></select></div></div></form>',
 	            nl2br: false,
 	            buttons: [{
 	                label: '创建',
@@ -49,7 +89,7 @@ define(['Common','bs/modal','bs/wizard','bs/tooltip','jq/form/validator','jq/for
             				    "admin_state_up": true,
             				    "enable_snat": true,
             				    "external_gateway_info": {
-            				    		"network_id":"027dc8b35c0e4af4ace0f25afa83c982",
+            				    		"network_id":$("[name='networkId']").val(),
             				    		"enable_snat":true},
             				    "gw_port_id": "",
             				    "name":  $("[name='name']").val(),
@@ -69,6 +109,7 @@ define(['Common','bs/modal','bs/wizard','bs/tooltip','jq/form/validator','jq/for
 	                }
 	            }],
 	            onshown : function(){
+	            	DataIniter.initNetworkList();
 	            	EventsHandler.formValidator();
 	            }
 	        });
@@ -83,7 +124,7 @@ define(['Common','bs/modal','bs/wizard','bs/tooltip','jq/form/validator','jq/for
 		            message: html,
 		            nl2br: false,
 		            buttons: [{
-		                label: '创建',
+		                label: '确定',
 		                action: function(dialog) {
 		                	var valid = $(".form-horizontal").valid();
 		            		if(!valid) return false;
@@ -92,7 +133,6 @@ define(['Common','bs/modal','bs/wizard','bs/tooltip','jq/form/validator','jq/for
 	            				    "admin_state_up": true,
 	            				    "enable_snat": true,
 	            				    "external_gateway_info": {
-	            				    		"network_id":"027dc8b35c0e4af4ace0f25afa83c982",
 	            				    		"enable_snat":true},
 	            				    "gw_port_id": "",
 	            				    "name":  $("[name='name']").val(),
@@ -137,6 +177,26 @@ define(['Common','bs/modal','bs/wizard','bs/tooltip','jq/form/validator','jq/for
 	             }
 	         });
 	     })
+	     //清除网关
+	     $("#RouterTable_wrapper span.deleteGateway").on("click",function(){
+	    	 var id = $(this).attr("data");
+	    	 Dialog.confirm('确定要清除网关吗?', function(result){
+	             if(result) {
+	            	 Common.xhr.del('/v2.0/routers/'+id,  //需修改接口
+	                     function(data){
+	                    	 if(data){
+	                    		 Dialog.success('操作成功')
+	                			 setTimeout(function(){Dialog.closeAll()},2000);
+	                    		 Common.router.route();
+	                    	 }else{
+	                    		 Dialog.warning ('操作失败')
+	                    	 }
+	                     });
+	             }else {
+	            	 Dialog.closeAll();
+	             }
+	         });
+	     })
 		//路由明细
 		$("#RouterTable_wrapper a.router-name").on("click",function(){
 		    	Common.xhr.ajax('/v2.0/routers/'+$(this).attr("data"),function(data){
@@ -149,26 +209,7 @@ define(['Common','bs/modal','bs/wizard','bs/tooltip','jq/form/validator','jq/for
 		    		});
 		    	});
 		    });
-	    //载入默认的数据 inits,创建数据载入类
-		var DataIniter = {
-				//子网列表
-				initSubnetList : function(){
-					Common.xhr.ajax('/v2.0/subnets',function(data){
-						var subnets = data.subnets;
-						var id = $("[name='subnetId']").attr("data");
-						if(id!=null){
-							for (var i=0;i<subnets.length;i++) {
-								if (subnets[i].id==id) {
-									subnets[i].selected="selected";
-								}
-							}
-						}				
-						var html = Common.uiSelect(subnets);
-				    	$("[name='subnetId']").html(html);
-				    	
-					})
-				},
-		};
+	   
 		var EditData = {
 		    	//添加子网连接
 		    	AddRouterSubnet : function(id,cb){
@@ -183,10 +224,8 @@ define(['Common','bs/modal','bs/wizard','bs/tooltip','jq/form/validator','jq/for
 			    	                	var valid = $(".form-horizontal").valid();
 			    	            		if(!valid) return false;
 			    	                	var serverData = {
-	    	                				  "id": "",
-	    	                				  "portId": "",
-	    	                				  "subnetId": $("[name='subnetId']").val(),
-	    	                				  "tenantId": ""
+	    	                				  "port_id": null,
+	    	                				  "subnet_id": $("[name='subnetId']").val(),
 			    	                	  };
 			    	                	Common.xhr.putJSON('/v2.0/routers/'+id+'/add_router_interface',serverData,function(data){ //需修改接口
 			    	                		if(data){
@@ -204,49 +243,17 @@ define(['Common','bs/modal','bs/wizard','bs/tooltip','jq/form/validator','jq/for
 			    		});
 		    		
 		    	},
-		    	//子网连接编辑
-		    	EditRouterSubnet:function(id,cb){
-		    		Common.xhr.ajax('/v2.0/routers/'+id,function(data){  //需修改接口
-			    		Common.render('tpls/ccenter/vpc/editroutersubnet.html',data.router,function(html){
-				    	Dialog.show({
-				            title: '连接子网',
-				            message: html,
-				            nl2br: false,
-				            buttons: [{
-				                label: '确定',
-				                action: function(dialog) {
-				                	var valid = $(".form-horizontal").valid();
-				            		if(!valid) return false;
-				            		var serverData = {
-	    	                				  "id": "",
-	    	                				  "portId": "",
-	    	                				  "subnetId": $("[name='subnetId']").val(),
-	    	                				  "tenantId": ""
-			    	                	  };
-				                	Common.xhr.putJSON('/v2.0/routers/'+id+'/add_router_interface',serverData,function(data){ //需修改接口
-				                		if(data){
-				                			Dialog.success('保存成功')
-				                			setTimeout(function(){Dialog.closeAll()},2000);
-				                			EditData.GetSubnetList(id);
-										}else{
-											 Dialog.warning ('保存失败')
-										}
-									})
-				                }
-				            }],
-				            onshown : cb
-				        });
-			    		})
-			    	});
-		    	},
 		    	//获取子网连接列表
 		    	GetSubnetList :function(id){
-		    		Common.render(true,'tpls/ccenter/vpc/routersubnet.html','/v2.0/routers',function(html){
+		    		Common.render(true,'tpls/ccenter/vpc/routersubnet.html','/v2.0/ports?device_owner=network&device_id='+id,function(html){ //需修改接口
 			    		Common.initDataTable($('#subnetTable'),function($tar){
 			    			$tar.prev().find('.left-col:first').append(
 			    					'<span class="btn btn-add">添加子网连接</span>'
 			    				);
 			    		});
+			    		$("a.reload").on("click",function(){
+		    		    	Common.router.route();
+		    		    })
 			    		//添加子网连接
 				    	$("#subnetTable_wrapper span.btn-add").on("click",function(){
 				    		EditData.AddRouterSubnet(id,function(){
@@ -254,13 +261,31 @@ define(['Common','bs/modal','bs/wizard','bs/tooltip','jq/form/validator','jq/for
 				    			EventsHandler.formValidator();
 				    		})
 				    	});
-				    	//编辑子网连接
-					    $("#subnetTable_wrapper a.btn-edit").on("click",function(){
-					    	var id= $(this).attr("data");
-					    	EditData.EditRouterSubnet(id,function(){
-					    		DataIniter.initSubnetList();
-				    			EventsHandler.formValidator();
-				    		})
+					    //删除子网连接
+					    $("#subnetTable_wrapper a.btn-delete").on("click",function(){
+					    	var portId= $(this).attr("data");
+					    	var subnetId= $(this).attr("datasubnet");
+					    	Dialog.confirm('确定要删除该子网连接吗?', function(result){
+					             if(result) {
+					            	 var serverData = {
+	    	                				  "router_id": id,
+	    	                				  "subnet_id": subnetId,
+	    	                				  "port_id": portId
+			    	                	  };
+					            	 Common.xhr.putJSON('/v2.0/routers/'+id+'/remove_router_interface',serverData,  //需修改接口
+					                     function(data){
+					                    	 if(data){
+					                    		 Dialog.success('删除成功')
+					                			 setTimeout(function(){Dialog.closeAll()},2000);
+					                    		 EditData.GetSubnetList(id);
+					                    	 }else{
+					                    		 Dialog.warning ('删除失败')
+					                    	 }
+					                     });
+					             }else {
+					            	 Dialog.closeAll();
+					             }
+					         });
 					    });
 			    	});
 		    	}

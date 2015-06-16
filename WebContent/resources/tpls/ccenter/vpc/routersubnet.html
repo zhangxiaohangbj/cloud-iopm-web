@@ -1,6 +1,7 @@
 <div class="page-header clearfix">
 	<ol class="breadcrumb">
 	  <li class="active">子网连接</li>
+	  <a href="javascript:void(0);" class="reload" style="padding: 6px 12px;font-size: 14px;">返回路由列表</a>
 	</ol>
 </div>
 <div class="page-body">
@@ -22,20 +23,21 @@
 					</tr>
 				</thead>
 				<tbody>
-				{{each routers as item i}}
+				{{each ports as item i}}
 					<tr>
 						<td><label><input type="checkbox"></label></td>
-						<td>{{item.gw_port_id}}</td>
-						<td>subnet1</td>
-						<td>{{item.gw_port_id }}</td>
+						<td>{{item.network_id}}</td>
+						<td>{{item.fixed_ips[0].subnet_id}}</td>
+						<td>{{item.fixed_ips[0].ip_address}}</td>
 						<td>{{item.status}}</td>
-						<td>{{if item.enable_snat == 1}} 网关 {{else}} 内部网络 {{/if}}</td>
+						<td>{{if item.device_owner == "network:router_interface"}} 子网链接 {{else}} 外部网关 {{/if}}</td>
 						<td>
 			 			{{if item.admin_state_up == '1'}} 启用 {{else}} 禁用 {{/if}}
 			 			</td>
 						<td>
-						<a class="btn-edit" data-toggle="tooltip" title="编辑" href="javascript:void(0)" data="{{item.id}}" data-act="stop" style="margin: 0;"><li class="glyphicon glyphicon-edit"></li></a>
-						<a class="btn-delete" data-toggle="tooltip" title="删除" href="javascript:void(0)" data="{{item.id}}"><i class="fa fa-trash-o fa-fw"></i></a>
+						{{if item.device_owner == "network:router_interface"}}
+						<a class="btn-delete" data-toggle="tooltip" title="删除" href="javascript:void(0)" data="{{item.id}}" datasubnet="{{item.fixed_ips[0].subnet_id}}"><i class="fa fa-trash-o fa-fw"></i></a>
+						{{else}} {{/if}}
 						</td>
 					</tr>
     			{{/each}}

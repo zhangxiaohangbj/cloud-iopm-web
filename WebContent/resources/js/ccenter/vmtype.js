@@ -263,7 +263,6 @@ define(['Common','bs/modal','bs/wizard','bs/tooltip','jq/form/validator-bs3'],fu
                                     EventsHandler.flavorAccessEvent();
                                 }
 			    	        });
-
 			    		});
 		    		})
 		    		
