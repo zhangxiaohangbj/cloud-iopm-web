@@ -399,6 +399,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 								var html = Common.uiSelect(selectData);
 								that.parents('.list-group-item:first').find('select.select-subip').html(html);
 							}
+						}
 					});
 				},
 				//访问安全事件
