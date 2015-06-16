@@ -13,28 +13,28 @@
 			<table class="table table-primary table-striped" id="VmTable">
 				<thead>
 					<tr>
-						<th class="c1">
+						<th class="c2">
 							<label><input type="checkbox" class="selectAll"></label>
 						</th>
-						<th class="c2">名称</th>
-						<th class="c2">内部IP</th>
-						<th class="c2">浮动IP</th>
-						<th class="c3">配置</th>
-						<th class="c1">激活</th>
-						<th class="c2">可用域</th>
-						<th class="c2">虚拟数据中心</th>
-						<th class="c1">电源状态</th>
-						<th class="c2">运行时间</th>
-						<th class="c2 sorting_disabled">操作</th>
+						<th class="c9">名称</th>
+						<th class="c8">内部IP</th>
+						<th class="c8">浮动IP</th>
+						<th class="c12">配置</th>
+						<th class="c9">激活</th>
+						<th class="c9">可用域</th>
+						<th class="c10">虚拟数据中心</th>
+						<th class="c9">电源状态</th>
+						<th class="c10">运行时间</th>
+						<th class="c12 sorting_disabled">操作</th>
 					</tr>
 				</thead>
 				<tbody>
 				{{each list as item i}}
 					<tr>
 						<td><label><input type="checkbox"></label></td>
-						<td class="vm_name">{{item.name}}</td>
-						<td>{{item.inner_ip}}</td>
-						<td>{{item.float_ip}}</td>
+						<td>{{item.name}}</td>
+						<td>{{item.fixedIps}}</td>
+						<td>{{item.floatingIps}}</td>
 						<td>{{item.os_conf}}</td>
 						<td>
 			 			{{if item.active_status == 'actived'}}
@@ -68,8 +68,8 @@
 								<li><a href="#"><i class="fa fa-file-text fa-fw"></i>暂停</a></li>
 								<li><a href="#"><i class="fa fa-file-text fa-fw"></i>挂起</a></li>
 								<li><a href="javascript:void(0)" class="editVmType" data="{{item.id}}"><i class="fa fa-file-text fa-fw"></i>调整配置</a></li>
-								<li><a href="#"><i class="fa fa-file-text fa-fw"></i>软重启</a></li>
-								<li><a href="#"><i class="fa fa-file-text fa-fw"></i>硬重启</a></li>
+								<li><a href="javascript:void(0)" class="rebootSoft"><i class="fa fa-file-text fa-fw"></i>软重启</a></li>
+								<li><a href="javascript:void(0)" class="rebootHard"><i class="fa fa-file-text fa-fw"></i>硬重启</a></li>
 								<li><a href="#"><i class="fa fa-file-text fa-fw"></i>关闭</a></li>
 								<li><a href="#"><i class="fa fa-file-text fa-fw"></i>重建</a></li>
 								<li><a href="javascript:void(0)" class="delete" data="{{item.id}}"><i class="fa fa-file-text fa-fw"></i>终止</a></li>
