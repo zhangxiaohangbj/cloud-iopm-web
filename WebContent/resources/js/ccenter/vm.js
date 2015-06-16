@@ -463,16 +463,18 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
     			});
     			//加载时载入validate
     			wizard.on('show',function(){
-    				wizard.form.validate({
-    						errorContainer: '_form',
-    			            rules: {
+    				wizard.form.each(function(){
+    					$(this).validate({
+                            errorContainer: '_form',
+                            rules: {
     			            	'name': {
     			                    required: true,
     			                    minlength: 4,
     			                    maxlength:15
     			                }
     			            }
-    				});
+    					});
+    				})
     			});
     			//确认信息卡片被选中的监听
     			wizard.cards.confirm.on('selected',function(card){

@@ -618,21 +618,57 @@ i.image-icon-default.centos {
 }
 /* 表格宽度*/
 .table-primary thead .c1{
-	width:5%;
+	width:1%;
 }
 .table-primary thead .c2{
-	width:10%;
+	width:2%;
 }
 .table-primary thead .c3{
-	width:15%;
+	width:3%;
 }
 .table-primary thead .c4{
-	width:20%;
+	width:4%;
 }
 .table-primary thead .c5{
-	width:25%;
+	width:5%;
 }
 .table-primary thead .c6{
+	width:6%;
+}
+.table-primary thead .c7{
+	width:7%;
+}
+.table-primary thead .c8{
+	width:8%;
+}
+.table-primary thead .c9{
+	width:9%;
+}
+.table-primary thead .c10{
+	width:10%;
+}
+.table-primary thead .c11{
+	width:11%;
+}
+.table-primary thead .c12{
+	width:12%;
+}
+.table-primary thead .c13{
+	width:13%;
+}
+.table-primary thead .c14{
+	width:14%;
+}
+.table-primary thead .c15{
+	width:15%;
+}
+.table-primary thead .c20{
+	width:20%;
+}
+.table-primary thead .c25{
+	width:25%;
+}
+.table-primary thead .c30{
 	width:30%;
 }
 .table-primary tfoot tr{
