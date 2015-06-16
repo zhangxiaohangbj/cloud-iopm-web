@@ -269,7 +269,6 @@ define(['Common','bs/modal','jq/form/wizard','jq/form/validator-bs3','bs/tooltip
 
         //编辑按钮
         $("a.edit").on("click",function(){
-
             var data = $(this).attr("data");
             Common.xhr.ajax("/v2/os-availability-zone/"+data,function(zone){
                 var selectData2= {"data":renderData,"availableZone":zone};

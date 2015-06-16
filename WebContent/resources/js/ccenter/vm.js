@@ -538,9 +538,9 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
     				}
     				Common.xhr.postJSON('/'+current_vdc_id+'/servers',serverData,function(data){
     					wizard._submitting = false;
-    					wizard.updateProgressBar(100);
-    					closeWizard();
-    					Common.router.reload();
+						wizard.updateProgressBar(100);
+						closeWizard();
+						Common.router.reload();
     				})
     			});
 
