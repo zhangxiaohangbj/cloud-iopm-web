@@ -4,7 +4,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 	var init = function(){
 		Common.$pageContent.addClass("loading");
 		//先获取数据，进行加工后再去render
-		Common.render(true,'tpls/ccenter/vpc/network.html','/v2.0/networks',function(){
+		Common.render(true,'tpls/ccenter/vpc/network/list.html','/v2.0/networks',function(){
 			bindEvent();
 		});
 	};
@@ -67,7 +67,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 		//增加按钮
 		$("#networkTable_wrapper span.btn-add").on("click",function(){
 	    	//需要修改为真实数据源
-			Common.render('tpls/ccenter/vpc/addnetwork.html','',function(html){
+			Common.render('tpls/ccenter/vpc/network/add.html','',function(html){
 				Dialog.show({
     	            title: '新建VPC',
     	            message: html,
@@ -120,7 +120,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 		//编辑网络
 		$("#networkTable_wrapper a.btn-edit").on("click",function(){
 			var id = $(this).attr("data");
-			Common.render(false,'tpls/ccenter/vpc/editnetwork.html','/v2.0/networks/'+id,function(html){
+			Common.render(false,'tpls/ccenter/vpc/network/edit.html','/v2.0/networks/'+id,function(html){
 				Dialog.show({
     	            title: '编辑网络',
     	            message: html,
@@ -188,8 +188,8 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 		//明细
 	    $("#networkTable_wrapper a.network-name").on("click",function(){
 	    	var id = $(this).attr("data");
-	    	Common.render(true,'tpls/ccenter/vpc/networkdetail.html','/v2.0/networks/'+id,function(html){
-	    		Common.render(false,'tpls/ccenter/vpc/networkdetailsubnetlist.html','/v2.0/subnets?network_id='+id,function(html){
+	    	Common.render(true,'tpls/ccenter/vpc/network/detail.html','/v2.0/networks/'+id,function(html){
+	    		Common.render(false,'tpls/ccenter/vpc/network/subnetlist.html','/v2.0/subnets?network_id='+id,function(html){
 	    			EventsHandler.switcher();
 					$('#subnetTableDiv').html(html);
 					 $("a.reload").on("click",function(){
