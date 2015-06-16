@@ -467,16 +467,18 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
     			});
     			//加载时载入validate
     			wizard.on('show',function(){
-    				wizard.form.validate({
-    						errorContainer: '_form',
-    			            rules: {
+    				wizard.form.each(function(){
+    					$(this).validate({
+                            errorContainer: '_form',
+                            rules: {
     			            	'name': {
     			                    required: true,
     			                    minlength: 4,
     			                    maxlength:15
     			                }
     			            }
-    				});
+    					});
+    				})
     			});
     			//确认信息卡片被选中的监听
     			wizard.cards.confirm.on('selected',function(card){
@@ -706,6 +708,25 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 	    });
 	    
 	    //删除云主机
+	    $("ul.dropdown-menu a.delete").on("click",function(){
+	    	var serverName = $(this).parents('tr:first').find('td.vm_name').html();
+	    	var serverId = $(this).attr("data");
+	    	require(['css!'+PubView.rqBaseUrl+'/css/dialog.css']);
+	    	Modal.confirm("你已经选择了 【"+serverName+"】 。 请确认您的选择。终止的云主机均无法恢复。",function(result){
+	            if(result) {
+	                Common.xhr.del('/'+current_vdc_id+'/servers/'+serverId,function(data){
+	                	if(data.success||data.code==404){
+	                		Modal.success("云主机【"+serverName+"】已终止！");
+	                	}else{
+	                		Modal.error("云主机【"+serverName+"】终止失败！");
+	                	}
+	                	Common.router.reload();
+	                });	    		
+	            }
+	    	});
+	    });
+	    
+	  //软重启云主机
 	    $("ul.dropdown-menu a.delete").on("click",function(){
 	    	var serverName = $(this).parents('tr:first').find('td.vm_name').html();
 	    	var serverId = $(this).attr("data");

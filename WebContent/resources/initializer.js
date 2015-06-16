@@ -35,7 +35,7 @@ define('Common', ['PubView', 'bs/modal', 'json', 'template', 'jq/dataTables-bs3'
         },
         {
             text: '系统管理',
-            link: '#'
+            link: '#sysmanagement'
         }
     ];
     var sideBarItems = [
@@ -147,6 +147,10 @@ define('Common', ['PubView', 'bs/modal', 'json', 'template', 'jq/dataTables-bs3'
                         {
                             text: '安全组',
                             link: '#security/securitygroup'
+                        },
+                        {
+                        	text: '密钥对',
+                        	link: '#security/keypair'
                         },
                         {
                             text: '防火墙',
@@ -268,7 +272,33 @@ define('Common', ['PubView', 'bs/modal', 'json', 'template', 'jq/dataTables-bs3'
                 }
             ]
         },
-        null
+        {
+            title: '<i class="fa fa-codepen fa-fw"></i>系统管理',
+            current: [1],
+            items: [
+                {
+                    text: '<i class="fa fa-user"></i>用户管理',
+                    link: '#user'
+                },
+                {
+                    text: '<i class="fa fa-street-view"></i>角色管理',
+                    link: '#role'
+                },
+                {
+                    text: '<i class="fa fa-puzzle-piece"></i>功能管理',
+                    link: '#function'
+                },
+                {
+                    text: '<i class="fa fa-bars"></i>URL管理',
+                    link: '#url'
+                },
+                {
+                    text: '<i class="fa fa-sitemap"></i>组织机构管理',
+                    link: '#organization'
+                }
+            ]
+        
+        }
     ];
     var sideBarDataMap = function() {
         var initItemsLink = function(prefix, item, level) {
@@ -1108,6 +1138,7 @@ require(['PubView', 'Common'], function(PubView, Common) {
         when("^#ccenter(!.*)?$", ['js/ccenter/vm']);
         when("^#monitor(!.*)?$", ['js/monitor/task/strategyGroup']);
         when("^#cresource(!.*)?$", ['js/cresource/env']);
+        when("^#sysmanagement(!.*)?$", ['js/sysmanagement/user']);
     }
 
     //路由当前页面

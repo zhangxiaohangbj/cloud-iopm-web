@@ -203,50 +203,51 @@ define(['Common','bs/modal','jq/form/wizard','jq/form/validator-bs3','bs/tooltip
                             return this.el.find('form').valid();
                         },
                         1: function(){
-                            debugger
                             return this.el.find('form').valid();
                         }
                     }
                 });
                 //加载时载入validate
                 wizard.on('show',function(){
-                    wizard.form.validate({
-                        errorContainer: '_form',
-                        rules: {
-                            'env-name': {
-                                required: true,
-                                minlength: 4,
-                                maxlength:15
-                            },
-                            'env-version': {
-                                required: true
-                            },
-                            'connector-port':{
-                                required: true,
-                                number:true,
-                                range:[1025,65534]
-                            },
-                            'connector-username':{
-                                required:true,
-                                minlength:4,
-                                maxlength:15
-                            },
-                            'connector-password':{
-                                required:true,
-                                minlength:6
+                    wizard.form.each(function(){
+                    	$(this).validate({
+                            errorContainer: '_form',
+                            rules: {
+                                'env-name': {
+                                    required: true,
+                                    minlength: 4,
+                                    maxlength:15
+                                },
+                                'env-version': {
+                                    required: true
+                                },
+                                'connector-port':{
+                                    required: true,
+                                    number:true,
+                                    range:[1025,65534]
+                                },
+                                'connector-username':{
+                                    required:true,
+                                    minlength:4,
+                                    maxlength:15
+                                },
+                                'connector-password':{
+                                    required:true,
+                                    minlength:6
 
-                            },
-                            'connector-password-confirm':{
-                                required:true,
-                                minlength:6,
-                                equalTo:"#connector-password"
-                            },
-                            'connector-ip':{
-                                required:true,
-                                ip:true
+                                },
+                                'connector-password-confirm':{
+                                    required:true,
+                                    minlength:6,
+                                    equalTo:"#connector-password"
+                                },
+                                'connector-ip':{
+                                    required:true,
+                                    ip:true
+                                }
                             }
-                        }
-                    });
+                        });
+                    })
                 });
                 //确认信息卡片被选中的监听
                 wizard.cards.confirm.on('selected',function(card){

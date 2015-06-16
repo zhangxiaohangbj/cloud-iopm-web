@@ -135,7 +135,6 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
     	                	for(var i=0;i<data.length;i++){
     	                		postData.security_group[data[i]["name"]] = data[i]["value"];
     						}
-    	                	postData.security_group["is_deleted"] = 0;
     	                	Common.xhr.postJSON('/v2.0/security-groups',postData,function(data){
     	                		if(data){
     	                			Dialog.success('保存成功')
@@ -198,6 +197,17 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 			    	                	for(var i=0;i<data.length;i++){
 			    	                		postData.security_group_rule[data[i]["name"]]=data[i]["value"];
 			    						}
+			    	                	if(postData.security_group_rule["port_range"]==0){
+			    	                		postData.security_group_rule["port_range_max"] = postData.security_group_rule["port_range_min"]
+			    	                	}
+			    	                	if(postData.security_group_rule["remote"]=="cidr"){
+			    	                		delete postData.security_group_rule["remote_group_id"];
+			    	                		if(postData.security_group_rule["remote_ip_prefix"]==""){delete postData.security_group_rule["remote_ip_prefix"];}
+			    	                	}else {
+			    	                		delete postData.security_group_rule["remote_ip_prefix"];
+			    	                	}
+			    	                	delete postData.security_group_rule["remote"];
+			    	                	delete postData.security_group_rule["port_range"];
 			    	                	postData.security_group_rule["security_group_id"] = id;
 			    	                	Common.xhr.postJSON('/v2.0/security-group-rules',postData,function(data){ //接口保存失败
 			    	                		if(data){
