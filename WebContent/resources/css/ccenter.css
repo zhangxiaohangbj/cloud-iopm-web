@@ -1,4 +1,7 @@
 @CHARSET "UTF-8";
+.table-primary thead .c0{
+	width:2%;
+}
 .table-primary thead .c1{
 	width:5%;
 }

@@ -149,6 +149,10 @@ define('Common', ['PubView', 'bs/modal', 'json', 'template', 'jq/dataTables-bs3'
                             link: '#security/securitygroup'
                         },
                         {
+                        	text: '密钥对',
+                        	link: '#security/keypair'
+                        },
+                        {
                             text: '防火墙',
                             link: '#'
                         }
