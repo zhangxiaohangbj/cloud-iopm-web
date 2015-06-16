@@ -48,7 +48,8 @@ define(['Common','bs/modal','bs/wizard','bs/tooltip','jq/form/validator','jq/for
 	    	            title: '监控明细',
 	    	            message: html,
 	    	            nl2br: false,
-	    	            onshown : cb
+	    	            onshown : cb,
+	    	            size : Modal.SIZE_WIDE
 	    	        });
 				})
 	    	}
