@@ -7,10 +7,9 @@
 </style>
 <div class="wizard" id="create-vdc-wizard" data-title="创建服务器">
 	<!-- 基本信息 -->
-	<div class="wizard-card" data-cardname="basci">
+	<div class="wizard-card" data-cardname="basci" id="editVdcBasic">
 		<h3>基本信息</h3>
 		<div class="wizard-card-content col-sm-8">
-			<form class="vdc_basic" id = "editVdcBasic">
 				<div class="wizard-input-section">
 					<div class="form-group">
 						<label for="vdc-name" class="control-label col-sm-2"><span>* </span>名称：</label>
@@ -40,7 +39,6 @@
 						</div>
 					</div>
 				</div>
-			</form>
 		</div>
 		<div class="wizard-card-desc col-sm-4">
 			<p>一个虚拟数据中心对于一个租户：选择创建你的云主机所用的镜像。其中，从镜像创建是指从不同类型操作系统的镜像文件创建，另外可选择是否创建一个新磁盘；
@@ -79,10 +77,9 @@
 		
 	</div>
 	<!-- 配额信息  -->
-		<div class="wizard-card wizard-card-overlay" data-cardname="flavor">
+		<div class="wizard-card wizard-card-overlay" data-cardname="flavor" id ="vdcQuota">
 			<h3>配额信息</h3>
-			<div class="wizard-card-content col-sm-8">	
-			<form class="vdc_quota" id="vdcQuota">			
+			<div class="wizard-card-content col-sm-8">				
 				<div class="wizard-input-section">
 					<div class="form-group">
 						<label for="metadata_items" class="control-label col-sm-2"><span>* </span>元数据条目：</label>
@@ -210,8 +207,7 @@
 							<input type="text" value="0" class="wizard-form-control" name="subnet" placeholder="子网">
 						</div>
 					</div>
-				</div>	
-			</form>			
+				</div>			
 		</div>
 		
 		<div class="wizard-card-desc col-sm-4">
