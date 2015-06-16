@@ -647,6 +647,19 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 	    	            onshown : cb  //Modal show后回调
 	    	        });
 	    		});
+	    	},
+	    	
+	    	DoAction:function(id,name,rq,dc){
+	    		Common.$pageContent.addClass("loading");
+                Common.xhr.postJSON('/'+current_vdc_id+'/servers/'+id+'/action',rq,function(data){
+                	if(data.success){
+                		Modal.success("云主机["+name+"]已"+dc+"!");
+                	}else{
+                		Modal.error("云主机["+name+"]"+dc+"失败!");
+                	}
+                	Common.router.reload();
+                	Common.$pageContent.removeClass("loading");
+                });	    		
 	    	}
 	    };
 	    //修改云主机名称
@@ -722,23 +735,31 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 	    	});
 	    });
 	    
-	  //软重启云主机
-	    $("ul.dropdown-menu a.delete").on("click",function(){
+	    //软重启云主机
+	    $("ul.dropdown-menu a.rebootSoft").on("click",function(){
 	    	var serverName = $(this).parents('tr:first').find('td.vm_name').html();
 	    	var serverId = $(this).attr("data");
 	    	require(['css!'+PubView.rqBaseUrl+'/css/dialog.css']);
-	    	Modal.confirm("你已经选择了 【"+serverName+"】 。 请确认您的选择。终止的云主机均无法恢复。",function(result){
+	    	Modal.confirm({title:"确认：软重启云主机",
+	    		message:"你已经选择了 ["+serverName+"] 。  请确认您的选择。重启云主机会丢失所以没有存放在永久存储设备上的数据。 ",
+	    		callback:function(result){
 	            if(result) {
-	                Common.xhr.del('/'+current_vdc_id+'/servers/'+serverId,function(data){
-	                	if(data.success||data.code==404){
-	                		Modal.success("云主机【"+serverName+"】已终止！");
-	                	}else{
-	                		Modal.error("云主机【"+serverName+"】终止失败！");
-	                	}
-	                	Common.router.reload();
-	                });	    		
+	            	EditData.DoAction(serverId,serverName,{"reboot": {"type": "SOFT"}},"软重启");
 	            }
-	    	});
+	    	}});
+	    });
+	    //硬重启云主机
+	    $("ul.dropdown-menu a.rebootHard").on("click",function(){
+	    	var serverName = $(this).parents('tr:first').find('td.vm_name').html();
+	    	var serverId = $(this).attr("data");
+	    	require(['css!'+PubView.rqBaseUrl+'/css/dialog.css']);
+	    	Modal.confirm({title:"确认：硬重启云主机",
+	    		message:"你已经选择了 ["+serverName+"] 。  请确认您的选择。重启云主机会丢失所以没有存放在永久存储设备上的数据。 ",
+	    		callback:function(result){
+	            if(result) {
+	            	EditData.DoAction(serverId,serverName,{"reboot": {"type": "HARD"}},"硬重启");
+	            }
+	    	}});
 	    });
 	}	
 	return {
