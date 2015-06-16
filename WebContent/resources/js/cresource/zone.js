@@ -326,46 +326,22 @@ define(['Common','bs/modal','jq/form/wizard','jq/form/validator-bs3','bs/tooltip
         //删除按钮
         $("a.delete").on("click",function(){
             var data = $(this).attr("data");
-
-            Common.render('tpls/cresource/zone/delete.html',"",function(html){
-                Modal.show({
-                    title: '删除',
-                    message: html,
-                    nl2br: false,
-                    buttons: [{
-                        label: '取消',
-                        action: function (Modal) {
-                            Modal.close();
-                        }
-                    },{
-                        label:'确定',
-                        action:function(Modal){
-                            var valid = $(".form-horizontal").valid();
-                            if(!valid) return false;
-
-                            var del={
-                                url:"/v2/tenant_id/os-availability-zone/"+data,
-                                type:"delete"
+            Modal.confirm('确定要删除该可用分区吗?',function(result){
+                if(result) {
+                    Common.xhr.del("/v2/tenant_id/os-availability-zone/"+data,
+                        function(data){
+                            if(data){
+                                Modal.success('删除成功')
+                                setTimeout(function(){Dialog.closeAll()},2000);
+                                Common.router.route();//重新载入
+                            }else{
+                                Modal.warning ('删除失败')
                             }
-                            Common.xhr.ajax(del,function(data){
-                                if(data){
-                                    Modal.success('保存成功') ;
-
-                                    setTimeout(function(){Modal.closeAll()},2000);
-                                    Common.router.reload();
-                                }else{
-                                    alert("failed");
-                                }
-                            });
-                        }
-                    }],
-                    onshown : function(){
-
-                    }
-                });
-
+                        });
+                }else {
+                    Modal.closeAll();
+                }
             });
-
         });
 
     }
