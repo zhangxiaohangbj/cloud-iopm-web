@@ -39,6 +39,38 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 					})
 				},
 		};
+		//cidr校验
+	    $.validator.addMethod("cidr", function(value, element) {
+	    	return this.optional(element) || /^((\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.){3}(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\/\d{1,2}$/.test(value);
+	    }, "请填写正确的CIDR地址");
+	    //端口范围校验
+	    $.validator.addMethod("port_max", function(value, element) {
+	    	var optionalValue = this.optional(element);
+	    	// Element is optional
+	    	if (optionalValue) {
+	    		return optionalValue;
+	    	}
+	    	var start = $("[name='port_range_min']").val();
+	    	if(start == "" || start ==null) return true;
+	    	 if(parseInt(value) < parseInt(start)){
+	    		 return false;
+	    	 }else return true;
+	    	
+	    }, "请输入正确的端口最大值");
+	    $.validator.addMethod("port_min", function(value, element) {
+	    	var optionalValue = this.optional(element);
+	    	// Element is optional
+	    	if (optionalValue) {
+	    		return optionalValue;
+	    	}
+	    	var end = $("[name='port_range_max']").val();
+	    	if(end == "" || end ==null) return true;
+	    	
+	    	 if(parseInt(value) > parseInt(end)){
+	    		 return false;
+	    	 }else return true;
+	    	
+	    }, "请输入正确的端口最小值");
 		var EventsHandler = {
 	    		//表单校验
 				formValidator: function(){
@@ -47,6 +79,20 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 			            	'name': {
 			                    required: true,
 			                    maxlength:255
+			                },
+			                'port_range_min':{
+			                	digits:true,
+			                	port_min:true
+			                },
+			                'port_range_max':{
+			                	digits:true,
+			                	port_max:true
+			                },
+			                'remote_ip_prefix':{
+			                	cidr:true
+			                },
+			                'remote_group_id':{
+			                	maxlength:36
 			                }
 			            }
 			        });
@@ -71,6 +117,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
     	                	for(var i=0;i<data.length;i++){
     	                		postData.security_group[data[i]["name"]] = data[i]["value"];
     						}
+    	                	postData.security_group["is_deleted"] = 0;
     	                	Common.xhr.postJSON('/v2.0/security-groups',postData,function(data){
     	                		if(data){
     	                			Dialog.success('保存成功')
