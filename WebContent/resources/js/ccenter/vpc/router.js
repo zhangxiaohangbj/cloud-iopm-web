@@ -25,11 +25,15 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 			            rules: {
 			            	'name': {
 			                    required: true,
+			                    minlength: 4,
 			                    maxlength:255
 			                }
 			            }
 			        });
-				}
+				},
+				switcher:function(){
+					$(".col-sm input[type=\"checkbox\"], input[type=\"radio\"]").not("[data-switch-no-init]").switcher();
+				},
 		}
 		 //载入默认的数据 inits,创建数据载入类
 		var DataIniter = {
@@ -52,9 +56,10 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 				},
 				//vpc列表
 				initNetworkList : function(){
-					Common.xhr.ajax('/v2.0/networks',function(data){
+					var data = {isExternalNetwork:true};
+					Common.xhr.get('/v2.0/networks',data,function(data){
 						var networks = data.networks;
-						var id = $("[name='networkId']").attr("data");
+						var id = $("[name='network_id']").attr("data");
 						if(id!=null){
 							for (var i=0;i<networks.length;i++) {
 								if (networks[i].id==id) {
@@ -63,56 +68,51 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 							}
 						}				
 						var html = Common.uiSelect(networks);
-				    	$("[name='networkId']").html(html);
+				    	$("[name='network_id']").html(html);
 				    	
 					})
 				}
 		};
 		//创建路由
 	    $("#RouterTable_wrapper span.btn-add").on("click",function(){
-	    	Dialog.show({
-	            title: '路由创建',
-	            message: '<form class="form-horizontal" id="addRouter"><div class="form-group"><label for="name" class="control-label col-sm-3">'
-	            	+'<span style="color: red;">* </span>路由名称：</label><div class="col-sm-7 col-sm">'
-	    			+'<input type="text" class="dialog-form-control" name="name" value=""></div></div>'
-	    			+'<div class="form-group"><label for="network_id" class="control-label col-sm-3">'
-	    		 	+'<span style="color: red;">* </span>VPC：</label><div class="col-sm-7 col-sm">'
-	    		 	+'<select class="dialog-form-control select" name="networkId"></select></div></div></form>',
-	            nl2br: false,
-	            buttons: [{
-	                label: '创建',
-	                action: function(dialog) {
-	                	var valid = $(".form-horizontal").valid();
-	            		if(!valid) return false;
-	                	var serverData = {
-            				  "router": {
-            				    "admin_state_up": true,
-            				    "enable_snat": true,
-            				    "external_gateway_info": {
-            				    		"network_id":$("[name='networkId']").val(),
-            				    		"enable_snat":true},
-            				    "gw_port_id": "",
-            				    "name":  $("[name='name']").val(),
-            				    "status": "",
-            				    "tenant_id": "vdcid1"
-            				  }
-	                	  };
-	                	Common.xhr.postJSON('/v2.0/routers',serverData,function(data){
-	                		if(data){
-	                			Dialog.success('保存成功')
-	                			setTimeout(function(){Dialog.closeAll()},2000);
-	                			Common.router.route();
-							}else{
-								 Dialog.warning ('保存失败')
-							}
-						})
-	                }
-	            }],
-	            onshown : function(){
-	            	DataIniter.initNetworkList();
-	            	EventsHandler.formValidator();
-	            }
-	        });
+	    	Common.render('tpls/ccenter/vpc/addrouter.html','',function(html){
+		    	Dialog.show({
+		            title: '路由创建',
+		            message: html,
+		            closeByBackdrop: false,
+		            nl2br: false,
+		            buttons: [{
+		                label: '创建',
+		                action: function(dialog) {
+		                	var valid = $(".form-horizontal").valid();
+		            		if(!valid) return false;
+		                	var routerData = {
+	            				  "router": {
+	            				    "admin_state_up":$("#addRouter [name='admin_state_up']:checked").length?true:false,
+	            				    "external_gateway_info": {
+	            				    		"network_id":$("[name='network_id']").val(),
+	            				    		"enable_snat":true},
+	            				    "name":  $("[name='name']").val()
+	            				  }
+		                	  };
+		                	Common.xhr.postJSON('/v2.0/routers',routerData,function(data){
+		                		if(data){
+		                			Dialog.success('保存成功')
+		                			setTimeout(function(){Dialog.closeAll()},2000);
+		                			Common.router.route();
+								}else{
+									 Dialog.warning ('保存失败')
+								}
+							})
+		                }
+		            }],
+		            onshown : function(){
+		            	DataIniter.initNetworkList();
+		            	EventsHandler.formValidator();
+		            	EventsHandler.switcher();
+		            }
+		        });
+			});
 	    });
 		//编辑路由
 	    $("#RouterTable_wrapper a.editRouter").on("click",function(){
@@ -122,24 +122,20 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 		    	Dialog.show({
 		            title: '编辑路由',
 		            message: html,
+		            closeByBackdrop: false,
 		            nl2br: false,
 		            buttons: [{
 		                label: '确定',
 		                action: function(dialog) {
 		                	var valid = $(".form-horizontal").valid();
 		            		if(!valid) return false;
-		                	var serverData = {
+		                	var routerData = {
 	            				  "router": {
-	            				    "admin_state_up": true,
-	            				    "enable_snat": true,
-	            				    "external_gateway_info": {
-	            				    		"enable_snat":true},
-	            				    "gw_port_id": "",
+	            				    "admin_state_up": $("#addRouter [name='admin_state_up']:checked").length?true:false,
 	            				    "name":  $("[name='name']").val(),
-	            				    "status": ""
 	            				  }
 		                	  };
-		                	Common.xhr.putJSON('/v2.0/routers/'+id,serverData,function(data){
+		                	Common.xhr.putJSON('/v2.0/routers/'+id,routerData,function(data){
 		                		if(data){
 		                			Dialog.success('保存成功')
 		                			setTimeout(function(){Dialog.closeAll()},2000);
@@ -152,11 +148,12 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 		            }],
 		            onshown : function(){
 		            	EventsHandler.formValidator();
+		            	EventsHandler.switcher();
 		            }
 		        });
 	    		})
 	    	});
-	    });
+	    })
 	  //删除路由
 	     $("#RouterTable_wrapper a.deleteRouter").on("click",function(){
 	    	 var id = $(this).attr("data");
@@ -182,21 +179,63 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 	    	 var id = $(this).attr("data");
 	    	 Dialog.confirm('确定要清除网关吗?', function(result){
 	             if(result) {
-	            	 Common.xhr.del('/v2.0/routers/'+id,  //需修改接口
-	                     function(data){
-	                    	 if(data){
-	                    		 Dialog.success('操作成功')
-	                			 setTimeout(function(){Dialog.closeAll()},2000);
-	                    		 Common.router.route();
-	                    	 }else{
-	                    		 Dialog.warning ('操作失败')
-	                    	 }
-	                     });
+					var routerData = { "router": {"external_gateway_info": {"network_id":""}}};
+					Common.xhr.putJSON('/v2.0/routers/'+id, routerData,
+						function(data){
+							 if(data){
+								 Dialog.success('操作成功')
+								 setTimeout(function(){Dialog.closeAll()},2000);
+								 Common.router.route();
+							 }else{
+								 Dialog.warning ('操作失败')
+							 }
+					});
 	             }else {
 	            	 Dialog.closeAll();
 	             }
-	         });
-	     })
+	         })
+	     });
+	     //设置网关
+	     $("#RouterTable_wrapper span.setGateway").on("click",function(){
+	    	 var id = $(this).attr("data");
+	    	 Common.xhr.ajax('/v2.0/routers/'+id,function(data){
+				    Common.render('tpls/ccenter/vpc/setroutergateway.html',data.router,function(html){
+			    	 Dialog.show({
+				            title: '设置网关',
+				            message: html,
+				            closeByBackdrop: false,
+				            nl2br: false,
+				            buttons: [{
+				                label: '确定',
+				                action: function(dialog) {
+				                	var valid = $(".form-horizontal").valid();
+				            		if(!valid) return false;
+				                	var routerData = {
+			            				  "router": {
+			            					  "external_gateway_info": {
+			            				    		"network_id":$("[name='network_id']").val()
+			            				    		}
+			            				  }
+				                	  };
+				                	Common.xhr.putJSON('/v2.0/routers/'+id,routerData,function(data){
+				                		if(data){
+				                			Dialog.success('设置成功')
+				                			setTimeout(function(){Dialog.closeAll()},2000);
+				                			Common.router.route();
+										}else{
+											 Dialog.warning ('设置失败')
+										}
+									})
+				                }
+				            }],
+				            onshown : function(){
+				            	DataIniter.initNetworkList();
+				            	//EventsHandler.formValidator();
+				            }
+				        });
+				    });
+	    	 });
+	     });
 		//路由明细
 		$("#RouterTable_wrapper a.router-name").on("click",function(){
 		    	Common.xhr.ajax('/v2.0/routers/'+$(this).attr("data"),function(data){
@@ -208,7 +247,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 		    		    })
 		    		});
 		    	});
-		    });
+		});
 	   
 		var EditData = {
 		    	//添加子网连接
@@ -223,11 +262,11 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 			    	                action: function(dialog) {
 			    	                	var valid = $(".form-horizontal").valid();
 			    	            		if(!valid) return false;
-			    	                	var serverData = {
+			    	                	var routerInterface = {
 	    	                				  "port_id": null,
 	    	                				  "subnet_id": $("[name='subnetId']").val(),
 			    	                	  };
-			    	                	Common.xhr.putJSON('/v2.0/routers/'+id+'/add_router_interface',serverData,function(data){ //需修改接口
+			    	                	Common.xhr.putJSON('/v2.0/routers/'+id+'/add_router_interface',routerInterface,function(data){ //需修改接口
 			    	                		if(data){
 			    	                			Dialog.success('保存成功')
 			    	                			setTimeout(function(){Dialog.closeAll()},2000);
@@ -275,7 +314,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 					            	 Common.xhr.putJSON('/v2.0/routers/'+id+'/remove_router_interface',serverData,  //需修改接口
 					                     function(data){
 					                    	 if(data){
-					                    		 Dialog.success('删除成功')
+					                    		 Dialog.success('删除成功');
 					                			 setTimeout(function(){Dialog.closeAll()},2000);
 					                    		 EditData.GetSubnetList(id);
 					                    	 }else{
