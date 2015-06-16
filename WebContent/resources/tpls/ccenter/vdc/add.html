@@ -49,7 +49,7 @@
 	
 	</div>
 	
-	<!--详细信息 -->
+	<!--可用分区 -->
 	<div class="wizard-card" data-cardname="az">
 		<h3>可用分区</h3>
 		<div class="wizard-card-content  col-sm-8">
@@ -65,38 +65,7 @@
 			</div>
 			
 			<div class="wizard-input-section">
-				<div class="chose-az choose-style  clearfix"  id="vdcAZ">
-					<div class="col-sm-6 col-sm show-all">
-						<div class="panel panel-default">
-						  <!-- Default panel contents -->
-						  <div class="panel-heading clearfix">全部</div>
-						 <div class="panel-body clearfix">
-						   <form class="form-search">
-							  	<input type="text" class="search-query">
-							  	<i class="fa fa-search"></i>
-						  	</form>
-						  </div>								
-						  <!-- List group -->
-						  <div class="list-group az-all list-group-all">
-						  </div>
-						</div>
-					</div>
-					<div class="col-sm-6 col-sm">
-						<div class="panel panel-default">
-						  <!-- Default panel contents -->
-						  <div class="panel-heading clearfix">已选择</div>
-						 <div class="panel-body clearfix">
-						   <form class="form-search">
-							  	<input type="text" class="search-query">
-							  	<i class="fa fa-search"></i>
-						  	</form>
-						  </div>
-						
-						  <!-- List group -->
-						  <div class="list-group az-chosen" id="vdc-az-chosen">
-						  </div>
-						</div>
-					</div>
+				<div class="chose-az  clearfix"  id="vdcAZ">
 				</div>
 			</div>
 			
@@ -251,114 +220,41 @@
 				默认情况下，自动选择子网和DHCP方式</p>
 		</div>
 	</div>
+	<!-- 成员 -->
 	<div class="wizard-card wizard-card-overlay" data-cardname="members">
 		<h3>成员信息</h3>
 		<div class="wizard-card-content none-desc col-sm-12">
-			<div class="wizard-input-section">
-				<div class="choose-members choose-style  clearfix">
-					<div class="show-all col-sm-5 col-sm">
-						<div class="panel panel-default">
-						  <!-- Default panel contents -->
-						  <div class="panel-heading clearfix">全部</div>
-						 <div class="panel-body clearfix">
-						   <form class="form-search">
-							  	<input type="text" class="search-query">
-							  	<i class="fa fa-search"></i>
-						  	</form>
-						  </div>
-						
-						  <!-- List group -->
-						  <div class="list-group all-users">
-						  	{{each userList as item i}}
-						  	<ul class="nav nav-pills btn-group btn-group-sm dark_stripe list-group-item">
-								<li class="member adjust" data-update_members-id="">
-									<span class="display_name">{{item.name}}</span>
-								</li>
-								<li class="pull-right adjust icon"><i class="fa fa-plus-circle"></i></li>
-								<li class="dropdown pull-right opt" >
-									<div class="dropdown">
-									  <button class="btn btn-default dropdown-toggle ellipsis" type="button"  data-toggle="dropdown" aria-expanded="true">
-									    {{roleList[0].name}}
-									    <span class="caret"></span>
-									  </button>
-									  <ul class="dropdown-menu dropdown-menu-right" role="menu" >
-									  	{{each roleList as opt i}}
-									    	<li><a href="javascript:void(0);"><i class="fa fa-check fa-fw"></i>{{opt.name}}</a></li>
-									    {{/each}}
-									  </ul>
-									</div>
-							      </li>
-						  	</ul>
-						  	{{/each}}
-						  	<a class="loadmore" href="javascript:void(0)">
-						  		加载更多...
-						    </a>	
-					    </div>
-					  </div>
-					</div>
-					<div class="show-selected col-sm-7 col-sm">
-						<div class="panel panel-default">
-						  <!-- Default panel contents -->
-						  <div class="panel-heading clearfix">已选择</div>
-						 <div class="panel-body clearfix">
-						   <form class="form-search">
-							  	<input type="text" class="search-query">
-							  	<i class="fa fa-search"></i>
-						  	</form>
-						  </div>
-						
-						  <!-- List group -->
-						  <div class="list-group choosen-users">
-						  </div>
-						</div>
-					</div>
-				</div>
+			<div class="wizard-input-section" id="vdc-users">
 			</div>
-			
 		</div>
 		
 	</div>
-
-	<div class="wizard-card" data-cardname="senior">
+ <!--浮动IP -->
+	<div class="wizard-card" data-cardname="floatIP">
 		<h3>浮动IP</h3>
-		<div class="wizard-card-content col-sm-8">
+		<div class="wizard-card-content  col-sm-8">
 			<div class="wizard-input-section">
 				<div class="form-group">
-					<label for="scripts" class="control-label col-sm-2"><span>* </span>自定义脚本：</label>
-					<div class="col-sm-9 col-sm">
-						<textarea class="wizard-form-control" rows="8"  id="scripts" name="scripts" placeholder=""></textarea>
+					<label for="select-net" class="control-label col-sm-3"><span>* </span>网络池：</label>
+					<div  class="col-sm-7 col-sm">
+						<select name="select-net"  class="wizard-form-control select select-net">
+						    {{#uiSelectList(netList)}}
+						</select>
 					</div>
 				</div>
 			</div>
 			
 			<div class="wizard-input-section">
-				<div class="form-group">
-					<label  class="control-label col-sm-2"><span>* </span>上传：</label>
-					<div class="col-sm-9 col-sm">
-						<button type="button" class="btn btn-info">上传脚本</button>
-					</div>
+				<div class="chose-ip  clearfix"  id="vdcFloatIP">
 				</div>
 			</div>
 			
-			<div class="wizard-input-section">
-				<div class="form-group">
-					<label  class="control-label col-sm-2"><span>* </span>磁盘分区：</label>
-					<div class="col-sm-9 col-sm">
-						<label>
-                            <input name="radio-auto"  class="icheck-success" value="auto" type="radio">
-                            	自动
-                       	</label>
-                       	<label>
-                            <input name="radio-auto"  class="icheck-success" value="non-auto" type="radio">
-                            	手动
-                       	</label>
-					</div>
-				</div>
-			</div>
 		</div>
 		<div class="wizard-card-desc col-sm-4">
-			<p>自定义脚本：云主机创建后执行的脚本。</p>
-			<p>磁盘分区：自动：全部磁盘是一个分区，自动调整大小。手动：快速创建，但是需要手动分区。</p>
+			<p>一个虚拟数据中心对于一个租户：选择创建你的云主机所用的镜像。其中，从镜像创建是指从不同类型操作系统的镜像文件创建，另外可选择是否创建一个新磁盘；
+				从快照创建是指从云主机的快照创建；
+				从云硬盘创建是指从一个通过云主机创建的云硬盘来创建云主机，云硬盘会被挂载到云主机上；</p>
 		</div>
+		
 	</div>
 </div>
