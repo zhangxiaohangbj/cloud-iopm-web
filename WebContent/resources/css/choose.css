@@ -54,7 +54,10 @@
  	text-decoration:none;
  }
 .choose-wrapper .panel .list-group .list-group-item .adjust{
-	margin:6px 3px 3px;
+	margin:4px 3px 3px;
+}
+.choose-wrapper .panel .list-group .list-group-item .icon{
+	margin-top:6px;
 }
 .choose-wrapper .panel .list-group .list-group-item .dropdown .btn-default{
  	padding:3px;border-radius:0;

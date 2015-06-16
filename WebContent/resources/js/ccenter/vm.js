@@ -204,9 +204,10 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 										var dtd = $.Deferred();
 										var netId = $clone.find('li:first').attr('data-id');
 										//请求subnet
-										Common.xhr.ajax('resources/data/select.txt',function(subNetList){
-											var html = Common.uiSelect({list:subNetList,className:'select-subnet'});
-											$clone.append('<li class="pull-right subip"><select class="select-subip"><option>默认DHCP</option></select></li>');
+										Common.xhr.get('/v2.0/subnets',{"networkId":netId},function(data){
+											var selectData = [{id:"default",name:"默认子网"}].concat(data.subnets);
+											var html = Common.uiSelect({list:selectData,className:'select-subnet'});
+											$clone.append('<li class="pull-right subip"><select class="select-subip"><option>DHCP</option></select></li>');
 											$clone.append('<li class="pull-right subnet">'+html+'</li>');
 											dtd.resolve();
 										});
@@ -214,14 +215,14 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 									},
 									delCall: function($clone){
 										//去除角色窗及取消事件绑定
-										$clone.children("li.subip").remove();
+										$clone.children("li.fixedip").remove();
 										$clone.children("li.subnet").remove();
 									},
 									list: networks
 							};
 							choose.initChoose(options);
 						});
-						EventsHandler.networkChosen();
+						EventsHandler.subnetChange();
 					}
 				})
 			},
@@ -296,36 +297,6 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 						EventsHandler.initCheckBox();
 					}
 				})
-			},
-			//选中网络后初始化子网
-			initSubNet: function(){
-				var networkId = currentChosenObj.networkId;
-				if(networkId){
-					Common.xhr.get('/v2.0/subnets',{"networkId":networkId},function(data){
-						var selectData = [{id:"default",name:"默认子网"}].concat(data.subnets);
-						var html = Common.uiSelect(selectData);
-				    	$('select.select-sub-network').html(html);
-				    	//同步currentChosenObj
-				    	currentChosenObj.subnets = $('select.select-sub-network').children('option:selected');
-				    	//设置dhcp
-				    	$('select.fixed_ip').html(Common.uiSelect([{id:"dhcp",name:"DHCP"}]));
-					});
-				}
-			},
-			//选中子网后初始化IP
-			initFixedIp: function(){
-				var subnetId = currentChosenObj.subnets.val();
-				if(subnetId){
-					Common.xhr.get('/v2.0/subnets/'+subnetId+'/availableips',function(data){
-						var selectData = [{id:"dhcp",name:"DHCP"}];
-						for(var i=1;i<data.availableips.length;i++){
-							selectData[i] = {id:data.availableips[i],name:data.availableips[i]};
-						}
-						var html = Common.uiSelect(selectData);
-				    	$('select.fixed_ip').html(html);
-					});
-				
-				}
 			},
 			//密钥对
 			initKeyPairs: function(){
@@ -407,38 +378,28 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 					})
 				},
 				//可用网络选择事件
-				networkChosen : function(){
+				subnetChange : function(){
 					//选择可用网络绑定点击事件,先移出之前绑定的事件，防止多次执行
 					$(document).off("change","#vm-networks .select-subnet");
 					$(document).on("change","#vm-networks .select-subnet",function(event){
 						var that = $(this),
-							subnet_id = that.children('option:selected').val();
-						if(subnet_id){
-							Common.xhr.ajax('resources/data/select.txt',function(ipList){
-								var html = Common.uiSelect(ipList);
+						subnetId = that.children('option:selected').val();
+						if(subnetId){
+							if(subnetId!='default'){
+								Common.xhr.get('/v2.0/subnets/'+subnetId+'/availableips',function(data){
+									var selectData = [];
+									for(var i=0;i<data.availableips.length;i++){
+										selectData[i] = {id:data.availableips[i],name:data.availableips[i]};
+									}
+									var html = Common.uiSelect(selectData);
+									that.parents('.list-group-item:first').find('select.select-subip').html(html);
+								});
+							}else{
+								var selectData = [{id:"dhcp",name:"DHCP"}];
+								var html = Common.uiSelect(selectData);
 								that.parents('.list-group-item:first').find('select.select-subip').html(html);
-							});
-						}
+							}
 					});
-					//载入拖拽效果
-					/*require(['jq/dragsort'], function() {
-						 $(".available-network,.networks").dragsort({defaultSelector:"a", dragBetween: true,  placeHolderTemplate: "<a class='list-group-item'></a>",dragEnd: function(){
-							 //拖下来
-							 if($(this).parent().attr('data-listidx') == "1"){
-								 $(this).find('i').hide();
-								 currentChosenObj.networkId = $(this).find('span').html();
-								 DataIniter.initSubNet();
-							 }
-							 
-						 } });
-					})*/
-				},
-				subnetChange : function(){
-					$('select.select-sub-network').change(function(){
-    					var current = $(this).children('option:selected');
-				    	currentChosenObj.subnets = current;//同步currentChosenObj
-						DataIniter.initFixedIp();
-					})
 				},
 				//访问安全事件
 				securitySetting : function(){
@@ -458,32 +419,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 				    	checkboxClass: "icheckbox-info",
 				        radioClass: "iradio-info"
 				    })
-				},
-				//表单校验
-				formValidator: function(){
-					$(".form-horizontal").validate({
-			            rules: {
-			            	'name': {
-			                    required: true,
-			                    minlength: 4,
-			                    maxlength:15
-			                }
-			            }
-			        });
-				},
-				oninput: function(){
-					$('.form-horizontal input[type=text],.form-horizontal input[type=password]').on('input propertychange',function(){
-						var id = $(this).attr('id');
-						if($("#"+id) && $("#"+id).length){
-							if($(this).prop("disabled") == false && !$(".form-horizontal").validate().element("#"+id)){
-								wizard.disableNextButton();
-							}else{
-								wizard.enableNextButton();
-							}
-						}
-					});
 				}
-				
 		};
 		
 		//重置CurrentChosenObj对象
@@ -517,30 +453,47 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
     	                backText: "上一步",
     	                submitText: "提交",
     	                submittingText: "提交中..."
+    	            },
+    	            validate: {
+	            		0: function(){
+	            			return this.el.find('form').valid();
+	            		}
     	            }
     			});
-		    	
-		    	
+    			//加载时载入validate
+    			wizard.on('show',function(){
+    				wizard.form.validate({
+    						errorContainer: '_form',
+    			            rules: {
+    			            	'name': {
+    			                    required: true,
+    			                    minlength: 4,
+    			                    maxlength:15
+    			                }
+    			            }
+    				});
+    			});
+    			//确认信息卡片被选中的监听
+    			wizard.cards.confirm.on('selected',function(card){
+    				//获取上几步中填写的值
+    				var serverData = wizard.serializeObject()
+    				$('.name-confirm').text(serverData.name)
+				});
     			DataIniter.initAvailableZone();
     			DataIniter.initPopver();
     			DataIniter.initQuatos();
     			DataIniter.initSecurityGroup();
     			DataIniter.initAvailableNetWorks();
     			
-    			//展现wizard，禁用下一步按钮
+    			//展现wizard，
     			
     			wizard.show();
-    			wizard.disableNextButton();
-    			
     			EventsHandler.bindBasicWizard();
     			EventsHandler.vdcChange();
     			EventsHandler.specsChange();
-    			EventsHandler.subnetChange();
 				//spinbox
 				EventsHandler.VmNumsSpinbox();
 				EventsHandler.securitySetting();
-				EventsHandler.formValidator();
-				EventsHandler.oninput();
 				//关闭弹窗
 				var closeWizard = function(){
     				$('div.wizard').remove();
@@ -552,21 +505,30 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
     				closeWizard();
     			});
     			
+                //下一步中进行数据的初始化
+//                wizard.on("nextclick", function(wizard) {
+//                    wizard.getActiveCard().enable()
+//                    var index = wizard.getActiveCard().index;
+//                    switch (index){
+//                        case 6:
+//                        	alert(6)
+//                            break;
+//                    }
+//                });
+    			
     			wizard.on("submit", function(wizard) {
-//    				var serverData = {"server":{
-//    					"name": $("#name").val(),
-//    					"imageRef": 'ed18e2ce-a574-4ff0-8a00-6ef9d7dc4c2b',//$("#imageRef").val(),
-//    					"flavorRef": '3',//$("#flavorRef").val(),
-//    					"networks": [{
-//    						"uuid": 'af8c1f42-b21c-4d13-bc92-1852e22f4f98'//,//$("#networks").val(),
-//    						//"fixed_ip": '192.168.0.115'//$("#fixed_ip").val()
-//    					}]
-//    				}};
-    				var serverData = {server:$(".form-horizontal").serializeObject()};
-    				serverData.server.networks=[{
-						"uuid": 'af8c1f42-b21c-4d13-bc92-1852e22f4f98'
-						//"fixed_ip": '192.168.0.115'//$("#fixed_ip").val()
-					}]
+    				
+    				var serverData = {server:wizard.serializeObject()};
+    				//取网络相关的数据
+    				var networkData = [];
+    				$('#vm-networks .list-group-select').children().each(function(i,item){
+    					var network = {};
+    					network.uuid = $(item).find('li:first').attr('data-id');
+    					network.fixed_ip = $(item).find('select.select-fixedip').children('option:selected').val();
+    					networkData.push(network);
+    				});
+    				
+    				serverData.server.networks=networkData;
     				var fixed_ip = $("#fixed_ip").val();
     				if(fixed_ip!=null&&fixed_ip!="DHCP"){
     					serverData.server.networks=[{
@@ -654,7 +616,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 	    	},
 	    	//编辑虚拟机大小弹框
 	    	EditVmType : function(id,cb){
-	    		Common.render('tpls/ccenter/vm/vmdetail.html',renderData,function(html){
+	    		Common.render('tpls/ccenter/vm/editvmtype.html',renderData,function(html){
 		    		Modal.show({
 	    	            title: '编辑虚拟机大小',
 	    	            message: html,

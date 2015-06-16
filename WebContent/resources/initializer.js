@@ -110,7 +110,7 @@ define('Common', ['PubView', 'bs/modal', 'json', 'template', 'jq/dataTables-bs3'
                 },
                 {
                     text: '<i class="fa fa-database"></i>磁盘管理',
-                    link: ''
+                    link: '#block'
                 },
                 {
                     text: '<i class="fa fa-cube"></i>镜像管理',

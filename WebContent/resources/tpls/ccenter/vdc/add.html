@@ -10,36 +10,37 @@
 	<div class="wizard-card" data-cardname="basci">
 		<h3>基本信息</h3>
 		<div class="wizard-card-content col-sm-8">
-		<form class="vdc_basic"></form>
-			<div class="wizard-input-section">
-				<div class="form-group">
-					<label for="server-name" class="control-label col-sm-2"><span>* </span>名称：</label>
-					<div class="col-sm-7 col-sm">
-						<input type="text" class="wizard-form-control" id="vdc-name" name="vdc-name" placeholder="vdc名称">
+			<form class="vdc_basic" id = "editVdcBasic">
+				<div class="wizard-input-section">
+					<div class="form-group">
+						<label for="vdc-name" class="control-label col-sm-2"><span>* </span>名称：</label>
+						<div class="col-sm-7 col-sm">
+							<input type="text" class="wizard-form-control" id="vdc-name" name="vdc-name" placeholder="vdc名称">
+						</div>
 					</div>
 				</div>
-			</div>
-			
-			<div class="wizard-input-section">
-				<div class="form-group">
-					<label for="server-desc" class="control-label col-sm-2"><span>* </span>描述：</label>
-					<div class="col-sm-9 col-sm">
-						<textarea class="wizard-form-control" rows="10"></textarea>
+				
+				<div class="wizard-input-section">
+					<div class="form-group">
+						<label for="description" class="control-label col-sm-2"><span>* </span>描述：</label>
+						<div class="col-sm-9 col-sm">
+							<textarea class="wizard-form-control" rows="10" name="description"></textarea>
+						</div>
 					</div>
 				</div>
-			</div>
-			 <div class="wizard-input-section">
-				<div class="form-group">
-					<label for="enable_dhcp" class="control-label col-sm-2">
-						激活：</label>
-					<div class="col-sm-7 col-sm">
-						<p>
-							<input type="checkbox" name="enable_dhcp" data-size="small"
-								data-on-text="激活" data-off-text="禁用" checked>
-						</p>
+				 <div class="wizard-input-section">
+					<div class="form-group">
+						<label for="enabled" class="control-label col-sm-2">
+							激活：</label>
+						<div class="col-sm-7 col-sm">
+							<p>
+								<input type="checkbox" name="enabled" data-size="small"
+									data-on-text="激活" data-off-text="禁用" checked>
+							</p>
+						</div>
 					</div>
 				</div>
-			</div>
+			</form>
 		</div>
 		<div class="wizard-card-desc col-sm-4">
 			<p>一个虚拟数据中心对于一个租户：选择创建你的云主机所用的镜像。其中，从镜像创建是指从不同类型操作系统的镜像文件创建，另外可选择是否创建一个新磁盘；
@@ -81,7 +82,7 @@
 		<div class="wizard-card wizard-card-overlay" data-cardname="flavor">
 			<h3>配额信息</h3>
 			<div class="wizard-card-content col-sm-8">	
-			<form class="vdc_quota" >			
+			<form class="vdc_quota" id="vdcQuota">			
 				<div class="wizard-input-section">
 					<div class="form-group">
 						<label for="metadata_items" class="control-label col-sm-2"><span>* </span>元数据条目：</label>
