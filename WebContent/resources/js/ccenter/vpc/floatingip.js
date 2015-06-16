@@ -4,7 +4,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 	var init = function(){
 		Common.$pageContent.addClass("loading");
 		//先获取数据，进行加工后再去render
-		Common.render(true,'tpls/ccenter/vpc/floatingip.html','/v2.0/floatingips',function(){
+		Common.render(true,'tpls/ccenter/vpc/floatingip/list.html','/v2.0/floatingips',function(){
 			bindEvent();
 		});
 	};
