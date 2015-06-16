@@ -7,7 +7,7 @@
 				<option value="tcp">定制TCP规则</option>
 				<option value="icmp">定制ICMP规则</option>
 				<option value="udp">定制UDP规则</option>
-				<option value="">定制其他规则</option>
+				<option value="">其他协议</option>
 			</select>
 		</div>
 	</div>
@@ -57,7 +57,7 @@
 	<div class="form-group remote security_group" style="display:none;">
 		<label for="remote_group_id" class="control-label col-sm-3">安全组：</label>
 		<div class="col-sm-7 col-sm">
-			<input type="text" class="dialog-form-control" name="remote_group_id" value="">
+			<select name="remote_group_id" class="dialog-form-control select remote_group_id"></select>
 		</div>
 	</div>
 	<div class="form-group remote security_group" style="display:none;">

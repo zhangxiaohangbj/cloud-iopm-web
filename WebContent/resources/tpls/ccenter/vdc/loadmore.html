@@ -4,18 +4,5 @@
 		<span class="display_name" data-id="{{item.id}}">{{item.name}}</span>
 	</li>
 	<li class="pull-right adjust icon"><i class="fa fa-plus-circle"></i></li>
-	<li class="dropdown pull-right opt" >
-		<div class="dropdown">
-		  <button class="btn btn-default dropdown-toggle ellipsis" type="button"  data-toggle="dropdown" aria-expanded="true">
-		    {{roleList[0].name}}
-		    <span class="caret"></span>
-		  </button>
-		  <ul class="dropdown-menu dropdown-menu-right" role="menu" >
-		  	{{each roleList as opt i}}
-		    	<li><a href="javascript:void(0);"><i class="fa fa-check fa-fw" data-id="{{opt.id}}"></i>{{opt.name}}</a></li>
-		    {{/each}}
-		  </ul>
-		</div>
-      </li>
  	</ul>
 {{/each}}
