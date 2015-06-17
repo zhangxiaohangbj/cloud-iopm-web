@@ -649,7 +649,6 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
     					var obj = vdcIpList.floatingips[key];
     					obj.name = obj.floating_ip_address;
     				}
-    				debugger;
     				var data = {
     						netList:renderData.netList		
     				},
