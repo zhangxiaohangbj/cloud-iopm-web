@@ -80,7 +80,12 @@
 			<list>
 				<bean class="org.springframework.web.servlet.view.json.MappingJackson2JsonView">
 					<property name="objectMapper" ref="objectMapper"></property>
-					<property name="modelKey" value="data"></property>
+					<property name="modelKeys">
+						<set>
+							<value>data</value>
+							<value>exception</value>
+						</set>
+					</property>
 					<property name="extractValueFromSingleKeyModel" value="true"></property>
 				</bean>
 				<bean class="com.inspur.cloudframework.spring.web.servlet.view.javascript.XJavascriptView">
