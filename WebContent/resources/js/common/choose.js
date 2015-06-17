@@ -2,14 +2,16 @@ define(['Common','bs/modal'],function(Common,Modal){
 	Common.requestCSS('css/choose.css');
 	var initChoose = function(options){
 		var defaults = {
-				selector: "div",
-				loadmore: false,
-				addCall: null,
-				delCall: null,
-				allData: [],
-				chosenData:[],
-				groupSelectedClass: 'col-sm-6',
-				groupAllClass: 'col-sm-6'
+				selector: "div",	//父级选择器
+				loadmore: false,	//是否显示加载更多
+				addCall: null,		//点击添加时回调
+				delCall: null,		//点击减少时回调
+				allData: [],		//左侧全部区域的数据
+				chosenData:[],		//右侧已选择部分数据
+				doneCall: null,		//执行完成后的回调
+				doneData:null,		//执行完成后回调可能会用到的数据
+				groupSelectedClass: 'col-sm-6',		//已选择部分的class
+				groupAllClass: 'col-sm-6'		//全部区域部分的class
 		};
 
 		var renderOptions = $.extend({},defaults,options);
@@ -46,6 +48,7 @@ define(['Common','bs/modal'],function(Common,Modal){
 				 $('body').append(chooseWrapper);
 				 chooseWrapper.append(html);
 			}
+			typeof renderOptions.doneCall === 'function' && renderOptions.doneCall(renderOptions.doneData || chooseWrapper,chooseWrapper);
 		});
 		//
 		var move = function(delDom,moveDom,wrapper){
