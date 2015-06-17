@@ -142,6 +142,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 				//虚拟化环境change事件
 				veChange: function(){
 					$('select.select-ve').change(function(){
+						debugger
 						//同步
 						currentChosenObj.ve = $('select.select-ve').children('option:selected');
 						//重新载入可用分区数据
@@ -279,7 +280,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 						require(['js/common/choose'],function(choose){
 							var options = {
 									selector: '#vdcAZ',
-									list: azList
+									allData: azList
 							};
 							choose.initChoose(options);
 						})
@@ -313,7 +314,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 								//去除角色窗及取消事件绑定
 								$clone.children("li:last").remove();
 							},
-							list: cacheData.userList
+							allData: cacheData.userList
 					};
 					choose.initChoose(options);
 				})
@@ -357,11 +358,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 		    	DataIniter.initAz();
 		    	DataIniter.initUsers();
 		    	DataIniter.initFloatIP();
-		    	//载入事件
-		    	EventsHandler.userChosen();
-				EventsHandler.veChange();
-				EventsHandler.netChange();
-				
+		    	
     			wizard = $('#create-vdc-wizard').wizard({
     				keyboard : false,
     				contentHeight : 526,
@@ -393,7 +390,10 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
     				wizard.form.each(function(){
     					EventsHandler.vdc_form($(this));
     				})
-    				
+    				//载入事件
+    				EventsHandler.userChosen();
+    				EventsHandler.veChange();
+    				EventsHandler.netChange();
     			});
     			wizard.show();
     			
@@ -506,26 +506,40 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 	  //可用分区管理
     	AZ : function(env_id,vdc_id){
     		//先获取az后，再render
-    		Common.xhr.ajax('/v2/os-availability-zone/virtualEnv/' + env_id,function(eaz){
+    		Common.xhr.ajax('/v2/os-availability-zone/virtualEnv/' + '94f101bb5c4847eebe25487c3060ec4a',function(eaz){
     			Common.xhr.ajax('/v2.0/az/' + vdc_id,function(vaz){
     				var data = {
     						eazList:eaz,
     						vazList:vaz,
-    						veList:renderData.veList
-    				}
-    				Common.render('tpls/ccenter/vdc/az.html',data,function(html){
-        				Modal.show({
-    	    	            title: '可用分区',
-    	    	            message: html,
-    	    	            nl2br: false,
-    	    	            buttons: [{
-    	    	                label: '保存',
-    	    	                action: function(dialog) {}
-    	    	            }],
-    	    	            onshown : function(){}
-    	    	        });
-    	    		});
-    			})		
+    						veList:renderData.veList,
+    						options: {
+									selector: '#vdcAZ',
+									allData: eaz,
+									selectData: vaz
+							}
+    				};
+    				
+    				require(['js/common/choose'],function(choose){
+    	        		choose.initChoose(data.options);
+    	        		Common.render('tpls/ccenter/vdc/az.html',data,function(html){
+    	        			var chooseWrapper = $('#chooseWrapper');
+    	        			chooseWrapper.append(html);
+    	        			$(data.options.selector).append(chooseWrapper.find('div:first'));
+    	        			Modal.show({
+        	    	            title: '可用分区',
+        	    	            message: chooseWrapper.html(),
+        	    	            nl2br: false,
+        	    	            buttons: [{
+        	    	                label: '保存',
+        	    	                action: function(dialog) {}
+        	    	            }],
+        	    	            onshown : function(){
+        	    	            	chooseWrapper.remove();
+        	    	            }
+        	    	        });
+    	        		})
+    	        	});
+    			})
     		})		
     	 },
     	//删除一个租户

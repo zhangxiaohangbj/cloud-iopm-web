@@ -6,7 +6,8 @@ define(['Common','bs/modal'],function(Common,Modal){
 				loadmore: false,
 				addCall: null,
 				delCall: null,
-				list: [],
+				allData: [],
+				chosenData:[],
 				groupSelectedClass: 'col-sm-6',
 				groupAllClass: 'col-sm-6'
 		};
@@ -25,7 +26,6 @@ define(['Common','bs/modal'],function(Common,Modal){
 					move(that,clone,$(renderOptions.selector+" .list-group-select"))
 				}
 			});
-			$(renderOptions.selector).empty().append(html);
 			
 			$(document).off("click",renderOptions.selector+" .list-group-select .list-group-item .fa-minus-circle");
 			$(document).on("click",renderOptions.selector+" .list-group-select .list-group-item .fa-minus-circle", function(event){
@@ -35,10 +35,17 @@ define(['Common','bs/modal'],function(Common,Modal){
 				if(typeof renderOptions.delCall === 'function'){
 					$.when(renderOptions.delCall(clone)).done(move(that,clone,$(renderOptions.selector+" .list-group-all")));/*.fail(Modal.error('解析出错'))*/
 				}else{
-					move(that,clone,$(renderOptions.selector+" .list-group-all"))
+					move(that,clone,$(renderOptions.selector+" .list-group-all"));
 				}
 			});
-			
+			if($(renderOptions.selector).length){
+				$(renderOptions.selector).empty().append(html);
+			}else{
+				 var chooseWrapper=$('<div id="chooseWrapper"></div>');
+				 chooseWrapper.css('display','none');
+				 $('body').append(chooseWrapper);
+				 chooseWrapper.append(html);
+			}
 		});
 		//
 		var move = function(delDom,moveDom,wrapper){
