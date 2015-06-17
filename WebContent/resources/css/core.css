@@ -680,3 +680,65 @@ i.image-icon-default.centos {
 }
 
  /*page页面公共部分结束*/
+/*弹框样式开始*/
+.dialog-modal.type-primary .modal-header{
+	padding: 5px 14px;
+	background-color: #F5F5F5;
+}
+.dialog-modal .modal-title{
+	font-size: 15px;
+	line-height: 30px;
+	color: #333;
+}
+.modal-body {
+	background-color: #fff;
+}
+.modal-footer{
+	padding-top: 0;
+	background-color: #fff;
+	border-top: 0;
+}
+.btn-default{
+	padding: 4px 12px;
+	background-color: #36B3DF;
+	border-color: #36B3DF;
+	color: #fff;
+	border-radius: 0;
+}
+.btn-gray {
+	color: #333;
+	background-color: #fff;
+	border-color: #ccc;
+}
+.btn-blue{
+	background-color: #36B3DF;
+	border-color: #36B3DF;
+	color: #fff;
+}
+.btn-primary{
+	padding: 4px 12px;
+	background-color: #36B3DF;
+	border-color: #36B3DF;
+	color: #fff;
+	border-radius: 0;
+}
+/*弹框body内容样式*/
+.form-horizontal .control-label{
+	padding: 5px 0 0 0;
+	font-weight: normal;
+}
+.form-horizontal .col-sm{
+	padding-left: 2px;
+}
+.dialog-modal .form-control {
+	border-radius: 0;
+	height: 30px;
+	width: 100%;
+	padding: 0 8px;
+	-webkit-box-shadow: none;
+	box-shadow: none;
+}
+.dialog-modal .form-group label span {
+	color: red;
+}
+/*弹框样式结束*/
