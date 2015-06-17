@@ -159,6 +159,20 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
         var EventsHandler = {
 
             //表单校验
+            flavorAccessEvent:function(){
+                require(['js/common/domchoose'],function(domchoose){
+                    var leftOption = {
+                            appendWrapper: '.vdc-all',
+                            clone: 'a.list-group-item'
+                        },
+                        rightOption = {
+                            appendWrapper: '.vdc-chosen',
+                            clone: 'a.list-group-item',//相对clickSelector获取元素
+                            clickSelector: 'i.fa-minus-circle'
+                        };
+                    domchoose.initChoose(leftOption,rightOption);
+                });
+            },
             flavorFormValidator: function(){
                 return $(".form-horizontal").validate({
                     rules: {
@@ -267,6 +281,8 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 
             accessFlavor : function(id){
                 Common.xhr.ajax('/v2/123/flavors/'+id+"/os-flavor-access",function(data){
+                    var unselectedList = [];
+                    var selectedList = [];
                     Common.render('tpls/ccenter/vmtype/flavorAccess.html',data,function(html){
                         Modal.show({
                             title: '访问授权',
@@ -275,7 +291,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
                             buttons: [{
                                 label: '保存',
                                 action: function(dialog) {
-                                    Common.xhr.putJSON('/v2/123/flavors/','',function(data){
+                                    Common.xhr.putJSON('/v2/123/flavors/'+id+'/action','',function(data){
                                         if(data){
                                             alert("保存成功");
                                             dialog.close();
@@ -287,11 +303,22 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
                             }],
                             onshown : function(){
                                 require(['js/common/choose'],function(choose){
-                                    alert(data)
+                                    var flavorVdcList = data['flavor_access'];
                                     debugger
+                                    a: for(var i=0; i<renderData.vdcList.length; i++){
+                                         for(var j=0; j<flavorVdcList.length; j++){
+                                            if(renderData.vdcList[i]['id'] == flavorVdcList[j]['tenant_id']){
+
+                                                selectedList.push(renderData.vdcList[i])
+                                                continue a;
+                                            }
+                                        }
+                                        unselectedList.push(renderData.vdcList[i])
+                                    }
                                     var options = {
                                         selector: '#flavorVdcAccess',
-                                        list: renderData.vdcList
+                                        allData: unselectedList,
+                                        selectData: selectedList
                                     };
                                     choose.initChoose(options);
                                 });
