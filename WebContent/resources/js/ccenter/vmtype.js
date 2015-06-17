@@ -1,13 +1,11 @@
-define(['Common','bs/modal','bs/wizard','bs/tooltip','jq/form/validator-bs3'],function(Common,Modal){
+define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3'],function(Common,Modal){
 	Common.requestCSS('css/wizard.css');
 	Common.requestCSS('css/dialog.css');
 	var init = function(){
 		Common.$pageContent.addClass("loading");
         Common.xhr.ajax('/v2/123/flavors/detail', function(data){
-            debugger;
-            Common.render(true,'tpls/ccenter/vmtype/list.html',data,function(){
+           Common.render(true,'tpls/ccenter/vmtype/list.html',data,function(){
                 bindEvent();
-
             });
         })
 
@@ -40,20 +38,22 @@ define(['Common','bs/modal','bs/wizard','bs/tooltip','jq/form/validator-bs3'],fu
 	    });
 	    var renderData = {};
         //初始化加载，不依赖其他模块
+        var wizard;
+
 		var DataGetter = {
 				//虚拟化环境 virtural environment
 			getVdc: function(){
 				Common.xhr.ajax('/v2.0/tenants/page/10/1',function(pageVdcList){///v2/images
                     var vdcList = pageVdcList.result;
                     renderData.vdcList = vdcList;
-                    debugger
-                    $("#flavorVdcAccess").find(".list-group-all").empty();
-                    var listView=[];
-                    for(var i=0;i<vdcList.length;i++){
-                        listView.push('<a href="javascript:void(0);" class="list-group-item">'+vdcList[i]["name"]+' <i data-id = '+vdcList[i]["id"]+' class="fa fa-plus-circle fa-fw" style="float: right;"></i></a>')
-                    }
-                    $("#flavorVdcAccess").find(".list-group-all").html(listView.join(""));
-                    EventsHandler.flavorAddEvent();
+                    require(['js/common/choose'],function(choose){
+                        var options = {
+                            selector: '#flavorVdcAccess',
+                            list: vdcList
+                        };
+                        choose.initChoose(options);
+                    })
+
 				});
 			},
 
@@ -73,10 +73,18 @@ define(['Common','bs/modal','bs/wizard','bs/tooltip','jq/form/validator-bs3'],fu
             }
 
 		}
-		DataGetter.getVdc();
+        DataGetter.getVdc();
 
         var currentChosenObj = {
 
+
+        };
+
+        var DataRender = {
+            renderCreateFlavor : function() {
+
+
+            }
         };
 
 	  //增加按钮
@@ -85,6 +93,7 @@ define(['Common','bs/modal','bs/wizard','bs/tooltip','jq/form/validator-bs3'],fu
             Common.render('tpls/ccenter/vmtype/add.html',renderData,function(html){
 
                 $('body').append(html);
+
 
                 DataGetter.getVdc();
                 //同步currentChosenObj
@@ -107,7 +116,6 @@ define(['Common','bs/modal','bs/wizard','bs/tooltip','jq/form/validator-bs3'],fu
                 });
 
                 //展现wizard，禁用下一步按钮
-
                 wizard.show();
                 //wizard.disableNextButton();
 
@@ -135,7 +143,7 @@ define(['Common','bs/modal','bs/wizard','bs/tooltip','jq/form/validator-bs3'],fu
                             "swap": $("#addFlavor [name='swap']").val()
                         }
                     };
-//
+
                     Common.xhr.postJSON('/v2/123/flavors/',flavorData,function(data){
                         wizard._submitting = false;
                         wizard.updateProgressBar(100);
@@ -149,34 +157,7 @@ define(['Common','bs/modal','bs/wizard','bs/tooltip','jq/form/validator-bs3'],fu
 
 
         var EventsHandler = {
-            flavorAddEvent:function(){
-                require(['js/common/domchoose'],function(domchoose){
-                    var leftOption = {
-                            appendWrapper: '.vdc-all',
-                            clone: 'a.list-group-item'
-                        },
-                        rightOption = {
-                            appendWrapper: '.vdc-chosen',
-                            clone: 'a.list-group-item',//相对clickSelector获取元素
-                            clickSelector: 'i.fa-minus-circle'
-                        };
-                    domchoose.initChoose(leftOption,rightOption);
-                });
-            },
-            flavorAccessEvent:function(){
-                require(['js/common/domchoose'],function(domchoose){
-                    var leftOption = {
-                            appendWrapper: '.vdc-all',
-                            clone: 'a.list-group-item'
-                        },
-                        rightOption = {
-                            appendWrapper: '.vdc-chosen',
-                            clone: 'a.list-group-item',//相对clickSelector获取元素
-                            clickSelector: 'i.fa-minus-circle'
-                        };
-                    domchoose.initChoose(leftOption,rightOption);
-                });
-            },
+
             //表单校验
             flavorFormValidator: function(){
                 return $(".form-horizontal").validate({
@@ -223,9 +204,13 @@ define(['Common','bs/modal','bs/wizard','bs/tooltip','jq/form/validator-bs3'],fu
         $("ul.dropdown-menu a.removeFlavor").on("click",function(){
             more.deleteFlavor($(this).attr("data"));
         });
+
+        $("ul.dropdown-menu a.updateAccessVdc").on("click",function(){
+            more.accessFlavor($(this).attr("data"));
+        });
 	    //更多
 	    var more = {
-		    	//配额管理
+		    	//更新flavor
                 updateFlavor : function(id){
 		    		Common.xhr.ajax('/v2/123/flavors/'+id,function(data){
 		    			Common.render('tpls/ccenter/vmtype/edit.html',data,function(html){
@@ -237,16 +222,7 @@ define(['Common','bs/modal','bs/wizard','bs/tooltip','jq/form/validator-bs3'],fu
 			    	                label: '保存',
 			    	                action: function(dialog) {
 			    	                	var flavorData = {
-				    	            			"flavor":{
-				    	        					"id": id,
-				    	        					"name": $("#editFlavor [name='name']").val(),
-				    	        					"vcpus": $("#editFlavor [name='vcpus']").val(),
-				    	        					"ram": $("#editFlavor [name='ram']").val(),
-				    	        					"disk": $("#editFlavor [name='disk']").val(),
-				    	        					//"OS-FLV-EXT-DATA:ephemera": $("#editFlavor [name='ephemera']").val(),
-				    	        					"swap": $("#editFlavor [name='swap']").val(),
-                                                    "rxtx_factor": $("#editFlavor [name='rxtx_factor']").val()
-				    	            				}
+
 			    	        				};
 			    	                	Common.xhr.putJSON('/v2/123/flavors/',flavorData,function(data){
 			    	                		if(data){
@@ -299,11 +275,9 @@ define(['Common','bs/modal','bs/wizard','bs/tooltip','jq/form/validator-bs3'],fu
                             buttons: [{
                                 label: '保存',
                                 action: function(dialog) {
-
                                     Common.xhr.putJSON('/v2/123/flavors/','',function(data){
                                         if(data){
                                             alert("保存成功");
-
                                             dialog.close();
                                         }else{
                                             alert("保存失败");
@@ -312,6 +286,15 @@ define(['Common','bs/modal','bs/wizard','bs/tooltip','jq/form/validator-bs3'],fu
                                 }
                             }],
                             onshown : function(){
+                                require(['js/common/choose'],function(choose){
+                                    alert(data)
+                                    debugger
+                                    var options = {
+                                        selector: '#flavorVdcAccess',
+                                        list: renderData.vdcList
+                                    };
+                                    choose.initChoose(options);
+                                });
 
                             }
                         });

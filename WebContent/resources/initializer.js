@@ -76,7 +76,7 @@ define('Common', ['PubView', 'bs/modal', 'json', 'template', 'jq/dataTables-bs3'
                 },
                 {
                     text: '<i class="fa fa-cloud"></i>物理区域',
-                    link: '#host'
+                    link: '#region'
                 },
                 {
                     text: '<i class="fa fa-cloud"></i>虚拟化环境',
@@ -147,6 +147,10 @@ define('Common', ['PubView', 'bs/modal', 'json', 'template', 'jq/dataTables-bs3'
                         {
                             text: '安全组',
                             link: '#security/securitygroup'
+                        },
+                        {
+                        	text: '密钥对',
+                        	link: '#security/keypair'
                         },
                         {
                             text: '防火墙',
@@ -274,23 +278,23 @@ define('Common', ['PubView', 'bs/modal', 'json', 'template', 'jq/dataTables-bs3'
             items: [
                 {
                     text: '<i class="fa fa-user"></i>用户管理',
-                    link: '#task/task'
+                    link: '#user'
                 },
                 {
                     text: '<i class="fa fa-street-view"></i>角色管理',
-                    link: '#task/task'
+                    link: '#role'
                 },
                 {
                     text: '<i class="fa fa-puzzle-piece"></i>功能管理',
-                    link: '#task/task'
+                    link: '#function'
                 },
                 {
                     text: '<i class="fa fa-bars"></i>URL管理',
-                    link: '#task/task'
+                    link: '#url'
                 },
                 {
                     text: '<i class="fa fa-sitemap"></i>组织机构管理',
-                    link: '#task/task'
+                    link: '#organization'
                 }
             ]
         
@@ -643,6 +647,7 @@ define('Common', ['PubView', 'bs/modal', 'json', 'template', 'jq/dataTables-bs3'
                         } else {
                             Modal.error(e.message);
                         }
+                        console.error(e);
                     });
                     return this;
                 };
@@ -701,6 +706,7 @@ define('Common', ['PubView', 'bs/modal', 'json', 'template', 'jq/dataTables-bs3'
                             }catch(e){
                                 that.resolve();
                                 Modal.error(e.message);
+                                console.error(e);
                             }
                         }, function(e) {
                             that.resolve();
@@ -733,6 +739,7 @@ define('Common', ['PubView', 'bs/modal', 'json', 'template', 'jq/dataTables-bs3'
                 } catch (e) {
                     that.resolve();
                     Modal.error(e.message);
+                    console.error(e);
                 }
             }
         },
@@ -1134,6 +1141,7 @@ require(['PubView', 'Common'], function(PubView, Common) {
         when("^#ccenter(!.*)?$", ['js/ccenter/vm']);
         when("^#monitor(!.*)?$", ['js/monitor/task/strategyGroup']);
         when("^#cresource(!.*)?$", ['js/cresource/env']);
+        when("^#sysmanagement(!.*)?$", ['js/sysmanagement/user']);
     }
 
     //路由当前页面

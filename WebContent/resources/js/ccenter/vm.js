@@ -208,7 +208,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 										Common.xhr.get('/v2.0/subnets',{"networkId":netId},function(data){
 											var selectData = [{id:"default",name:"默认子网"}].concat(data.subnets);
 											var html = Common.uiSelect({list:selectData,className:'select-subnet'});
-											$clone.append('<li class="pull-right subip"><select class="select-subip"><option>DHCP</option></select></li>');
+											$clone.append('<li class="pull-right fixedip"><select class="select-fixedip"><option>DHCP</option></select></li>');
 											$clone.append('<li class="pull-right subnet">'+html+'</li>');
 											dtd.resolve();
 										});
@@ -304,7 +304,11 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 				var vdc_id = currentChosenObj.vdc || $('select.tenant_id').children('option:selected').val();
 				if(vdc_id){
 					Common.xhr.ajax('/'+vdc_id+'/os-keypairs',function(keypairs){
-						var html = Common.uiSelect(keypairs);
+						var keypairData = []
+						for(var i=0;i<keypairs.length;i++){
+							keypairData[i] = {value:keypairs[i].name};
+						}
+						var html = Common.uiSelect(keypairData);
 				    	$('select.keypairs').html(html);
 					});
 				}else{
@@ -393,12 +397,12 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 										selectData[i] = {id:data.availableips[i],name:data.availableips[i]};
 									}
 									var html = Common.uiSelect(selectData);
-									that.parents('.list-group-item:first').find('select.select-subip').html(html);
+									that.parents('.list-group-item:first').find('select.select-fixedip').html(html);
 								});
 							}else{
 								var selectData = [{id:"dhcp",name:"DHCP"}];
 								var html = Common.uiSelect(selectData);
-								that.parents('.list-group-item:first').find('select.select-subip').html(html);
+								that.parents('.list-group-item:first').find('select.select-fixedip').html(html);
 							}
 						}
 					});
@@ -554,7 +558,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 	    var EditData = {
 	    		//编辑云主机名称弹框
 	    	EditVmName : function(name){
-	    		Common.render('tpls/ccenter/vm/vmname.html','',function(html){
+	    		Common.render('tpls/ccenter/vm/editvmname.html','',function(html){
 	    			Modal.show({
 	    	            title: '编辑云主机',
 	    	            message: html,
@@ -705,6 +709,25 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 	    $("ul.dropdown-menu a.delete").on("click",function(){
 	    	var serverName = $(this).parents('tr:first').find('td.vm_name').html();
 	    	var serverId = $(this).attr("data");
+	    	Modal.confirm("你已经选择了 【"+serverName+"】 。 请确认您的选择。终止的云主机均无法恢复。",function(result){
+	            if(result) {
+	                Common.xhr.del('/'+current_vdc_id+'/servers/'+serverId,function(data){
+	                	if(data.success||data.code==404){
+	                		Modal.success("云主机【"+serverName+"】已终止！");
+	                	}else{
+	                		Modal.error("云主机【"+serverName+"】终止失败！");
+	                	}
+	                	Common.router.reload();
+	                });	    		
+	            }
+	    	});
+	    });
+	    
+	  //软重启云主机
+	    $("ul.dropdown-menu a.delete").on("click",function(){
+	    	var serverName = $(this).parents('tr:first').find('td.vm_name').html();
+	    	var serverId = $(this).attr("data");
+	    	require(['css!'+PubView.rqBaseUrl+'/css/dialog.css']);
 	    	Modal.confirm("你已经选择了 【"+serverName+"】 。 请确认您的选择。终止的云主机均无法恢复。",function(result){
 	            if(result) {
 	                Common.xhr.del('/'+current_vdc_id+'/servers/'+serverId,function(data){
