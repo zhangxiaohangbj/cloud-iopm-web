@@ -1,5 +1,6 @@
 define(['Common','bs/modal','jq/form/wizard','jq/form/validator-bs3','bs/tooltip'],function(Common,Modal) {
     Common.requestCSS('css/wizard.css');
+    Common.requestCSS('css/dialog.css');
 
     //初始化
     var wizard;
@@ -40,7 +41,6 @@ define(['Common','bs/modal','jq/form/wizard','jq/form/validator-bs3','bs/tooltip
             for(var key in currentZone){
                 currentZone[key] = null;
             }
-            currentZone.nums = 1;
         }
 
         var dataGetter={

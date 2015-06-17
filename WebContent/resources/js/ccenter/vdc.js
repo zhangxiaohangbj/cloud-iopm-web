@@ -142,7 +142,6 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 				//虚拟化环境change事件
 				veChange: function(){
 					$('select.select-ve').change(function(){
-						debugger
 						//同步
 						currentChosenObj.ve = $('select.select-ve').children('option:selected');
 						//重新载入可用分区数据
@@ -157,6 +156,33 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 						currentChosenObj.netId = $('select.select-net').children('option:selected');
 						//重新载入可用分区数据
 						DataIniter.initFloatIP();
+    				});
+					
+				},
+				//虚拟化环境change事件EventsHandler.moreVeChange()
+				moreVeChange: function(vdc_id){
+					$('select.select-ve').change(function(){
+						/*var ve_id = $('select.select-ve').children('option:selected').val();
+						if(!ve_id)return;
+						Common.xhr.ajax('/v2/os-availability-zone/virtualEnv/' + ve_id,function(azList){
+							require(['js/common/choose'],function(choose){
+								var options = {
+										selector: '#vdcAZ',
+										allData: azList
+								};
+								choose.initChoose(options);
+							})
+						});*/
+    				});
+					
+				},
+				//网络池change事件
+				moreNetChange: function(){
+					$('select.select-net').change(function(){
+						//同步
+						currentChosenObj.netId = $('select.select-net').children('option:selected');
+						//重新载入可用分区数据
+						//DataIniter.initFloatIP();
     				});
 					
 				},
@@ -451,7 +477,20 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 	    });
 	    //可用分区
 	    $("ul.dropdown-menu a.vdcAz").on("click",function(){
-	    	more.AZ($(this).attr("data-env"),$(this).attr("data"));
+	    	var ve_id =  $(this).attr("data-env");
+	    	var vdc_id = $(this).attr("data");
+	    	//先获取az后，再render
+    		if(!ve_id){
+    			ve_id = renderData.veList[0].id;//$('select.select-ve').children('option:selected').val();
+    		}else{
+    			for(var key in renderData.veList){
+    				var obj = renderData.veList[key];
+    				if(obj.id == ve_id){
+    					obj.selected = "true";
+    				}
+    			}
+    		} 
+	    	more.AZ(ve_id,vdc_id);
 	    });
 	    //删除一个vdc
 	    $("ul.dropdown-menu a.deleteTenant").on("click",function(){
@@ -504,39 +543,42 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 		    		})	
 		    	},
 	  //可用分区管理
-    	AZ : function(env_id,vdc_id){
-    		//先获取az后，再render
-    		Common.xhr.ajax('/v2/os-availability-zone/virtualEnv/' + '94f101bb5c4847eebe25487c3060ec4a',function(eaz){
+    	AZ : function(ve_id,vdc_id){
+    		Common.xhr.ajax('/v2/os-availability-zone/virtualEnv/' + ve_id,function(eaz){
     			Common.xhr.ajax('/v2.0/az/' + vdc_id,function(vaz){
     				var data = {
     						eazList:eaz,
     						vazList:vaz,
-    						veList:renderData.veList,
-    						options: {
-									selector: '#vdcAZ',
-									allData: eaz,
-									selectData: vaz
-							}
-    				};
-    				
+    						veList:renderData.veList
+    				},
+    				options = {
+						selector: '#vdcAZ',
+						allData: eaz,
+						selectData: vaz
+    				}
     				require(['js/common/choose'],function(choose){
-    	        		choose.initChoose(data.options);
     	        		Common.render('tpls/ccenter/vdc/az.html',data,function(html){
-    	        			var chooseWrapper = $('#chooseWrapper');
-    	        			chooseWrapper.append(html);
-    	        			$(data.options.selector).append(chooseWrapper.find('div:first'));
-    	        			Modal.show({
-        	    	            title: '可用分区',
-        	    	            message: chooseWrapper.html(),
-        	    	            nl2br: false,
-        	    	            buttons: [{
-        	    	                label: '保存',
-        	    	                action: function(dialog) {}
-        	    	            }],
-        	    	            onshown : function(){
-        	    	            	chooseWrapper.remove();
-        	    	            }
-        	    	        });
+    	        			//通过回调方式加载，保证choose执行完毕后再去modal
+    	        			options.doneCall = function(html,chooseWrapper){
+    	        				chooseWrapper.append(html);
+    		        			$(options.selector).append(chooseWrapper.find('div:first'));
+    		        			console.log(chooseWrapper.html());
+    		        			Modal.show({
+    	    	    	            title: '可用分区',
+    	    	    	            message: chooseWrapper.html(),
+    	    	    	            nl2br: false,
+    	    	    	            buttons: [{
+    	    	    	                label: '保存',
+    	    	    	                action: function(dialog) {}
+    	    	    	            }],
+    	    	    	            onshown : function(){
+    	    	    	            	EventsHandler.veChange();
+    	    	    	            	chooseWrapper.remove();
+    	    	    	            }
+    	    	    	        });
+    	        			};
+    	        			options.doneData = html;
+    	        			choose.initChoose(options);
     	        		})
     	        	});
     			})
