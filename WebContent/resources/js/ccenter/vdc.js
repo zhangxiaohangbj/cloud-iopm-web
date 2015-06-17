@@ -79,7 +79,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 				},
 				userJson:function(obj){
 					var memberList = [];
-					$(obj).find(".nav").each(function(i,user){
+					$(obj).find(".list-group-item").each(function(i,user){
 						var uid = $(user).find(".member").attr("data-id");
 						var userRoleList = [];
 						$(user).find("ul.dropdown-menu a").each(function(i,role){
