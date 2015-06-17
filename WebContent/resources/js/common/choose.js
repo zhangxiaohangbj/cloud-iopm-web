@@ -41,15 +41,10 @@ define(['Common','bs/modal'],function(Common,Modal){
 			if($(renderOptions.selector).length){
 				$(renderOptions.selector).empty().append(html);
 			}else{
-				 var chooseWrapper=$('<div></div>');        //创建一个父div
-				 chooseWrapper.attr('id','chooseWrapper');        //给父div设置id
+				 var chooseWrapper=$('<div id="chooseWrapper"></div>');
 				 chooseWrapper.css('display','none');
 				 $('body').append(chooseWrapper);
 				 chooseWrapper.append(html);
-				 var modalDiv=$('<div></div>');        //创建一个父div
-				 modalDiv.attr('id','modalDiv');        //给父div设置id
-				 modalDiv.css('display','none');
-				 $('body').append(modalDiv);
 			}
 		});
 		//

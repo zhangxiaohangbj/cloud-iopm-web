@@ -693,5 +693,8 @@ i.image-icon-default.centos {
 	float:right;
 	margin-top:6px;
 }
-
+/*弹框*/
+.modal-footer{
+	border:0;
+}
  /*page页面公共部分结束*/
