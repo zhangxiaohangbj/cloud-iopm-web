@@ -1,6 +1,7 @@
-define(['Common','bs/modal','jq/form/wizard','jq/form/validator-bs3','bs/tooltip'],function(Common,Dialog){
+define(['Common','bs/modal','jq/form/wizard','jq/form/validator-bs3','bs/tooltip'],function(Common,Modal){
     Common.requestCSS('css/wizard.css');
     Common.requestCSS('css/dialog.css');
+
     var init = function(){
         Common.$pageContent.addClass("loading");
         //Common.render(true, 'tpls/cresource/virtualEnv.html','/resources/data/env.txt', function() {
@@ -165,11 +166,9 @@ define(['Common','bs/modal','jq/form/wizard','jq/form/validator-bs3','bs/tooltip
             for(var key in currentChosenEnv){
                 currentChosenEnv[key] = null;
             }
-            currentChosenEnv.nums = 1;
             for(var key in currentChosenConnector){
                 currentChosenConnector[key] = null;
             }
-            currentChosenConnector.nums = 1;
         }
 
         //创建按钮
@@ -221,6 +220,11 @@ define(['Common','bs/modal','jq/form/wizard','jq/form/validator-bs3','bs/tooltip
                                 'env-version': {
                                     required: true
                                 },
+                                'env-vendor': {
+                                    required: true,
+                                    minlength: 4,
+                                    maxlength:15
+                                },
                                 'connector-port':{
                                     required: true,
                                     number:true,
@@ -231,14 +235,15 @@ define(['Common','bs/modal','jq/form/wizard','jq/form/validator-bs3','bs/tooltip
                                     minlength:4,
                                     maxlength:15
                                 },
-                                'connector-password':{
-                                    required:true,
-                                    minlength:6
-
+                                'connector-password': {
+                                    required: true,
+                                    minlength: 6,
+                                    maxlength:15
                                 },
                                 'connector-password-confirm':{
                                     required:true,
                                     minlength:6,
+                                    maxlength:15,
                                     equalTo:"#connector-password"
                                 },
                                 'connector-ip':{
@@ -281,8 +286,6 @@ define(['Common','bs/modal','jq/form/wizard','jq/form/validator-bs3','bs/tooltip
                 });
 
 
-
-
                 //提交按钮
                 wizard.on("submit", function(wizard) {
                     //合并数据
@@ -304,7 +307,7 @@ define(['Common','bs/modal','jq/form/wizard','jq/form/validator-bs3','bs/tooltip
             Common.xhr.ajax("/v2/virtual-env/"+data,function(env){
                 var selectData2= {"data":renderData,"virtualEnv":env};
                 Common.render('tpls/cresource/env/loginfo.html',selectData2,function(html){
-                    Dialog.show({
+                    Modal.show({
                         title: '日志信息',
                         message: html,
                         nl2br: false,
@@ -321,7 +324,7 @@ define(['Common','bs/modal','jq/form/wizard','jq/form/validator-bs3','bs/tooltip
             Common.xhr.ajax("/v2/virtual-env/"+data,function(env){
                 var selectData2= {"data":renderData,"virtualEnv":env};
                 Common.render('tpls/cresource/env/edit.html',selectData2,function(html){
-                    Dialog.show({
+                    Modal.show({
                         title: '编辑虚拟化环境',
                         message: html,
                         nl2br: false,
@@ -349,11 +352,11 @@ define(['Common','bs/modal','jq/form/wizard','jq/form/validator-bs3','bs/tooltip
                                 debugger;
                                 Common.xhr.putJSON('/v2/virtual-env',envData,function(data){
                                     if(data){
-                                        Dialog.success('保存成功');
-                                        setTimeout(function(){Dialog.closeAll()},2000);
+                                        Modal.success('保存成功');
+                                        setTimeout(function(){Modal.closeAll()},2000);
                                         Common.router.route();
                                     }else{
-                                        Dialog.warning ('保存失败')
+                                        Modal.warning ('保存失败')
                                     }
                                 })
                             }
@@ -367,7 +370,7 @@ define(['Common','bs/modal','jq/form/wizard','jq/form/validator-bs3','bs/tooltip
         });
         //删除按钮
 
-        $("a.deletedelete").on("click",function(){
+        $("a.delete").on("click",function(){
             var data = $(this).attr("data");
             Modal.confirm('确定要删除该虚拟环境吗?',function(result){
                 if(result) {

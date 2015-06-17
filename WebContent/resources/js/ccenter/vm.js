@@ -1,5 +1,6 @@
 define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3'],function(Common,Modal){
 	Common.requestCSS('css/wizard.css');
+	Common.requestCSS('css/dialog.css');
 	var current_vdc_id = '9cc717d8047e46e5bf23804fc4400247';
 	var init = function(){
 		Common.$pageContent.addClass("loading");
@@ -218,7 +219,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 										$clone.children("li.fixedip").remove();
 										$clone.children("li.subnet").remove();
 									},
-									list: networks
+									allData: networks
 							};
 							choose.initChoose(options);
 						});
@@ -693,21 +694,27 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
                 });	    		
 	    	}
 	    };
+		//明细
+	    $("#VmTable_wrapper a.vm_name").on("click",function(){
+	    	var id = $(this).attr("data");
+	    	Common.render(true,'tpls/ccenter/vm/detail.html','/'+currentChosenObj.vdc+'/servers/'+id,function(html){
+					 $("a.reload").on("click",function(){
+		    		    	Common.router.route();
+		    		  });
+	    	});
+	    })
 	    //修改云主机名称
 	    $("ul.dropdown-menu a.editName").on("click",function(){
-	    	require(['css!'+PubView.rqBaseUrl+'/css/dialog.css']);
 	    	EditData.EditVmName($(this).attr("data"));
 	    });
 	    //编辑安全组
 	    $("ul.dropdown-menu a.editSecurity").on("click",function(){
-	    	require(['css!'+PubView.rqBaseUrl+'/css/dialog.css']);
 	    	EditData.EditVmSecurity($(this).attr("data"),function(){
 	    		
 	    	});
 	    });
 	    //修改虚拟机大小
 	    $("ul.dropdown-menu a.editVmType").on("click",function(){
-	    	require(['css!'+PubView.rqBaseUrl+'/css/dialog.css']);
 	    	//获取云主机个数,规格等信息
 	    	Common.xhr.ajax('/resources/data/arrays.txt',function(data){
 	    		data.nums = 1;
@@ -729,7 +736,6 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 	    $("ul.dropdown-menu a.delete").on("click",function(){
 	    	var serverName = $(this).parents('tr:first').find('td.vm_name').html();
 	    	var serverId = $(this).attr("data");
-	    	require(['css!'+PubView.rqBaseUrl+'/css/dialog.css']);
 	    	Modal.confirm("你已经选择了 【"+serverName+"】 。 请确认您的选择。终止的云主机均无法恢复。",function(result){
 	            if(result) {
 	                Common.xhr.del('/'+current_vdc_id+'/servers/'+serverId,function(data){

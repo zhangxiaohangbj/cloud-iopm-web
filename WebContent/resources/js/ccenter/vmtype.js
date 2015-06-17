@@ -57,19 +57,13 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 				});
 			},
 
-            getFlavorAccess: function(id){
-                Common.xhr.ajax('/v2/123/flavors/'+id+"/os-flavor-access",function(pageVdcList){///v2/images
-                    var vdcList = pageVdcList.result;
-                    renderData.vdcList = vdcList;
-                    debugger
-                    $("#flavorVdcAccess").find(".list-group-all").empty();
-                    var listView=[];
-                    for(var i=0;i<vdcList.length;i++){
-                        listView.push('<a href="javascript:void(0);" class="list-group-item">'+vdcList[i]["name"]+' <i data-id = '+vdcList[i]["id"]+' class="fa fa-plus-circle fa-fw" style="float: right;"></i></a>')
-                    }
-                    $("#flavorVdcAccess").find(".list-group-all").html(listView.join(""));
-                    EventsHandler.flavorAddEvent();
+            getChoose: function(obj){
+                var chooseList = [];
+                $(obj).find("li.member").each(function(i,element){
+                    var id = $(element).attr("data-id");
+                    chooseList.push(id);
                 });
+                return chooseList;
             }
 
 		}
@@ -159,6 +153,20 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
         var EventsHandler = {
 
             //表单校验
+            flavorAccessEvent:function(){
+                require(['js/common/domchoose'],function(domchoose){
+                    var leftOption = {
+                            appendWrapper: '.vdc-all',
+                            clone: 'a.list-group-item'
+                        },
+                        rightOption = {
+                            appendWrapper: '.vdc-chosen',
+                            clone: 'a.list-group-item',//相对clickSelector获取元素
+                            clickSelector: 'i.fa-minus-circle'
+                        };
+                    domchoose.initChoose(leftOption,rightOption);
+                });
+            },
             flavorFormValidator: function(){
                 return $(".form-horizontal").validate({
                     rules: {
@@ -267,6 +275,8 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 
             accessFlavor : function(id){
                 Common.xhr.ajax('/v2/123/flavors/'+id+"/os-flavor-access",function(data){
+                    var unselectedList = [];
+                    var selectedList = [];
                     Common.render('tpls/ccenter/vmtype/flavorAccess.html',data,function(html){
                         Modal.show({
                             title: '访问授权',
@@ -275,7 +285,9 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
                             buttons: [{
                                 label: '保存',
                                 action: function(dialog) {
-                                    Common.xhr.putJSON('/v2/123/flavors/','',function(data){
+                                    var chooseList = DataGetter.getChoose('#flavorVdcAccess .list-group-select');
+                                    debugger
+                                    Common.xhr.putJSON('/v2/123/flavors/'+id+'/os-flavor-access',chooseList,function(data){
                                         if(data){
                                             alert("保存成功");
                                             dialog.close();
@@ -287,11 +299,22 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
                             }],
                             onshown : function(){
                                 require(['js/common/choose'],function(choose){
-                                    alert(data)
+                                    var flavorVdcList = data['flavor_access'];
                                     debugger
+                                    a: for(var i=0; i<renderData.vdcList.length; i++){
+                                         for(var j=0; j<flavorVdcList.length; j++){
+                                            if(renderData.vdcList[i]['id'] == flavorVdcList[j]['tenant_id']){
+
+                                                selectedList.push(renderData.vdcList[i])
+                                                continue a;
+                                            }
+                                        }
+                                        unselectedList.push(renderData.vdcList[i])
+                                    }
                                     var options = {
                                         selector: '#flavorVdcAccess',
-                                        list: renderData.vdcList
+                                        allData: unselectedList,
+                                        selectData: selectedList
                                     };
                                     choose.initChoose(options);
                                 });

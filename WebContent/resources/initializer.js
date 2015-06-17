@@ -76,7 +76,7 @@ define('Common', ['PubView', 'bs/modal', 'json', 'template', 'jq/dataTables-bs3'
                 },
                 {
                     text: '<i class="fa fa-cloud"></i>物理区域',
-                    link: '#host'
+                    link: '#region'
                 },
                 {
                     text: '<i class="fa fa-cloud"></i>虚拟化环境',
@@ -246,26 +246,26 @@ define('Common', ['PubView', 'bs/modal', 'json', 'template', 'jq/dataTables-bs3'
             current: [1,1],
             items: [
                 {
-                    text: '<i class="fa fa-puzzle-piece"></i>任务管理<i class="fa icon-arrow"></i>',
+                    text: '<i class="fa fa-puzzle-piece"></i>任务调度<i class="fa icon-arrow"></i>',
                     items: [
                         {
-                            text: '任务定义',
+                            text: '任务管理',
                             link: '#task/task'
                         },
                         {
-                            text: '任务监控',
-                            link: '#task/monitor'
-                        },
-                        {
-                            text: '策略定义',
+                            text: '策略管理',
                             link: '#task/strategy'
                         },
                         {
+                            text: '执行日志',
+                            link: '#task/monitor'
+                        },
+                        /*{
                             text: '任务分组',
                             link: '#task/taskGroup'
-                        },
+                        },*/
                         {
-                            text: '策略分组',
+                            text: '分组管理',
                             link: '#task/strategyGroup'
                         }
                     ]
