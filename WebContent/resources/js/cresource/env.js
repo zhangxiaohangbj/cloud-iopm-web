@@ -1,5 +1,7 @@
 define(['Common','bs/modal','jq/form/wizard','jq/form/validator-bs3','bs/tooltip'],function(Common,Modal){
     Common.requestCSS('css/wizard.css');
+    Common.requestCSS('css/dialog.css');
+
     var init = function(){
         Common.$pageContent.addClass("loading");
         //Common.render(true, 'tpls/cresource/virtualEnv.html','/resources/data/env.txt', function() {
@@ -164,11 +166,9 @@ define(['Common','bs/modal','jq/form/wizard','jq/form/validator-bs3','bs/tooltip
             for(var key in currentChosenEnv){
                 currentChosenEnv[key] = null;
             }
-            currentChosenEnv.nums = 1;
             for(var key in currentChosenConnector){
                 currentChosenConnector[key] = null;
             }
-            currentChosenConnector.nums = 1;
         }
 
         //创建按钮
@@ -237,11 +237,13 @@ define(['Common','bs/modal','jq/form/wizard','jq/form/validator-bs3','bs/tooltip
                                 },
                                 'connector-password': {
                                     required: true,
-                                    minlength: 6
+                                    minlength: 6,
+                                    maxlength:15
                                 },
                                 'connector-password-confirm':{
                                     required:true,
                                     minlength:6,
+                                    maxlength:15,
                                     equalTo:"#connector-password"
                                 },
                                 'connector-ip':{
