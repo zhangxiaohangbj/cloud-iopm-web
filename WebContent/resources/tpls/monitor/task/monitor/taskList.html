@@ -19,9 +19,9 @@
 					<tr>
 						<td>{{item.name}}</td>
 						<td>{{item.memo}}</td>
-						<td><a href="javascript:void(0)" class="instanceList" name="running" data="{{item.id}}"><font color="#FFD700"><strong>running(12)</strong></font></a>&nbsp;&nbsp;&nbsp;&nbsp;
-						<a href="javascript:void(0)" class="instanceList" name="failed" data="{{item.id}}"><font color="#FF3030"><strong>failed(5)</strong></font></a>&nbsp;&nbsp;&nbsp;&nbsp;
-						<a href="javascript:void(0)" class="instanceList" name="success" data="{{item.id}}"><font color="#00FF00"><strong>success(90)</strong></font></a></td>
+						<td><a href="javascript:void(0)" class="instanceList" name="running" data="{{item.id}}"><font color="#FFD700"><strong>running({{item.runningCount}})</strong></font></a>&nbsp;&nbsp;&nbsp;&nbsp;
+						<a href="javascript:void(0)" class="instanceList" name="failed" data="{{item.id}}"><font color="#FF3030"><strong>failed({{item.failedCount}})</strong></font></a>&nbsp;&nbsp;&nbsp;&nbsp;
+						<a href="javascript:void(0)" class="instanceList" name="success" data="{{item.id}}"><font color="#00FF00"><strong>success({{item.successCount}})</strong></font></a></td>
 					</tr>
     			{{/each}}
 				</tbody>
