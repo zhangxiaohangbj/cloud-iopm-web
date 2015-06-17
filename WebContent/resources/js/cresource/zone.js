@@ -68,7 +68,7 @@ define(['Common','bs/modal','jq/form/wizard','jq/form/validator-bs3','bs/tooltip
         dataGetter.getResourceType();
 
         //初始化资源
-        var initResource = function(resourceType){
+        var initResource = function(resourceType,elem){
             var resourceTypeArray = renderData.type;
             var link ;
             resourceTypeArray.forEach(function(e){
@@ -92,62 +92,40 @@ define(['Common','bs/modal','jq/form/wizard','jq/form/validator-bs3','bs/tooltip
                 EventsHandler.resourceAddEvent(resourceType);*/
                 require(['js/common/choose'],function(choose){
                     var options = {
-                        selector: '#choseResource',
+                        selector: '#'+elem,
                         list: dataList
                     };
                     choose.initChoose(options);
                 })
             });
         }
-        var CheckHandler = {
-            nameCheck:function(){
+        var dataSetHandler = {
+            nameSet:function(){
                 currentZone.name = $("#zone-name").val();
                 $("#zone-name-confirm").val(currentZone.name);
             },
-            envChange:function(){
-                $('#select-env').change(function(){
-                    var curEnv = $(this).children('option:selected');
-                    currentZone.virtualEnvId =  curEnv.val();
-                    $("#select-env-confirm").val(curEnv.text());
-                });
-                $("#select-env-confirm").val($("#select-env option:selected").text());
+            envSet:function(){
+                var curEnv = $('#select-env option:selected');
+                currentZone.virtualEnvId =  curEnv.val();
+                $("#select-env-confirm").val(curEnv.text());
             },
-            resourceChange:function(){
+            resourceSet:function(elem){
                 var resourceType = $("#select-resource-type").children('option:selected').val();
-                initResource(resourceType);
+                initResource(resourceType,elem);
                 $("#select-resource-type").change(function(){
                     var resourceType = $(this).children('option:selected').val();
-                    initResource(resourceType);
+                    initResource(resourceType,elem);
                 });
 
             },
-            regionChange:function(){
-                $('#select-region').change(function(){
-                    var curRegion = $(this).children('option:selected');
-                    currentZone.regionId =  curRegion.val();
-                    $("#select-region-confirm").val(curRegion.text());
-                });
-                $("#select-region-confirm").val($('#select-region option:selected').text());
-
+            regionSet:function(){
+                var curRegion =   $('#select-region option:selected');
+                currentZone.regionId =  curRegion.val();
+                $("#select-region-confirm").val(curRegion.text());
             },
-            descriptionCheck:function(){
+            descriptionSet:function(){
                 currentZone.description = $("#zone-description").val();
                 $("#zone-description-confirm").val(currentZone.description);
-            },
-            formValidator: function() {
-                $(".form-horizontal").validate({
-                    rules: {
-                        'zone-name': {
-                            required: true,
-                            minlength: 4,
-                            maxlength: 15
-                        },
-                        'zone-description':{
-                            required:false,
-                            maxlength:200
-                        }
-                    }
-                });
             }
         }
 
@@ -187,9 +165,8 @@ define(['Common','bs/modal','jq/form/wizard','jq/form/validator-bs3','bs/tooltip
                 $('body').append(html);
 
                 //
-                currentZone.virtualEnvId = $("#select-env option:selected").val();
-                currentZone.regionId = $("#select-region option:selected").val();
-
+                //currentZone.virtualEnvId = $("#select-env option:selected").val();
+                //currentZone.regionId = $("#select-region option:selected").val();
                 $.fn.wizard.logging = true;
                 wizard = $('#create-zone-wizard').wizard({
                     keyboard : false,
@@ -203,8 +180,44 @@ define(['Common','bs/modal','jq/form/wizard','jq/form/validator-bs3','bs/tooltip
                         backText: "上一步",
                         submitText: "提交",
                         submittingText: "提交中..."
+                    },
+                    validate: {
+                        0: function(){
+                            return this.el.find('form').valid();
+                        }
                     }
                 });
+
+                //加载时载入validate
+                wizard.on('show',function(){
+                    wizard.form.each(function(){
+                        $(this).validate({
+                            errorContainer: '_form',
+                            rules: {
+                                'zone-name': {
+                                    required: true,
+                                    minlength: 4,
+                                    maxlength: 15
+                                },
+                                'zone-description':{
+                                    required:false,
+                                    maxlength:200
+                                }
+                            }
+                        });
+                    })
+                });
+
+                //确认信息卡片被选中的监听
+                wizard.cards.confirm.on('selected',function(card){
+                    //获取上几步中填写的值
+                    dataSetHandler.nameSet();
+                    dataSetHandler.descriptionSet();
+                    dataSetHandler.envSet();
+                    dataSetHandler.regionSet();
+                });
+
+
                 wizard.show();
 
                 //关闭弹窗
@@ -218,30 +231,7 @@ define(['Common','bs/modal','jq/form/wizard','jq/form/validator-bs3','bs/tooltip
                     closeWizard();
                 });
 
-                //下一步中进行数据的初始化
-                wizard.on("nextclick", function(wizard) {
-                    wizard.getActiveCard().enable()
-                    var index = wizard.getActiveCard().index;
-                    switch (index){
-                        case 1:
-                            CheckHandler.nameCheck();
-                            CheckHandler.descriptionCheck();
-                            break;
-                        case 2:
-                            //CheckHandler.ipCheck();
-                            //CheckHandler.paswCheck();
-                            //CheckHandler.periodChange();
-                            //CheckHandler.portCheck();
-                            //CheckHandler.protocolChange();
-                            //CheckHandler.userCheck();
-                            break;
-                    }
-                });
-
-                CheckHandler.regionChange();
-                CheckHandler.envChange();
-                CheckHandler.formValidator();
-                CheckHandler.resourceChange();
+                dataSetHandler.resourceSet("choseResource");
 
                 //提交按钮
                 wizard.on("submit", function(wizard) {
@@ -285,10 +275,7 @@ define(['Common','bs/modal','jq/form/wizard','jq/form/validator-bs3','bs/tooltip
                         },
                             {
                                 label: '保存',
-                                action: function(Modal) {
-                                    var valid = $(".form-horizontal").valid();
-                                    if(!valid) return false;
-
+                                action: function(dialog) {
                                     var azone ={
                                         "id":zone.id,
                                         "name": $("#edit-zone-name").val(),
@@ -320,6 +307,48 @@ define(['Common','bs/modal','jq/form/wizard','jq/form/validator-bs3','bs/tooltip
         });
         //增加资源按钮
         $("a.add-resource").on("click",function(){
+            var data = $(this).attr("data");
+            Common.xhr.ajax( "/v2/os-availability-zone/"+data,function(zoneInfo){
+                Common.render('tpls/cresource/zone/addResource.html',renderData,function(html){
+
+
+                    Modal.show({
+                        title: '添加资源',
+                        message: html,
+                        nl2br: false,
+                        buttons: [{
+                            label:'取消',
+                            action:function(dialog){
+                                dialog.close();
+                            }
+                        },
+                            {
+                                label: '保存',
+                                action: function(dialog) {
+                                    Modal.success('保存成功');
+                                    setTimeout(function(){Modal.closeAll()},2000);
+                                    Common.router.route();
+                                    //Common.xhr.putJSON('/v2/virtual-env',envData,function(data){
+                                    //    if(data){
+                                    //        Modal.success('保存成功');
+                                    //        setTimeout(function(){Modal.closeAll()},2000);
+                                    //        Common.router.route();
+                                    //    }else{
+                                    //        Modal.warning ('保存失败')
+                                    //    }
+                                    //})
+                                }
+                            }],
+                        onshown : function(){
+                            var rtype = renderData.type[0].type;
+                            initResource(rtype,"addResource");
+                        }
+                    });
+
+                });
+            });
+
+
 
         });
         //删除按钮

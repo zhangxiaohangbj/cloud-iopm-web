@@ -220,6 +220,11 @@ define(['Common','bs/modal','jq/form/wizard','jq/form/validator-bs3','bs/tooltip
                                 'env-version': {
                                     required: true
                                 },
+                                'env-vendor': {
+                                    required: true,
+                                    minlength: 4,
+                                    maxlength:15
+                                },
                                 'connector-port':{
                                     required: true,
                                     number:true,
@@ -230,39 +235,9 @@ define(['Common','bs/modal','jq/form/wizard','jq/form/validator-bs3','bs/tooltip
                                     minlength:4,
                                     maxlength:15
                                 },
-                                'connector-password':{
-                                    required:true,
-                                    minlength:6
-                    wizard.form.validate({
-                        errorContainer: '_form',
-                        rules: {
-                            'env-name': {
-                                required: true,
-                                minlength: 4,
-                                maxlength:15
-                            },
-                            'env-version': {
-                                required: true
-                            },
-                            'env-vendor': {
-                                required: true,
-                                minlength: 4,
-                                maxlength:15
-                            },
-                            'connector-port':{
-                                required: true,
-                                number:true,
-                                range:[1025,65534]
-                            },
-                            'connector-username':{
-                                required:true,
-                                minlength:4,
-                                maxlength:15
-                            },
-                            'connector-password':{
-                                required:true,
-                                minlength:6
-
+                                'connector-password': {
+                                    required: true,
+                                    minlength: 6
                                 },
                                 'connector-password-confirm':{
                                     required:true,
@@ -393,7 +368,7 @@ define(['Common','bs/modal','jq/form/wizard','jq/form/validator-bs3','bs/tooltip
         });
         //删除按钮
 
-        $("a.deletedelete").on("click",function(){
+        $("a.delete").on("click",function(){
             var data = $(this).attr("data");
             Modal.confirm('确定要删除该虚拟环境吗?',function(result){
                 if(result) {
