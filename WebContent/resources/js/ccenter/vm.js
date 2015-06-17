@@ -589,37 +589,64 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 	    	},
 	    	//编辑安全组弹框
 	    	EditVmSecurity : function(id,cb){
+	    		Common.$pageContent.addClass("loading");
+	    		var pageData={};
 				//取云主机列表
-				Common.xhr.ajax('/resources/data/arrays.txt',function(data){
+				Common.xhr.getSync('/'+current_vdc_id+'/servers/'+id+'/list-unattched-security-groups',function(data){
+					pageData.unattched=data;});
+				Common.xhr.getSync('/'+current_vdc_id+'/servers/'+id+'/list-attched-security-groups',function(data){
+					pageData.attched=data;});
+				
+		    	//生成html数据
+				Common.render('tpls/ccenter/vm/security.html',pageData,function(html){
+//					alert(""+JSON.stringify(pageData));
 					
-			    	//生成html数据
-					Common.render('tpls/ccenter/vm/security.html',data,function(html){
-						Modal.show({
-		    	            title: '编辑安全组',
-		    	            message: html,
-		    	            nl2br: false,
-		    	            buttons: [{
-		    	                label: '保存',
-		    	                action: function(dialog) {
-		    	                	Common.xhr.ajax('/resources/data/arrays.txt',function(data){
-		    	                		if(data){
-		    	                			alert("保存成功");
-								    		dialog.close();
-										}else{
-											alert("保存失败");
-										}
-		    	                	});
-		    	                }
-		    	            }, {
-		    	                label: '取消',
-		    	                action: function(dialog) {
-		    	                    dialog.close();
-		    	                }
-		    	            }],
-		    	            onshown : cb  //Modal show后回调
-		    	        });
-					});
-				})
+					Modal.show({
+	    	            title: '编辑安全组',
+	    	            message: html,
+	    	            nl2br: false,
+	    	            buttons: [{
+	    	                label: '保存',
+	    	                action: function(dialog) {
+    	    					var selectedList = [];
+    	    					$("#edit-security-group .list-group-select").find("li.member").each(function(i,element){
+    	    						var id = $(element).attr("data-id");
+    	    						selectedList.push(id);
+    	    					});
+    	    					Common.xhr.postJSON('/'+current_vdc_id+'/servers/'+id+'/change-security-group',selectedList,function(data){
+    	    						if(data.success){
+    	    							dialog.close();
+    	    	                		Modal.success("云主机安全组已更改!");
+    	    	                		setTimeout(function(){Modal.closeAll()},3000);
+        	                			Common.router.route();
+    	    	                	}else{
+    	    	                		Modal.error("云主机变更安全组失败!");
+    	    	                	}
+    	    					});
+	    	                	
+	    	                	
+	    	                }
+	    	            }, {
+	    	                label: '取消',
+	    	                action: function(dialog) {
+	    	                    dialog.close();
+	    	                }
+	    	            }],
+	    	            onshown : function(){
+	    	            	require(['js/common/choose'],function(choose){
+	    						var options = {
+	    								selector: '#edit-security-group',
+	    								list: pageData.unattched
+	    						};
+	    						choose.initChoose(options);
+	    					})
+	    					//Modal show后回调
+	    	            	cb;
+	    	            	Common.$pageContent.removeClass("loading");
+	    	            } 
+	    	        });
+				});
+				
 	    	},
 	    	//编辑虚拟机大小弹框
 	    	EditVmType : function(id,cb){
@@ -675,29 +702,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 	    $("ul.dropdown-menu a.editSecurity").on("click",function(){
 	    	require(['css!'+PubView.rqBaseUrl+'/css/dialog.css']);
 	    	EditData.EditVmSecurity($(this).attr("data"),function(){
-	    		//全部安全组双击事件
-	    		$("#edit_vm_security .security-left").on("dblclick",function(){
-	    			$(this).remove();
-	    			$("ul[name='choosedSecurity']").append('<li class="p3"><span class="security-left">'+$(this).html()+'</span></li>');
-	    		});
-	    		//已选安全组双击事件
-	    		$("#edit_vm_security .security-right").on("dblclick",function(){
-	    			$(this).remove();
-	    			$("ul[name='allSecurity']").append('<li class="p3"><span class="security-left">'+$(this).html()+'</span></li>');
-	    		});
-	    		//安全组search  
-	    		$('#edit_vm_security .form-control').on('keypress',function(event){  
-	    			var obj = $(this);
-	    		    if(event.keyCode == "13") 
-	    		    	Common.xhr.ajax('/resources/data/arrays.txt',function(data){
-	    		    		var res = data.data;
-	    		    		var text = "";
-		    		    	for(var i = 0;i<res.length;i++){
-		    		    		text += '<li class="p3"><span class="security-left">'+res[i].name+'</span></li>';
-		    		    	}
-		    		    	obj.parent().next().find("ul").html(text);
-	    		    	});
-	    		});
+	    		
 	    	});
 	    });
 	    //修改虚拟机大小
@@ -765,6 +770,117 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 	            }
 	    	}});
 	    });
+	    
+	    //关闭云主机
+	    $("ul.dropdown-menu a.osStop").on("click",function(){
+	    	var serverName = $(this).parents('tr:first').find('td.vm_name').html();
+	    	var serverId = $(this).attr("data");
+	    	require(['css!'+PubView.rqBaseUrl+'/css/dialog.css']);
+	    	Modal.confirm({title:"确认：关闭云主机",
+	    		message:"你已经选择了 ["+serverName+"] 。  请确认您的选择。关闭该云主机。 ",
+	    		callback:function(result){
+	            if(result) {
+	            	EditData.DoAction(serverId,serverName,{"os-stop": null},"关闭");
+	            }
+	    	}});
+	    });
+	    
+	    //暂停云主机
+	    $("ul.dropdown-menu a.pause").on("click",function(){
+	    	var serverName = $(this).parents('tr:first').find('td.vm_name').html();
+	    	var serverId = $(this).attr("data");
+	    	require(['css!'+PubView.rqBaseUrl+'/css/dialog.css']);
+	    	Modal.confirm({title:"确认：暂停云主机",
+	    		message:"你已经选择了 ["+serverName+"] 。  请确认您的选择。暂停该云主机。 ",
+	    		callback:function(result){
+	            if(result) {
+	            	EditData.DoAction(serverId,serverName,{"pause": null},"暂停");
+	            }
+	    	}});
+	    });
+	    
+	    //挂起云主机
+	    $("ul.dropdown-menu a.suspend").on("click",function(){
+	    	var serverName = $(this).parents('tr:first').find('td.vm_name').html();
+	    	var serverId = $(this).attr("data");
+	    	require(['css!'+PubView.rqBaseUrl+'/css/dialog.css']);
+	    	Modal.confirm({title:"确认：挂起云主机",
+	    		message:"你已经选择了 ["+serverName+"] 。  请确认您的选择。挂起该云主机。 ",
+	    		callback:function(result){
+	            if(result) {
+	            	EditData.DoAction(serverId,serverName,{"suspend": null},"挂起");
+	            }
+	    	}});
+	    });
+	    
+	    //重建云主机
+	    $("ul.dropdown-menu a.rebuild").on("click",function(){
+	    	var serverName = $(this).parents('tr:first').find('td.vm_name').html();
+	    	var serverId = $(this).attr("data");
+	    	var imageList;
+	    	require(['css!'+PubView.rqBaseUrl+'/css/dialog.css']);
+	    	Common.xhr.getSync('/v2/images/?owner='+current_vdc_id,function(data){
+    			imageList=data;
+    		});
+//	    	Common.render('tpls/ccenter/vm/rebuild.html',imageList,function(html){
+	    	Common.render('tpls/ccenter/vm/rebuild.html','/resources/data/image.txt',function(html){	
+	    		Modal.show({
+    	            title: '重建云主机',
+    	            message: html,
+    	            closeByBackdrop: false,
+    	            nl2br: false,
+    	            buttons: [{
+    	                label: '保存',
+    	                action: function(dialog) {
+    	                	var postData={"rebuild":{}};
+    	                	postData.rebuild["imageRef"]=$('select.image-list').val();
+    	                	postData.rebuild["OS-DCF:diskConfig"]=$('select.config-list').val();
+//    	                 	alert("Value: " + JSON.stringify(postData));
+    	                 	EditData.DoAction(serverId,serverName,postData,"重建");
+    	                 	dialog.close();
+    	                }
+    	            }, {
+    	                label: '取消',
+    	                action: function(dialog) {
+    	                    dialog.close();
+    	                }
+    	            }],
+    	            onshown : function(dialog){
+    	    			
+    	            }
+    	        });
+	    	});
+	    });
+	    
+	  //绑定floatingIp
+	    $("ul.dropdown-menu a.attachIp").on("click",function(){
+	    	var serverId = $(this).attr("data");
+	    	var imageList;
+	    	Common.render('tpls/ccenter/vm/attachip.html','',function(html){	
+	    		Modal.show({
+    	            title: '绑定浮动IP',
+    	            message: html,
+    	            closeByBackdrop: false,
+    	            nl2br: false,
+    	            buttons: [{
+    	                label: '绑定',
+    	                action: function(dialog) {
+    	                 	dialog.close();
+    	                }
+    	            }, {
+    	                label: '取消',
+    	                action: function(dialog) {
+    	                    dialog.close();
+    	                }
+    	            }],
+    	            onshown : function(dialog){
+    	    			
+    	            }
+    	        });
+	    	});
+	    });
+	    
+	    
 	}	
 	return {
 		init : init

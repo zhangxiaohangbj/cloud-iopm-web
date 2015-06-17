@@ -1,37 +1,21 @@
-<div id="edit_vm_security" style="overflow:hidden;">
-		<div class="col-sm-6">
-		    <span style="display: block;margin-bottom: 10px;font-size: 16px;">全部安全组</span>
+<div id="edit_vm_security" style="overflow: hidden;">
+	<!--<div class="col-sm-6">
+		 <span style="display: block;margin-bottom: 10px;font-size: 16px;">全部安全组</span>
 			<div style="padding: 8px;border: 1px solid #ccc;">
 		      <input type="text" class="form-control" placeholder="Search">
 		    </div>
-		    <!-- <select data-placeholder="" class="form-control" multiple="" tabindex="3" name="allSecurity" style="border-top: 0;border-radius: 0;">
-                <option value="Security Group1">Security Group1</option>
-                <option value="Security Group2">Security Group2</option>
-            </select> -->
+		    
             <div class="select-list">
-            	<ul name="allSecurity">
-            		<li class="p3"><span class="security-left">Security Group1</span></li>
-            		<li class="p3"><span class="security-left">Security Group2</span></li>
+            	<ul name="all-security-list">
+            	   {{each unattched as item1}}
+                    <li class="p3"><span class="security-left">{{item1.name}}</span><span class="btn btn-primary"><i class="fa fa-plus"></i></span></li>
+            	   {{/each}}	
             	</ul>
-            </div>
-		</div>
-		<div class="col-sm-6">
-			<span style="display: block;margin-bottom: 10px;font-size: 16px;">虚拟机安全组</span>
-			<div style="padding: 8px;border: 1px solid #ccc;">
-		      <input type="text" class="form-control" placeholder="Search">
-		    </div>
-		    <!-- <select data-placeholder="" class="form-control" multiple="" tabindex="3" name="choosedSecurity" style="border-top: 0;border-radius: 0;">
-		    	{{each data as item i}}
-		    		<option value="Security Group1">Security Group1</option>
-		    	{{/each}}
-                <option value="Security Group3">Security Group3</option>
-                <option value="Security Group4">Security Group4</option>
-            </select> -->
-             <div class="select-list">
-            	<ul  name="choosedSecurity">
-            		<li class="p3"><span class="security-right">Security Group3</span></li>
-            		<li class="p3"><span class="security-right">Security Group4</span></li>
-            	</ul>
-            </div>
-		</div>
+            </div> -->
+	<div class="wizard-input-section">
+	    <div class="chose-sg  clearfix"  id="edit-security-group">
+	    </div>
+	</div>
+	
+
 </div>
