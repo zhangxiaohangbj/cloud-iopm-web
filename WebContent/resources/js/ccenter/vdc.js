@@ -548,21 +548,31 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
     				var data = {
     						eazList:eaz,
     						vazList:vaz,
-    						veList:renderData.veList
-    				}
-    				Common.render('tpls/ccenter/vdc/az.html',data,function(html){
-        				Modal.show({
-    	    	            title: '可用分区',
-    	    	            message: html,
-    	    	            nl2br: false,
-    	    	            buttons: [{
-    	    	                label: '保存',
-    	    	                action: function(dialog) {}
-    	    	            }],
-    	    	            onshown : function(){}
-    	    	        });
-    	    		});
-    			})		
+    						veList:renderData.veList,
+    						options: {
+									selector: '#vdcAZ',
+									list: []
+							}
+    				};
+    				
+    				require(['js/common/choose'],function(choose){
+    	        		choose.initChoose(data.options);
+    	        		Common.render('tpls/ccenter/vdc/az.html',data,function(html){
+    	        			$('#modalDiv').empty().html(html);
+    	        			$('#modalDiv').find('#vdcAZ').html($('#chooseWrapper').html());
+    	        			Modal.show({
+        	    	            title: '可用分区',
+        	    	            message: $('#modalDiv').html(),
+        	    	            nl2br: false,
+        	    	            buttons: [{
+        	    	                label: '保存',
+        	    	                action: function(dialog) {}
+        	    	            }],
+        	    	            onshown : function(){}
+        	    	        });
+    	        		})
+    	        	})
+    			})
     		})		
     	 },
     	//删除一个租户
