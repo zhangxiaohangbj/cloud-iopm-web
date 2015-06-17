@@ -162,11 +162,17 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 				//虚拟化环境change事件EventsHandler.moreVeChange()
 				moreVeChange: function(vdc_id){
 					$('select.select-ve').change(function(){
-						//同步
-						currentChosenObj.ve = $('select.select-ve').children('option:selected');
-						//重新载入可用分区数据
-						//DataIniter.initAz();
-						more.AZ(vdc_id);
+						/*var ve_id = $('select.select-ve').children('option:selected').val();
+						if(!ve_id)return;
+						Common.xhr.ajax('/v2/os-availability-zone/virtualEnv/' + ve_id,function(azList){
+							require(['js/common/choose'],function(choose){
+								var options = {
+										selector: '#vdcAZ',
+										allData: azList
+								};
+								choose.initChoose(options);
+							})
+						});*/
     				});
 					
 				},
@@ -471,8 +477,20 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 	    });
 	    //可用分区
 	    $("ul.dropdown-menu a.vdcAz").on("click",function(){
-	    	more.AZ($(this).attr("data-env"),$(this).attr("data"));
-	    	//EventsHandler.moreVeChange($(this).attr("data"));
+	    	var ve_id =  $(this).attr("data-env");
+	    	var vdc_id = $(this).attr("data");
+	    	//先获取az后，再render
+    		if(!ve_id){
+    			ve_id = renderData.veList[0].id;//$('select.select-ve').children('option:selected').val();
+    		}else{
+    			for(var key in renderData.veList){
+    				var obj = renderData.veList[key];
+    				if(obj.id == ve_id){
+    					obj.selected = "true";
+    				}
+    			}
+    		} 
+	    	more.AZ(ve_id,vdc_id);
 	    });
 	    //删除一个vdc
 	    $("ul.dropdown-menu a.deleteTenant").on("click",function(){
@@ -525,17 +543,9 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 		    		})	
 		    	},
 	  //可用分区管理
-    	AZ : function(vdc_id){
-    		//先获取az后，再render
-    		//var ve_id = currentChosenObj.ve.val() || $('select.select-ve').children('option:selected').val();
-    		Common.xhr.ajax('/v2/os-availability-zone/virtualEnv/' + '94f101bb5c4847eebe25487c3060ec4a',function(eaz){
+    	AZ : function(ve_id,vdc_id){		
+    		Common.xhr.ajax('/v2/os-availability-zone/virtualEnv/' + ve_id,function(eaz){
     			Common.xhr.ajax('/v2.0/az/' + vdc_id,function(vaz){
-    				for(var key in renderData.veList){
-    					var obj = renderData.veList[key];
-    					if(obj.id == '94f101bb5c4847eebe25487c3060ec4a'){
-    						obj.selected = true;
-    					}
-    				}
     				var data = {
     						eazList:eaz,
     						vazList:vaz,
@@ -548,8 +558,9 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
     				};
     				
     				require(['js/common/choose'],function(choose){
-    	        		choose.initChoose(data.options);
+    	        		
     	        		Common.render('tpls/ccenter/vdc/az.html',data,function(html){
+    	        			choose.initChoose(data.options);
     	        			var chooseWrapper = $('#chooseWrapper');
     	        			chooseWrapper.append(html);
     	        			$(data.options.selector).append(chooseWrapper.find('div:first'));
@@ -562,6 +573,8 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
         	    	                action: function(dialog) {}
         	    	            }],
         	    	            onshown : function(){
+        	    	            	
+        	    	            	EventsHandler.veChange();
         	    	            	chooseWrapper.remove();
         	    	            }
         	    	        });
