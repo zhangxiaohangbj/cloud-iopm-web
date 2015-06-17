@@ -25,14 +25,14 @@
 						<th class="c10">虚拟数据中心</th>
 						<th class="c9">电源状态</th>
 						<th class="c10">运行时间</th>
-						<th class="c12 sorting_disabled">操作</th>
+						<th class="c12">操作</th>
 					</tr>
 				</thead>
 				<tbody>
 				{{each list as item i}}
 					<tr>
 						<td><label><input type="checkbox"></label></td>
-						<td class="vm_name">{{item.name}}</td>
+						<td><a href="javascript:void(0);" class="vm_name" data="{{item.id}}">{{item.name}}</a></td>
 						<td>{{item.fixedIps}}</td>
 						<td>{{item.floatingIps}}</td>
 						<td>

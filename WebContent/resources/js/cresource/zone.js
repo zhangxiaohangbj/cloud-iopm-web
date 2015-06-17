@@ -1,5 +1,6 @@
 define(['Common','bs/modal','jq/form/wizard','jq/form/validator-bs3','bs/tooltip'],function(Common,Modal) {
     Common.requestCSS('css/wizard.css');
+    Common.requestCSS('css/dialog.css');
 
     //初始化
     var wizard;
@@ -40,7 +41,6 @@ define(['Common','bs/modal','jq/form/wizard','jq/form/validator-bs3','bs/tooltip
             for(var key in currentZone){
                 currentZone[key] = null;
             }
-            currentZone.nums = 1;
         }
 
         var dataGetter={
@@ -79,6 +79,9 @@ define(['Common','bs/modal','jq/form/wizard','jq/form/validator-bs3','bs/tooltip
             })
             Common.xhr.ajax(link,function(data){
                 var dataList = data.data;
+                $.each(dataList,function(i,item){
+                	item.icon_type = resourceType;
+                })
                 /*var resourceListElem = $("#choseResource").find(".list-group-all");
                 var chosenList  = $("#resource-chosen");
                 resourceListElem.empty();
@@ -93,7 +96,11 @@ define(['Common','bs/modal','jq/form/wizard','jq/form/validator-bs3','bs/tooltip
                 require(['js/common/choose'],function(choose){
                     var options = {
                         selector: '#'+elem,
-                        list: dataList
+                        allData: dataList,
+                        headAppend: {
+                        	className: 'select',
+                        	list: resourceTypeArray
+                        }
                     };
                     choose.initChoose(options);
                 })

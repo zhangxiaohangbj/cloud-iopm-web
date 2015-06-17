@@ -251,53 +251,62 @@
 				<div class="wizard-card-content none-desc col-sm-12">
 				<p>即将创建的云主机信息如下：</p>
 					<div class="wizard-input-section">
+					<p>基本信息</p><hr>
 						<div class="form-group">
-							<label for="name" class="control-label col-sm-6">名称：</label>
-							<div class="col-sm-7 col-sm name-confirm" style="padding-top: 7px;">server1</div>
+							<label class="control-label col-sm-3">名称：</label>
+							<label class="col-sm-6 name-confirm"></label>
 						</div>
 						<div class="form-group">
-							<label for="name" class="control-label col-sm-6">镜像：</label>
-							<label for="name" class="col-sm-6">centos-7</label>
+							<label class="control-label col-sm-3">镜像：</label>
+							<label class="col-sm-6 image-confirm"></label>
+						</div>
+					<p>详细配置</p><hr>	
+						<div class="form-group">
+							<label class="control-label col-sm-3">虚拟数据中心：</label>
+							<label class="col-sm-6 vdc-confirm"></label>
 						</div>
 						<div class="form-group">
-							<label for="name" class="control-label col-sm-6">虚拟数据中心：</label>
-							<label for="name" class="col-sm-6">admin</label>
+							<label class="control-label col-sm-3">可用域：</label>
+							<label class="col-sm-6 az-confirm"></label>
 						</div>
 						<div class="form-group">
-							<label for="name" class="control-label col-sm-6">可用域：</label>
-							<label for="name" class="col-sm-6">gao</label>
+							<label class="control-label col-sm-3">云主机规格：</label>
+							<label class="col-sm-6 flavor-confirm"></label>
 						</div>
 						<div class="form-group">
-							<label for="name" class="control-label col-sm-6">云主机规格：</label>
-							<label for="name" class="col-sm-6">medium</label>
+							<label class="control-label col-sm-3">数量：</label>
+							<label class="col-sm-6 num-confirm"></label>
+						</div>
+					<p>网络</p><hr>	
+						<div class="form-group">
+							<label class="control-label col-sm-3">网络：</label>
+							<label class="col-sm-6 network-confirm"></label>
 						</div>
 						<div class="form-group">
-							<label for="name" class="control-label col-sm-6">数量：</label>
-							<label for="name" class="col-sm-6">1</label>
+							<label class="control-label col-sm-3">子网：</label>
+							<label class="col-sm-6 subnet-confirm"></label>
 						</div>
 						<div class="form-group">
-							<label for="name" class="control-label col-sm-6">网络：</label>
-							<label for="name" class="col-sm-6">网络1</label>
+							<label class="control-label col-sm-3">IP：</label>
+							<label class="col-sm-6 fixedip-confirm"></label>
+						</div>
+					<p>访问安全</p><hr>		
+						<div class="form-group">
+							<label class="control-label col-sm-3">密钥对：</label>
+							<label class="col-sm-6 keyname-confirm"></label>
 						</div>
 						<div class="form-group">
-							<label for="name" class="control-label col-sm-6">子网：</label>
-							<label for="name" class="col-sm-6">private1</label>
+							<label class="control-label col-sm-3">安全组：</label>
+							<label class="col-sm-6 securitygroup-confrim"></label>
+						</div>						
+					<p>高级设置</p><hr>	
+						<div class="form-group">
+							<label class="control-label col-sm-3">自定义脚本：</label>
+							<label class="col-sm-6 userdata-confirm"></label>
 						</div>
 						<div class="form-group">
-							<label for="name" class="control-label col-sm-6">IP：</label>
-							<label for="name" class="col-sm-6">192.168.11.22</label>
-						</div>
-						<div class="form-group">
-							<label for="name" class="control-label col-sm-6">密钥对：</label>
-							<label for="name" class="col-sm-6">key1</label>
-						</div>
-						<div class="form-group">
-							<label for="name" class="control-label col-sm-6">自定义脚本：</label>
-							<label for="name" class="col-sm-6">xxxxxxxxxxxxx</label>
-						</div>
-						<div class="form-group">
-							<label for="name" class="control-label col-sm-6">磁盘分区：</label>
-							<label for="name" class="col-sm-6">自动</label>
+							<label class="control-label col-sm-3">磁盘分区：</label>
+							<label class="col-sm-6 diskconfig-confirm"></label>
 						</div>
 						
 					</div>
