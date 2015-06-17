@@ -524,11 +524,21 @@ define('Common', ['PubView', 'bs/modal', 'json', 'template', 'jq/dataTables-bs3'
                     $table = tableSelector;
                 }
                 if($table.length <= 0) return null;
-                if(PubView.utils.isFunction(complete)) {
-                    _options = $.extend(true, {}, _options, {'initComplete': function() {
-                        complete.call(this, $table);
-                    }});
+                if(_options && PubView.utils.isFunction(_options.initComplete)) {
+                    complete = _options.initComplete;
                 }
+                _options = $.extend(true, {}, _options, {'initComplete': function() {
+                    var firstColumn = this.fnSettings().aoColumns[0];
+                    if(firstColumn && !firstColumn.orderable) {
+                        $(firstColumn.nTh).removeClass("sorting sorting_asc sorting_desc").addClass(firstColumn.sSortingClass || "sorting_disabled");
+                    }
+                    var args = [];
+                    $.each(arguments, function(i, arg) {
+                        args.push(arg);
+                    });
+                    args.unshift($table);
+                    PubView.utils.isFunction(complete) && complete.apply(this, args);
+                }});
                 return $table.DataTable(_options);
             } else if(PubView.utils.isFunction(complete)) {
                 complete.call(this, tableSelector);
