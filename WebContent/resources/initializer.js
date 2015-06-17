@@ -76,7 +76,7 @@ define('Common', ['PubView', 'bs/modal', 'json', 'template', 'jq/dataTables-bs3'
                 },
                 {
                     text: '<i class="fa fa-cloud"></i>物理区域',
-                    link: '#host'
+                    link: '#region'
                 },
                 {
                     text: '<i class="fa fa-cloud"></i>虚拟化环境',
