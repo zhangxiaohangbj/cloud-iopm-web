@@ -2,7 +2,8 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 	Common.requestCSS('css/wizard.css');
 	var cacheData = {
 			roleList: null,
-			userList:null
+			userList:null,
+			vdcUserList:null
 	};	//缓存数据
 	var init = function(){
 		Common.$pageContent.addClass("loading");
