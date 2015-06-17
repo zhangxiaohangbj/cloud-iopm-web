@@ -159,33 +159,6 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
     				});
 					
 				},
-				//虚拟化环境change事件EventsHandler.moreVeChange()
-				moreVeChange: function(vdc_id){
-					$('select.select-ve').change(function(){
-						/*var ve_id = $('select.select-ve').children('option:selected').val();
-						if(!ve_id)return;
-						Common.xhr.ajax('/v2/os-availability-zone/virtualEnv/' + ve_id,function(azList){
-							require(['js/common/choose'],function(choose){
-								var options = {
-										selector: '#vdcAZ',
-										allData: azList
-								};
-								choose.initChoose(options);
-							})
-						});*/
-    				});
-					
-				},
-				//网络池change事件
-				moreNetChange: function(){
-					$('select.select-net').change(function(){
-						//同步
-						currentChosenObj.netId = $('select.select-net').children('option:selected');
-						//重新载入可用分区数据
-						//DataIniter.initFloatIP();
-    				});
-					
-				},
 				//配额的表单验证
 				vdc_form:function($form){
 					if(!$form)return null;
@@ -504,6 +477,12 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 	    $(".members").on("click",function(){
 	    	more.Member($(this).attr("data"));
 	    });
+	    //成员管理
+	    $("ul.dropdown-menu a.floatIP").on("click",function(){
+	    	var net_id =  renderData.netList[0].id
+	    	var vdc_id = $(this).attr("data");
+	    	more.FloatIP(net_id,vdc_id);
+	    });
     
 	    //更多
 	    var more = {
@@ -547,22 +526,20 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
     		Common.xhr.ajax('/v2/os-availability-zone/virtualEnv/' + ve_id,function(eaz){
     			Common.xhr.ajax('/v2.0/az/' + vdc_id,function(vaz){
     				var data = {
-    						eazList:eaz,
-    						vazList:vaz,
     						veList:renderData.veList
     				},
     				options = {
 						selector: '#vdcAZ',
 						allData: eaz,
 						selectData: vaz
-    				}
+    				};
     				require(['js/common/choose'],function(choose){
     	        		Common.render('tpls/ccenter/vdc/az.html',data,function(html){
     	        			//通过回调方式加载，保证choose执行完毕后再去modal
     	        			options.doneCall = function(html,chooseWrapper){
     	        				chooseWrapper.append(html);
     		        			$(options.selector).append(chooseWrapper.find('div:first'));
-    		        			console.log(chooseWrapper.html());
+    		        			//console.log(chooseWrapper.html());
     		        			Modal.show({
     	    	    	            title: '可用分区',
     	    	    	            message: chooseWrapper.html(),
@@ -660,7 +637,57 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 	    	            }
 	    	        });
 	    		});
-    	 }
+    	 },//可用分区管理
+    	FloatIP: function(net_id,vdc_id){		
+    		Common.xhr.get('/v2.0/floatingips',{'floatingNetworkId':net_id},function(ipList){
+    			for(var key in ipList.floatingips ){
+					var obj = ipList.floatingips[key];
+					obj.name = obj.floating_ip_address;
+				}
+    			Common.xhr.get('/v2.0/floatingips',{'vdcId':vdc_id},function(vdcIpList){
+    				for(var key in vdcIpList.floatingips ){
+    					var obj = vdcIpList.floatingips[key];
+    					obj.name = obj.floating_ip_address;
+    				}
+    				debugger;
+    				var data = {
+    						netList:renderData.netList		
+    				},
+    				options = {
+    						selector: '#vdcFloatIP',
+							allData: ipList.floatingips,
+							selectData: vdcIpList.floatingips
+	    			};
+    				
+    				require(['js/common/choose'],function(choose){
+    	        		
+    	        		Common.render('tpls/ccenter/vdc/floatIP.html',data,function(html){
+    	        			//通过回调方式加载，保证choose执行完毕后再去modal
+    	        			options.doneCall = function(html,chooseWrapper){
+    	        				chooseWrapper.append(html);
+    		        			$(options.selector).append(chooseWrapper.find('div:first'));
+    		        			//console.log(chooseWrapper.html());
+    		        			Modal.show({
+    	    	    	            title: '可用分区',
+    	    	    	            message: chooseWrapper.html(),
+    	    	    	            nl2br: false,
+    	    	    	            buttons: [{
+    	    	    	                label: '保存',
+    	    	    	                action: function(dialog) {}
+    	    	    	            }],
+    	    	    	            onshown : function(){
+    	    	    	            	EventsHandler.EventsHandler.netChange();
+    	    	    	            	chooseWrapper.remove();
+    	    	    	            }
+    	    	    	        });
+    	        			};
+    	        			options.doneData = html;
+    	        			choose.initChoose(options);
+    	        		})
+    	        	});
+    			})
+    		})		
+    	 },
 	   }
 	}	
 	return {
