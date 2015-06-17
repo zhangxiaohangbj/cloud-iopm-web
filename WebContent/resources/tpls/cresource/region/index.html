@@ -1,6 +1,6 @@
 <div class="page-header clearfix">
     <ol class="breadcrumb">
-        <li class="active">可用分区列表</li>
+        <li class="active">物理区域列表</li>
     </ol>
 </div>
 <div class="page-body">
@@ -9,11 +9,12 @@
             <table class="table table-primary table-striped" id="ZoneTable">
                 <thead>
                 <tr>
-                    <th class="c1">选择</th>
-                    <th class="c2">可用分区名称</th>
-                    <th class="c2">所属虚拟化环境</th>
-                    <th class="c2">区域</th>
-                    <th class="c2">资源容量</th>
+                    <th class="c1">编号</th>
+                    <th class="c2">地域名称</th>
+                    <th class="c2">云服务版本</th>
+                    <th class="c2">IP</th>
+                    <th class="c2">连接状态</th>
+                    <th class="c2">管理状态</th>
                     <th class="c2 sorting_disabled" >操作</th>
                 </tr>
                 </thead>
@@ -24,6 +25,7 @@
                     <td>{{item.zoneName}}</td>
                     <td>{{item.virtualEnvId}}</td>
                     <td>{{item.regionId}}</td>
+                    <td>{{item.zoneName}}</td>
                     <td>{{item.zoneName}}</td>
                     <td>
                         <a class="btn-opt pull-left add-resource" data-toggle="tooltip" data-act="log" style="margin: 0 5px;" data="{{item.id}}">增加资源</a>

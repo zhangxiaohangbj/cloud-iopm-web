@@ -122,11 +122,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 				//获取成员信息
 				getUsers : function(index,size){
 					///'cloud/am/user/page/'+index + '/'+size,resources/data/arrays.txt'
-					Common.xhr.ajax('/cloud/am/user/page/'+index + '/'+size,function(userList){
-						for(var key in userList.result){
-							var obj = userList.result[key];
-							obj.name = obj.trueName;
-						}
+					Common.xhr.ajax('/v2.0/users/page/'+size + '/'+index,function(userList){
 						renderData.userList = userList.result;
 						cacheData.userList = userList.result;
 						userTotalSize = userList.totalCount;
@@ -134,14 +130,10 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 				},
 				//获取及对应的角色
 				getRoles : function(){
-					//"//cloud/am/role/list",'resources/data/select.txt'
-					Common.xhr.ajax("/cloud/am/role/list",function(roleList){
-						for(var key in roleList){
-							var obj = roleList[key];
-							obj.name = obj.roleName;
-						}
-						renderData.roleList = roleList;
-						cacheData.roleList = roleList;
+					//"//v2.0/OS-KSADM/roles",'resources/data/select.txt'
+					Common.xhr.ajax("/v2.0/OS-KSADM/roles/",function(roleList){
+						renderData.roleList = roleList.roles;
+						cacheData.roleList = roleList.roles;
 					});
 				},
 				//获取网络资源池
@@ -197,9 +189,10 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 					});
 				},*/
 				//配额的表单验证
-				vdc_quota_form:function(){
-					return $(".vdc_quota").validate({
-						errorContainer: $(".vdc_quota"),
+				vdc_form:function($form){
+					if(!$form)return null;
+					return $form.validate({
+						errorContainer: "_form",
 						rules:{
 							'metadata_items': {
 			                    required: true,
@@ -264,19 +257,13 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 			                'subnet': {
 			                    required: true,
 			                    digits:true
+			                },
+			                'vdc-name': {
+			                    required: true,
+			                    maxlength:50,
+			                    minlength:4
 			                }
 						}
-					})
-				},
-				//vdc 基本信息表单
-				vdc_basic_form:function(){
-					return $(".vdc_basic").validate({
-						   rules: {
-				            	'name': {
-				                    required: true,
-				                    maxlength:10
-				                }
-				            }
 					})
 				},
 				//初始化选择用户相关的事件
@@ -291,13 +278,8 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 					});
 					$(document).off("click",".list-group .loadmore");
 					$(document).on("click",".list-group .loadmore",function(event){
-						Common.xhr.ajax('/cloud/am/user/page/'+(userIndex + 1) + '/'+userSize,function(userList){
-							debugger;
+						Common.xhr.ajax('/v2.0/users/page/'+ userSize + '/'+(userIndex + 1),function(userList){
 							var data = {};
-							for(var key in userList.result){
-								var obj = userList.result[key];
-								obj.name = obj.trueName;
-							}
 							data.userList = userList.result;
 							//data.roleList = cacheData.roleList;
 							userTotalSize = userList.totalCount;
@@ -338,7 +320,6 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 			//调用公共组件加载
 			initUsers: function(){
 				require(['js/common/choose'],function(choose){
-					debugger;
 					var loadmore = false;
 					if(userTotalSize > userSize * userIndex){
 						loadmore = true;
@@ -370,7 +351,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 			initFloatIP : function(){
 				var net_id = currentChosenObj.netId.val() || $('select.select-net').children('option:selected').val();
 				if(net_id){
-					Common.xhr.get('/v2.0/floatingIps',{'floatingNetworkId':net_id},function(ipList){
+					Common.xhr.get('/v2.0/floatingips',{'floatingNetworkId':net_id},function(ipList){
 						for(var key in ipList.floatingips ){
 							var obj = ipList.floatingips[key];
 							obj.name = obj.floating_ip_address;
@@ -416,19 +397,36 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
     				contentWidth : 900,
     				showCancel: true,
     				backdrop: 'static',
+    				/*formClass: {
+    				          '_default': "form-horizontal",
+    				           0: "form-inline",
+    				       }*/
     				buttons: {
     	                cancelText: "取消",
     	                nextText: "下一步",
     	                backText: "上一步",
     	                submitText: "创建",
     	                submittingText: "提交中..."
+    	            },
+    	            validate: {
+	            		0: function(){
+	            			return this.el.find('form').valid();
+	            		},
+	            		2: function(){
+	            			return this.el.find('form').valid();
+	            		}
     	            }
+    			});
+    			//加载时载入validate
+    			wizard.on('show',function(){
+    				wizard.form.each(function(){
+    					EventsHandler.vdc_form($(this));
+    				})
+    				
     			});
     			wizard.show();
     			
-    			//校验
-    			EventsHandler.vdc_quota_form();
-    			EventsHandler.vdc_basic_form();
+    			
     			//wizard.disableNextButton();
     			//重置CurrentChosenObj对象
     			var resetCurrentChosenObj = function(){
@@ -450,26 +448,22 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
     			});
     			//创建提交数据
     			wizard.on("submit", function(wizard) {
-    				var valid = $(".vdc_basic").valid();
-            		if(!valid) return false;
-            		
-            		var valid1 = $(".vdc_quota").valid();
-            		if(!valid1) return false;
     				var name = $("#editVdcBasic [name='vdc-name']").val();
     				var description =  $("#editVdcBasic [name='description']").val();
     				var enabled = $("#editVdcBasic [name='enabled']:checked").length? true:false;
+    				var virtualEnvId = currentChosenObj.ve.val() || $('select.select-ve').children('option:selected').val();
     				var vdcData={
     						"tenant":{
     							"name":name,
     							"description":description,
     							"enabled":enabled,
     							"quota_set":jsonData.quotaSetsJson("#vdcQuota .list-group-select"),
-    							"azList":jsonData.azJson("#vdcAZ .list-group-select"),
-    							"memberList":jsonData.userJson("#vdc-users .list-group-select"),
-    							"floatIpList":jsonData.floatIpJson("#vdcFloatIP .list-group-select")
+    							"available_zones":jsonData.azJson("#vdcAZ .list-group-select"),
+    							"members":jsonData.userJson("#vdc-users .list-group-select"),
+    							"float_ips":jsonData.floatIpJson("#vdcFloatIP .list-group-select"),
+    							"virtualEnvId":virtualEnvId
     						}
     				};
-    				return;
     				Common.xhr.postJSON('/v2.0/tenants',vdcData,function(data){
     					wizard._submitting = false;
     					wizard.updateProgressBar(100);
@@ -511,7 +505,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 			    	            buttons: [{
 			    	                label: '保存',
 			    	                action: function(dialog) {
-			    	                	var valid = $(".vdc_quota").valid();
+			    	                	var valid = $(".form-horizontal").valid();
 			    	            		if(!valid) return false;
 			    	                	var serverData = {
 				    	            			"quota_set":jsonData.quotaSetsJson("#vdcQuota")
@@ -528,11 +522,12 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 			    	                }
 			    	            }],
 			    	            onshown : function(dialog){
-			    	            	dialog.setData('vdc_quota_form', EventsHandler.vdc_quota_form());	
-			    	            },
-			    				onhide : function(dialog){
-			    					dialog.getData("vdc_quota_form").hideErrors();
+			    	            	EventsHandler.vdc_form($(".vdc_quota"));
+			    	            	//dialog.setData('vdc_quota_form', EventsHandler.vdc_form($(".vdc_quota")));	
 			    	            }
+			    				/*onhide : function(dialog){
+			    					dialog.getData("vdc_quota_form").hideErrors();
+			    	            }*/
 		    				
 			    	        });
 			    		});
@@ -569,9 +564,9 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 	             if(result) {
 	            	 Common.xhr.del('/v2.0/tenants/' + vdc_id,
 	                     function(data){
-	                    	 if(data){
+	                    	 if(data.success||data.code==404){
 	                    		 Modal.success('删除成功')
- 	                			 setTimeout(function(){Dialog.closeAll()},2000);
+ 	                			 setTimeout(function(){Dialog.closeAll()},1000);
 	                    		 Common.router.route();//重新载入
 	                    	 }else{
 	                    		 Modal.warning ('删除失败')
@@ -593,7 +588,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
   	    	            buttons: [{
   	    	                label: '保存',
   	    	                action: function(dialog) {
-  	    	                	var valid = $(".vdc_basic").valid();
+  	    	                	var valid = $(".form-horizontal").valid();
 	    	            		if(!valid) return false;
   	    	                	var vdcData = {
     	                			"tenant":{
@@ -616,7 +611,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
   	    	                }
   	    	            }],
       				    onshown : function(dialog){
-	    	            	dialog.setData('vdc_basic_form', EventsHandler.vdc_basic_form());	
+	    	            	dialog.setData('vdc_basic_form', EventsHandler.vdc_form());	
 	    	            },
 	    				onhide : function(dialog){
 	    					dialog.getData("vdc_basic_form").hideErrors();

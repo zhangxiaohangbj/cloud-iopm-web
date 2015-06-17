@@ -4,7 +4,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 	var init = function(){
 		Common.$pageContent.addClass("loading");
 		//render获取的数据
-		Common.render(true,'tpls/ccenter/vpc/router.html','/v2.0/routers/page/1/10',function(){
+		Common.render(true,'tpls/ccenter/vpc/router/list.html','/v2.0/routers/page/1/10',function(){
 			bindEvent();
 		});
 	};
@@ -75,7 +75,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 		};
 		//创建路由
 	    $("#RouterTable_wrapper span.btn-add").on("click",function(){
-	    	Common.render('tpls/ccenter/vpc/addrouter.html','',function(html){
+	    	Common.render('tpls/ccenter/vpc/router/add.html','',function(html){
 		    	Dialog.show({
 		            title: '路由创建',
 		            message: html,
@@ -118,7 +118,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 	    $("#RouterTable_wrapper a.editRouter").on("click",function(){
 	    	var id= $(this).attr("data");
 	    	Common.xhr.ajax('/v2.0/routers/'+id,function(data){
-	    		Common.render('tpls/ccenter/vpc/editrouter.html',data.router,function(html){
+	    		Common.render('tpls/ccenter/vpc/router/edit.html',data.router,function(html){
 		    	Dialog.show({
 		            title: '编辑路由',
 		            message: html,
@@ -199,7 +199,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 	     $("#RouterTable_wrapper span.setGateway").on("click",function(){
 	    	 var id = $(this).attr("data");
 	    	 Common.xhr.ajax('/v2.0/routers/'+id,function(data){
-				    Common.render('tpls/ccenter/vpc/setroutergateway.html',data.router,function(html){
+				    Common.render('tpls/ccenter/vpc/router/setgateway.html',data.router,function(html){
 			    	 Dialog.show({
 				            title: '设置网关',
 				            message: html,
@@ -239,7 +239,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 		//路由明细
 		$("#RouterTable_wrapper a.router-name").on("click",function(){
 		    	Common.xhr.ajax('/v2.0/routers/'+$(this).attr("data"),function(data){
-		    		Common.render('tpls/ccenter/vpc/routerdetail.html',data.router,function(html){
+		    		Common.render('tpls/ccenter/vpc/router/detail.html',data.router,function(html){
 		    			$("#page-main .page-content").html(html);
 		    			//返回按钮
 		    		    $(".form-horizontal a.reload").on("click",function(){
@@ -252,7 +252,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 		var EditData = {
 		    	//添加子网连接
 		    	AddRouterSubnet : function(id,cb){
-		    			Common.render('tpls/ccenter/vpc/addroutersubnet.html',function(html){
+		    			Common.render('tpls/ccenter/vpc/router/addlinksubnet.html',function(html){
 			    			Dialog.show({
 			    	            title: '连接子网',
 			    	            message: html,
@@ -284,7 +284,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 		    	},
 		    	//获取子网连接列表
 		    	GetSubnetList :function(id){
-		    		Common.render(true,'tpls/ccenter/vpc/routersubnet.html','/v2.0/ports?device_owner=network&device_id='+id,function(html){ //需修改接口
+		    		Common.render(true,'tpls/ccenter/vpc/router/linksubnet.html','/v2.0/ports?device_owner=network&device_id='+id,function(html){ //需修改接口
 			    		Common.initDataTable($('#subnetTable'),function($tar){
 			    			$tar.prev().find('.left-col:first').append(
 			    					'<span class="btn btn-add">添加子网连接</span>'

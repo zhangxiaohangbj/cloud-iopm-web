@@ -4,7 +4,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 	var init = function(){
 		Common.$pageContent.addClass("loading");
 		//render获取的数据
-		Common.render(true,'tpls/ccenter/security/securitygroup.html','/v2.0/security-groups/page/1/10',function(){
+		Common.render(true,'tpls/ccenter/security/securitygroup/list.html','/v2.0/security-groups/page/1/10',function(){
 			bindEvent();
 		});
 	};
@@ -119,7 +119,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 		//增加按钮
 		$("#SecuritygroupTable_wrapper span.btn-add").on("click",function(){
 	    	//需要修改为真实数据源
-			Common.render('tpls/ccenter/security/addsecuritygroup.html','',function(html){
+			Common.render('tpls/ccenter/security/securitygroup/add.html','',function(html){
 				Dialog.show({
     	            title: '新建安全组',
     	            message: html,
@@ -135,7 +135,6 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
     	                	for(var i=0;i<data.length;i++){
     	                		postData.security_group[data[i]["name"]] = data[i]["value"];
     						}
-    	                	postData.security_group["is_deleted"] = 0;
     	                	Common.xhr.postJSON('/v2.0/security-groups',postData,function(data){
     	                		if(data){
     	                			Dialog.success('保存成功')
@@ -183,7 +182,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 		var EditData = {
 		    	//添加规则
 				AddSecurityRule : function(id,cb){
-		    			Common.render('tpls/ccenter/security/addrule.html',function(html){
+		    			Common.render('tpls/ccenter/security/securitygroup/addrule.html',function(html){
 			    			Dialog.show({
 			    	            title: '添加规则',
 			    	            message: html,
@@ -198,6 +197,17 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 			    	                	for(var i=0;i<data.length;i++){
 			    	                		postData.security_group_rule[data[i]["name"]]=data[i]["value"];
 			    						}
+			    	                	if(postData.security_group_rule["port_range"]==0){
+			    	                		postData.security_group_rule["port_range_max"] = postData.security_group_rule["port_range_min"]
+			    	                	}
+			    	                	if(postData.security_group_rule["remote"]=="cidr"){
+			    	                		delete postData.security_group_rule["remote_group_id"];
+			    	                		if(postData.security_group_rule["remote_ip_prefix"]==""){delete postData.security_group_rule["remote_ip_prefix"];}
+			    	                	}else {
+			    	                		delete postData.security_group_rule["remote_ip_prefix"];
+			    	                	}
+			    	                	delete postData.security_group_rule["remote"];
+			    	                	delete postData.security_group_rule["port_range"];
 			    	                	postData.security_group_rule["security_group_id"] = id;
 			    	                	Common.xhr.postJSON('/v2.0/security-group-rules',postData,function(data){ //接口保存失败
 			    	                		if(data){
@@ -219,7 +229,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 		    	GetRuleList :function(id){
 		    		var param = {"security_group_id":id};
 		    		Common.xhr.get('/v2.0/security-group-rules',param,function(data){  //获取规则列表接口，参数未起作用
-		    			Common.render(true,'tpls/ccenter/security/securityrule.html',data,function(html){
+		    			Common.render(true,'tpls/ccenter/security/securitygroup/rulelist.html',data,function(html){
 				    		Common.initDataTable($('#SecurityruleTable'),function($tar){
 				    			$tar.prev().find('.left-col:first').append(
 				    					'<span class="btn btn-add">添加规则</span>'
