@@ -1,0 +1,35 @@
+<style>
+<!--
+.dataTables_length select.input-sm {
+	width: 40%;
+}
+-->
+</style>
+<form class="form-horizontal" id="chooseVDC">
+	<table class="table table-primary" id="chooseRoleTable">
+		<thead>
+			<tr>
+				<th class="c1">
+				</th>
+				<th class="c3">VDC名称</th>
+				<th class="c4">VDC描述</th>
+			</tr>
+		</thead>
+		<tbody>
+			{{each tenants as item i}}
+				<tr>
+					<td><input type="checkbox"><input type="hidden" value="{{item.id}}"/></td>
+					<td>{{item.name}}</td>
+					<td>{{item.description}}</td>
+				</tr>
+			{{/each}}
+		</tbody>
+		<tfoot>
+			<tr>
+				<td></td>
+				<td></td>
+				<td></td>
+			</tr>
+		</tfoot>
+	</table>
+</form>
