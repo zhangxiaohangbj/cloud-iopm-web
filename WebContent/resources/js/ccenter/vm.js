@@ -654,6 +654,15 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 	    		});
 	    	}
 	    };
+		//明细
+	    $("#VmTable_wrapper a.vm_name").on("click",function(){
+	    	var id = $(this).attr("data");
+	    	Common.render(true,'tpls/ccenter/vm/detail.html','/'+currentChosenObj.vdc+'/servers/'+id,function(html){
+					 $("a.reload").on("click",function(){
+		    		    	Common.router.route();
+		    		  });
+	    	});
+	    })
 	    //修改云主机名称
 	    $("ul.dropdown-menu a.editName").on("click",function(){
 	    	EditData.EditVmName($(this).attr("data"));

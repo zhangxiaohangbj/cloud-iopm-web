@@ -32,7 +32,7 @@
 				{{each list as item i}}
 					<tr>
 						<td><label><input type="checkbox"></label></td>
-						<td class="vm_name">{{item.name}}</td>
+						<td><a href="javascript:void(0);" class="vm_name" data="{{item.id}}">{{item.name}}</a></td>
 						<td>{{item.fixedIps}}</td>
 						<td>{{item.floatingIps}}</td>
 						<td>
