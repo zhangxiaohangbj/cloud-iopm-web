@@ -73,8 +73,8 @@ div.select-list{
 	list-style: none;
 }
 .modal-dialog ul li:HOVER{
-	/* background-color: #428bca; */
-	color: #fff;
+	/* background-color: #428bca;
+	color: #fff; */
 }
 .modal-dialog li.p3{
 	padding: 3px;
