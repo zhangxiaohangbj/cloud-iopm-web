@@ -557,7 +557,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 	    var EditData = {
 	    		//编辑云主机名称弹框
 	    	EditVmName : function(name){
-	    		Common.render('tpls/ccenter/vm/vmname.html','',function(html){
+	    		Common.render('tpls/ccenter/vm/editvmname.html','',function(html){
 	    			Modal.show({
 	    	            title: '编辑云主机',
 	    	            message: html,

@@ -190,9 +190,10 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 					});
 				},*/
 				//配额的表单验证
-				vdc_form:function(){
-					return $(".form-horizontal").validate({
-						errorContainer: $("_form"),
+				vdc_form:function($form){
+					if(!$form)return null;
+					return $form.validate({
+						errorContainer: "_form",
 						rules:{
 							'metadata_items': {
 			                    required: true,
@@ -419,7 +420,10 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
     			});
     			//加载时载入validate
     			wizard.on('show',function(){
-    				EventsHandler.vdc_form();
+    				wizard.form.each(function(){
+    					EventsHandler.vdc_form($(this));
+    				})
+    				
     			});
     			wizard.show();
     			
