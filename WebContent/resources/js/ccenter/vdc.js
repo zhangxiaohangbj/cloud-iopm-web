@@ -543,41 +543,42 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 		    		})	
 		    	},
 	  //可用分区管理
-    	AZ : function(ve_id,vdc_id){		
+    	AZ : function(ve_id,vdc_id){
     		Common.xhr.ajax('/v2/os-availability-zone/virtualEnv/' + ve_id,function(eaz){
     			Common.xhr.ajax('/v2.0/az/' + vdc_id,function(vaz){
     				var data = {
     						eazList:eaz,
     						vazList:vaz,
-    						veList:renderData.veList,
-    						options: {
-									selector: '#vdcAZ',
-									allData: eaz,
-									selectData: vaz
-							}
-    				};
-    				
+    						veList:renderData.veList
+    				},
+    				options = {
+						selector: '#vdcAZ',
+						allData: eaz,
+						selectData: vaz
+    				}
     				require(['js/common/choose'],function(choose){
-    	        		
     	        		Common.render('tpls/ccenter/vdc/az.html',data,function(html){
-    	        			choose.initChoose(data.options);
-    	        			var chooseWrapper = $('#chooseWrapper');
-    	        			chooseWrapper.append(html);
-    	        			$(data.options.selector).append(chooseWrapper.find('div:first'));
-    	        			Modal.show({
-        	    	            title: '可用分区',
-        	    	            message: chooseWrapper.html(),
-        	    	            nl2br: false,
-        	    	            buttons: [{
-        	    	                label: '保存',
-        	    	                action: function(dialog) {}
-        	    	            }],
-        	    	            onshown : function(){
-        	    	            	
-        	    	            	EventsHandler.veChange();
-        	    	            	chooseWrapper.remove();
-        	    	            }
-        	    	        });
+    	        			//通过回调方式加载，保证choose执行完毕后再去modal
+    	        			options.doneCall = function(html,chooseWrapper){
+    	        				chooseWrapper.append(html);
+    		        			$(options.selector).append(chooseWrapper.find('div:first'));
+    		        			console.log(chooseWrapper.html());
+    		        			Modal.show({
+    	    	    	            title: '可用分区',
+    	    	    	            message: chooseWrapper.html(),
+    	    	    	            nl2br: false,
+    	    	    	            buttons: [{
+    	    	    	                label: '保存',
+    	    	    	                action: function(dialog) {}
+    	    	    	            }],
+    	    	    	            onshown : function(){
+    	    	    	            	EventsHandler.veChange();
+    	    	    	            	chooseWrapper.remove();
+    	    	    	            }
+    	    	    	        });
+    	        			};
+    	        			options.doneData = html;
+    	        			choose.initChoose(options);
     	        		})
     	        	});
     			})
