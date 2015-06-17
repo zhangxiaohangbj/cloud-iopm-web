@@ -122,8 +122,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 				//获取成员信息
 				getUsers : function(index,size){
 					///'cloud/am/user/page/'+index + '/'+size,resources/data/arrays.txt'
-					Common.xhr.ajax('/v2.0/users/page/'+index + '/'+size,function(userList){
-						debugger;
+					Common.xhr.ajax('/v2.0/users/page/'+size + '/'+index,function(userList){
 						renderData.userList = userList.result;
 						cacheData.userList = userList.result;
 						userTotalSize = userList.totalCount;
@@ -133,8 +132,8 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 				getRoles : function(){
 					//"//v2.0/OS-KSADM/roles",'resources/data/select.txt'
 					Common.xhr.ajax("/v2.0/OS-KSADM/roles/",function(roleList){
-						renderData.roleList = roleList;
-						cacheData.roleList = roleList;
+						renderData.roleList = roleList.roles;
+						cacheData.roleList = roleList.roles;
 					});
 				},
 				//获取网络资源池
@@ -279,7 +278,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 					});
 					$(document).off("click",".list-group .loadmore");
 					$(document).on("click",".list-group .loadmore",function(event){
-						Common.xhr.ajax('/v2.0/users/page/'+(userIndex + 1) + '/'+userSize,function(userList){
+						Common.xhr.ajax('/v2.0/users/page/'+ userSize + '/'+(userIndex + 1),function(userList){
 							var data = {};
 							data.userList = userList.result;
 							//data.roleList = cacheData.roleList;
@@ -523,11 +522,12 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 			    	                }
 			    	            }],
 			    	            onshown : function(dialog){
-			    	            	dialog.setData('vdc_quota_form', EventsHandler.vdc_form());	
-			    	            },
-			    				onhide : function(dialog){
-			    					dialog.getData("vdc_quota_form").hideErrors();
+			    	            	EventsHandler.vdc_form($(".vdc_quota"));
+			    	            	//dialog.setData('vdc_quota_form', EventsHandler.vdc_form($(".vdc_quota")));	
 			    	            }
+			    				/*onhide : function(dialog){
+			    					dialog.getData("vdc_quota_form").hideErrors();
+			    	            }*/
 		    				
 			    	        });
 			    		});
