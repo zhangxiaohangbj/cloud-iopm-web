@@ -142,7 +142,6 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 				//虚拟化环境change事件
 				veChange: function(){
 					$('select.select-ve').change(function(){
-						debugger
 						//同步
 						currentChosenObj.ve = $('select.select-ve').children('option:selected');
 						//重新载入可用分区数据
@@ -157,6 +156,27 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 						currentChosenObj.netId = $('select.select-net').children('option:selected');
 						//重新载入可用分区数据
 						DataIniter.initFloatIP();
+    				});
+					
+				},
+				//虚拟化环境change事件EventsHandler.moreVeChange()
+				moreVeChange: function(vdc_id){
+					$('select.select-ve').change(function(){
+						//同步
+						currentChosenObj.ve = $('select.select-ve').children('option:selected');
+						//重新载入可用分区数据
+						//DataIniter.initAz();
+						more.AZ(vdc_id);
+    				});
+					
+				},
+				//网络池change事件
+				moreNetChange: function(){
+					$('select.select-net').change(function(){
+						//同步
+						currentChosenObj.netId = $('select.select-net').children('option:selected');
+						//重新载入可用分区数据
+						//DataIniter.initFloatIP();
     				});
 					
 				},
@@ -452,6 +472,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 	    //可用分区
 	    $("ul.dropdown-menu a.vdcAz").on("click",function(){
 	    	more.AZ($(this).attr("data-env"),$(this).attr("data"));
+	    	//EventsHandler.moreVeChange($(this).attr("data"));
 	    });
 	    //删除一个vdc
 	    $("ul.dropdown-menu a.deleteTenant").on("click",function(){
@@ -504,10 +525,17 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 		    		})	
 		    	},
 	  //可用分区管理
-    	AZ : function(env_id,vdc_id){
+    	AZ : function(vdc_id){
     		//先获取az后，再render
+    		//var ve_id = currentChosenObj.ve.val() || $('select.select-ve').children('option:selected').val();
     		Common.xhr.ajax('/v2/os-availability-zone/virtualEnv/' + '94f101bb5c4847eebe25487c3060ec4a',function(eaz){
     			Common.xhr.ajax('/v2.0/az/' + vdc_id,function(vaz){
+    				for(var key in renderData.veList){
+    					var obj = renderData.veList[key];
+    					if(obj.id == '94f101bb5c4847eebe25487c3060ec4a'){
+    						obj.selected = true;
+    					}
+    				}
     				var data = {
     						eazList:eaz,
     						vazList:vaz,
