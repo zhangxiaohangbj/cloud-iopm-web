@@ -1,6 +1,5 @@
 define(['Common','bs/modal','jq/form/wizard','jq/form/validator-bs3','bs/tooltip'],function(Common,Modal) {
     Common.requestCSS('css/wizard.css');
-    Common.requestCSS('css/dialog.css');
 
     //变量初始化
     var wizard;
