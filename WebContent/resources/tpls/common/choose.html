@@ -17,7 +17,7 @@
 		  <!-- List group -->
 		  <div class="list-group list-group-all">
 		  	{{each allData as item i}}
-		  	<ul class="nav nav-pills btn-group btn-group-sm dark_stripe list-group-item">
+		  	<ul class="nav nav-pills btn-group btn-group-sm list-group-item">
 		  		{{if item.icon_type}}
 		  			<li class="item_type">
 						<i class="type_icons {{item.icon_type}}"></i>
@@ -50,7 +50,7 @@
 		  <!-- List group -->
 		  <div class="list-group list-group-select">
 			  {{each selectData as item i}}
-			  	<ul class="list-group-item">
+			  	<ul class="nav nav-pills btn-group btn-group-sm list-group-item">
 					<li class="member adjust" data-id="{{item.id}}">
 						<span class="display_name">{{item.name}}</span>
 					</li>
