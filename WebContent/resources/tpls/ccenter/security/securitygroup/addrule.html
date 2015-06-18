@@ -3,7 +3,7 @@
 		<label for="ethertype" class="control-label col-sm-3">
 	 	协议版本：</label>
 	 	<div class="col-sm-7 col-sm">
-			<select name="ethertype" class="dialog-form-control select">
+			<select name="ethertype" class="form-control select">
 				<option value="IPv4">IPv4</option>
 				<option value="IPv6">IPv6</option>
 			</select>
@@ -13,7 +13,7 @@
 		<label for="protocol" class="control-label col-sm-3">
 	 	<span style="color: red;">* </span>规则：</label>
 	 	<div class="col-sm-7 col-sm">
-			<select name="protocol" class="dialog-form-control select">
+			<select name="protocol" class="form-control select">
 				<option value="tcp">定制TCP规则</option>
 				<option value="icmp">定制ICMP规则</option>
 				<option value="udp">定制UDP规则</option>
@@ -25,7 +25,7 @@
 		<label for="direction" class="control-label col-sm-3">
 	 	方向：</label>
 	 	<div class="col-sm-7 col-sm">
-			<select name="direction" class="dialog-form-control select">
+			<select name="direction" class="form-control select">
 				<option value="ingress">入口</option>
 				<option value="egress">出口</option>
 			</select>
@@ -35,7 +35,7 @@
 		<label for="port_range" class="control-label col-sm-3">
 	 	端口类型：</label>
 	 	<div class="col-sm-7 col-sm">
-			<select name="port_range" class="dialog-form-control select">
+			<select name="port_range" class="form-control select">
 				<option value="0">单一端口</option>
 				<option value="1">端口范围</option>
 			</select>
@@ -52,7 +52,7 @@
 		<label for="remote" class="control-label col-sm-3">
 	 	远程：</label>
 	 	<div class="col-sm-7 col-sm">
-			<select name="remote" class="dialog-form-control select">
+			<select name="remote" class="form-control select">
 				<option value="cidr">CIDR</option>
 				<option value="security_group">安全组</option>
 			</select>
@@ -61,13 +61,13 @@
 	<div class="form-group remote cidr">
 		<label for="remote_ip_prefix" class="control-label col-sm-3">CIDR地址：</label>
 		<div class="col-sm-7 col-sm">
-			<input type="text" class="dialog-form-control" name="remote_ip_prefix">
+			<input type="text" class="form-control" name="remote_ip_prefix">
 		</div>
 	</div>
 	<div class="form-group remote security_group" style="display:none;">
 		<label for="remote_group_id" class="control-label col-sm-3">安全组：</label>
 		<div class="col-sm-7 col-sm">
-			<select name="remote_group_id" class="dialog-form-control select remote_group_id"></select>
+			<select name="remote_group_id" class="form-control select remote_group_id"></select>
 		</div>
 	</div>
 	

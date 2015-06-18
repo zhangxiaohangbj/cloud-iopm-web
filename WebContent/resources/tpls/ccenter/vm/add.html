@@ -7,7 +7,7 @@
 						<div class="form-group">
 							<label for="name" class="control-label col-sm-2"><span>* </span>名称：</label>
 							<div class="col-sm-7 col-sm">
-								<input type="text" class="wizard-form-control" id="name" name="name" placeholder="服务器名称">
+								<input type="text" class="form-control" id="name" name="name" placeholder="服务器名称">
 							</div>
 							<!-- <div class="col-sm-3 col-sm">
 					            <span class="help-block" style="color: #000000;padding-top: 10px;">请填写真实的邮箱</span>
@@ -46,7 +46,7 @@
 									{{/each}}
 								</div>
 							</div>
-							<input type="hidden" class="wizard-form-control" id="imageRef" name="imageRef">
+							<input type="hidden" class="form-control" id="imageRef" name="imageRef">
 						</div>
 					</div>
 				</div>
@@ -69,7 +69,7 @@
 						<div class="form-group">
 							<label for="tenant_id" class="control-label col-sm-3"><span>* </span>虚拟数据中心：</label>
 							<div id="select-vm" class="col-sm-7 col-sm">
-								<select name="tenant_id"  class="wizard-form-control select tenant_id">
+								<select name="tenant_id"  class="form-control select tenant_id">
 								    {{#uiSelectList(vdcList)}}
 								</select>
 							</div>
@@ -80,7 +80,7 @@
 						<div class="form-group">
 							<label for="availability_zone" class="control-label col-sm-3"><span>* </span>可用域：</label>
 							<div class="col-sm-7 col-sm">
-								<select name="availability_zone"   class="wizard-form-control select availability_zone">
+								<select name="availability_zone"   class="form-control select availability_zone">
 								</select>
 							</div>
 						</div>
@@ -90,7 +90,7 @@
 						<div class="form-group">
 							<label for="flavorRef" class="control-label col-sm-3"><span>* </span>云主机规格：</label>
 							<div class="col-sm-7 col-sm">
-			                    <select name="flavorRef"  class="wizard-form-control select flavorRef" tabindex="5">
+			                    <select name="flavorRef"  class="form-control select flavorRef" tabindex="5">
 			                    	{{each specsList as item i}}
 										<option data-root-disk="{{item.disk}}" data-tmp-disk="{{item.ephemeral}}" data-memory="{{item.ram}}" data-core="{{item.vcpus}}"  value="{{item.id}}">{{item.name}}</option>
 								  	{{/each}}
@@ -107,7 +107,7 @@
 							<label for="min_count" class="control-label col-sm-3"><span>* </span>云主机数量：</label>
 							<div class="col-sm-7 col-sm">
 								<div class="spinbox"  id="setVmNums">
-								  <input type="text" name="min_count" style="height:35px;"  class="wizard-form-control input-mini spinbox-input">
+								  <input type="text" name="min_count" style="height:35px;"  class="form-control input-mini spinbox-input">
 								  <div class="spinbox-buttons btn-group btn-group-vertical">
 								    <button type="button" class="btn btn-default spinbox-up btn-xs">
 								      <span class="glyphicon glyphicon-chevron-up"></span><span class="sr-only">Increase</span>
@@ -170,18 +170,18 @@
 									<div class="usr clearfix">
 					                  <label class="col-sm-2" for="login-name">用户名: </label>
 					                  <div class="col-sm-9 col-sm">
-					                  	 <input type="text" value="root"  class="wizard-form-control" id="login-name">
+					                  	 <input type="text" value="root"  class="form-control" id="login-name">
 					                  </div>
 					                </div>
 					                <div class="pwd clearfix">
 					                  <label  class="col-sm-2" for="login-key">密钥: </label>
 					                  <div data-for="secret-key" class="col-sm-9 col-sm">
-										<select name="key_name"   class="wizard-form-control select keypairs">
+										<select name="key_name"   class="form-control select keypairs">
 										</select>			                  
 						                <span class="text-danger" style="line-height:30px;"><a href="javascript:;"> 创建密钥</a></span>
 					                  </div>
 					                  <div data-for="password"  class="col-sm-9 col-sm" style="display:none">
-						                  <input type="password" class="wizard-form-control" placeholder="请输入密码">
+						                  <input type="password" class="form-control" placeholder="请输入密码">
 					                  </div>
 					                </div>
 								</div>
@@ -210,7 +210,7 @@
 						<div class="form-group">
 							<label for="user_data" class="control-label col-sm-2">自定义脚本：</label>
 							<div class="col-sm-9 col-sm">
-								<textarea class="wizard-form-control" rows="8"  id="user_data" name="user_data" placeholder=""></textarea>
+								<textarea class="form-control" rows="8"  id="user_data" name="user_data" placeholder=""></textarea>
 							</div>
 						</div>
 					</div>

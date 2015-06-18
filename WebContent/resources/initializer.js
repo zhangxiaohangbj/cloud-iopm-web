@@ -340,20 +340,20 @@ define('Common', ['PubView', 'bs/modal', 'json', 'template', 'jq/dataTables-bs3'
     // init dataTable
     if($.fn.dataTable) {
         $.extend(true, $.fn.dataTable.defaults, {
-            "sDom": "<'row tableMenus'<'col-sm-6 left-col'><'col-sm-6 right-col'f>>" + "t" + "<'row tableInfos'<'col-sm-4'i><'col-sm-8'lp>>",
-            "oLanguage": {
-                "sSearch": "_INPUT_<i class='fa fa-search'></i>",
-                "sLengthMenu": "每页显示 _MENU_ 条",
-                "sInfo": "第 _START_~_END_ 条 / 共<span class='nums'> _TOTAL_ </span>条",
-                "sInfoEmpty": "第 0~0 条 / 共 0 条",
-                "oPaginate": {
-                    "sPrevious": '<i class="fa fa-angle-left"></i>',
-                    "sNext": '<i class="fa fa-angle-right"></i>'
+            "dom": "<'row tableMenus'<'col-sm-6 left-col'><'col-sm-6 right-col'f>>" + "t" + "<'row tableInfos'<'col-sm-4'i><'col-sm-8'lp>>",
+            "language": {
+                "search": "_INPUT_<i class='fa fa-search'></i>",
+                "lengthMenu": "每页显示 _MENU_ 条",
+                "info": "第 _START_~_END_ 条 / 共<span class='nums'> _TOTAL_ </span>条",
+                "infoEmpty": "第 0~0 条 / 共 0 条",
+                "paginate": {
+                    "previous": '<i class="fa fa-angle-left"></i>',
+                    "next": '<i class="fa fa-angle-right"></i>'
                 },
-                "sPaginationType": "two_button",
-                "sEmptyTable": '<div class="text-danger text-center">还没有数据</div>',
-                "sZeroRecords": '<div class="text-danger text-center">没有找到符合查询条件的数据项</div>',
-                "sInfoFiltered": "(总 _MAX_ 条)"
+                "paginationType": "two_button",
+                "emptyTable": '<div class="text-danger text-center">还没有数据</div>',
+                "zeroRecords": '<div class="text-danger text-center">没有找到符合查询条件的数据项</div>',
+                "infoFiltered": "(总 _MAX_ 条)"
             }
         });
     }
@@ -508,15 +508,42 @@ define('Common', ['PubView', 'bs/modal', 'json', 'template', 'jq/dataTables-bs3'
             this.pub.headerNavIndex = index;
             this.adjustContentLeft();
         },
-        initDataTable: function($tar, cb) {
-            if(PubView.utils.is$($tar)) {
-                $tar.dataTable({
-                    bProcessing : true,
-                    bSort : false
-                });
-                typeof cb === "function" && cb($tar);
+        initDataTable: function(tableSelector, options, complete) {
+            var _options;
+            if(PubView.utils.isFunction(options)) {
+                complete = options;
+                _options = null;
+            } else {
+                _options = options;
             }
-            return this;
+            if(PubView.utils.isString(tableSelector) || PubView.utils.is$(tableSelector)) {
+                var $table;
+                if(PubView.utils.isString(tableSelector)) {
+                    $table = $(tableSelector);
+                } else {
+                    $table = tableSelector;
+                }
+                if($table.length <= 0) return null;
+                if(_options && PubView.utils.isFunction(_options.initComplete)) {
+                    complete = _options.initComplete;
+                }
+                _options = $.extend(true, {}, _options, {'initComplete': function() {
+                    var firstColumn = this.fnSettings().aoColumns[0];
+                    if(firstColumn && !firstColumn.orderable) {
+                        $(firstColumn.nTh).removeClass("sorting sorting_asc sorting_desc").addClass(firstColumn.sSortingClass || "sorting_disabled");
+                    }
+                    var args = [];
+                    $.each(arguments, function(i, arg) {
+                        args.push(arg);
+                    });
+                    args.unshift($table);
+                    PubView.utils.isFunction(complete) && complete.apply(this, args);
+                }});
+                return $table.DataTable(_options);
+            } else if(PubView.utils.isFunction(complete)) {
+                complete.call(this, tableSelector);
+            }
+            return null;
         },
         _registerHashEvent: function() {
             var that = this;
@@ -692,7 +719,7 @@ define('Common', ['PubView', 'bs/modal', 'json', 'template', 'jq/dataTables-bs3'
                         } else if(!PubView.utils.isPlainObject(_data)) {
                             data = $.extend({}, {data: _data});
                         }
-                        require(['text!'+_tplUrl], function(tplText) {
+                        require(['rq/text!'+_tplUrl], function(tplText) {
                             try{
                                 var render = template.compile(tplText),
                                     inHtml = render(data);
@@ -801,6 +828,7 @@ define('Common', ['PubView', 'bs/modal', 'json', 'template', 'jq/dataTables-bs3'
                     }
                 } catch (e) {
                     Modal.error(e.message);
+                    console.error(e);
                     if(this._deferred) {
                         this.resolve(false);
                     }
@@ -810,7 +838,7 @@ define('Common', ['PubView', 'bs/modal', 'json', 'template', 'jq/dataTables-bs3'
         requestCSS: function(cssUrl, callback) {
             var that = this;
             if(cssUrl && PubView.utils.isString(cssUrl)) {
-                require(['css!'+(cssUrl.indexOf('/')==0?PubView.root:PubView.rqBaseUrl+'/')+cssUrl], function() {
+                require(['rq/css!'+(cssUrl.indexOf('/')==0?PubView.root:PubView.rqBaseUrl+'/')+cssUrl], function() {
                     PubView.utils.isFunction(callback) && callback.apply(that, arguments);
                 });
             }
@@ -820,7 +848,7 @@ define('Common', ['PubView', 'bs/modal', 'json', 'template', 'jq/dataTables-bs3'
             var that = this;
             var XHR = function() {
                 //请求header
-                this.header = {
+                this.headers = {
                     Accept: "application/json",
                     'Content-Type': "application/json"
                 };
@@ -1117,18 +1145,6 @@ define('Common', ['PubView', 'bs/modal', 'json', 'template', 'jq/dataTables-bs3'
                 }
             } catch (e) { }
             return inHtml;
-        },
-        dataTable: function(tableSelector, options) {
-            if(PubView.utils.isString(tableSelector) || PubView.utils.is$(tableSelector)) {
-                var $table;
-                if(PubView.utils.isString(tableSelector)) {
-                    $table = $(tableSelector);
-                } else {
-                    $table = tableSelector;
-                }
-                if($table.length <= 0) return null;
-                $table.dataTable(options);
-            }
         }
     };
 });

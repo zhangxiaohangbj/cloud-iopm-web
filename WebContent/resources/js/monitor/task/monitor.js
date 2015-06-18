@@ -1,6 +1,5 @@
 define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3'],function(Common,Modal){
 	Common.requestCSS('css/wizard.css');
-	Common.requestCSS('css/dialog.css');
 	var timeBucket = "day";  //当前选中的时间段  day/week/month
 	var task_id = "";  //当前所查看的任务id
 	var status = "running";  //当前所查看的任务监控的状态  running/failed/success
@@ -115,9 +114,9 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 					'<span class="btn btn-add" name="back">返回</span>'
 			);
 			$tar.prev().find('.right-col:first').append(
-					'<a href="javascript:void(0)" class="instanceList" name="running"><font color="#FFD700"><strong><span id="runningSpan">running</span></strong></font></a>&nbsp;&nbsp;&nbsp;&nbsp;'+
-					'<a href="javascript:void(0)" class="instanceList" name="failed"><font color="#FF3030"><strong><span id="failedSpan">failed</span></strong></font></a>&nbsp;&nbsp;&nbsp;&nbsp;'+
-					'<a href="javascript:void(0)" class="instanceList" name="success"><font color="#00FF00"><strong><span id="successSpan">success</span></strong></font></a>'
+					'<a href="javascript:void(0)" class="instanceList" name="running"><font color="#FFD700"><strong><span id="runningSpan">running(0)</span></strong></font></a>&nbsp;&nbsp;&nbsp;&nbsp;'+
+					'<a href="javascript:void(0)" class="instanceList" name="failed"><font color="#FF3030"><strong><span id="failedSpan">failed(0)</span></strong></font></a>&nbsp;&nbsp;&nbsp;&nbsp;'+
+					'<a href="javascript:void(0)" class="instanceList" name="success"><font color="#00FF00"><strong><span id="successSpan">success(0)</span></strong></font></a>'
 			);
 			//这个必须添加，不然就是隐藏的效果，看不到页面
 			Common.$pageContent.removeClass("loading");
@@ -182,11 +181,13 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 		})
 		
 		//设置running  failed  success的数量
-		Common.xhr.ajax('/cloud/task/instance/task_instance_count?task_id='+task_id+'timeBucket='+timeBucket,function(data){
-			//alert(data.size());
-			$("#runningSpan").text("running()");
-			$("#failedSpan").text("failed()");
-			$("#successSpan").text("success()");
+		Common.xhr.ajax('/cloud/task/instance/task_instance_count?task_id='+task_id+'&timeBucket='+timeBucket,function(data){
+			if(data.length > 0){
+				var task = data[0];
+				$("#runningSpan").text("running("+task.runningCount+")");
+				$("#failedSpan").text("failed("+task.failedCount+")");
+				$("#successSpan").text("success("+task.successCount+")");
+			}
 		})
 		
 		//running  failed  success
@@ -203,6 +204,14 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 				callback: bindEvent
 			});
 	    })
+	    
+	    if(status == "running"){
+			$("#runningSpan").css({"background-color":"#EEEED1"});
+		}else if(status == "failed"){
+			$("#failedSpan").css({"background-color":"#EEEED1"});
+		}else if(status == "success"){
+			$("#successSpan").css({"background-color":"#EEEED1"});
+		}
 		
 		var renderData = {};
         //初始化加载，不依赖其他模块
