@@ -10,19 +10,15 @@
 			<table class="table table-primary table-striped" id="monitorTable">
 				<thead>
 					<tr>
-						<th class="c2">
-							<label><input type="checkbox" class="selectAll"></label>
-						</th>
-						<th class="c6">开始时间</th>
-						<th class="c2">结束时间</th>
-						<th class="c6">执行状态</th>
-						<th class="c6 sorting_disabled">操作</th>
+						<th style="width:30%">开始时间</th>
+						<th style="width:30%">结束时间</th>
+						<th style="width:20%">执行状态</th>
+						<th style="width:20%">操作</th>
 					</tr>
 				</thead>
 				<tbody>
 				{{each list as item i}}
 					<tr>
-						<td><label><input type="checkbox"></label></td>
 						<td>{{item.beginAt}}</td>
 						<td>{{item.endAt}}</td>
 						<td>{{item.status}}</td>
