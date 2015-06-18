@@ -508,6 +508,19 @@ define('Common', ['PubView', 'bs/modal', 'json', 'template', 'jq/dataTables-bs3'
             this.pub.headerNavIndex = index;
             this.adjustContentLeft();
         },
+        /**
+         * 使用dataTables组件初始化表格
+         * @param tableSelector
+         *          表格选择器 或 表格的jQuery对象
+         * @param options
+         *          初始化表格时的配置项，若为零配置此参数可忽略，后一个参数往前提
+         * @param complete
+         *          初始化后的回调方法，此参数也可直接写在options中，对应键是initComplete
+         *          function($table, settings, json) {
+		 *              // do something
+		 *          }
+         * @returns dataTable API实例，为 NULL 则表示表格未找到或未初始化成功
+         */
         initDataTable: function(tableSelector, options, complete) {
             var _options;
             if(PubView.utils.isFunction(options)) {
