@@ -845,7 +845,17 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
     	                }
     	            }],
     	            onshown : function(dialog){
-    	    			
+    	            	
+//    	            var list=[{"id":"aaa","name"},{}];
+//    	            	for (var i=0;i<tenants.length;i++) {
+//							if (tenants[i].id==id) {
+//								tenants[i].selected="selected";
+//							}
+//						}
+//					}				
+//					var html = Common.uiSelect(tenants);
+			    	//$('select.tenant_id').html(html);
+			    	
     	            }
     	        });
 	    	});
@@ -873,7 +883,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
     	                }
     	            }],
     	            onshown : function(dialog){
-    	    			
+//    	    			${''}
     	            }
     	        });
 	    	});
