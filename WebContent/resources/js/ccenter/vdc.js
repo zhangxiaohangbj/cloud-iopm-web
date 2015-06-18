@@ -323,6 +323,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 				var net_id = currentChosenObj.netId.val() || $('select.select-net').children('option:selected').val();
 				if(net_id){
 					Common.xhr.get('/v2.0/floatingips',{'floatingNetworkId':net_id},function(ipList){
+						debugger;
 						for(var key in ipList.floatingips ){
 							var obj = ipList.floatingips[key];
 							obj.name = obj.floating_ip_address;
@@ -477,7 +478,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 	    $(".members").on("click",function(){
 	    	more.Member($(this).attr("data"));
 	    });
-	    //成员管理
+	    //外部网络管理
 	    $("ul.dropdown-menu a.floatIP").on("click",function(){
 	    	var net_id =  renderData.netList[0].id
 	    	var vdc_id = $(this).attr("data");
@@ -585,7 +586,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 	                     function(data){
 	                    	 if(data.success||data.code==404){
 	                    		 Modal.success('删除成功')
- 	                			 setTimeout(function(){Dialog.closeAll()},1000);
+ 	                			 setTimeout(function(){Modal.closeAll()},1000);
 	                    		 Common.router.route();//重新载入
 	                    	 }else{
 	                    		 Modal.warning ('删除失败')
@@ -638,21 +639,56 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
     	 },
     	//成员管理
     	 Member : function(vdc_id){
-    		 var data = [];
-    		 Common.render('tpls/ccenter/vdc/user.html',data,function(html){
-   				Modal.show({
-	    	            title: '虚拟数据中心信息',
-	    	            message: html,
-	    	            nl2br: false,
-	    	            buttons: [{
-	    	                label: '保存',
-	    	                action: function(dialog) {}
-	    	            }],
-	    	            onshown : function(){
-	    	            	DataIniter.initUsers();
-	    	            }
-	    	        });
-	    		});
+    		var data = [];
+    		var loadmore = false;
+			if(userTotalSize > userSize * userIndex){
+				loadmore = true;
+			}
+			var options = {
+					selector: '#vdc-users',
+					loadmore: loadmore,
+					groupSelectedClass: 'col-sm-7',
+					groupAllClass: 'col-sm-5',
+					addCall: function($clone){
+						//添加角色窗及对应的事件
+						var dtd = $.Deferred();
+						Common.render('tpls/ccenter/vdc/role.html',cacheData.roleList,function(html){
+							$clone.append(html);
+							dtd.resolve();
+						});
+						return dtd.promise();
+					},
+					delCall: function($clone){
+						//去除角色窗及取消事件绑定
+						$clone.children("li:last").remove();
+					},
+					allData: cacheData.userList
+			};
+    		require(['js/common/choose'],function(choose){
+	        		Common.render('tpls/ccenter/vdc/user.html',data,function(html){
+	        			//通过回调方式加载，保证choose执行完毕后再去modal
+	        			options.doneCall = function(html,chooseWrapper){
+	        				chooseWrapper.append(html);
+		        			$(options.selector).append(chooseWrapper.find('div:first'));
+		        			//console.log(chooseWrapper.html());
+		        			Modal.show({
+	    	    	            title: '成员管理',
+	    	    	            message: chooseWrapper.html(),
+	    	    	            nl2br: false,
+	    	    	            buttons: [{
+	    	    	                label: '保存',
+	    	    	                action: function(dialog) {}
+	    	    	            }],
+	    	    	            onshown : function(){
+	    	    	            	EventsHandler.userChosen();
+	    	    	            	chooseWrapper.remove();
+	    	    	            }
+	    	    	        });
+	        			};
+	        			options.doneData = html;
+	        			choose.initChoose(options);
+	        		})
+	        	});
     	 },//可用分区管理
     	FloatIP: function(net_id,vdc_id){		
     		Common.xhr.get('/v2.0/floatingips',{'floatingNetworkId':net_id},function(ipList){
@@ -683,15 +719,29 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
     		        			$(options.selector).append(chooseWrapper.find('div:first'));
     		        			//console.log(chooseWrapper.html());
     		        			Modal.show({
-    	    	    	            title: '可用分区',
+    	    	    	            title: '外部网络',
     	    	    	            message: chooseWrapper.html(),
     	    	    	            nl2br: false,
     	    	    	            buttons: [{
     	    	    	                label: '保存',
-    	    	    	                action: function(dialog) {}
+    	    	    	                action: function(dialog) {
+    	    	    	    				var putData={
+    	    	    	    							"floatingips":jsonData.floatIpJson("#vdcAZ .list-group-select")
+    	    	    	    				      };
+    	    	    	                	Common.xhr.putJSON('/v2.0/az/'+vdc_id,putData,function(data){
+    	    	    	                		if(data){
+    	    	    	                			 Modal.success('保存成功')
+      				 	                			 setTimeout(function(){Modal.closeAll()},1000);
+      					                    		 Common.router.route();//重新载入
+    	    	    	                		}else{
+    	    	    	                			Modal.warning ('保存失败');
+    	    	    	                		}
+    	    	    	                	});
+    	    	    	                
+    	    	    	                }
     	    	    	            }],
     	    	    	            onshown : function(){
-    	    	    	            	EventsHandler.EventsHandler.netChange();
+    	    	    	            	EventsHandler.netChange();
     	    	    	            	chooseWrapper.remove();
     	    	    	            }
     	    	    	        });
