@@ -8,7 +8,16 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 			tpl:'tpls/ccenter/vm/list.html',
 			data:'/'+current_vdc_id+'/servers/page/1/10',
 			beforeRender: function(data){
-				return data.result;
+				var vms = data.result
+	    		for(var i=0;i<vms.length;i++){
+	    			if(vms[i]['fixedIps']!=null){//ip 换行显示
+	    				vms[i]['fixedIps'] = vms[i]['fixedIps'].replace(new RegExp(/(,)/g),'<br>')
+	    			}
+	    			if(vms[i]['floatingIps']!=null){//ip 换行显示
+	    				vms[i]['floatingIps'] = vms[i]['floatingIps'].replace(new RegExp(/(,)/g),'<br>')
+	    			}
+	    		}
+				return vms;
 			},
 			callback: bindEvent
 		});
@@ -328,8 +337,11 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 	    				$(this).parents('ul:first').siblings('div').each(function(){
 	    					if($(this).attr('data-con') == source){
 	    						$(this).removeClass('hide').addClass('show');
+	    						$(this).parent().find('[data-con='+source+']').find('*:first').addClass('selected');
+	    	    				$('#imageRef').val($(this).find('.selected:first').attr('data-con'));
 	    					}else{
 	    						$(this).removeClass('show').addClass('hide');
+	    						$(this).find('.selected').removeClass('selected');
 	    					}
 	    				})
 	    			});
@@ -338,7 +350,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 	    				$(this).parents('.form-group:first').find('.selected').removeClass('selected');
 	    				$(this).addClass('selected');
 	    				var data = $(this).attr("data-con");
-	    				$(this).parents('.form-group:first').find('input[name=imageRef]').val(data);
+	    				$('#imageRef').val(data);
 	    			})
 				},
 				//详细信息 -绑定云主机数量spinbox
@@ -475,6 +487,10 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
     			                    required: true,
     			                    minlength: 4,
     			                    maxlength:15
+    			                },
+    			                'imageRef': {
+    			                    required: true,
+    			                    minlength: 1
     			                }
     			            }
     					});
