@@ -1,0 +1,42 @@
+<form class="form-horizontal">
+	<div class="form-group">
+		<label for="url_name" class="control-label col-sm-3"><span>* </span>URL名称：</label>
+		<div class="col-sm-7 col-sm">
+			<input type="text" class="form-control" name="url_name">
+		</div>
+	</div>
+
+	<div class="form-group">
+		<label for="url_address" class="control-label col-sm-3"><span>* </span>URL地址：</label>
+		<div class="col-sm-7 col-sm">
+			<input type="text" class="form-control" name="url_address">
+		</div>
+	</div>
+	<div class="form-group">
+		<label for="method" class="control-label col-sm-3"><span>* </span>method：</label>
+		<div class="col-sm-7 col-sm">
+			<select class="form-control select" name="method">
+				<option value="POST">POST</option>
+				<option value="GET">GET</option>
+				<option value="DELETE">DELETE</option>
+				<option value="PUT">PUT</option>
+			</select>
+		</div>
+	</div>
+	<div class="form-group">
+		<label for="is_public" class="control-label col-sm-3"><span>* </span>是否公开：</label>
+		<div class="col-sm-7 col-sm">
+			<select class="form-control select" name="is_public">
+				<option value="1">是</option>
+				<option value="0">否</option>
+			</select>
+		</div>
+	</div>
+	<div class="form-group">
+		<label for="endpoint_id" class="control-label col-sm-3"><span>* </span>所属端点：</label>
+		<div class="col-sm-7 col-sm">
+			<input type="hidden" name="endpoint_id">
+			<input type="text" class="form-control" name="endpoint_name" readonly="readonly">
+		</div>
+	</div>
+</form>
