@@ -286,7 +286,7 @@ define('Common', ['PubView', 'bs/modal', 'json', 'template', 'jq/dataTables-bs3'
                 },
                 {
                     text: '<i class="fa fa-puzzle-piece"></i>功能管理',
-                    link: '#function'
+                    link: '#functiontree'
                 },
                 {
                     text: '<i class="fa fa-bars"></i>URL管理',

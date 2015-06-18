@@ -23,25 +23,25 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 			Common.$pageContent.removeClass("loading");
 		});
 		//载入默认的数据 inits,创建数据载入类
-		var DataIniter = {
-			//vdc列表
-			initVdcList : function(){
-				Common.xhr.ajax('/v2.0/tenants',function(data){
-					var tenants = data.tenants;
-					var id = $('select.tenant_id').attr("data");
-					if(id!=null){
-						for (var i=0;i<tenants.length;i++) {
-							if (tenants[i].id==id) {
-								tenants[i].selected="selected";
-							}
-						}
-					}				
-					var html = Common.uiSelect(tenants);
-			    	$('select.tenant_id').html(html);
-			    	
-				})
-			}
-		}
+//		var DataIniter = {
+//			//vdc列表
+//			initVdcList : function(){
+//				Common.xhr.ajax('/v2.0/tenants',function(data){
+//					var tenants = data.tenants;
+//					var id = $('select.tenant_id').attr("data");
+//					if(id!=null){
+//						for (var i=0;i<tenants.length;i++) {
+//							if (tenants[i].id==id) {
+//								tenants[i].selected="selected";
+//							}
+//						}
+//					}				
+//					var html = Common.uiSelect(tenants);
+//			    	$('select.tenant_id').html(html);
+//			    	
+//				})
+//			}
+//		}
 		//载入后的事件
 		var EventsHandler = {
 			//选择部门
@@ -316,11 +316,11 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 		    	                	  };
 	    	                	Common.xhr.putJSON('/v2.0/users/'+id,serverData,function(data){
 	    	                		if(data){
-	    	                			Dialog.success('保存成功')
-	    	                			setTimeout(function(){Dialog.closeAll()},2000);
+	    	                			Modal.success('保存成功')
+	    	                			setTimeout(function(){Modal.closeAll()},2000);
 	    	                			Common.router.route();
 									}else{
-										Dialog.warning ('保存失败')
+										Modal.warning ('保存失败')
 									}
 								})
 	    	                }
@@ -346,15 +346,15 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 	            	 Common.xhr.del('/v2.0/users/'+id,
 	                     function(data){
 	                    	 if(data){
-	                    		 Dialog.success('删除成功')
-	                			 setTimeout(function(){Dialog.closeAll()},2000);
+	                    		 Modal.success('删除成功')
+	                			 setTimeout(function(){Modal.closeAll()},2000);
 	                    		 Common.router.route();
 	                    	 }else{
-	                    		 Dialog.warning ('删除失败')
+	                    		 Modal.warning ('删除失败')
 	                    	 }
 	                     });
 	             }else {
-	            	 Dialog.closeAll();
+	            	 Modal.closeAll();
 	             }
 	         });
 	     });
@@ -374,11 +374,11 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 			    	                	  };
 		    	                	Common.xhr.putJSON('/v2.0/users/'+id,serverData,function(data){
 		    	                		if(data){
-		    	                			Dialog.success('保存成功')
-		    	                			setTimeout(function(){Dialog.closeAll()},2000);
+		    	                			Modal.success('保存成功')
+		    	                			setTimeout(function(){Modal.closeAll()},2000);
 		    	                			Common.router.route();
 										}else{
-											Dialog.warning ('保存失败')
+											Modal.warning ('保存失败')
 										}
 									})
 		    	                }
