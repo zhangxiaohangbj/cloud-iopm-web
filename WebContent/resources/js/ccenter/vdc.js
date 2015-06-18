@@ -506,7 +506,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 			    	                	Common.xhr.putJSON('/v2.0/9cc717d8047e46e5bf23804fc4400247/os-quota-sets/'+id,serverData,function(data){
 			    	                		if(data){
 					                    		 Modal.success('保存成功')
-				 	                			 setTimeout(function(){Dialog.closeAll()},2000);
+				 	                			 setTimeout(function(){Modal.closeAll()},2000);
 					                    		 Common.router.route();//重新载入
 					                    	 }else{
 					                    		 Modal.warning ('保存失败')
@@ -525,6 +525,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
     	AZ : function(ve_id,vdc_id){
     		Common.xhr.ajax('/v2/os-availability-zone/virtualEnv/' + ve_id,function(eaz){
     			Common.xhr.ajax('/v2.0/az/' + vdc_id,function(vaz){
+    				debugger;
     				var data = {
     						veList:renderData.veList
     				},
@@ -546,7 +547,22 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
     	    	    	            nl2br: false,
     	    	    	            buttons: [{
     	    	    	                label: '保存',
-    	    	    	                action: function(dialog) {}
+    	    	    	                action: function(dialog) {
+    	    	    	                	var virtualEnvId = $('select.select-ve').children('option:selected').val();
+    	    	    	    				var putData={
+    	    	    	    							"available_zones":jsonData.azJson("#vdcAZ .list-group-select"),
+    	    	    	    							"virtualEnvId":virtualEnvId
+    	    	    	    				      };
+    	    	    	                	Common.xhr.putJSON('/v2.0/az/'+vdc_id,putData,function(data){
+    	    	    	                		if(data){
+    	    	    	                			 Modal.success('保存成功')
+      				 	                			 setTimeout(function(){Modal.closeAll()},1000);
+      					                    		 Common.router.route();//重新载入
+    	    	    	                		}else{
+    	    	    	                			Modal.warning ('保存失败');
+    	    	    	                		}
+    	    	    	                	});
+    	    	    	                }
     	    	    	            }],
     	    	    	            onshown : function(){
     	    	    	            	EventsHandler.veChange();
