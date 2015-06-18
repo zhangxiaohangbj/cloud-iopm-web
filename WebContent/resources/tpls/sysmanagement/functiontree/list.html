@@ -1,22 +1,19 @@
 <div class="page-header clearfix">
 	<ol class="breadcrumb">
-	  <li class="active">用户管理</li>
+	  <li class="active">功能树管理</li>
 	</ol>
 </div>
 <div class="page-body">
 	<div class="pane">
 		<div class="pane-content">
-			<table class="table table-primary table-striped" id="UserTable">
+			<table class="table table-primary table-striped" id="FunctionTable">
 				<thead>
 					<tr>
 						<th class="c1">
 							<label><input type="checkbox" class="selectAll"></label>
 						</th>
-						<th class="c3">登录账号</th>
-						<th class="c2">姓名</th>
-						<th class="c2">手机号</th>
-						<th class="c3">邮箱</th>
-						<th class="c1">状态</th>
+						<th class="c3">功能树名称</th>
+						<th class="c4">功能树描述</th>
 						<th class="c3 sorting_disabled">操作</th>
 					</tr>
 				</thead>
@@ -26,22 +23,16 @@
 						<td><label><input type="checkbox"></label></td>
 						<td>{{item.name}}</td>
 						<td>{{item.name}}</td>
-						<td>{{item.name}}</td>
-						<td>{{item.name}}</td>
-						<td>{{item.name}}</td>
 						<td>
 							<a class="btn-edit" data-toggle="tooltip" title="编辑" href="javascript:void(0)" data="{{item.id}}" data-act="stop" style="margin: 0 8px;"><li class="glyphicon glyphicon-edit"></li></a>
 							<a class="btn-delete" data-toggle="tooltip" title="删除" href="javascript:void(0)" data="{{item.id}}" style="margin: 0 8px;"><i class="fa fa-trash-o fa-fw"></i></a>
-							<a class="btn-edit-role" data-toggle="tooltip" title="权限设置" href="javascript:void(0)" data="{{item.id}}" style="margin: 0 8px;">权限设置</a>
+							<a class="btn-edit-authority" data-toggle="tooltip" title="权限设置" href="javascript:void(0)" data="{{item.id}}" style="margin: 0 8px;">管理</a>
 						</td>
 					</tr>
     			{{/each}}
 				</tbody>
 				<tfoot>
 					<tr>
-						<td></td>
-						<td></td>
-						<td></td>
 						<td></td>
 						<td></td>
 						<td></td>

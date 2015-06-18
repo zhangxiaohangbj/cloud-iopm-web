@@ -23,7 +23,7 @@
 		</div>
 	</div>
 	<div class="signin-body">
-		<form id="login_form" class="form-signin" action="/am/tokens" method="post">
+		<form id="login_form" class="form-signin" action="/v2.0/tokens" method="post">
 			<div class="input-group">
 				<span class="signin-icons signin-icon-input signin-icon-user">
 					<i class="signin-icons signin-icon-br"></i>
@@ -73,7 +73,7 @@
 			submitForm();
 		});
 		function submitForm() {
-			var url = "${pageContext.request.contextPath}/cloud/am/tokens";
+			var url = "${pageContext.request.contextPath}/v2.0/tokens";
 			var data = {
 					 'auth': {
 					        'tenantId': "",
@@ -94,7 +94,7 @@
 	        });
 		}
 		function callbackSuccess(res){
-			if(res != null && res.error_code == null && res.token != null){
+			if(res != null && res.error_code == null && res.access.token != null){
 				window.location.href="${pageContext.request.contextPath}";
 			}else{
 				alert("错误代码："+res.error_code+"\n错误描述: "+res.error_desc);
