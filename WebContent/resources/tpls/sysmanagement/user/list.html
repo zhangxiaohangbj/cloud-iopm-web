@@ -13,11 +13,11 @@
 							<label><input type="checkbox" class="selectAll"></label>
 						</th>
 						<th class="c3">登录账号</th>
-						<th class="c3">姓名</th>
-						<th class="c3">手机号</th>
+						<th class="c2">姓名</th>
+						<th class="c2">手机号</th>
 						<th class="c3">邮箱</th>
-						<th class="c2">状态</th>
-						<th class="c2 sorting_disabled">操作</th>
+						<th class="c1">状态</th>
+						<th class="c3 sorting_disabled">操作</th>
 					</tr>
 				</thead>
 				<tbody>
@@ -32,6 +32,7 @@
 						<td>
 							<a class="btn-edit" data-toggle="tooltip" title="编辑" href="javascript:void(0)" data="{{item.id}}" data-act="stop" style="margin: 0 8px;"><li class="glyphicon glyphicon-edit"></li></a>
 							<a class="btn-delete" data-toggle="tooltip" title="删除" href="javascript:void(0)" data="{{item.id}}" style="margin: 0 8px;"><i class="fa fa-trash-o fa-fw"></i></a>
+							<a class="btn-edit-role" data-toggle="tooltip" title="权限设置" href="javascript:void(0)" data="{{item.id}}" style="margin: 0 8px;">权限设置</a>
 						</td>
 					</tr>
     			{{/each}}
