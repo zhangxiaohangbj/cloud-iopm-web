@@ -639,37 +639,76 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
     	 },
     	//成员管理
     	 Member : function(vdc_id){
-    		var data = [];
-    		var loadmore = false;
-			if(userTotalSize > userSize * userIndex){
-				loadmore = true;
-			}
-			var options = {
-					selector: '#vdc-users',
-					loadmore: loadmore,
-					groupSelectedClass: 'col-sm-7',
-					groupAllClass: 'col-sm-5',
-					addCall: function($clone){
-						//添加角色窗及对应的事件
-						var dtd = $.Deferred();
-						Common.render('tpls/ccenter/vdc/role.html',cacheData.roleList,function(html){
-							$clone.append(html);
-							dtd.resolve();
-						});
-						return dtd.promise();
-					},
-					delCall: function($clone){
-						//去除角色窗及取消事件绑定
-						$clone.children("li:last").remove();
-					},
-					allData: cacheData.userList
-			};
-    		require(['js/common/choose'],function(choose){
+    		 //根据vdc_id获取用户列表，包括角色 
+    		 Common.xhr.ajax("resources/data/user.txt",function(userList){
+			 	var data = [];
+	    		var loadmore = false;
+				if(userTotalSize > userSize * userIndex){
+					loadmore = true;
+				}
+				var options = {
+						selector: '#vdc-users',
+						loadmore: loadmore,
+						groupSelectedClass: 'col-sm-7',
+						groupAllClass: 'col-sm-5',
+						addCall: function($clone){
+							//添加角色窗及对应的事件
+							var dtd = $.Deferred();
+							Common.render('tpls/ccenter/vdc/role.html',cacheData.roleList,function(html){
+								$clone.append(html);
+								dtd.resolve();
+							});
+							return dtd.promise();
+						},
+						delCall: function($clone){
+							//去除角色窗及取消事件绑定
+							$clone.children("li:last").remove();
+						},
+						allData: cacheData.userList,
+						selectData: userList
+				};
+				require(['js/common/choose'],function(choose){
 	        		Common.render('tpls/ccenter/vdc/user.html',data,function(html){
 	        			//通过回调方式加载，保证choose执行完毕后再去modal
 	        			options.doneCall = function(html,chooseWrapper){
 	        				chooseWrapper.append(html);
 		        			$(options.selector).append(chooseWrapper.find('div:first'));
+		        			//var obj = $("#vdc-users .show-selected");
+		        			$("#vdc-users .show-selected").find("ul.list-group-item").each(function(i,element){
+	        						var user = userList[i];
+		        					var roles = user.roles;
+		        					var allRolse = cacheData.roleList;
+		        					var userData = [];
+		        					userData.push('<li class="dropdown pull-right opt" >');
+		        					userData.push('<div class="dropdown">');
+		        					userData.push('<button class="btn btn-default dropdown-toggle ellipsis" type="button"  data-toggle="dropdown" aria-expanded="true">');
+		        					userData.push(roles[0].name);
+		        					userData.push('<span class="caret"></span>');
+		        					userData.push('</button>');
+		        					
+		        					userData.push('<ul class="dropdown-menu dropdown-menu-right" role="menu" >');
+		        					for(var key in allRolse){
+		        						var obj = allRolse[key];
+		        						var display = false;
+		        						for(var j  in roles){
+		        							if(obj.id == roles[j].id){
+		        								display = true;
+		        								break;
+		        							}
+		        						}
+		        						if(display){
+		        							userData.push('<li><a in-use="1" href="javascript:void(0);" data-id="',obj.id,'"><i class="fa fa-check fa-fw" style="opacity:1;"></i>',obj.name,'</a></li>')
+		        						}else{
+		        							userData.push('<li><a href="javascript:void(0);"data-id="',obj.id,'"><i class="fa fa-check fa-fw"></i>',obj.name,'</a></li>')
+		        						}
+		        					}
+		        					userData.push('</ul>');
+		        					
+		        					userData.push('</div>');
+		        					userData.push('</li>');
+		        					$(element).append(userData.join(""));
+	        					
+	        				});
 		        			//console.log(chooseWrapper.html());
 		        			Modal.show({
 	    	    	            title: '成员管理',
@@ -682,14 +721,19 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 	    	    	            onshown : function(){
 	    	    	            	EventsHandler.userChosen();
 	    	    	            	chooseWrapper.remove();
+	    	    	            },
+	    	    	            onhide : function(){
+	    	    	            	userIndex = 1;
 	    	    	            }
 	    	    	        });
 	        			};
 	        			options.doneData = html;
 	        			choose.initChoose(options);
 	        		})
-	        	});
-    	 },//可用分区管理
+	        	});    			
+    		 });    		
+    	 },
+    	//外部网络
     	FloatIP: function(net_id,vdc_id){		
     		Common.xhr.get('/v2.0/floatingips',{'floatingNetworkId':net_id},function(ipList){
     			for(var key in ipList.floatingips ){
