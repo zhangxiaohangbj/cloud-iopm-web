@@ -66,7 +66,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
     					"disks": $(obj + " [name='disks']").val(),
     					"diskSnapshots": $(obj +" [name='diskSnapshots']").val(),
     					"diskTotalSizes": $(obj +" [name='diskTotalSizes']").val(),
-    					"ram": $(obj +"s [name='ram']").val(),
+    					"ram": $(obj +" [name='ram']").val(),
     					"security_group_rules": $(obj +" [name='security_group_rules']").val(),
     					"floating_ips": $(obj +" [name='floating_ips']").val(),
     					"network": $(obj +" [name='network']").val(),
@@ -620,7 +620,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 	  	    	              	Common.xhr.putJSON('v2.0/tenants/'+vdc_id,vdcData,function(data){
 		  	    	              	if(data){
 			                    		 Modal.success('保存成功')
-		 	                			 setTimeout(function(){Dialog.closeAll()},2000);
+		 	                			 setTimeout(function(){Modal.closeAll()},2000);
 			                    		 Common.router.route();//重新载入
 			                    	 }else{
 			                    		 Modal.warning ('保存失败')
