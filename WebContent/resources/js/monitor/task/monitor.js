@@ -1,6 +1,5 @@
 define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3'],function(Common,Modal){
 	Common.requestCSS('css/wizard.css');
-	Common.requestCSS('css/dialog.css');
 	var timeBucket = "day";  //当前选中的时间段  day/week/month
 	var task_id = "";  //当前所查看的任务id
 	var status = "running";  //当前所查看的任务监控的状态  running/failed/success

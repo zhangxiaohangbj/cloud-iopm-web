@@ -1,6 +1,5 @@
 define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3'],function(Common,Modal){
 	Common.requestCSS('css/wizard.css');
-	Common.requestCSS('css/dialog.css');
 	var init = function(){
 		Common.$pageContent.addClass("loading");
         Common.xhr.ajax('/v2/123/flavors/detail', function(data){

@@ -3,14 +3,14 @@
         <label for="edit-zone-name" class="control-label col-sm-3">
             <span style="color: red;">* </span>名称：</label>
         <div class="col-sm-7 col-sm">
-            <input type="text" class="dialog-form-control" id="edit-zone-name" value="{{ availableZone.name}}"/>
+            <input type="text" class="form-control" id="edit-zone-name" value="{{ availableZone.name}}"/>
         </div>
     </div>
     <div class="form-group">
         <label for="edit-region" class="control-label col-sm-3">
             <span style="color: red;">* </span>所属区域：</label>
         <div class="col-sm-7 col-sm">
-            <select class="dialog-form-control select" id="edit-region">
+            <select class="form-control select" id="edit-region">
                 {{each data.region as item i}}
                     {{if item.name == availableZone.regionId}}
                         <option value="{{item.name}}" selected>{{item.name}}</option>
@@ -25,7 +25,7 @@
         <label for="edit-env" class="control-label col-sm-3">
             <span style="color: red;">* </span>所属虚拟化环境：</label>
         <div class="col-sm-7 col-sm">
-            <select class="dialog-form-control select" id="edit-env">
+            <select class="form-control select" id="edit-env">
                 {{each data.virtualEnv as item i}}
                     {{if item.name == availableZone.virtualEnvId}}
                         <option value="{{item.id}}" selected>{{item.name}}</option>
@@ -39,7 +39,7 @@
     <div class="form-group">
         <label for="edit-zone-description" class="control-label col-sm-3">分区描述：</label>
         <div class="col-sm-7 col-sm">
-            <textarea class="wizard-form-control" cols="10" rows="10" id="edit-zone-description" name="edit-zone-description"></textarea>
+            <textarea class="form-control" cols="10" rows="10" id="edit-zone-description" name="edit-zone-description"></textarea>
         </div>
     </div>
 

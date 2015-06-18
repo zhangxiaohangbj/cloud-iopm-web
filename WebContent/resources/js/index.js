@@ -36,7 +36,7 @@ define(['Common'],function(Common){
 				});
 			},
 			callback: function() {
-				Common.dataTable('#table-example', {
+				Common.initDataTable('#table-example', {
 					columnDefs: [
 						{
 							orderable: false,

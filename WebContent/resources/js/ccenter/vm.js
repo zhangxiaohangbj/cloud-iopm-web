@@ -1,6 +1,5 @@
 define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3'],function(Common,Modal){
 	Common.requestCSS('css/wizard.css');
-	Common.requestCSS('css/dialog.css');
 	var current_vdc_id = '9cc717d8047e46e5bf23804fc4400247';
 	var init = function(){
 		Common.$pageContent.addClass("loading");
@@ -754,7 +753,6 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 	    $("ul.dropdown-menu a.rebootSoft").on("click",function(){
 	    	var serverName = $(this).parents('tr:first').find('td.vm_name').html();
 	    	var serverId = $(this).attr("data");
-	    	require(['css!'+PubView.rqBaseUrl+'/css/dialog.css']);
 	    	Modal.confirm({title:"确认：软重启云主机",
 	    		message:"你已经选择了 ["+serverName+"] 。  请确认您的选择。重启云主机会丢失所以没有存放在永久存储设备上的数据。 ",
 	    		callback:function(result){
@@ -767,7 +765,6 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 	    $("ul.dropdown-menu a.rebootHard").on("click",function(){
 	    	var serverName = $(this).parents('tr:first').find('td.vm_name').html();
 	    	var serverId = $(this).attr("data");
-	    	require(['css!'+PubView.rqBaseUrl+'/css/dialog.css']);
 	    	Modal.confirm({title:"确认：硬重启云主机",
 	    		message:"你已经选择了 ["+serverName+"] 。  请确认您的选择。重启云主机会丢失所以没有存放在永久存储设备上的数据。 ",
 	    		callback:function(result){
@@ -781,7 +778,6 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 	    $("ul.dropdown-menu a.osStop").on("click",function(){
 	    	var serverName = $(this).parents('tr:first').find('td.vm_name').html();
 	    	var serverId = $(this).attr("data");
-	    	require(['css!'+PubView.rqBaseUrl+'/css/dialog.css']);
 	    	Modal.confirm({title:"确认：关闭云主机",
 	    		message:"你已经选择了 ["+serverName+"] 。  请确认您的选择。关闭该云主机。 ",
 	    		callback:function(result){
@@ -795,7 +791,6 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 	    $("ul.dropdown-menu a.pause").on("click",function(){
 	    	var serverName = $(this).parents('tr:first').find('td.vm_name').html();
 	    	var serverId = $(this).attr("data");
-	    	require(['css!'+PubView.rqBaseUrl+'/css/dialog.css']);
 	    	Modal.confirm({title:"确认：暂停云主机",
 	    		message:"你已经选择了 ["+serverName+"] 。  请确认您的选择。暂停该云主机。 ",
 	    		callback:function(result){
@@ -809,7 +804,6 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 	    $("ul.dropdown-menu a.suspend").on("click",function(){
 	    	var serverName = $(this).parents('tr:first').find('td.vm_name').html();
 	    	var serverId = $(this).attr("data");
-	    	require(['css!'+PubView.rqBaseUrl+'/css/dialog.css']);
 	    	Modal.confirm({title:"确认：挂起云主机",
 	    		message:"你已经选择了 ["+serverName+"] 。  请确认您的选择。挂起该云主机。 ",
 	    		callback:function(result){
@@ -824,7 +818,6 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 	    	var serverName = $(this).parents('tr:first').find('td.vm_name').html();
 	    	var serverId = $(this).attr("data");
 	    	var imageList;
-	    	require(['css!'+PubView.rqBaseUrl+'/css/dialog.css']);
 	    	Common.xhr.getSync('/v2/images/?owner='+current_vdc_id,function(data){
     			imageList=data;
     		});
@@ -852,7 +845,17 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
     	                }
     	            }],
     	            onshown : function(dialog){
-    	    			
+    	            	
+//    	            var list=[{"id":"aaa","name"},{}];
+//    	            	for (var i=0;i<tenants.length;i++) {
+//							if (tenants[i].id==id) {
+//								tenants[i].selected="selected";
+//							}
+//						}
+//					}				
+//					var html = Common.uiSelect(tenants);
+			    	//$('select.tenant_id').html(html);
+			    	
     	            }
     	        });
 	    	});
@@ -880,7 +883,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
     	                }
     	            }],
     	            onshown : function(dialog){
-    	    			
+//    	    			${''}
     	            }
     	        });
 	    	});

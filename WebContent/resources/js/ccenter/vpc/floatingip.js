@@ -1,6 +1,5 @@
 define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3','bs/switcher'],function(Common,Dialog){
 	Common.requestCSS('css/wizard.css');
-	Common.requestCSS('css/dialog.css');
 	var init = function(){
 		Common.$pageContent.addClass("loading");
 		//先获取数据，进行加工后再去render

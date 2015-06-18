@@ -107,7 +107,7 @@ input[disabled], select[disabled], textarea[disabled], input[readonly], select[r
  	border-right:1px solid #E5E5E5;
  }
 
- .wizard-input-section .form-group .wizard-form-control{
+ .wizard-input-section .form-group .form-control{
  	border-radius:0;
  	height:30px;
  	width:100%;
@@ -115,13 +115,13 @@ input[disabled], select[disabled], textarea[disabled], input[readonly], select[r
  	outline: none;
  	background-color: #fff;
  }
- .wizard-input-section div.has-error  .wizard-form-control{
+ .wizard-input-section div.has-error  .form-control{
   	border-color:#a94442;
  }
-  .wizard-input-section div.has-success  .wizard-form-control{
+  .wizard-input-section div.has-success  .form-control{
   	border-color:#3c763d;
  }
- .wizard-input-section div.form-group textarea.wizard-form-control{
+ .wizard-input-section div.form-group textarea.form-control{
  	height:auto;
  }
 .wizard-input-section div.form-group label{
