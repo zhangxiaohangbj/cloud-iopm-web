@@ -68,7 +68,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 	    	//需要修改为真实数据源
 			Common.render('tpls/ccenter/vpc/network/add.html','',function(html){
 				Dialog.show({
-    	            title: '新建VPC',
+    	            title: '新建私有网络',
     	            message: html,
     	            closeByBackdrop: false,
     	            nl2br: false,
