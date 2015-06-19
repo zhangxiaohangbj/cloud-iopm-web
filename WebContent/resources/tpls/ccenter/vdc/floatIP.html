@@ -1,34 +1,16 @@
-<div class="wizard-card-content col-sm-8">
-	<div class="wizard-input-section">
-		<div class="form-group">
-			<label for="scripts" class="control-label col-sm-2"><span>*
-			</span>自定义脚本：</label>
-			<div class="col-sm-9 col-sm">
-				<textarea class="wizard-form-control" rows="8" id="scripts"
-					name="scripts" placeholder=""></textarea>
-			</div>
+<div class="col-sm-12" style="margin:10px;">
+	<div class="form-group">
+		<label for="select-net" class="control-label col-sm-3"><span>*
+		</span>网络池：</label>
+		<div class="col-sm-7 col-sm">
+			<select name="select-net"
+				class="form-control select select-net">
+				{{#uiSelectList(netList)}}
+			</select>
 		</div>
+	</div>
+	<div >
+		<div class="clearfix" id="vdcFloatIP"></div>
 	</div>
 
-	<div class="wizard-input-section">
-		<div class="form-group">
-			<label class="control-label col-sm-2"><span>* </span>上传：</label>
-			<div class="col-sm-9 col-sm">
-				<button type="button" class="btn btn-info">上传脚本</button>
-			</div>
-		</div>
-	</div>
-
-	<div class="wizard-input-section">
-		<div class="form-group">
-			<label class="control-label col-sm-2"><span>* </span>磁盘分区：</label>
-			<div class="col-sm-9 col-sm">
-				<label> <input name="radio-auto" class="icheck-success"
-					value="auto" type="radio"> 自动
-				</label> <label> <input name="radio-auto" class="icheck-success"
-					value="non-auto" type="radio"> 手动
-				</label>
-			</div>
-		</div>
-	</div>
 </div>

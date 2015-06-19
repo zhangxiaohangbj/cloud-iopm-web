@@ -1,6 +1,6 @@
 <div class="page-header clearfix">
 	<ol class="breadcrumb">
-	  <li class="active">任务列表</li>
+	  <li class="active">任务管理</li>
 	</ol>
 </div>
 <div class="page-body">
@@ -12,13 +12,12 @@
 						<th class="c2">
 							<label><input type="checkbox" class="selectAll"></label>
 						</th>
-						<th class="c4">任务分组</th>
-						<th class="c4">任务名称</th>
-						<th class="c4">任务描述</th>
-						<th class="c6">任务实现类</th>
-						<th class="c6">任务实现方法</th>
-						<th class="c2">创建时间</th>
-						<th class="c6 sorting_disabled">操作</th>
+						<th class="c1">任务分组</th>
+						<th class="c1">任务名称</th>
+						<th class="c1">任务描述</th>
+						<th class="c1">任务实现类</th>
+						<th class="c1">任务实现方法</th>
+						<th class="c1">操作</th>
 					</tr>
 				</thead>
 				<tbody>
@@ -30,22 +29,14 @@
 						<td>{{item.memo}}</td>
 						<td>{{item.className}}</td>
 						<td>{{item.methodName}}</td>
-						<td>{{item.createdAt}}</td>
 						<td>
-						<a class="btn-opt" data-toggle="tooltip" title="编辑分组" href="javascript:void(0)" data="{{item.id}}" data-act="stop" style="margin: 0;"><li class="glyphicon glyphicon-edit"></li></a>
-						<div class="dropdown">
-							<span class="btn btn-more dropdown-toggle" data-toggle="dropdown" aria-expanded="false">更 多 <i class="fa fa-angle-down fa-fw"></i></span>
-							<ul class="dropdown-menu" style="right: 0;left: initial;">
-								<li><a href="javascript:void(0)" class="delete" data="{{item.id}}"><i class="fa fa-trash-o fa-fw"></i>删除</a></li>
-							</ul>
-						</div>	
+						<a class="btn-opt" data-toggle="tooltip" title="编辑任务" href="javascript:void(0)" data="{{item.id}}" data-act="stop" style="margin: 0;"><li class="glyphicon glyphicon-edit"></li></a>
 						</td>
 					</tr>
     			{{/each}}
 				</tbody>
 				<tfoot>
 					<tr>
-						<td></td>
 						<td></td>
 						<td></td>
 						<td></td>

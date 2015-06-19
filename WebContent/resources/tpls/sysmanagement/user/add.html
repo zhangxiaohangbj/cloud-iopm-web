@@ -1,0 +1,185 @@
+<style>
+<!--
+.wizard .table-primary > tbody > tr > td, .wizard .table-primary > thead > tr > th{
+	border-right: 1px solid #e4e9ec;
+}
+.wizard .table-primary .btn-primary{
+	float:right;
+}
+-->
+</style>
+<div class="wizard" id="create-user-wizard" data-title="新建用户">
+	<!-- 基本信息 -->
+	<div class="wizard-card" data-cardname="basci" id="editUserBasic">
+		<h3>基本信息</h3>
+		<div class="wizard-card-content col-sm-8">
+				<div class="wizard-input-section">
+					<div class="form-group">
+						<label for="login-name" class="control-label col-sm-2"><span>* </span>账号：</label>
+						<div class="col-sm-7 col-sm">
+							<input type="text" class="form-control" id="login-name" name="login-name">
+						</div>
+					</div>
+				</div>
+				
+				<div class="wizard-input-section">
+					<div class="form-group">
+						<label for="password" class="control-label col-sm-2"><span>* </span>密码：</label>
+						<div class="col-sm-7 col-sm">
+							<input class="form-control" type="password" name="password" id="password"/>
+						</div>
+					</div>
+				</div>
+				<div class="wizard-input-section">
+					<div class="form-group">
+						<label for="password_again" class="control-label col-sm-2"><span>* </span>确认密码：</label>
+						<div class="col-sm-7 col-sm">
+							<input class="form-control" type="password" name="password_again"/>
+						</div>
+					</div>
+				</div>
+				<div class="wizard-input-section">
+					<div class="form-group">
+						<label for="status" class="control-label col-sm-2"><span>* </span>状态：</label>
+						<div class="col-sm-7 col-sm">
+							<select class="form-control select" name="status">
+								<option value="normal">正常</option>
+								<option value="locked">已锁定</option>
+								<option value="delete">已删除</option>
+								<option value="disabled">已禁用</option>
+							</select>
+						</div>
+					</div>
+				</div>
+				<div class="wizard-input-section">
+					<div class="form-group">
+						<label for="phone" class="control-label col-sm-2">手机号：</label>
+						<div class="col-sm-7 col-sm">
+							<input type="text" class="form-control" name="phone">
+						</div>
+					</div>
+				</div>
+				<div class="wizard-input-section">
+					<div class="form-group">
+						<label for="email" class="control-label col-sm-2">邮箱：</label>
+						<div class="col-sm-7 col-sm">
+							<input type="text" class="form-control" name="email">
+						</div>
+					</div>
+				</div>
+				<div class="wizard-input-section">
+					<div class="form-group">
+						<label for="true_name" class="control-label col-sm-2">姓名：</label>
+						<div class="col-sm-7 col-sm">
+							<input type="text" class="form-control" name="true_name">
+						</div>
+					</div>
+				</div>
+				<div class="wizard-input-section">
+					<div class="form-group">
+						<label for="organ_id" class="control-label col-sm-2"><span>* </span>所属部门：</label>
+						<div class="col-sm-7 col-sm">
+							<input type="text" class="form-control" name="organ_id" readonly="readonly">
+						</div>
+					</div>
+				</div>
+		</div>
+		<div class="wizard-card-desc col-sm-4">
+			<p>帮助说明；帮助说明；帮助说明；帮助说明；帮助说明；帮助说明；帮助说明；帮助说明；</p>
+		</div>
+	</div>
+	<div class="wizard-card" data-cardname="authority">
+		<h3>权限信息</h3>
+		<div class="wizard-card-content col-sm-8">
+			<table class="table table-primary" id="authorityInfo">
+				<thead>
+					<tr>
+						<th class="c3">关联VDC</th>
+						<th class="c4">角色</th>
+						<th class="c1 sorting_disabled">操作</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<td><span class="vdc"></span><input type="hidden" name="vdc"/>
+						<span class="btn btn-primary chooseVDC">选择</span></td>
+						<td><span class="role"></span><input type="hidden" name="role"/>
+						<span class="btn btn-primary chooseRole">选择</span></td>
+						<td>
+							<a class="btn-delete" data-toggle="tooltip" title="删除" href="javascript:void(0)" style="margin: 0 8px;"><i class="fa fa-trash-o fa-fw"></i></a>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+			<div style="text-align: center;">
+				<span class="btn btn-primary addAuthority">添加行</span>
+			</div>
+		</div>
+		<div class="wizard-card-desc col-sm-4">
+			<p>帮助说明；帮助说明；帮助说明；帮助说明；帮助说明；帮助说明；帮助说明；帮助说明；</p>
+		</div>
+	</div>
+	<div class="wizard-card" data-cardname="confirm" id="confirm">
+		<h3>确认信息</h3>
+		<div class="wizard-card-content col-sm-12" style="border-right: 0;">
+			<div class="wizard-input-section">
+					<div class="form-group">
+						<label for="login-name" class="control-label col-sm-2">账号：</label>
+						<div class="col-sm-7 col-sm">
+							<label name="login-name"></label>
+						</div>
+					</div>
+				</div>
+				<div class="wizard-input-section">
+					<div class="form-group">
+						<label for="status" class="control-label col-sm-2">状态：</label>
+						<div class="col-sm-7 col-sm">
+							<label name="status"></label>
+						</div>
+					</div>
+				</div>
+				<div class="wizard-input-section">
+					<div class="form-group">
+						<label for="phone" class="control-label col-sm-2">手机号：</label>
+						<div class="col-sm-7 col-sm">
+							<label name="phone"></label>
+						</div>
+					</div>
+				</div>
+				<div class="wizard-input-section">
+					<div class="form-group">
+						<label for="email" class="control-label col-sm-2">邮箱：</label>
+						<div class="col-sm-7 col-sm">
+							<label name="email"></label>
+						</div>
+					</div>
+				</div>
+				<div class="wizard-input-section">
+					<div class="form-group">
+						<label for="true_name" class="control-label col-sm-2">姓名：</label>
+						<div class="col-sm-7 col-sm">
+							<label name="true-name"></label>
+						</div>
+					</div>
+				</div>
+				<div class="wizard-input-section">
+					<div class="form-group">
+						<label for="organ_id" class="control-label col-sm-2">所属部门：</label>
+						<div class="col-sm-7 col-sm">
+							<label name="organ_id"></label>
+						</div>
+					</div>
+				</div>
+				<table class="table table-primary">
+					<thead>
+						<tr>
+							<th class="c3">关联VDC</th>
+							<th class="c4">角色</th>
+						</tr>
+					</thead>
+					<tbody>
+					</tbody>
+				</table>
+		</div>
+	</div>
+</div>

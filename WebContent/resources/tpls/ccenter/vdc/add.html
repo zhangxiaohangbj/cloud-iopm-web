@@ -14,7 +14,7 @@
 					<div class="form-group">
 						<label for="vdc-name" class="control-label col-sm-2"><span>* </span>名称：</label>
 						<div class="col-sm-7 col-sm">
-							<input type="text" class="wizard-form-control" id="vdc-name" name="vdc-name" placeholder="vdc名称">
+							<input type="text" class="form-control" id="vdc-name" name="vdc-name" placeholder="vdc名称">
 						</div>
 					</div>
 				</div>
@@ -23,7 +23,7 @@
 					<div class="form-group">
 						<label for="description" class="control-label col-sm-2"><span>* </span>描述：</label>
 						<div class="col-sm-9 col-sm">
-							<textarea class="wizard-form-control" rows="10" name="description"></textarea>
+							<textarea class="form-control" rows="10" name="description"></textarea>
 						</div>
 					</div>
 				</div>
@@ -45,7 +45,6 @@
 				从快照创建是指从云主机的快照创建；
 				从云硬盘创建是指从一个通过云主机创建的云硬盘来创建云主机，云硬盘会被挂载到云主机上；</p>
 		</div>
-	
 	</div>
 	
 	<!--可用分区 -->
@@ -56,7 +55,7 @@
 				<div class="form-group">
 					<label for="select-ve" class="control-label col-sm-3"><span>* </span>虚拟化环境：</label>
 					<div  class="col-sm-7 col-sm">
-						<select name="select-ve"  class="wizard-form-control select select-ve">
+						<select name="select-ve"  class="form-control select select-ve">
 						    {{#uiSelectList(veList)}}
 						</select>
 					</div>
@@ -84,7 +83,7 @@
 					<div class="form-group">
 						<label for="metadata_items" class="control-label col-sm-2"><span>* </span>元数据条目：</label>
 						<div class="col-sm-7 col-sm">
-							<input type="text" value="0" class="wizard-form-control" name="metadata_items" placeholder="元数据条目">
+							<input type="text" value="0" class="form-control" name="metadata_items" placeholder="元数据条目">
 						</div>
 					</div>
 				</div>	
@@ -92,7 +91,7 @@
 					<div class="form-group">
 						<label for="cores" class="control-label col-sm-2"><span>* </span>虚拟内核：</label>
 						<div class="col-sm-7 col-sm">
-							<input type="text" value="0" class="wizard-form-control" name="cores" placeholder="虚拟内核">
+							<input type="text" value="0" class="form-control" name="cores" placeholder="虚拟内核">
 						</div>
 					</div>
 				</div>
@@ -100,7 +99,7 @@
 					<div class="form-group">
 						<label for="instances" class="control-label col-sm-2"><span>* </span>实例：</label>
 						<div class="col-sm-7 col-sm">
-							<input type="text" value="0" class="wizard-form-control" name="instances" placeholder="实例">
+							<input type="text" value="0" class="form-control" name="instances" placeholder="实例">
 						</div>
 					</div>
 				</div>
@@ -108,7 +107,7 @@
 					<div class="form-group">
 						<label for="injected_files" class="control-label col-sm-2"><span>* </span>注入的文件：</label>
 						<div class="col-sm-7 col-sm">
-							<input type="text" value="0" class="wizard-form-control" name="injected_files" placeholder="注入的文件">
+							<input type="text" value="0" class="form-control" name="injected_files" placeholder="注入的文件">
 						</div>
 					</div>
 				</div>
@@ -116,7 +115,7 @@
 					<div class="form-group">
 						<label for="injected_file_content_bytes" class="control-label col-sm-2"><span>* </span>已注入的文件内容（Bytes）：</label>
 						<div class="col-sm-7 col-sm">
-							<input type="text" value="0" class="wizard-form-control" name="injected_file_content_bytes" placeholder="已注入的文件内容（Bytes）">
+							<input type="text" value="0" class="form-control" name="injected_file_content_bytes" placeholder="已注入的文件内容（Bytes）">
 						</div>
 					</div>
 				</div>
@@ -124,7 +123,7 @@
 					<div class="form-group">
 						<label for="disks" class="control-label col-sm-2"><span>* </span>云硬盘：</label>
 						<div class="col-sm-7 col-sm">
-							<input type="text" value="0" class="wizard-form-control" name="disks" placeholder="云硬盘">
+							<input type="text" value="0" class="form-control" name="disks" placeholder="云硬盘">
 						</div>
 					</div>
 				</div>
@@ -132,7 +131,7 @@
 					<div class="form-group">
 						<label for="diskSnapshots" class="control-label col-sm-2"><span>* </span>云硬盘快照：</label>
 						<div class="col-sm-7 col-sm">
-							<input type="text" value="0" class="wizard-form-control" name="diskSnapshots" placeholder="云硬盘快照">
+							<input type="text" value="0" class="form-control" name="diskSnapshots" placeholder="云硬盘快照">
 						</div>
 					</div>
 				</div>
@@ -140,7 +139,7 @@
 					<div class="form-group">
 						<label for="diskTotalSizes" class="control-label col-sm-2"><span>* </span>云硬盘和快照的总大小（GB）：</label>
 						<div class="col-sm-7 col-sm">
-							<input type="text" value="0" class="wizard-form-control" name="diskTotalSizes" placeholder="云硬盘和快照的总大小（GB）">
+							<input type="text" value="0" class="form-control" name="diskTotalSizes" placeholder="云硬盘和快照的总大小（GB）">
 						</div>
 					</div>
 				</div>
@@ -148,7 +147,7 @@
 					<div class="form-group">
 						<label for="ram" class="control-label col-sm-2"><span>* </span>内存：</label>
 						<div class="col-sm-7 col-sm">
-							<input type="text" value="0" class="wizard-form-control" name="ram" placeholder="内存">
+							<input type="text" value="0" class="form-control" name="ram" placeholder="内存">
 						</div>
 					</div>
 				</div>
@@ -156,7 +155,7 @@
 					<div class="form-group">
 						<label for="security_groups" class="control-label col-sm-2"><span>* </span>安全组：</label>
 						<div class="col-sm-7 col-sm">
-							<input type="text" value="0" class="wizard-form-control" name="security_groups" placeholder="安全组">
+							<input type="text" value="0" class="form-control" name="security_groups" placeholder="安全组">
 						</div>
 					</div>
 				</div>
@@ -164,7 +163,7 @@
 					<div class="form-group">
 						<label for="security_group_rules" class="control-label col-sm-2"><span>* </span>安全组规则：</label>
 						<div class="col-sm-7 col-sm">
-							<input type="text" value="0" class="wizard-form-control" name="security_group_rules" placeholder="安全组规则">
+							<input type="text" value="0" class="form-control" name="security_group_rules" placeholder="安全组规则">
 						</div>
 					</div>
 				</div>
@@ -172,7 +171,7 @@
 					<div class="form-group">
 						<label for="floating_ips" class="control-label col-sm-2"><span>* </span>浮动IP：</label>
 						<div class="col-sm-7 col-sm">
-							<input type="text" value="0" class="wizard-form-control" name="floating_ips" placeholder="浮动IP">
+							<input type="text" value="0" class="form-control" name="floating_ips" placeholder="浮动IP">
 						</div>
 					</div>
 				</div>
@@ -180,7 +179,7 @@
 					<div class="form-group">
 						<label for="network" class="control-label col-sm-2"><span>* </span>网络：</label>
 						<div class="col-sm-7 col-sm">
-							<input type="text" value="0" class="wizard-form-control" name="network" placeholder="网络">
+							<input type="text" value="0" class="form-control" name="network" placeholder="网络">
 						</div>
 					</div>
 				</div>
@@ -188,7 +187,7 @@
 					<div class="form-group">
 						<label for="port" class="control-label col-sm-2"><span>* </span>端口：</label>
 						<div class="col-sm-7 col-sm">
-							<input type="text" value="0" class="wizard-form-control" name="port" placeholder="端口">
+							<input type="text" value="0" class="form-control" name="port" placeholder="端口">
 						</div>
 					</div>
 				</div>
@@ -196,7 +195,7 @@
 					<div class="form-group">
 						<label for="route" class="control-label col-sm-2"><span>* </span>路由：</label>
 						<div class="col-sm-7 col-sm">
-							<input type="text" value="0" class="wizard-form-control" name="route" placeholder="路由">
+							<input type="text" value="0" class="form-control" name="route" placeholder="路由">
 						</div>
 					</div>
 				</div>
@@ -204,7 +203,7 @@
 					<div class="form-group">
 						<label for="subnet" class="control-label col-sm-2"><span>* </span>子网：</label>
 						<div class="col-sm-7 col-sm">
-							<input type="text" value="0" class="wizard-form-control" name="subnet" placeholder="子网">
+							<input type="text" value="0" class="form-control" name="subnet" placeholder="子网">
 						</div>
 					</div>
 				</div>			
@@ -234,7 +233,7 @@
 				<div class="form-group">
 					<label for="select-net" class="control-label col-sm-3"><span>* </span>网络池：</label>
 					<div  class="col-sm-7 col-sm">
-						<select name="select-net"  class="wizard-form-control select select-net">
+						<select name="select-net"  class="form-control select select-net">
 						    {{#uiSelectList(netList)}}
 						</select>
 					</div>
