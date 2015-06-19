@@ -16,15 +16,15 @@
 						<th class="c2">
 							<label><input type="checkbox" class="selectAll"></label>
 						</th>
-						<th class="c10">名称</th>
+						<th class="c12">名称</th>
 						<th class="c12">内部IP</th>
 						<th class="c12">浮动IP</th>
 						<th class="c12">配置</th>
 						<th class="c6">可用域</th>
 						<th class="c10">虚拟数据中心</th>
-						<th class="c9">状态</th>
+						<th class="c6">状态</th>
 						<th class="c15">创建时间</th>
-						<th class="c12">操作</th>
+						<th class="c13">操作</th>
 					</tr>
 				</thead>
 				<tbody>
@@ -40,7 +40,7 @@
 						{{/if}}
 						</td>
 						<td>{{item.availability_zone}}</td>
-						<td>{{item.tenant_id}}</td>
+						<td>{{item.vdcName}}</td>
 						<td>
 			 			{{if item.vmState == 'ACTIVE'}} <span class="text-success">运行中</span>
 							{{else if item.vmState == 'BUILD'}} <span class="text-success">创建中</span>
