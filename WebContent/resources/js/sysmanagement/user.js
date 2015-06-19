@@ -394,7 +394,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 	     //权限设置
 	     $("#UserTable_wrapper a.btn-edit-role").on("click",function(){
 		    	var id= $(this).attr("data");
-		    	Common.xhr.ajax('/v2.0/users/'+id,function(data){  //需修改接口
+		    	Common.xhr.ajax('/v2.0/users/tenants/'+id,function(data){  //需修改接口
 		    		Common.render('tpls/sysmanagement/user/editrole.html',data,function(html){
 		    			Modal.show({
 		    	            title: '用户权限设置',
