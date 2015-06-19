@@ -394,10 +394,12 @@ body{
 	border-left:1px solid #E5E5E5;
 }
 #page-main > .page-content > .page-header{
-	height:100px;
+	min-height:50px;
  	border-bottom:none;
  	margin:0;
 	padding:0;
+	width:100%;
+	display:table;
 }
 #page-main > .page-content > .page-header > .breadcrumb{
 	background:none;
@@ -467,6 +469,13 @@ body{
     text-align: center;
     vertical-align: middle;
 }
+.table-primary > tbody > tr > td >a{
+	color:#227B9B;
+}
+
+.table-primary > tbody > tr > td a:hover{
+	text-decoration:none;
+}
 .table-primary > tbody > tr > td,
 .table-primary > tfoot > tr > td,
 .table-primary.dataTable > tbody > tr > td,
@@ -503,7 +512,9 @@ table > tbody > tr > td .btn-opt:hover,
 table.dataTable > tbody > tr > td .btn-opt:hover {
 	color: #777;
 }
-
+table.dataTable > tbody > tr > td .btn-opt i {
+	margin:0 0.5em;
+}
 .tableMenus .dataTables_filter label {
 	position: relative;
 	margin-left: 10px;

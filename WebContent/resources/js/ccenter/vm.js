@@ -1,6 +1,5 @@
 define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3'],function(Common,Modal){
 	Common.requestCSS('css/wizard.css');
-	Common.requestCSS('css/dialog.css');
 	var current_vdc_id = '9cc717d8047e46e5bf23804fc4400247';
 	var init = function(){
 		Common.$pageContent.addClass("loading");
@@ -167,19 +166,19 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 							rateMemory = getMathRound(quotaUsages.ram,quotas.ram),
 							rateNums = getMathRound(quotaUsages.instances,quotas.instances),
 							styleCore = getClass(rateCore),styleMemory = getClass(rateMemory),styleNums=getClass(rateNums);
-							var renderData = {
-									core: {
-										total: quotas.cores, used: quotaUsages.cores, rate: rateCore, style: styleCore
-									},
-									memory: {
-										total: quotas.ram, used: quotaUsages.ram, rate: rateMemory, style: styleMemory
-									},
-									nums: {
-										total: quotas.instances, used: quotaUsages.instances, rate: rateNums, style: styleNums
-									}
-							}
+							var renderData = [
+							        {
+							        	name: 'core',title: '虚拟内核数量',total: quotas.cores, used: quotaUsages.cores, rate: rateCore, style: styleCore
+							        },
+							        {
+							        	name: 'memory',title: '内存总计',total: quotas.ram, used: quotaUsages.ram, rate: rateMemory, style: styleMemory
+							        },
+							        {
+							        	name: 'nums',title: '云主机数量',total: quotas.instances, used: quotaUsages.instances, rate: rateNums, style: styleNums
+							        }
+							 ];
 							//生成html数据
-							Common.render('tpls/ccenter/vm/quota.html',renderData,function(html){
+							Common.render('tpls/common/quota.html',renderData,function(html){
 								$('div.quotas').html(html);
 							});
 						})
@@ -291,7 +290,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 							if(data.security_groups[i].name=='default'){
 								dataArr.push('<label><input type="checkbox" checked>'+data.security_groups[i].name+'</></label>');
 							}else{
-								dataArr.push('<label><input type="checkbox">'+data.security_groups[i].name+'</></label>');
+								dataArr.push('<label><input type="checkbox">'+data.security_groups[i].name+'</label>');
 							}
 						}
 						$('div.security-group').html(dataArr.join(''));

@@ -15,7 +15,6 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 	};
 	
 	var bindEvent = function(){
-		debugger
 		//dataTables
 		Common.initDataTable($('#monitorTable'),function($tar){debugger
 			
