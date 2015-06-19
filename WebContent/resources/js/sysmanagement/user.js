@@ -75,35 +75,43 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 				$(document).off("click","span.chooseVDC");
 				$(document).on("click","span.chooseVDC",function(){
 					var obj = $(this);
-					Common.render('tpls/sysmanagement/user/vdclist.html','/v2.0/tenants',function(html){
-						Modal.show({
-		    	            title: '选择VDC',
-		    	            message: html,
-		    	            closeByBackdrop: false,
-		    	            nl2br: false,
-		    	            buttons: [{
-		    	                label: '确定',
-		    	                action: function(dialog) {
-		    	                	if($("#chooseVDCTable input[type='radio']:checked").length == 0){
-		    	                		Modal.warning("请选择VDC");
-		    	                		return;
-		    	                	}
-		    	                	obj.parent().find(".vdc").html($("#chooseVDCTable input[type='radio']:checked").parent().next().html());
-		    	                	obj.parent().find("[name='vdc']").val($("#chooseVDCTable input[type='radio']:checked").next().val());
-		    	                	dialog.close();
-		    	                }
-		    	            }, {
-		    	                label: '取消',
-		    	                action: function(dialog) {
-		    	                    dialog.close();
-		    	                }
-		    	            }],
-		    	            onshown : function(dialog){
-		    	            	Common.initDataTable($('#chooseVDCTable'));
-		    	            }
-		    	        });
-					});
-					
+					var vdc_id = obj.prev().val();
+					Common.render({
+						tpl:'tpls/sysmanagement/user/vdclist.html',
+						data:'/v2.0/tenants',    //需修改接口
+						beforeRender: function(data){
+							data.vdc_id = vdc_id;
+							return data;
+						},
+						callback: function(html){
+							Modal.show({
+			    	            title: '选择VDC',
+			    	            message: html,
+			    	            closeByBackdrop: false,
+			    	            nl2br: false,
+			    	            buttons: [{
+			    	                label: '确定',
+			    	                action: function(dialog) {
+			    	                	if($("#chooseVDCTable input[type='radio']:checked").length == 0){
+			    	                		Modal.warning("请选择VDC");
+			    	                		return;
+			    	                	}
+			    	                	obj.parent().find(".vdc").html($("#chooseVDCTable input[type='radio']:checked").parent().next().html());
+			    	                	obj.parent().find("[name='vdc']").val($("#chooseVDCTable input[type='radio']:checked").next().val());
+			    	                	dialog.close();
+			    	                }
+			    	            }, {
+			    	                label: '取消',
+			    	                action: function(dialog) {
+			    	                    dialog.close();
+			    	                }
+			    	            }],
+			    	            onshown : function(dialog){
+			    	            	Common.initDataTable($('#chooseVDCTable'));
+			    	            }
+			    	        });
+						}
+					})
 				});
 			},
 			//选择角色
@@ -319,7 +327,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 		//编辑用户信息
 	    $("#UserTable_wrapper a.btn-edit").on("click",function(){
 	    	var id= $(this).attr("data");
-	    	Common.xhr.ajax('/v2.0/subnets/'+id,function(data){  //需修改接口
+	    	Common.xhr.ajax('/v2.0/users/'+id,function(data){  //需修改接口
 	    		Common.render('tpls/sysmanagement/user/edit.html',data,function(html){
 	    			Modal.show({
 	    	            title: '用户信息编辑',
@@ -386,7 +394,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 	     //权限设置
 	     $("#UserTable_wrapper a.btn-edit-role").on("click",function(){
 		    	var id= $(this).attr("data");
-		    	Common.xhr.ajax('/v2.0/subnets/'+id,function(data){  //需修改接口
+		    	Common.xhr.ajax('/v2.0/users/'+id,function(data){  //需修改接口
 		    		Common.render('tpls/sysmanagement/user/editrole.html',data,function(html){
 		    			Modal.show({
 		    	            title: '用户权限设置',
