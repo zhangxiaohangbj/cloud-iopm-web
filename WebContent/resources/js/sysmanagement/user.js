@@ -5,7 +5,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 		//先获取数据，进行加工后再去render
 		Common.render(true,{
 			tpl:'tpls/sysmanagement/user/list.html',
-			data:'/v2.0/users/page/1/10',  //需修改接口
+			data:'/v2.0/users/page/10/1',
 			beforeRender: function(data){
 				return data.result;
 			},
@@ -111,7 +111,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 				$(document).off("click","span.chooseRole");
 				$(document).on("click","span.chooseRole",function(){
 					var obj = $(this);
-					Common.render('tpls/sysmanagement/user/rolelist.html','/v2.0/tenants',function(html){
+					Common.render('tpls/sysmanagement/user/rolelist.html','/v2.0/roles/page/10/1',function(html){
 						Modal.show({
 		    	            title: '选择角色',
 		    	            message: html,
@@ -126,8 +126,8 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 		    	                		role_text += $(this).parent().next().html()+",";
 		    	                		role_id += $(this).next().val()+",";
 		    	                	})
-		    	                	obj.parent().find(".role").html(role_text);
-		    	                	obj.parent().find("[name='role']").val(role_id);
+		    	                	obj.parent().find(".role").html(role_text.substring(0,role_text.length-1));
+		    	                	obj.parent().find("[name='role']").val(role_id.substring(0,role_id.length-1));
 		    	                	dialog.close();
 		    	                }
 		    	            }, {
@@ -170,7 +170,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 				return $form.validate({
 					errorContainer: "_form",
 					rules:{
-						'login-name': {
+						'name': {
 		                    required: true,
 		                    maxlength:50
 		                },
@@ -190,10 +190,10 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 		                	email:true,
 		                    maxlength:50
 		                },
-		                'true_name': {
+		                'trueName': {
 		                    maxlength:50
 		                },
-		                'organ_id': {
+		                'organId': {
 		                    required: true,
 		                    maxlength:36
 		                }
@@ -206,6 +206,17 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 				})
 			}
 			
+		}
+		var jsonData = {
+				authorityJson:function(obj){
+					var authorityList = [];
+					$(obj+" tbody").find("tr").each(function(i,element){
+						var vdc_id = $(element).find("[name='vdc']").val();
+						var role_id = $(element).find("[name='role']").val();
+						authorityList.push({"scopeId":vdc_id,"roleId":role_id,"scopeType":"tenant"});
+					});
+					return authorityList;
+				}
 		}
 		//增加按钮
 	    $("#UserTable_wrapper span.btn-add").on("click",function(){
@@ -287,8 +298,15 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
     			//创建提交数据
     			wizard.on("submit", function(wizard) {
     				var postData={
-    					user:wizard.serializeObject()
-    				};
+        					"name": $(" [name='name']").val(),
+        					"password": $(" [name='password']").val(),
+        					"status": $(" [name='status']").val(),
+        					"phone": $(" [name='phone']").val(),
+        					"email": $( " [name='email']").val(),
+        					"trueName": $( " [name='trueName']").val(),
+        					"organId": $( " [name='organId']").val()
+            				};
+    				postData.userRoleList = jsonData.authorityJson("#authorityInfo");
     				Common.xhr.postJSON('/v2.0/users',postData,function(data){
     					wizard._submitting = false;
     					wizard.updateProgressBar(100);
@@ -313,7 +331,14 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 	    	                	var valid = $(".form-horizontal").valid();
 	    	            		if(!valid) return false;
 	    	            		var serverData = {
-		    	                	  };
+	    	        					"name": $(" [name='name']").val(),
+	    	        					"password": $(" [name='password']").val(),
+	    	        					"status": $(" [name='status']").val(),
+	    	        					"phone": $(" [name='phone']").val(),
+	    	        					"email": $( " [name='email']").val(),
+	    	        					"trueName": $( " [name='trueName']").val(),
+	    	        					"organId": $( " [name='organId']").val()
+	    	            				};
 	    	                	Common.xhr.putJSON('/v2.0/users/'+id,serverData,function(data){
 	    	                		if(data){
 	    	                			Modal.success('保存成功')
@@ -371,6 +396,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 		    	                label: '保存',
 		    	                action: function(dialog) {
 		    	            		var serverData = {
+		    	            				"userRoleList ": jsonData.authorityJson("#authorityInfo")
 			    	                	  };
 		    	                	Common.xhr.putJSON('/v2.0/users/'+id,serverData,function(data){
 		    	                		if(data){
