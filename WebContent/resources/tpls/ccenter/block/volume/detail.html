@@ -1,0 +1,96 @@
+<div class="page-header">
+	<ol class="breadcrumb">
+		<li><a class="" href="">磁盘管理</a></li>
+	    <li class="active">{{name}}</li>
+	</ol>
+</div>
+<div class="page-body">
+	<div class="pane">
+		<div class="pane-content">
+			<div class="detail-info">
+
+			  <!-- Nav tabs -->
+			  <ul class="nav nav-tabs" role="tablist">
+			    <li class="active"><a href="javascript:void(0)">Home</a></li>
+			    <li><a href="javascript:void(0)">Profile</a></li>
+			    <li><a href="javascript:void(0)">Messages</a></li>
+			    <li><a href="javascript:void(0)">Settings</a></li>
+			  </ul>
+			  <div class="detail-info-content">
+			    <div  class="tab-pane active">
+			    	<div class="clearfix">
+						<div class="row">
+							<label  class="control-label col-sm-3">名称：</label>
+							<div class="col-sm-7 col-sm query-info query-volume-name">
+								{{name}}
+							</div>
+						</div>
+						<div class="row">
+							<label class="control-label col-sm-3">ID：</label>
+							<div class="col-sm-7 col-sm query-info query-volume-size">
+							{{id}}
+							</div>
+						</div>
+						<div class="row">
+							<label class="control-label col-sm-3">容量：</label>
+							<div class="col-sm-7 col-sm query-info query-volume-size">
+							{{size}}
+							</div>
+						</div>
+						<div class="row">
+							<label class="control-label col-sm-3">状态：</label>
+							<div class="col-sm-7 col-sm query-info query-volume-type">
+								{{if status == 'in-use'}}
+					 				<span class="text-success">使用中</span>
+					 				{{else if status == 'available'}}
+					 					<span class="text-info">可用</span>
+					 						{{else}}
+					 							<span class="text-danger">已删除</span>
+					 			{{/if}}
+							</div>
+						</div>
+						<div class="row">
+							<label class="control-label col-sm-3">虚拟数据中心：</label>
+							<div class="col-sm-7 col-sm query-info">
+								{{vdc_id}}
+							</div>
+						</div>
+						<div class="row">
+							<label class="control-label col-sm-3">挂载的主机：</label>
+							<div class="col-sm-7 col-sm query-info">
+							{{each mount_list as opt i}}
+								{{opt.name}},
+							{{/each}}
+							</div>
+						</div>
+						<div class="row">
+							<label class="control-label col-sm-3">挂载路径：</label>
+							<div class="col-sm-7 col-sm query-info">
+							{{mount_path}}
+							</div>
+						</div>
+						<div class="row">
+							<label class="control-label col-sm-3">卷类型：</label>
+							<div class="col-sm-7 col-sm query-info">
+								{{type}}
+							</div>
+						</div>
+						<div class="row">
+							<label class="control-label col-sm-3">可用分区：</label>
+							<div class="col-sm-7 col-sm query-info">
+								{{available_zone}}
+							</div>
+						</div>
+						<div class="row">
+							<label class="control-label col-sm-3">可用分区：</label>
+							<div class="col-sm-7 col-sm query-info">
+								{{create_time}}
+							</div>
+						</div>
+					</div>
+					</div>
+			    </div>
+			  </div>
+			</div>
+		</div>
+</div>
