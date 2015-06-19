@@ -106,7 +106,7 @@ define('Common', ['PubView', 'bs/modal', 'json', 'template', 'jq/dataTables-bs3'
                 },
                 {
                     text: '<i class="fa fa-tachometer"></i>云主机类型管理',
-                    link: '#vmtype'
+                    link: '#vmtype/'
                 },
                 {
                     text: '<i class="fa fa-database"></i>磁盘管理',
@@ -1171,6 +1171,7 @@ require(['PubView', 'Common'], function(PubView, Common) {
         when("^#monitor(!.*)?$", ['js/monitor/task/strategyGroup']);
         when("^#cresource(!.*)?$", ['js/cresource/env']);
         when("^#sysmanagement(!.*)?$", ['js/sysmanagement/user']);
+        when("^#ccenter\\/vmtype\\/metadataList(\\/[^\\/]*)*$", ['js/ccenter/vmtype/metadata']);
     }
 
     //路由当前页面
