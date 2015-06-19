@@ -56,7 +56,7 @@
 		<property name="objectMapper" ref="objectMapper"></property>
 	</bean>
 	
-    <bean id="requestMappingHandlerAdapter"  class="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter" >
+    <bean id="requestMappingHandlerAdapter"  class="com.inspur.cloudframework.spring.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter" >
 		<property name="messageConverters">
 			<list> 
 				<ref bean="jackson2Converter"/>
@@ -97,6 +97,13 @@
 				</bean>
 			</list>
 		</property>
+		<property name="returnValueHandlers">
+			<list>
+				<bean class="com.inspur.cloudframework.spring.web.servlet.mvc.method.annotation.ModelAndViewMethodReturnValueHandler">
+				</bean>
+			</list>
+		</property>
+		
     </bean>
     
    	<bean id="handlerExceptionResolver"

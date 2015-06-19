@@ -30,7 +30,7 @@
 				{{each list as item i}}
 					<tr>
 						<td><label><input type="checkbox"></label></td>
-						<td>{{item.name}}</td>
+						<td><a class="volume_name" data-id="{{item.id}}" href="javascript:void(0);">{{item.name}}</a></td>
 						<td>{{item.size}}</td>
 						<td>
 			 			{{if item.status == 'in-use'}}
@@ -55,8 +55,11 @@
 			 			<td>{{item.description}}</td>
 						<td>
 						<a class="btn-opt" data-toggle="tooltip" title="创建快照"  style="margin: 0;"><i class="fa fa-camera"></i></a>
+						<a class="btn-opt" data-toggle="tooltip" title="备份"  style="margin: 0;"><i class="fa fa-files-o"></i></a>
+						
 						<div class="dropdown">
-							<span class="btn btn-more dropdown-toggle" data-toggle="dropdown" aria-expanded="false">更 多 <i class="fa fa-angle-down fa-fw"></i></span>
+							<!-- <span class="btn btn-more dropdown-toggle" data-toggle="dropdown" aria-expanded="false">更 多 <i class="fa fa-angle-down fa-fw"></i></span> -->
+							<a class="btn-opt dropdown-toggle" data-toggle="dropdown" title="更多"  aria-expanded="false" ><i class="fa fa-angle-double-right"></i></a>
 							<ul class="dropdown-menu" style="right: 0;left: initial;">
 								<li><a href="javascript:void(0)"><i class="fa fa-file-text fa-fw"></i>挂载到虚机</a></li>
 								<li><a href="javascript:void(0)"><i class="fa fa-gear fa-fw"></i>从虚机卸载</a></li>
@@ -66,7 +69,7 @@
 								<li><a href="javascript:void(0)"><i class="fa fa-file-text fa-fw"></i>备份</a></li>
 								<li><a href="javascript:void(0)"><i class="fa fa-file-text fa-fw"></i>删除</a></li>
 							</ul>
-						</div>	
+						</div>
 						</td>
 					</tr>
     			{{/each}}

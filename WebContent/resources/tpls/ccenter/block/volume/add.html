@@ -1,38 +1,77 @@
-<div class="wizard" id="create-vdc-wizard" data-title="创建磁盘">
+<div class="wizard" id="create-volume-wizard" data-title="创建磁盘">
 			
 			<!-- 基本信息 -->
-			<div class="wizard-card" data-cardname="basci">
+			<div class="wizard-card" data-cardname="basic">
 				<h3>基本信息</h3>
 				<div class="wizard-card-content col-sm-8">
 					<div class="wizard-input-section">
 						<div class="form-group">
-							<label for="server-name" class="control-label col-sm-2"><span>* </span>名称：</label>
-							<div class="col-sm-7 col-sm">
-								<input type="text" class="form-control" id="volume-name" name="volume-name" placeholder="磁盘名称">
+							<label for="volume_name" class="control-label col-sm-3"><span>* </span>名称：</label>
+							<div class="col-sm-6 col-sm">
+								<input type="text" class="form-control"  name="volume_name" placeholder="磁盘名称">
 							</div>
 						</div>
 					</div>
 					
-					<div class="wizard-input-section">
-						<div class="form-group">
-							<label for="server-desc" class="control-label col-sm-2"><span>* </span>描述：</label>
-							<div class="col-sm-9 col-sm">
-								<textarea name="description" class="form-control" rows="3"></textarea>
-							</div>
-						</div>
-					</div>
 					 <div class="wizard-input-section">
 						<div class="form-group">
-							<label for="enable_dhcp" class="control-label col-sm-2">
-								激活：</label>
+							<label for="tenant_id" class="control-label col-sm-3"><span>* </span>虚拟数据中心：</label>
 							<div class="col-sm-7 col-sm">
-								<p>
-									<input type="checkbox" name="enable_dhcp" data-size="small"
-										data-on-text="激活" data-off-text="禁用" checked>
-								</p>
+								<select name="tenant_id"  class="form-control select tenant_id">
+								    {{#uiSelectList(vdcList)}}
+								</select>
 							</div>
 						</div>
 					</div>
+					<div class="wizard-input-section">
+						<div class="form-group">
+							<label for="availability_zone" class="control-label col-sm-3"><span>* </span>可用分区：</label>
+							<div class="col-sm-7 col-sm">
+								<select name="availability_zone"   class="form-control select availability_zone">
+								</select>
+							</div>
+						</div>
+					</div>
+					<div class="wizard-input-section">
+						<div class="form-group">
+							<label  class="control-label col-sm-3"><span>* </span>虚拟化环境：</label>
+							<div class="col-sm-7 col-sm text-success virtual_envir" style="padding:5px 0 0 10px">
+							</div>
+						</div>
+					</div>
+					<div class="wizard-input-section">
+						<div class="form-group">
+							<label for="volume_type" class="control-label col-sm-3"><span>* </span>卷类型：</label>
+							<div class="col-sm-7 col-sm">
+								<select name="volume_type"   class="form-control select volume_type">
+								</select>
+							</div>
+						</div>
+					</div>
+					<div class="wizard-input-section">
+						<div class="form-group">
+							<label for="volume_size" class="control-label col-sm-3"><span>* </span>容量(GB)：</label>
+							<div class="col-sm-7 col-sm">
+								<input type="text" class="form-control" id="volume_size"  name="volume_size" placeholder="单位GB">
+							</div>
+						</div>
+					</div>
+					<div class="wizard-input-section">
+						<div class="form-group">
+							<label for="server_desc" class="control-label col-sm-3"><span> </span>描述：</label>
+							<div class="col-sm-7 col-sm">
+								<textarea name="server_desc" class="form-control wizard-form-control" rows="3"  placeholder="输入磁盘描述"></textarea>
+							</div>
+						</div>
+					</div>
+					<div class="wizard-input-section">
+						<div class="form-group">
+							<label for="" class="control-label col-sm-3">配额：</label>
+							<div class="col-sm-8 col-sm quotas">
+							</div>
+						</div>
+					</div>
+					
 				</div>
 				<div class="wizard-card-desc col-sm-4">
 					<p>一个虚拟数据中心对于一个租户：选择创建你的云主机所用的镜像。其中，从镜像创建是指从不同类型操作系统的镜像文件创建，另外可选择是否创建一个新磁盘；
@@ -43,123 +82,85 @@
 			</div>
 			
 			<!--挂载磁盘 -->
-			<div class="wizard-card" data-cardname="az">
-				<h3>可用分区</h3>
+			<div class="wizard-card" data-cardname="mount">
+				<h3>挂载磁盘</h3>
 				<div class="wizard-card-content  col-sm-8">
 					<div class="wizard-input-section">
-						<div class="form-group">
-							<label for="select-ve" class="control-label col-sm-3"><span>* </span>虚拟化环境：</label>
-							<div  class="col-sm-7 col-sm">
-								<select name="select-ve"  class="form-control select select-ve">
-								    {{#uiSelectList(veList)}}
-								</select>
-							</div>
-						</div>
+						<p>挂载 <span class="mount_volume_name" style="color:red;"></span> 到云主机:</p>
 					</div>
-					
 					<div class="wizard-input-section">
-						<div class="chose-az choose-style  clearfix"  id="vdcAZ">
-							<div class="col-sm-6 col-sm show-all">
-								<div class="panel panel-default">
-								  <!-- Default panel contents -->
-								  <div class="panel-heading clearfix">全部</div>
-								 <div class="panel-body clearfix">
-								   <form class="form-search">
-									  	<input type="text" class="search-query">
-									  	<i class="fa fa-search"></i>
-								  	</form>
-								  </div>								
-								  <!-- List group -->
-								  <div class="list-group az-all list-group-all">
-								  </div>
-								</div>
-							</div>
-							<div class="col-sm-6 col-sm">
-								<div class="panel panel-default">
-								  <!-- Default panel contents -->
-								  <div class="panel-heading clearfix">已选择</div>
-								 <div class="panel-body clearfix">
-								   <form class="form-search">
-									  	<input type="text" class="search-query">
-									  	<i class="fa fa-search"></i>
-								  	</form>
-								  </div>
-								
-								  <!-- List group -->
-								  <div class="list-group az-chosen">
-								  </div>
-								</div>
-							</div>
-						</div>
+						<div class="form-group vm-list"></div>
 					</div>
-					
 				</div>
 				<div class="wizard-card-desc col-sm-4">
 					<p>一个虚拟数据中心对于一个租户：选择创建你的云主机所用的镜像。其中，从镜像创建是指从不同类型操作系统的镜像文件创建，另外可选择是否创建一个新磁盘；
 						从快照创建是指从云主机的快照创建；
 						从云硬盘创建是指从一个通过云主机创建的云硬盘来创建云主机，云硬盘会被挂载到云主机上；</p>
 				</div>
-				
 			</div>
 			<!-- 确认信息  -->
-			<div class="wizard-card wizard-card-overlay" data-cardname="networks">
-			<h3>确认信息</h3>
-				<div class="wizard-card-content col-sm-8">
-					<div class="wizard-input-section">
-						<div class="form-group">
-							<label for="available-network" class="control-label col-sm-2"><span>* </span>可用网络：</label>
-							<div class="col-sm-9 col-sm">
-								<div class="list-group available-network">
+			<div class="wizard-card wizard-card-overlay" data-cardname="confirm">
+				<h3>确认信息</h3>
+				<div class="wizard-card-content col-sm-10 none-desc">
+				  <div class="query-info-basic clearfix">
+						<h4>基本信息</h4>
+						<hr style="width:80%">
+						<div class="wizard-input-section">
+							<div class="form-group">
+								<label  class="control-label col-sm-3"><span>* </span>名称：</label>
+								<div class="col-sm-7 col-sm query-info query-volume-name">
+								</div>
+							</div>
+						</div>
+						<div class="wizard-input-section">
+							<div class="form-group">
+								<label class="control-label col-sm-3"><span>* </span>容量：</label>
+								<div class="col-sm-7 col-sm query-info query-volume-size">
+								</div>
+							</div>
+						</div>
+						<div class="wizard-input-section">
+							<div class="form-group">
+								<label class="control-label col-sm-3"><span>* </span>卷类型：</label>
+								<div class="col-sm-7 col-sm query-info query-volume-type">
+								</div>
+							</div>
+						</div>
+						<div class="wizard-input-section">
+							<div class="form-group">
+								<label class="control-label col-sm-3"><span>* </span>虚拟数据中心：</label>
+								<div class="col-sm-7 col-sm query-info query-volume-vdc">
+							</div>
+						</div>
+						
+						<div class="wizard-input-section">
+							<div class="form-group">
+								<label class="control-label col-sm-3"><span>* </span>可用分区：</label>
+								<div class="col-sm-7 col-sm query-info query-volume-az">
+								</div>
+							</div>
+						</div>
+						<div class="wizard-input-section">
+							<div class="form-group">
+								<label class="control-label col-sm-3"><span>* </span>虚拟化环境：</label>
+								<div class="col-sm-7 col-sm query-info query-volume-ve">
+								</div>
+							</div>
+						</div>
+						
+						<div class="wizard-input-section">
+							<div class="form-group">
+								<label class="control-label col-sm-3"><span>* </span>描述：</label>
+								<div class="col-sm-7 col-sm query-info query-volume-desc">
 								</div>
 							</div>
 						</div>
 					</div>
-					
-					<div class="wizard-input-section">
-						<div class="form-group">
-							<label for="chosen-network" class="control-label col-sm-2"><span>* </span>已选网络：</label>
-							<div class="col-sm-9 col-sm">
-								<div class="list-group chosen-network">
-								</div>
-							</div>
-							<input type="hidden" class="form-control" id="chosen-network" name="chosen-network">
-						</div>
-					</div>
-					
-					<div class="wizard-input-section">
-						<div class="form-group">
-							<label for="network-card-name" class="control-label col-sm-2"><span>* </span>网卡名称：</label>
-							<div class="col-sm-7 col-sm">
-								<input type="text" disabled class="form-control" name="network-card-name" placeholder="网卡名称">
-							</div>
-						</div>
-					</div>
-					<div class="wizard-input-section">
-						<div class="form-group">
-							<label for="select-sub-network" class="control-label col-sm-2"><span>* </span>指定子网：</label>
-							<div class="col-sm-7 col-sm">
-								<select disabled name="select-sub-network" class="form-control select">
-								</select>
-							</div>
-						</div>
-					</div>
-					<div class="wizard-input-section">
-						<div class="form-group">
-							<label for="select-net-ip" class="control-label col-sm-2"><span>* </span>指定IP：</label>
-							<div class="col-sm-7 col-sm">
-								<select disabled name="select-net-ip" class="form-control select ">
-								</select>
-							</div>
-						</div>
-					</div>
-					
 				</div>
-				
-				<div class="wizard-card-desc col-sm-4">
-					<p>网卡：
-						通过按按钮或者拖拽释放来在选择可用网络中选择网络,当然也可以通过拖拽释放来改变nic的顺序.
-						选择网卡后，可指定子网和IP。
-						默认情况下，自动选择子网和DHCP方式</p>
+				<div class="query-info-mount clearfix">
+					<h4>挂载到磁盘</h4>
+					<hr style="width:80%">
 				</div>
 			</div>
 		</div>
+</div>
