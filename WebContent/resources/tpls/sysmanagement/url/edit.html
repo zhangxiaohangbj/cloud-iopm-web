@@ -1,0 +1,42 @@
+<form class="form-horizontal">
+	<div class="form-group">
+		<label for="url_name" class="control-label col-sm-3"><span>* </span>URL名称：</label>
+		<div class="col-sm-7 col-sm">
+			<input type="text" class="form-control" name="url_name" value="{{url_name}}">
+		</div>
+	</div>
+
+	<div class="form-group">
+		<label for="url_address" class="control-label col-sm-3"><span>* </span>URL地址：</label>
+		<div class="col-sm-7 col-sm">
+			<input type="text" class="form-control" name="url_address" value="{{url_address}}">
+		</div>
+	</div>
+	<div class="form-group">
+		<label for="method" class="control-label col-sm-3"><span>* </span>method：</label>
+		<div class="col-sm-7 col-sm">
+			<select class="form-control select" name="method">
+				<option value="POST" {{if method == 'POST'}}selected{{/if}}>POST</option>
+				<option value="GET" {{if method == 'GET'}}selected{{/if}}>GET</option>
+				<option value="DELETE" {{if method == 'DELETE'}}selected{{/if}}>DELETE</option>
+				<option value="PUT" {{if method == 'PUT'}}selected{{/if}}>PUT</option>
+			</select>
+		</div>
+	</div>
+	<div class="form-group">
+		<label for="is_public" class="control-label col-sm-3"><span>* </span>是否公开：</label>
+		<div class="col-sm-7 col-sm">
+			<select class="form-control select" name="is_public">
+				<option value="1" {{if is_public =='1'}}selected{{/if}}>是</option>
+				<option value="0" {{if is_public == '0'}}selected{{/if}}>否</option>
+			</select>
+		</div>
+	</div>
+	<div class="form-group">
+		<label for="endpoint_name" class="control-label col-sm-3"><span>* </span>所属端点：</label>
+		<div class="col-sm-7 col-sm">
+			<input type="hidden" name="endpoint_id" value="{{endpoint_id}}">
+			<input type="text" class="form-control" name="endpoint_name" readonly="readonly" value="{{endpoint_name}}">
+		</div>
+	</div>
+</form>

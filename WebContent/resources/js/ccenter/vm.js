@@ -8,7 +8,16 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 			tpl:'tpls/ccenter/vm/list.html',
 			data:'/'+current_vdc_id+'/servers/page/1/10',
 			beforeRender: function(data){
-				return data.result;
+				var vms = data.result
+	    		for(var i=0;i<vms.length;i++){
+	    			if(vms[i]['fixedIps']!=null){//ip 换行显示
+	    				vms[i]['fixedIps'] = vms[i]['fixedIps'].replace(new RegExp(/(,)/g),'<br>')
+	    			}
+	    			if(vms[i]['floatingIps']!=null){//ip 换行显示
+	    				vms[i]['floatingIps'] = vms[i]['floatingIps'].replace(new RegExp(/(,)/g),'<br>')
+	    			}
+	    		}
+				return vms;
 			},
 			callback: bindEvent
 		});
@@ -166,19 +175,19 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 							rateMemory = getMathRound(quotaUsages.ram,quotas.ram),
 							rateNums = getMathRound(quotaUsages.instances,quotas.instances),
 							styleCore = getClass(rateCore),styleMemory = getClass(rateMemory),styleNums=getClass(rateNums);
-							var renderData = {
-									core: {
-										total: quotas.cores, used: quotaUsages.cores, rate: rateCore, style: styleCore
-									},
-									memory: {
-										total: quotas.ram, used: quotaUsages.ram, rate: rateMemory, style: styleMemory
-									},
-									nums: {
-										total: quotas.instances, used: quotaUsages.instances, rate: rateNums, style: styleNums
-									}
-							}
+							var renderData = [
+							        {
+							        	name: 'core',title: '虚拟内核数量',total: quotas.cores, used: quotaUsages.cores, rate: rateCore, style: styleCore
+							        },
+							        {
+							        	name: 'memory',title: '内存总计',total: quotas.ram, used: quotaUsages.ram, rate: rateMemory, style: styleMemory
+							        },
+							        {
+							        	name: 'nums',title: '云主机数量',total: quotas.instances, used: quotaUsages.instances, rate: rateNums, style: styleNums
+							        }
+							 ];
 							//生成html数据
-							Common.render('tpls/ccenter/vm/quota.html',renderData,function(html){
+							Common.render('tpls/common/quota.html',renderData,function(html){
 								$('div.quotas').html(html);
 							});
 						})
@@ -290,7 +299,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 							if(data.security_groups[i].name=='default'){
 								dataArr.push('<label><input type="checkbox" checked>'+data.security_groups[i].name+'</></label>');
 							}else{
-								dataArr.push('<label><input type="checkbox">'+data.security_groups[i].name+'</></label>');
+								dataArr.push('<label><input type="checkbox">'+data.security_groups[i].name+'</label>');
 							}
 						}
 						$('div.security-group').html(dataArr.join(''));
@@ -371,8 +380,11 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 	    				$(this).parents('ul:first').siblings('div').each(function(){
 	    					if($(this).attr('data-con') == source){
 	    						$(this).removeClass('hide').addClass('show');
+	    						$(this).parent().find('[data-con='+source+']').find('*:first').addClass('selected');
+	    	    				$('#imageRef').val($(this).find('.selected:first').attr('data-con'));
 	    					}else{
 	    						$(this).removeClass('show').addClass('hide');
+	    						$(this).find('.selected').removeClass('selected');
 	    					}
 	    				})
 	    			});
@@ -381,7 +393,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 	    				$(this).parents('.form-group:first').find('.selected').removeClass('selected');
 	    				$(this).addClass('selected');
 	    				var data = $(this).attr("data-con");
-	    				$(this).parents('.form-group:first').find('input[name=imageRef]').val(data);
+	    				$('#imageRef').val(data);
 	    			})
 				},
 				//详细信息 -绑定云主机数量spinbox
@@ -517,6 +529,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
     	                submitText: "提交",
     	                submittingText: "提交中..."
     	            },
+    	            submitEnabled: [2,3,4],
     	            validate: {
 	            		0: function(){
 	            			return this.el.find('form').valid();
@@ -533,6 +546,10 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
     			                    required: true,
     			                    minlength: 4,
     			                    maxlength:15
+    			                },
+    			                'imageRef': {
+    			                    required: true,
+    			                    minlength: 1
     			                }
     			            }
     					});
@@ -589,7 +606,10 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
     				$('#vm-networks .list-group-select').children().each(function(i,item){
     					var network = {};
     					network.uuid = $(item).find('li:first').attr('data-id');
-    					network.fixed_ip = $(item).find('select.select-fixedip').children('option:selected').val();
+    					var fixedIp = $(item).find('select.select-fixedip').children('option:selected').val();
+    					if(fixedIp!='DHCP'){
+    						network.fixed_ip = fixedIp;
+    					}
     					networkData.push(network);
     				});
     				

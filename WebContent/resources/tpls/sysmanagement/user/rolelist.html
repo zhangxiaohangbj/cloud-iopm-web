@@ -11,12 +11,12 @@
 			<tr>
 				<th class="c1">
 				</th>
-				<th class="c3">VDC名称</th>
-				<th class="c4">VDC描述</th>
+				<th class="c3">角色名称</th>
+				<th class="c4">角色描述</th>
 			</tr>
 		</thead>
 		<tbody>
-			{{each tenants as item i}}
+			{{each result as item i}}
 				<tr>
 					<td><input type="checkbox"><input type="hidden" value="{{item.id}}"/></td>
 					<td>{{item.name}}</td>
@@ -24,12 +24,5 @@
 				</tr>
 			{{/each}}
 		</tbody>
-		<tfoot>
-			<tr>
-				<td></td>
-				<td></td>
-				<td></td>
-			</tr>
-		</tfoot>
 	</table>
 </form>

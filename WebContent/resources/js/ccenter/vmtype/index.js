@@ -3,6 +3,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 	var init = function(){
 		Common.$pageContent.addClass("loading");
         Common.xhr.ajax('/v2/123/flavors/detail', function(data){
+
            Common.render(true,'tpls/ccenter/vmtype/list.html',data,function(){
                 bindEvent();
             });
@@ -45,13 +46,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 				Common.xhr.ajax('/v2.0/tenants/page/10/1',function(pageVdcList){///v2/images
                     var vdcList = pageVdcList.result;
                     renderData.vdcList = vdcList;
-                    require(['js/common/choose'],function(choose){
-                        var options = {
-                            selector: '#flavorVdcAccess',
-                            list: vdcList
-                        };
-                        choose.initChoose(options);
-                    })
+
 
 				});
 			},
@@ -68,17 +63,9 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 		}
         DataGetter.getVdc();
 
-        var currentChosenObj = {
 
 
-        };
 
-        var DataRender = {
-            renderCreateFlavor : function() {
-
-
-            }
-        };
 
 	  //增加按钮
         $("#vmtypeTable_wrapper span.btn-add").on("click",function(){
@@ -90,6 +77,15 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 
                 DataGetter.getVdc();
                 //同步currentChosenObj
+
+                require(['js/common/choose'],function(choose){
+                    var options = {
+                        selector: '#flavorVdcAccess',
+                        allData:renderData.vdcList
+                    };
+                    debugger
+                    choose.initChoose(options);
+                });
 
                 //wizard show
                 $.fn.wizard.logging = true;
@@ -137,12 +133,28 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
                         }
                     };
 
+                    var flavor_id = ''
                     Common.xhr.postJSON('/v2/123/flavors/',flavorData,function(data){
-                        wizard._submitting = false;
-                        wizard.updateProgressBar(100);
-                        closeWizard();
-                        Common.router.route();
+                        debugger
+                        flavor_id = data['flavor']['id']
+                        var chooseList = DataGetter.getChoose('#flavorVdcAccess .list-group-select');
+                        if(chooseList.length !=0 ){
+                            Common.xhr.putJSON('/v2/123/flavors/'+flavor_id+'/os-flavor-access',chooseList,function(data){
+                                wizard.updateProgressBar(100);
+                                closeWizard();
+                                Common.router.route();
+                            })
+                        }
+                        else{
+                            wizard.updateProgressBar(100);
+                            closeWizard();
+                            Common.router.route();
+                        }
+
                     })
+
+
+
                 });
 
             })
@@ -150,22 +162,6 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 
 
         var EventsHandler = {
-
-            //表单校验
-            flavorAccessEvent:function(){
-                require(['js/common/domchoose'],function(domchoose){
-                    var leftOption = {
-                            appendWrapper: '.vdc-all',
-                            clone: 'a.list-group-item'
-                        },
-                        rightOption = {
-                            appendWrapper: '.vdc-chosen',
-                            clone: 'a.list-group-item',//相对clickSelector获取元素
-                            clickSelector: 'i.fa-minus-circle'
-                        };
-                    domchoose.initChoose(leftOption,rightOption);
-                });
-            },
             flavorFormValidator: function(){
                 return $(".form-horizontal").validate({
                     rules: {
@@ -207,7 +203,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
             more.updateFlavor($(this).attr("data"));
 	    });
 
-        //更新配额
+
         $("ul.dropdown-menu a.removeFlavor").on("click",function(){
             more.deleteFlavor($(this).attr("data"));
         });
@@ -229,8 +225,15 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 			    	                label: '保存',
 			    	                action: function(dialog) {
 			    	                	var flavorData = {
-
-			    	        				};
+                                            "flavor":{
+                                                "name": $("#addFlavor [name='name']").val(),
+                                                "vcpus": $("#addFlavor [name='vcpus']").val(),
+                                                "ram": $("#addFlavor [name='ram']").val(),
+                                                "disk": $("#addFlavor [name='disk']").val(),
+                                                //"OS-FLV-EXT-DATA:ephemera": $("#addFlavor [name='ephemera']").val(),
+                                                "swap": $("#addFlavor [name='swap']").val()
+                                            }
+			    	        			};
 			    	                	Common.xhr.putJSON('/v2/123/flavors/',flavorData,function(data){
 			    	                		if(data){
 			    	                			alert("保存成功");
@@ -243,7 +246,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 			    	                }
 			    	            }],
 			    	            onshown : function(){
-                                    EventsHandler.flavorAccessEvent();
+
                                 }
 			    	        });
 			    		});
@@ -259,7 +262,6 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
                                 function(data){
                                     if(data){
                                         Modal.success('删除成功')
-                                        setTimeout(function(){Dialog.closeAll()},2000);
                                         Common.router.route();//重新载入
                                     }else{
                                         Modal.warning ('删除失败')
@@ -326,7 +328,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 
             }
 	    }
-	}	
+	}
 	return {
 		init : init
 	}

@@ -1,7 +1,11 @@
 <div class="page-header clearfix">
 	<ol class="breadcrumb">
-	  <li class="active">VPC列表</li>
+	  <li class="active">私有网络列表</li>
 	</ol>
+	<p class="description">
+		私有网络是一个隔离的二层网络广播域，在这个二层网络中，可以创建多个三层网络，即子网，私有网络之间是100%隔离的。
+		您可以在VPC中创建多个网络，以满足不同业务对网络资源的需求。
+	</p>
 </div>
 <div class="page-body">
 	<div class="pane">
@@ -12,7 +16,7 @@
 						<th class="c1">
 							<label><input type="checkbox" class="selectAll"></label>
 						</th>
-						<th class="c2">VPC名称</th>
+						<th class="c2">网络名称</th>
 						<th class="c2">虚拟数据中心</th>
 						<th class="c2">网络类型</th>
 						<th class="c1">CIDR</th>
@@ -28,7 +32,7 @@
 						<td><label><input type="checkbox"></label></td>
 						<td><a href="javascript:void(0);" class="network-name" data="{{item.id}}">{{item.name}}</a></td>
 						<td>{{item.tenant_id}}</td>
-						<td>{{if item["router:external"] == true}} 外部网络 {{else}} 内部网络 {{/if}}</td>
+						<td>{{if item["router:external"] == true}} 外部网络 {{else}} 内部私有网络 {{/if}}</td>
 						<td>{{item.cidr}}</td>
 						<td>{{if item.shared == true}} 共享 {{else}} 非共享 {{/if}}</td>
 						<td>
