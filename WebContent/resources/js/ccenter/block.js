@@ -357,7 +357,9 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
     	            create_time: '2015-04-24 17:14:57'
 	    	}
 	    	Common.render(true,'tpls/ccenter/block/volume/detail.html',tmpDetailData,function(html){
-					
+	    		$("a.reload").on("click",function(){
+    		    	Common.router.route();
+    		  });
 	    	});
 	    })
 	}
