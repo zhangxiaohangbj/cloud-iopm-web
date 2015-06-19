@@ -18,7 +18,7 @@
 		<tbody>
 			{{each tenants as item i}}
 				<tr>
-					<td><input type="radio"><input type="hidden" value="{{item.id}}"/></td>
+					<td><input type="radio" name="vdc_radio" {{if item.id == vdc_id}}checked{{/if}}><input type="hidden" value="{{item.id}}"/></td>
 					<td>{{item.name}}</td>
 					<td>{{item.description}}</td>
 				</tr>

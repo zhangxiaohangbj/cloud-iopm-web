@@ -175,19 +175,19 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 							rateMemory = getMathRound(quotaUsages.ram,quotas.ram),
 							rateNums = getMathRound(quotaUsages.instances,quotas.instances),
 							styleCore = getClass(rateCore),styleMemory = getClass(rateMemory),styleNums=getClass(rateNums);
-							var renderData = {
-									core: {
-										total: quotas.cores, used: quotaUsages.cores, rate: rateCore, style: styleCore
-									},
-									memory: {
-										total: quotas.ram, used: quotaUsages.ram, rate: rateMemory, style: styleMemory
-									},
-									nums: {
-										total: quotas.instances, used: quotaUsages.instances, rate: rateNums, style: styleNums
-									}
-							}
+							var renderData = [
+							        {
+							        	name: 'core',title: '虚拟内核数量',total: quotas.cores, used: quotaUsages.cores, rate: rateCore, style: styleCore
+							        },
+							        {
+							        	name: 'memory',title: '内存总计',total: quotas.ram, used: quotaUsages.ram, rate: rateMemory, style: styleMemory
+							        },
+							        {
+							        	name: 'nums',title: '云主机数量',total: quotas.instances, used: quotaUsages.instances, rate: rateNums, style: styleNums
+							        }
+							 ];
 							//生成html数据
-							Common.render('tpls/ccenter/vm/quota.html',renderData,function(html){
+							Common.render('tpls/common/quota.html',renderData,function(html){
 								$('div.quotas').html(html);
 							});
 						})
@@ -299,7 +299,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 							if(data.security_groups[i].name=='default'){
 								dataArr.push('<label><input type="checkbox" checked>'+data.security_groups[i].name+'</></label>');
 							}else{
-								dataArr.push('<label><input type="checkbox">'+data.security_groups[i].name+'</></label>');
+								dataArr.push('<label><input type="checkbox">'+data.security_groups[i].name+'</label>');
 							}
 						}
 						$('div.security-group').html(dataArr.join(''));
@@ -471,6 +471,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
     	                submitText: "提交",
     	                submittingText: "提交中..."
     	            },
+    	            submitEnabled: [2,3,4],
     	            validate: {
 	            		0: function(){
 	            			return this.el.find('form').valid();
@@ -547,7 +548,10 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
     				$('#vm-networks .list-group-select').children().each(function(i,item){
     					var network = {};
     					network.uuid = $(item).find('li:first').attr('data-id');
-    					network.fixed_ip = $(item).find('select.select-fixedip').children('option:selected').val();
+    					var fixedIp = $(item).find('select.select-fixedip').children('option:selected').val();
+    					if(fixedIp!='DHCP'){
+    						network.fixed_ip = fixedIp;
+    					}
     					networkData.push(network);
     				});
     				
