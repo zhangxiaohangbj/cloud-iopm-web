@@ -2,26 +2,31 @@
 	{
 		"id" : "58c41046-408e-b959-d63147471b",
 		"name" : "CentOS 5.8 64bit",
-		"type" : "centos"
+		"type" : "centos",
+		"locations":"aaaaaaaaaaaaaa"
 	},
 	{
 		"id" : "58c41046-408e-b959-d631474711",
 		"name" : "CentOS 6.4 64bit",
-		"type" : "centos"
+		"type" : "centos",
+        "locations":"bbbbbbbbbbbbbb"
 	},
 	{
 		"id" : "58c41046-408e-b959-d63147471d",
 		"name" : "Ubuntu 14.04 64bit",
-		"type" : "ubuntu"
+		"type" : "ubuntu",
+        "locations":"cccccccccccccc"
 	},
 	{
 		"id" : "58c41046-408e-b959-d631474aa1",
 		"name" : "Ubuntu 14.04 64bit (With devstack)",
-		"type" : "ubuntu"
+		"type" : "ubuntu",
+        "locations":"dddddddddddddd"
 	},
 	{
 		"id" : "58c41046-408e-b959-d6314s4711",
 		"name" : "Windows Server 2003 R2 Enterprise 32bit (cn) (Not Activated)",
-		"type" : "windows"
+		"type" : "windows",
+        "locations":"eeeeeeeeeeeeee"
 	}
 ]

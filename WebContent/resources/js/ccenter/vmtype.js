@@ -1,6 +1,5 @@
 define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3'],function(Common,Modal){
 	Common.requestCSS('css/wizard.css');
-	Common.requestCSS('css/dialog.css');
 	var init = function(){
 		Common.$pageContent.addClass("loading");
         Common.xhr.ajax('/v2/123/flavors/detail', function(data){
@@ -57,19 +56,13 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 				});
 			},
 
-            getFlavorAccess: function(id){
-                Common.xhr.ajax('/v2/123/flavors/'+id+"/os-flavor-access",function(pageVdcList){///v2/images
-                    var vdcList = pageVdcList.result;
-                    renderData.vdcList = vdcList;
-                    debugger
-                    $("#flavorVdcAccess").find(".list-group-all").empty();
-                    var listView=[];
-                    for(var i=0;i<vdcList.length;i++){
-                        listView.push('<a href="javascript:void(0);" class="list-group-item">'+vdcList[i]["name"]+' <i data-id = '+vdcList[i]["id"]+' class="fa fa-plus-circle fa-fw" style="float: right;"></i></a>')
-                    }
-                    $("#flavorVdcAccess").find(".list-group-all").html(listView.join(""));
-                    EventsHandler.flavorAddEvent();
+            getChoose: function(obj){
+                var chooseList = [];
+                $(obj).find("li.member").each(function(i,element){
+                    var id = $(element).attr("data-id");
+                    chooseList.push(id);
                 });
+                return chooseList;
             }
 
 		}
@@ -291,7 +284,9 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
                             buttons: [{
                                 label: '保存',
                                 action: function(dialog) {
-                                    Common.xhr.putJSON('/v2/123/flavors/'+id+'/action','',function(data){
+                                    var chooseList = DataGetter.getChoose('#flavorVdcAccess .list-group-select');
+                                    debugger
+                                    Common.xhr.putJSON('/v2/123/flavors/'+id+'/os-flavor-access',chooseList,function(data){
                                         if(data){
                                             alert("保存成功");
                                             dialog.close();

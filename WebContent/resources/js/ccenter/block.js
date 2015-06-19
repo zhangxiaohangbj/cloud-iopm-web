@@ -117,18 +117,18 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 								var getClass = function(rate){
 									return rate <= 30 ? 'progress-bar-success' : rate >= 80 ? 'progress-bar-danger' : 'progress-bar-info';
 								}
-								if($('#volume-size').val()){
-									quotaUsages.diskTotalSizes = parseInt(quotaUsages.diskTotalSizes) + parseInt($('#volume-size').val());
+								if($('#volume_size').val()){
+									quotaUsages.diskTotalSizes = parseInt(quotaUsages.diskTotalSizes) + parseInt($('#volume_size').val());
 								}
 								var rateDiskNums = getMathRound(quotaUsages.disks,quotas.disks),
 								rateDiskTotalSizes = getMathRound(quotaUsages.diskTotalSizes,quotas.diskTotalSizes),
 								styleDiskNums = getClass(rateDiskNums),styleDiskTotalSizes = getClass(rateDiskTotalSizes);
 								var renderData = [
 											        {
-											        	name: 'diskNums',title: '磁盘数量',total: quotas.disks, used: quotaUsages.disks, rate: rateDiskNums, style: styleDiskNums
+											        	name: 'DiskTotalSizes',title: '容量',total: quotas.diskTotalSizes, used: quotaUsages.diskTotalSizes, rate: rateDiskTotalSizes, style: styleDiskTotalSizes
 											        },
 											        {
-											        	name: 'DiskTotalSizes',title: '容量',total: quotas.diskTotalSizes, used: quotaUsages.diskTotalSizes, rate: rateDiskTotalSizes, style: styleDiskTotalSizes
+											        	name: 'diskNums',title: '磁盘数量',total: quotas.disks, used: quotaUsages.disks, rate: rateDiskNums, style: styleDiskNums
 											        }
 											 ];
 								var check = function(){
@@ -159,7 +159,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 					Common.xhr.ajax('/resources/data/specs.txt',function(data){
 						var dataArr = [];
 						$.each(data,function(i,item){
-							dataArr.push('<div class="col-sm-9"><label><input type="checkbox">'+item.name+'</label></div>')
+							dataArr.push('<div class="col-sm-9"><label data-id="'+item.name+'"><input type="checkbox">'+item.name+'</label></div>')
 						})
 						$('.vm-list').html(dataArr.join(''));
 						EventsHandler.initCheckBox();
@@ -184,8 +184,8 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 				    })
 				},
 				inputListener: function(){
-					$('input[name="volume-size"]').on('input propertychange',function(){
-						if($(this).parents('form:first').validate().element('#volume-size')){
+					$('#volume_size').on('input propertychange',function(){
+						if($(this).parents('form:first').validate().element('#volume_size')){
 							DataIniter.initQuato();//重新加载配额数据
 						}
 					})
@@ -236,12 +236,12 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
     					$(this).validate({
                             errorContainer: '_form',
                             rules: {
-    			            	'volume-name': {
+    			            	'volume_name': {
     			                    required: true,
     			                    minlength: 4,
     			                    maxlength:15
     			                },
-    			                'volume-size': {
+    			                'volume_size': {
     			                    required: true,
     			                    number:true,
     			                    max:1024
@@ -253,25 +253,63 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
     		    	EventsHandler.vdcChange();
     				EventsHandler.inputListener();
     			});
+    			var getMountVm = function(){
+    				var data = [];
+    				$('div.vm-list').find('.icheckbox-info').each(function(){
+    					if($(this).hasClass('checked')){
+    						data.push($(this).parent().attr('data-id'))
+    					}
+    				});
+    				return data;
+    			}
     			wizard.cards.mount.on('selected',function(card){
 					//获取磁盘名字的值
-					$('.mount_volume_name').text($('#volume-name').val())
+					$('.mount_volume_name').text($('input[name="volume_name"]').val())
     			});
     			//确认信息卡片被选中的监听
     			wizard.cards.confirm.on('selected',function(card){
+    				//debugger
     				//获取上几步中填写的值
     				var serverData = wizard.serializeObject();
-    				$('.name-confirm').text(serverData.name)
+    				console.log(serverData);
+    				$('.query-volume-name').text(serverData.volume_name);
+    				$('.query-volume-size').text(serverData.volume_size+"GB");
+    				$('.query-volume-type').text($('select.volume_type').children('option:selected').text());
+    				$('.query-volume-vdc').text($('select.tenant_id').children('option:selected').text());
+    				$('.query-volume-az').text(serverData.availability_zone);
+    				$('.query-volume-ve').text($('.virtual_envir').html());
+    				$('.query-volume-desc').text(serverData.server_desc);
+    				//挂载磁盘
+    				var vmList = getMountVm();
+    				if(vmList.length){
+    					var dataArr= [];
+    					dataArr.push('<div class="wizard-input-section"><div class="form-group">');
+    					$.each(vmList,function(i,item){
+    						
+    						dataArr.push('<label class="control-label col-sm-5">'+item+'</label>');
+    					})
+    					dataArr.push('</div></div>');
+    					$('.query-info-mount').append(dataArr.join(''));
+    				}
 				});
     			
-    			
     			wizard.show();
+    			
+    			wizard.on("submit", function(wizard) {
+    				var serverData = {server:wizard.serializeObject()};
+    				Common.xhr.postJSON('/',serverData,function(data){
+    					wizard._submitting = false;
+    					wizard.updateProgressBar(100);
+    					closeWizard();
+    					Common.router.reload();
+    				})
+    			});
+    			
     			//重置CurrentChosenObj对象
     			var resetCurrentChosenObj = function(){
     				for(var key in currentChosenObj){
     					currentChosenObj[key] = null;
     				}
-    				currentChosenObj.nums = 1;
     			}
     			//关闭弹窗
 				var closeWizard = function(){

@@ -6,9 +6,9 @@
 				<div class="wizard-card-content col-sm-8">
 					<div class="wizard-input-section">
 						<div class="form-group">
-							<label for="volume-name" class="control-label col-sm-3"><span>* </span>名称：</label>
+							<label for="volume_name" class="control-label col-sm-3"><span>* </span>名称：</label>
 							<div class="col-sm-6 col-sm">
-								<input type="text" class="wizard-form-control" id="volume-name" name="volume-name" placeholder="磁盘名称">
+								<input type="text" class="form-control"  name="volume_name" placeholder="磁盘名称">
 							</div>
 						</div>
 					</div>
@@ -17,7 +17,7 @@
 						<div class="form-group">
 							<label for="tenant_id" class="control-label col-sm-3"><span>* </span>虚拟数据中心：</label>
 							<div class="col-sm-7 col-sm">
-								<select name="tenant_id"  class="wizard-form-control select tenant_id">
+								<select name="tenant_id"  class="form-control select tenant_id">
 								    {{#uiSelectList(vdcList)}}
 								</select>
 							</div>
@@ -27,7 +27,7 @@
 						<div class="form-group">
 							<label for="availability_zone" class="control-label col-sm-3"><span>* </span>可用分区：</label>
 							<div class="col-sm-7 col-sm">
-								<select name="availability_zone"   class="wizard-form-control select availability_zone">
+								<select name="availability_zone"   class="form-control select availability_zone">
 								</select>
 							</div>
 						</div>
@@ -43,24 +43,24 @@
 						<div class="form-group">
 							<label for="volume_type" class="control-label col-sm-3"><span>* </span>卷类型：</label>
 							<div class="col-sm-7 col-sm">
-								<select name="volume_type"   class="wizard-form-control select volume_type">
+								<select name="volume_type"   class="form-control select volume_type">
 								</select>
 							</div>
 						</div>
 					</div>
 					<div class="wizard-input-section">
 						<div class="form-group">
-							<label for="volume-size" class="control-label col-sm-3"><span>* </span>容量(GB)：</label>
+							<label for="volume_size" class="control-label col-sm-3"><span>* </span>容量(GB)：</label>
 							<div class="col-sm-7 col-sm">
-								<input type="text" class="wizard-form-control" id="volume-size" name="volume-size" placeholder="单位GB">
+								<input type="text" class="form-control" id="volume_size"  name="volume_size" placeholder="单位GB">
 							</div>
 						</div>
 					</div>
 					<div class="wizard-input-section">
 						<div class="form-group">
-							<label for="server-desc" class="control-label col-sm-3"><span> </span>描述：</label>
+							<label for="server_desc" class="control-label col-sm-3"><span> </span>描述：</label>
 							<div class="col-sm-7 col-sm">
-								<textarea name="description" class="wizard-form-control" rows="2"  placeholder="输入磁盘描述"></textarea>
+								<textarea name="server_desc" class="form-control wizard-form-control" rows="3"  placeholder="输入磁盘描述"></textarea>
 							</div>
 						</div>
 					</div>
@@ -102,66 +102,65 @@
 			<div class="wizard-card wizard-card-overlay" data-cardname="confirm">
 				<h3>确认信息</h3>
 				<div class="wizard-card-content col-sm-10 none-desc">
-					<h4>基本信息</h4>
-					<hr style="width:80%">
-					<div class="wizard-input-section">
-						<div class="form-group">
-							<label for="available-network" class="control-label col-sm-3"><span>* </span>名称：</label>
-							<div class="col-sm-7 col-sm query-info">
-								磁盘1
+				  <div class="query-info-basic clearfix">
+						<h4>基本信息</h4>
+						<hr style="width:80%">
+						<div class="wizard-input-section">
+							<div class="form-group">
+								<label  class="control-label col-sm-3"><span>* </span>名称：</label>
+								<div class="col-sm-7 col-sm query-info query-volume-name">
+								</div>
 							</div>
 						</div>
-					</div>
-					
-					<div class="wizard-input-section">
-						<div class="form-group">
-							<label  class="control-label col-sm-3"><span>* </span>虚拟数据中心：</label>
-							<div class="col-sm-7 col-sm query-info">
-								vdc1
+						<div class="wizard-input-section">
+							<div class="form-group">
+								<label class="control-label col-sm-3"><span>* </span>容量：</label>
+								<div class="col-sm-7 col-sm query-info query-volume-size">
+								</div>
 							</div>
 						</div>
-					</div>
-					
-					<div class="wizard-input-section">
-						<div class="form-group">
-							<label  class="control-label col-sm-3"><span>* </span>可用分区：</label>
-							<div class="col-sm-7 col-sm query-info">
-								可用分区1
+						<div class="wizard-input-section">
+							<div class="form-group">
+								<label class="control-label col-sm-3"><span>* </span>卷类型：</label>
+								<div class="col-sm-7 col-sm query-info query-volume-type">
+								</div>
 							</div>
 						</div>
-					</div>
-					<div class="wizard-input-section">
-						<div class="form-group">
-							<label for="chosen-network" class="control-label col-sm-3"><span>* </span>虚拟化环境：</label>
-							<div class="col-sm-7 col-sm query-info">
-								OpenStack
+						<div class="wizard-input-section">
+							<div class="form-group">
+								<label class="control-label col-sm-3"><span>* </span>虚拟数据中心：</label>
+								<div class="col-sm-7 col-sm query-info query-volume-vdc">
 							</div>
 						</div>
-					</div>
-					<div class="wizard-input-section">
-						<div class="form-group">
-							<label for="chosen-network" class="control-label col-sm-3"><span>* </span>卷类型：</label>
-							<div class="col-sm-7 col-sm query-info">
-								ceph(RBD)
+						
+						<div class="wizard-input-section">
+							<div class="form-group">
+								<label class="control-label col-sm-3"><span>* </span>可用分区：</label>
+								<div class="col-sm-7 col-sm query-info query-volume-az">
+								</div>
 							</div>
 						</div>
-					</div>
-					<div class="wizard-input-section">
-						<div class="form-group">
-							<label for="chosen-network" class="control-label col-sm-3"><span>* </span>容量：</label>
-							<div class="col-sm-7 col-sm query-info">
-								20GB
+						<div class="wizard-input-section">
+							<div class="form-group">
+								<label class="control-label col-sm-3"><span>* </span>虚拟化环境：</label>
+								<div class="col-sm-7 col-sm query-info query-volume-ve">
+								</div>
 							</div>
 						</div>
-					</div>
-					<div class="wizard-input-section">
-						<div class="form-group">
-							<label for="chosen-network" class="control-label col-sm-3"><span>* </span>描述：</label>
-							<div class="col-sm-7 col-sm query-info">
-								mysql数据存储用于xx系统，xx应用
+						
+						<div class="wizard-input-section">
+							<div class="form-group">
+								<label class="control-label col-sm-3"><span>* </span>描述：</label>
+								<div class="col-sm-7 col-sm query-info query-volume-desc">
+								</div>
 							</div>
 						</div>
 					</div>
 				</div>
+				<div class="query-info-mount clearfix">
+					<h4>挂载到磁盘</h4>
+					<hr style="width:80%">
+				</div>
 			</div>
 		</div>
+</div>

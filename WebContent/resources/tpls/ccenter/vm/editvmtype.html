@@ -9,7 +9,7 @@
 	<div class="form-group">
 		<label for="server-name" class="control-label col-sm-3"><span>* </span>选择云主机规格：</label>
 		<div class="col-sm-5 col-sm">
-                   <select name="select-specs"  class="wizard-form-control select select-specs" tabindex="5">
+                   <select name="select-specs"  class="form-control select select-specs" tabindex="5">
                    	{{each specsList as item i}}
 						<option data-root-disk="{{item.root_disk}}" data-tmp-disk="{{item.tmp_disk}}" data-memory="{{item.memory}}" data-core="{{item.core_num}}"  value="{{item.id}}">{{item.name}}</option>
 				  	{{/each}}

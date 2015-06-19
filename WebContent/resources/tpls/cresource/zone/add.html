@@ -17,7 +17,7 @@
                 <div class="form-group">
                     <label for="zone-name" class="control-label col-sm-3"><span>* </span>分区名称：</label>
                     <div class="col-sm-5 col-sm">
-                        <input type="text" class="wizard-form-control" id="zone-name" name="zone-name"  placeholder="可用分区名称"/>
+                        <input type="text" class="form-control" id="zone-name" name="zone-name"  placeholder="可用分区名称"/>
                     </div>
                 </div>
             </div>
@@ -26,7 +26,7 @@
                 <div class="form-group">
                     <label for="select-env" class="control-label col-sm-3"><span>* </span>虚拟化类型：</label>
                     <div class="col-sm-5 col-sm">
-                        <select name="select-env" id="select-env"  class="wizard-form-control select select-env">
+                        <select name="select-env" id="select-env"  class="form-control select select-env">
                             {{each data.virtualEnv as item i}}
                             <option value="{{item.id}}">{{item.name}}</option>
                             {{/each}}
@@ -39,7 +39,7 @@
                 <div class="form-group">
                     <label for="select-region" class="control-label col-sm-3"><span>* </span>所属区域：</label>
                     <div class="col-sm-5 col-sm">
-                        <select name="select-region" id="select-region"  class="wizard-form-control select select-region">
+                        <select name="select-region" id="select-region"  class="form-control select select-region">
                             {{each data.region as item i}}
                                 <option value="{{item.name}}">{{item.name}}</option>
                             {{/each}}
@@ -52,7 +52,7 @@
             <div class="form-group">
                 <label for="zone-description" class="control-label col-sm-3"><span>* </span>分区描述：</label>
                 <div class="col-sm-5 col-sm">
-                    <textarea class="wizard-form-control" cols="8" rows="8" id="zone-description" name="zone-description"></textarea>
+                    <textarea class="form-control" cols="8" rows="8" id="zone-description" name="zone-description"></textarea>
                 </div>
             </div>
         </div>
@@ -72,7 +72,7 @@
                 <div class="form-group">
                     <label for="select-resource-type" class="control-label col-sm-3"><span>* </span>资源类型：</label>
                     <div  class="col-sm-7 col-sm">
-                        <select name="select-resource-type"  id="select-resource-type"  class="wizard-form-control select select-resource-type">
+                        <select name="select-resource-type"  id="select-resource-type"  class="form-control select select-resource-type">
                             {{each data.type as item i}}
                             <option value="{{item.type}}">{{item.name}}</option>
                             {{/each}}
@@ -103,7 +103,7 @@
                 <div class="form-group">
                     <label for="zone-name-confirm" class="control-label col-sm-3">分区名称：</label>
                     <div class="col-sm-5 col-sm">
-                        <input type="text" disabled class="wizard-form-control" id="zone-name-confirm"/>
+                        <input type="text" disabled class="form-control" id="zone-name-confirm"/>
                     </div>
                 </div>
             </div>
@@ -112,7 +112,7 @@
                 <div class="form-group">
                     <label for="select-env-confirm" class="control-label col-sm-3">虚拟化环境：</label>
                     <div class="col-sm-5 col-sm">
-                        <input type="text" disabled class="wizard-form-control" id="select-env-confirm"  />
+                        <input type="text" disabled class="form-control" id="select-env-confirm"  />
                     </div>
                 </div>
             </div>
@@ -121,7 +121,7 @@
                 <div class="form-group">
                     <label for="select-region-confirm" class="control-label col-sm-3">所属区域：</label>
                     <div class="col-sm-5 col-sm">
-                        <input type="text" disabled class="wizard-form-control" id="select-region-confirm" />
+                        <input type="text" disabled class="form-control" id="select-region-confirm" />
                     </div>
                 </div>
             </div>
@@ -130,7 +130,7 @@
                 <div class="form-group">
                     <label for="zone-description-confirm" class="control-label col-sm-3">接入协议：</label>
                     <div  class="col-sm-5 col-sm">
-                        <textarea class="wizard-form-control" cols="8" rows="8" id="zone-description-confirm"></textarea>
+                        <textarea class="form-control" cols="8" rows="8" id="zone-description-confirm"></textarea>
                     </div>
                 </div>
             </div>

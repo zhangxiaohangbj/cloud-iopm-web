@@ -767,6 +767,9 @@ i.image-icon-default.centos {
 	-webkit-box-shadow: none;
 	box-shadow: none;
 }
+.dialog-modal textarea.form-control {
+	height: auto;
+}
 .dialog-modal .form-group label span {
 	color: red;
 }

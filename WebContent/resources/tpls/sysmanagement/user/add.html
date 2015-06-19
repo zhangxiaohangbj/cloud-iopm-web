@@ -1,9 +1,9 @@
 <style>
 <!--
-.table-primary > tbody > tr > td, .table-primary > thead > tr > th{
+.wizard .table-primary > tbody > tr > td, .wizard .table-primary > thead > tr > th{
 	border-right: 1px solid #e4e9ec;
 }
-.table-primary .btn-primary{
+.wizard .table-primary .btn-primary{
 	float:right;
 }
 -->
@@ -17,7 +17,7 @@
 					<div class="form-group">
 						<label for="login-name" class="control-label col-sm-2"><span>* </span>账号：</label>
 						<div class="col-sm-7 col-sm">
-							<input type="text" class="wizard-form-control" id="login-name" name="login-name">
+							<input type="text" class="form-control" id="login-name" name="login-name">
 						</div>
 					</div>
 				</div>
@@ -26,7 +26,7 @@
 					<div class="form-group">
 						<label for="password" class="control-label col-sm-2"><span>* </span>密码：</label>
 						<div class="col-sm-7 col-sm">
-							<input class="wizard-form-control" type="password" name="password" id="password"/>
+							<input class="form-control" type="password" name="password" id="password"/>
 						</div>
 					</div>
 				</div>
@@ -34,7 +34,7 @@
 					<div class="form-group">
 						<label for="password_again" class="control-label col-sm-2"><span>* </span>确认密码：</label>
 						<div class="col-sm-7 col-sm">
-							<input class="wizard-form-control" type="password" name="password_again"/>
+							<input class="form-control" type="password" name="password_again"/>
 						</div>
 					</div>
 				</div>
@@ -42,7 +42,7 @@
 					<div class="form-group">
 						<label for="status" class="control-label col-sm-2"><span>* </span>状态：</label>
 						<div class="col-sm-7 col-sm">
-							<select class="wizard-form-control select" name="status">
+							<select class="form-control select" name="status">
 								<option value="normal">正常</option>
 								<option value="locked">已锁定</option>
 								<option value="delete">已删除</option>
@@ -55,7 +55,7 @@
 					<div class="form-group">
 						<label for="phone" class="control-label col-sm-2">手机号：</label>
 						<div class="col-sm-7 col-sm">
-							<input type="text" class="wizard-form-control" name="phone">
+							<input type="text" class="form-control" name="phone">
 						</div>
 					</div>
 				</div>
@@ -63,7 +63,7 @@
 					<div class="form-group">
 						<label for="email" class="control-label col-sm-2">邮箱：</label>
 						<div class="col-sm-7 col-sm">
-							<input type="text" class="wizard-form-control" name="email">
+							<input type="text" class="form-control" name="email">
 						</div>
 					</div>
 				</div>
@@ -71,7 +71,7 @@
 					<div class="form-group">
 						<label for="true_name" class="control-label col-sm-2">姓名：</label>
 						<div class="col-sm-7 col-sm">
-							<input type="text" class="wizard-form-control" name="true_name">
+							<input type="text" class="form-control" name="true_name">
 						</div>
 					</div>
 				</div>
@@ -79,7 +79,7 @@
 					<div class="form-group">
 						<label for="organ_id" class="control-label col-sm-2"><span>* </span>所属部门：</label>
 						<div class="col-sm-7 col-sm">
-							<input type="text" class="wizard-form-control" name="organ_id" readonly="readonly">
+							<input type="text" class="form-control" name="organ_id" readonly="readonly">
 						</div>
 					</div>
 				</div>
@@ -88,10 +88,10 @@
 			<p>帮助说明；帮助说明；帮助说明；帮助说明；帮助说明；帮助说明；帮助说明；帮助说明；</p>
 		</div>
 	</div>
-	<div class="wizard-card" data-cardname="authority" id="authorityInfo">
+	<div class="wizard-card" data-cardname="authority">
 		<h3>权限信息</h3>
 		<div class="wizard-card-content col-sm-8">
-			<table class="table table-primary">
+			<table class="table table-primary" id="authorityInfo">
 				<thead>
 					<tr>
 						<th class="c3">关联VDC</th>

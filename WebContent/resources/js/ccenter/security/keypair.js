@@ -140,7 +140,6 @@ define(['Common','bs/modal','bs/wizard','bs/tooltip','jq/form/validator-bs3'],fu
     	    			dialog.setData("formvalid",EventsHandler.formValidator());
     	            },
     	            onhide : function(dialog){
-    	            	debugger;
     	            	var valid = dialog.getData("formvalid");
     	            	valid.hideErrors();
     	            }
@@ -236,7 +235,7 @@ define(['Common','bs/modal','bs/wizard','bs/tooltip','jq/form/validator-bs3'],fu
 			Common.$pageContent.addClass("loading");
 			$("#KeypairTable").find("tbody input[type='checkbox']:checked").each(function(){
 				id = $(this).attr("myval");
-				Common.xhr.del('/'+current_vdc_id+'/os-keypairs/'+id,function(data){
+				Common.xhr.delSync('/'+current_vdc_id+'/os-keypairs/'+id,function(data){
 					if(data){
 						Modal.success('密钥对['+id+']删除成功');
 						setTimeout(function(){Modal.closeAll()},3000);

@@ -1,0 +1,32 @@
+<style>
+<!--
+.dataTables_length select.input-sm {
+	width: 40%;
+}
+-->
+</style>
+<form class="form-horizontal">
+	<table class="table table-primary" id="chooseEndpointTable">
+		<thead>
+			<tr>
+				<th class="c1">
+				</th>
+				<th class="c2">所属Region</th>
+				<th class="c2">所属服务</th>
+				<th class="c3">端点地址</th>
+				<th class="c1">是否启用</th>
+			</tr>
+		</thead>
+		<tbody>
+			{{each tenants as item i}}
+				<tr>
+					<td><input type="radio" name="radio" {{if item.id == endpoint_id}}checked{{/if}}><input type="hidden" value="{{item.id}}"/></td>
+					<td>{{item.name}}</td>
+					<td>{{item.name}}</td>
+					<td>{{item.description}}</td>
+					<td>{{item.name}}</td>
+				</tr>
+			{{/each}}
+		</tbody>
+	</table>
+</form>

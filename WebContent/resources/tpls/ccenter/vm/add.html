@@ -7,7 +7,7 @@
 						<div class="form-group">
 							<label for="name" class="control-label col-sm-2"><span>* </span>名称：</label>
 							<div class="col-sm-7 col-sm">
-								<input type="text" class="wizard-form-control" id="name" name="name" placeholder="服务器名称">
+								<input type="text" class="form-control" id="name" name="name" placeholder="服务器名称">
 							</div>
 							<!-- <div class="col-sm-3 col-sm">
 					            <span class="help-block" style="color: #000000;padding-top: 10px;">请填写真实的邮箱</span>
@@ -26,27 +26,47 @@
 								  <li><a  href="javascript:void(0)" data-image="disksnap">云硬盘快照</a></li>
 								</ul>
 								<div data-con="image" class="image-list">
+								{{if imageList==null || imageList.length==0}}
+									暂无镜像
+								{{else}}
 									{{each imageList as item i}}
+										{{if i==0}}
+										<div class="btn selected" data-con="{{item.id}}"><i class="image-icon-default {{item.type}}"></i>{{item.name}}</div>
+										{{else}}
 										<div class="btn" data-con="{{item.id}}"><i class="image-icon-default {{item.type}}"></i>{{item.name}}</div>
+										{{/if}}
 									{{/each}}
+								{{/if}}
 								</div>
 								<div data-con="snapshot"  class="image-list hide">
+								{{if snapshotList==null || snapshotList.length==0}}
+									暂无快照
+								{{else}}								
 									{{each snapshotList as item i}}
 										<div class="btn" data-con="{{item.id}}"><i class="image-icon-default {{item.type}}"></i>{{item.name}}</div>
 									{{/each}}
+								{{/if}}
 								</div>
 								<div data-con="disk"   class="image-list hide">
+								{{if diskList==null || diskList.length==0}}
+									暂无云硬盘
+								{{else}}								
 									{{each diskList as item i}}
 										<div class="btn" data-con="{{item.id}}"><i class="image-icon-default {{item.type}}"></i>{{item.name}}</div>
 									{{/each}}
+								{{/if}}
 								</div>
 								<div data-con="disksnap"   class="image-list hide">
+								{{if diskSnapList==null || diskSnapList.length==0}}
+									暂无云硬盘快照
+								{{else}}								
 									{{each diskSnapList as item i}}
 										<div class="btn" data-con="{{item.id}}"><i class="image-icon-default {{item.type}}"></i>{{item.name}}</div>
 									{{/each}}
+								{{/if}}
 								</div>
 							</div>
-							<input type="hidden" class="wizard-form-control" id="imageRef" name="imageRef">
+							<input type="hidden" class="form-control" id="imageRef" name="imageRef">
 						</div>
 					</div>
 				</div>
@@ -69,7 +89,7 @@
 						<div class="form-group">
 							<label for="tenant_id" class="control-label col-sm-3"><span>* </span>虚拟数据中心：</label>
 							<div id="select-vm" class="col-sm-7 col-sm">
-								<select name="tenant_id"  class="wizard-form-control select tenant_id">
+								<select name="tenant_id"  class="form-control select tenant_id">
 								    {{#uiSelectList(vdcList)}}
 								</select>
 							</div>
@@ -80,7 +100,7 @@
 						<div class="form-group">
 							<label for="availability_zone" class="control-label col-sm-3"><span>* </span>可用域：</label>
 							<div class="col-sm-7 col-sm">
-								<select name="availability_zone"   class="wizard-form-control select availability_zone">
+								<select name="availability_zone"   class="form-control select availability_zone">
 								</select>
 							</div>
 						</div>
@@ -90,7 +110,7 @@
 						<div class="form-group">
 							<label for="flavorRef" class="control-label col-sm-3"><span>* </span>云主机规格：</label>
 							<div class="col-sm-7 col-sm">
-			                    <select name="flavorRef"  class="wizard-form-control select flavorRef" tabindex="5">
+			                    <select name="flavorRef"  class="form-control select flavorRef" tabindex="5">
 			                    	{{each specsList as item i}}
 										<option data-root-disk="{{item.disk}}" data-tmp-disk="{{item.ephemeral}}" data-memory="{{item.ram}}" data-core="{{item.vcpus}}"  value="{{item.id}}">{{item.name}}</option>
 								  	{{/each}}
@@ -107,7 +127,7 @@
 							<label for="min_count" class="control-label col-sm-3"><span>* </span>云主机数量：</label>
 							<div class="col-sm-7 col-sm">
 								<div class="spinbox"  id="setVmNums">
-								  <input type="text" name="min_count" style="height:35px;"  class="wizard-form-control input-mini spinbox-input">
+								  <input type="text" name="min_count" style="height:35px;"  class="form-control input-mini spinbox-input">
 								  <div class="spinbox-buttons btn-group btn-group-vertical">
 								    <button type="button" class="btn btn-default spinbox-up btn-xs">
 								      <span class="glyphicon glyphicon-chevron-up"></span><span class="sr-only">Increase</span>
@@ -170,18 +190,18 @@
 									<div class="usr clearfix">
 					                  <label class="col-sm-2" for="login-name">用户名: </label>
 					                  <div class="col-sm-9 col-sm">
-					                  	 <input type="text" value="root"  class="wizard-form-control" id="login-name">
+					                  	 <input type="text" value="root"  class="form-control" id="login-name">
 					                  </div>
 					                </div>
 					                <div class="pwd clearfix">
 					                  <label  class="col-sm-2" for="login-key">密钥: </label>
 					                  <div data-for="secret-key" class="col-sm-9 col-sm">
-										<select name="key_name"   class="wizard-form-control select keypairs">
+										<select name="key_name"   class="form-control select keypairs">
 										</select>			                  
 						                <span class="text-danger" style="line-height:30px;"><a href="javascript:;"> 创建密钥</a></span>
 					                  </div>
 					                  <div data-for="password"  class="col-sm-9 col-sm" style="display:none">
-						                  <input type="password" class="wizard-form-control" placeholder="请输入密码">
+						                  <input type="password" class="form-control" placeholder="请输入密码">
 					                  </div>
 					                </div>
 								</div>
@@ -210,7 +230,7 @@
 						<div class="form-group">
 							<label for="user_data" class="control-label col-sm-2">自定义脚本：</label>
 							<div class="col-sm-9 col-sm">
-								<textarea class="wizard-form-control" rows="8"  id="user_data" name="user_data" placeholder=""></textarea>
+								<textarea class="form-control" rows="8"  id="user_data" name="user_data" placeholder=""></textarea>
 							</div>
 						</div>
 					</div>
@@ -251,53 +271,62 @@
 				<div class="wizard-card-content none-desc col-sm-12">
 				<p>即将创建的云主机信息如下：</p>
 					<div class="wizard-input-section">
+					<p>基本信息</p><hr>
 						<div class="form-group">
-							<label for="name" class="control-label col-sm-6">名称：</label>
-							<div class="col-sm-7 col-sm name-confirm" style="padding-top: 7px;">server1</div>
+							<label class="control-label col-sm-3">名称：</label>
+							<label class="col-sm-6 name-confirm"></label>
 						</div>
 						<div class="form-group">
-							<label for="name" class="control-label col-sm-6">镜像：</label>
-							<label for="name" class="col-sm-6">centos-7</label>
+							<label class="control-label col-sm-3">镜像：</label>
+							<label class="col-sm-6 image-confirm"></label>
+						</div>
+					<p>详细配置</p><hr>	
+						<div class="form-group">
+							<label class="control-label col-sm-3">虚拟数据中心：</label>
+							<label class="col-sm-6 vdc-confirm"></label>
 						</div>
 						<div class="form-group">
-							<label for="name" class="control-label col-sm-6">虚拟数据中心：</label>
-							<label for="name" class="col-sm-6">admin</label>
+							<label class="control-label col-sm-3">可用域：</label>
+							<label class="col-sm-6 az-confirm"></label>
 						</div>
 						<div class="form-group">
-							<label for="name" class="control-label col-sm-6">可用域：</label>
-							<label for="name" class="col-sm-6">gao</label>
+							<label class="control-label col-sm-3">云主机规格：</label>
+							<label class="col-sm-6 flavor-confirm"></label>
 						</div>
 						<div class="form-group">
-							<label for="name" class="control-label col-sm-6">云主机规格：</label>
-							<label for="name" class="col-sm-6">medium</label>
+							<label class="control-label col-sm-3">数量：</label>
+							<label class="col-sm-6 num-confirm"></label>
+						</div>
+					<p>网络</p><hr>	
+						<div class="form-group">
+							<label class="control-label col-sm-3">网络：</label>
+							<label class="col-sm-6 network-confirm"></label>
 						</div>
 						<div class="form-group">
-							<label for="name" class="control-label col-sm-6">数量：</label>
-							<label for="name" class="col-sm-6">1</label>
+							<label class="control-label col-sm-3">子网：</label>
+							<label class="col-sm-6 subnet-confirm"></label>
 						</div>
 						<div class="form-group">
-							<label for="name" class="control-label col-sm-6">网络：</label>
-							<label for="name" class="col-sm-6">网络1</label>
+							<label class="control-label col-sm-3">IP：</label>
+							<label class="col-sm-6 fixedip-confirm"></label>
+						</div>
+					<p>访问安全</p><hr>		
+						<div class="form-group">
+							<label class="control-label col-sm-3">密钥对：</label>
+							<label class="col-sm-6 keyname-confirm"></label>
 						</div>
 						<div class="form-group">
-							<label for="name" class="control-label col-sm-6">子网：</label>
-							<label for="name" class="col-sm-6">private1</label>
+							<label class="control-label col-sm-3">安全组：</label>
+							<label class="col-sm-6 securitygroup-confrim"></label>
+						</div>						
+					<p>高级设置</p><hr>	
+						<div class="form-group">
+							<label class="control-label col-sm-3">自定义脚本：</label>
+							<label class="col-sm-6 userdata-confirm"></label>
 						</div>
 						<div class="form-group">
-							<label for="name" class="control-label col-sm-6">IP：</label>
-							<label for="name" class="col-sm-6">192.168.11.22</label>
-						</div>
-						<div class="form-group">
-							<label for="name" class="control-label col-sm-6">密钥对：</label>
-							<label for="name" class="col-sm-6">key1</label>
-						</div>
-						<div class="form-group">
-							<label for="name" class="control-label col-sm-6">自定义脚本：</label>
-							<label for="name" class="col-sm-6">xxxxxxxxxxxxx</label>
-						</div>
-						<div class="form-group">
-							<label for="name" class="control-label col-sm-6">磁盘分区：</label>
-							<label for="name" class="col-sm-6">自动</label>
+							<label class="control-label col-sm-3">磁盘分区：</label>
+							<label class="col-sm-6 diskconfig-confirm"></label>
 						</div>
 						
 					</div>

@@ -66,7 +66,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
     					"disks": $(obj + " [name='disks']").val(),
     					"diskSnapshots": $(obj +" [name='diskSnapshots']").val(),
     					"diskTotalSizes": $(obj +" [name='diskTotalSizes']").val(),
-    					"ram": $(obj +"s [name='ram']").val(),
+    					"ram": $(obj +" [name='ram']").val(),
     					"security_group_rules": $(obj +" [name='security_group_rules']").val(),
     					"floating_ips": $(obj +" [name='floating_ips']").val(),
     					"network": $(obj +" [name='network']").val(),
@@ -156,33 +156,6 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 						currentChosenObj.netId = $('select.select-net').children('option:selected');
 						//重新载入可用分区数据
 						DataIniter.initFloatIP();
-    				});
-					
-				},
-				//虚拟化环境change事件EventsHandler.moreVeChange()
-				moreVeChange: function(vdc_id){
-					$('select.select-ve').change(function(){
-						/*var ve_id = $('select.select-ve').children('option:selected').val();
-						if(!ve_id)return;
-						Common.xhr.ajax('/v2/os-availability-zone/virtualEnv/' + ve_id,function(azList){
-							require(['js/common/choose'],function(choose){
-								var options = {
-										selector: '#vdcAZ',
-										allData: azList
-								};
-								choose.initChoose(options);
-							})
-						});*/
-    				});
-					
-				},
-				//网络池change事件
-				moreNetChange: function(){
-					$('select.select-net').change(function(){
-						//同步
-						currentChosenObj.netId = $('select.select-net').children('option:selected');
-						//重新载入可用分区数据
-						//DataIniter.initFloatIP();
     				});
 					
 				},
@@ -350,6 +323,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 				var net_id = currentChosenObj.netId.val() || $('select.select-net').children('option:selected').val();
 				if(net_id){
 					Common.xhr.get('/v2.0/floatingips',{'floatingNetworkId':net_id},function(ipList){
+						debugger;
 						for(var key in ipList.floatingips ){
 							var obj = ipList.floatingips[key];
 							obj.name = obj.floating_ip_address;
@@ -504,6 +478,12 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 	    $(".members").on("click",function(){
 	    	more.Member($(this).attr("data"));
 	    });
+	    //外部网络管理
+	    $("ul.dropdown-menu a.floatIP").on("click",function(){
+	    	var net_id =  renderData.netList[0].id
+	    	var vdc_id = $(this).attr("data");
+	    	more.FloatIP(net_id,vdc_id);
+	    });
     
 	    //更多
 	    var more = {
@@ -527,7 +507,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 			    	                	Common.xhr.putJSON('/v2.0/9cc717d8047e46e5bf23804fc4400247/os-quota-sets/'+id,serverData,function(data){
 			    	                		if(data){
 					                    		 Modal.success('保存成功')
-				 	                			 setTimeout(function(){Dialog.closeAll()},2000);
+				 	                			 setTimeout(function(){Modal.closeAll()},2000);
 					                    		 Common.router.route();//重新载入
 					                    	 }else{
 					                    		 Modal.warning ('保存失败')
@@ -546,30 +526,44 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
     	AZ : function(ve_id,vdc_id){
     		Common.xhr.ajax('/v2/os-availability-zone/virtualEnv/' + ve_id,function(eaz){
     			Common.xhr.ajax('/v2.0/az/' + vdc_id,function(vaz){
+    				debugger;
     				var data = {
-    						eazList:eaz,
-    						vazList:vaz,
     						veList:renderData.veList
     				},
     				options = {
 						selector: '#vdcAZ',
 						allData: eaz,
 						selectData: vaz
-    				}
+    				};
     				require(['js/common/choose'],function(choose){
     	        		Common.render('tpls/ccenter/vdc/az.html',data,function(html){
     	        			//通过回调方式加载，保证choose执行完毕后再去modal
     	        			options.doneCall = function(html,chooseWrapper){
     	        				chooseWrapper.append(html);
     		        			$(options.selector).append(chooseWrapper.find('div:first'));
-    		        			console.log(chooseWrapper.html());
+    		        			//console.log(chooseWrapper.html());
     		        			Modal.show({
     	    	    	            title: '可用分区',
     	    	    	            message: chooseWrapper.html(),
     	    	    	            nl2br: false,
     	    	    	            buttons: [{
     	    	    	                label: '保存',
-    	    	    	                action: function(dialog) {}
+    	    	    	                action: function(dialog) {
+    	    	    	                	var virtualEnvId = $('select.select-ve').children('option:selected').val();
+    	    	    	    				var putData={
+    	    	    	    							"available_zones":jsonData.azJson("#vdcAZ .list-group-select"),
+    	    	    	    							"virtualEnvId":virtualEnvId
+    	    	    	    				      };
+    	    	    	                	Common.xhr.putJSON('/v2.0/az/'+vdc_id,putData,function(data){
+    	    	    	                		if(data){
+    	    	    	                			 Modal.success('保存成功')
+      				 	                			 setTimeout(function(){Modal.closeAll()},1000);
+      					                    		 Common.router.route();//重新载入
+    	    	    	                		}else{
+    	    	    	                			Modal.warning ('保存失败');
+    	    	    	                		}
+    	    	    	                	});
+    	    	    	                }
     	    	    	            }],
     	    	    	            onshown : function(){
     	    	    	            	EventsHandler.veChange();
@@ -592,7 +586,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 	                     function(data){
 	                    	 if(data.success||data.code==404){
 	                    		 Modal.success('删除成功')
- 	                			 setTimeout(function(){Dialog.closeAll()},1000);
+ 	                			 setTimeout(function(){Modal.closeAll()},1000);
 	                    		 Common.router.route();//重新载入
 	                    	 }else{
 	                    		 Modal.warning ('删除失败')
@@ -627,7 +621,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 	  	    	              	Common.xhr.putJSON('v2.0/tenants/'+vdc_id,vdcData,function(data){
 		  	    	              	if(data){
 			                    		 Modal.success('保存成功')
-		 	                			 setTimeout(function(){Dialog.closeAll()},2000);
+		 	                			 setTimeout(function(){Modal.closeAll()},2000);
 			                    		 Common.router.route();//重新载入
 			                    	 }else{
 			                    		 Modal.warning ('保存失败')
@@ -645,22 +639,164 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
     	 },
     	//成员管理
     	 Member : function(vdc_id){
-    		 var data = [];
-    		 Common.render('tpls/ccenter/vdc/user.html',data,function(html){
-   				Modal.show({
-	    	            title: '虚拟数据中心信息',
-	    	            message: html,
-	    	            nl2br: false,
-	    	            buttons: [{
-	    	                label: '保存',
-	    	                action: function(dialog) {}
-	    	            }],
-	    	            onshown : function(){
-	    	            	DataIniter.initUsers();
-	    	            }
-	    	        });
-	    		});
-    	 }
+    		 //根据vdc_id获取用户列表，包括角色 
+    		 Common.xhr.ajax("resources/data/user.txt",function(userList){
+			 	var data = [];
+	    		var loadmore = false;
+				if(userTotalSize > userSize * userIndex){
+					loadmore = true;
+				}
+				var options = {
+						selector: '#vdc-users',
+						loadmore: loadmore,
+						groupSelectedClass: 'col-sm-7',
+						groupAllClass: 'col-sm-5',
+						addCall: function($clone){
+							//添加角色窗及对应的事件
+							var dtd = $.Deferred();
+							Common.render('tpls/ccenter/vdc/role.html',cacheData.roleList,function(html){
+								$clone.append(html);
+								dtd.resolve();
+							});
+							return dtd.promise();
+						},
+						delCall: function($clone){
+							//去除角色窗及取消事件绑定
+							$clone.children("li:last").remove();
+						},
+						allData: cacheData.userList,
+						selectData: userList
+				};
+				require(['js/common/choose'],function(choose){
+	        		Common.render('tpls/ccenter/vdc/user.html',data,function(html){
+	        			//通过回调方式加载，保证choose执行完毕后再去modal
+	        			options.doneCall = function(html,chooseWrapper){
+	        				chooseWrapper.append(html);
+		        			$(options.selector).append(chooseWrapper.find('div:first'));
+		        			//var obj = $("#vdc-users .show-selected");
+		        			$("#vdc-users .show-selected").find("ul.list-group-item").each(function(i,element){
+	        						var user = userList[i];
+		        					var roles = user.roles;
+		        					var allRolse = cacheData.roleList;
+		        					var userData = [];
+		        					userData.push('<li class="dropdown pull-right opt" >');
+		        					userData.push('<div class="dropdown">');
+		        					userData.push('<button class="btn btn-default dropdown-toggle ellipsis" type="button"  data-toggle="dropdown" aria-expanded="true">');
+		        					userData.push(roles[0].name);
+		        					userData.push('<span class="caret"></span>');
+		        					userData.push('</button>');
+		        					
+		        					userData.push('<ul class="dropdown-menu dropdown-menu-right" role="menu" >');
+		        					for(var key in allRolse){
+		        						var obj = allRolse[key];
+		        						var display = false;
+		        						for(var j  in roles){
+		        							if(obj.id == roles[j].id){
+		        								display = true;
+		        								break;
+		        							}
+		        						}
+		        						if(display){
+		        							userData.push('<li><a in-use="1" href="javascript:void(0);" data-id="',obj.id,'"><i class="fa fa-check fa-fw" style="opacity:1;"></i>',obj.name,'</a></li>')
+		        						}else{
+		        							userData.push('<li><a href="javascript:void(0);"data-id="',obj.id,'"><i class="fa fa-check fa-fw"></i>',obj.name,'</a></li>')
+		        						}
+		        					}
+		        					userData.push('</ul>');
+		        					
+		        					userData.push('</div>');
+		        					userData.push('</li>');
+		        					$(element).append(userData.join(""));
+	        					
+	        				});
+		        			//console.log(chooseWrapper.html());
+		        			Modal.show({
+	    	    	            title: '成员管理',
+	    	    	            message: chooseWrapper.html(),
+	    	    	            nl2br: false,
+	    	    	            buttons: [{
+	    	    	                label: '保存',
+	    	    	                action: function(dialog) {}
+	    	    	            }],
+	    	    	            onshown : function(){
+	    	    	            	EventsHandler.userChosen();
+	    	    	            	chooseWrapper.remove();
+	    	    	            },
+	    	    	            onhide : function(){
+	    	    	            	userIndex = 1;
+	    	    	            }
+	    	    	        });
+	        			};
+	        			options.doneData = html;
+	        			choose.initChoose(options);
+	        		})
+	        	});    			
+    		 });    		
+    	 },
+    	//外部网络
+    	FloatIP: function(net_id,vdc_id){		
+    		Common.xhr.get('/v2.0/floatingips',{'floatingNetworkId':net_id},function(ipList){
+    			for(var key in ipList.floatingips ){
+					var obj = ipList.floatingips[key];
+					obj.name = obj.floating_ip_address;
+				}
+    			Common.xhr.get('/v2.0/floatingips',{'vdcId':vdc_id},function(vdcIpList){
+    				for(var key in vdcIpList.floatingips ){
+    					var obj = vdcIpList.floatingips[key];
+    					obj.name = obj.floating_ip_address;
+    				}
+    				var data = {
+    						netList:renderData.netList		
+    				},
+    				options = {
+    						selector: '#vdcFloatIP',
+							allData: ipList.floatingips,
+							selectData: vdcIpList.floatingips
+	    			};
+    				
+    				require(['js/common/choose'],function(choose){
+    	        		
+    	        		Common.render('tpls/ccenter/vdc/floatIP.html',data,function(html){
+    	        			//通过回调方式加载，保证choose执行完毕后再去modal
+    	        			options.doneCall = function(html,chooseWrapper){
+    	        				chooseWrapper.append(html);
+    		        			$(options.selector).append(chooseWrapper.find('div:first'));
+    		        			//console.log(chooseWrapper.html());
+    		        			Modal.show({
+    	    	    	            title: '外部网络',
+    	    	    	            message: chooseWrapper.html(),
+    	    	    	            nl2br: false,
+    	    	    	            buttons: [{
+    	    	    	                label: '保存',
+    	    	    	                action: function(dialog) {
+    	    	    	    				var putData={
+    	    	    	    							"floatingips":jsonData.floatIpJson("#vdcAZ .list-group-select")
+    	    	    	    				      };
+    	    	    	                	Common.xhr.putJSON('/v2.0/az/'+vdc_id,putData,function(data){
+    	    	    	                		if(data){
+    	    	    	                			 Modal.success('保存成功')
+      				 	                			 setTimeout(function(){Modal.closeAll()},1000);
+      					                    		 Common.router.route();//重新载入
+    	    	    	                		}else{
+    	    	    	                			Modal.warning ('保存失败');
+    	    	    	                		}
+    	    	    	                	});
+    	    	    	                
+    	    	    	                }
+    	    	    	            }],
+    	    	    	            onshown : function(){
+    	    	    	            	EventsHandler.netChange();
+    	    	    	            	chooseWrapper.remove();
+    	    	    	            }
+    	    	    	        });
+    	        			};
+    	        			options.doneData = html;
+    	        			choose.initChoose(options);
+    	        		})
+    	        	});
+    			})
+    		})		
+    	 },
 	   }
 	}	
 	return {

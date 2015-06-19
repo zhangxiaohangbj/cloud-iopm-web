@@ -40,7 +40,6 @@ define(['Common','bs/modal','jq/form/wizard','jq/form/validator-bs3','bs/tooltip
             for(var key in currentZone){
                 currentZone[key] = null;
             }
-            currentZone.nums = 1;
         }
 
         var dataGetter={

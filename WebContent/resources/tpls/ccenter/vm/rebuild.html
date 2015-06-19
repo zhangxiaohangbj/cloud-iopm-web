@@ -1,0 +1,21 @@
+<form class="form-horizontal" id="rebuild-server">
+	<div class="form-group">
+		<label for="name" class="control-label col-sm-4"><span style="color: red;">* </span>选择镜像：</label>
+	 	<div class="col-sm-5 col-sm">
+			<select class="form-control image-list" style="width:350px;" tabindex="1">
+                {{each list as item i}}
+                <option value="{{item.locations}}">{{item.name}}</option>
+                {{/each}}
+            </select>
+		</div>
+	</div>
+	<div class="form-group">
+        <label for="publickey" class="control-label col-sm-4">磁盘分区方式：</label>
+        <div class="col-sm-5 col-sm">
+            <select class="form-control config-list" style="width:350px;" tabindex="1">
+                <option value="AUTO" selected>自动</option>
+                <option value="MANUAL">手动</option>
+            </select>
+        </div>
+    </div>
+</form>

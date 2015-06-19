@@ -2,19 +2,19 @@
 	<div class="form-group">
 		<label for="name" class="control-label col-sm-4"><span style="color: red;">* </span>VPC名称：</label>
 	 	<div class="col-sm-5 col-sm">
-			<input type="text" class="dialog-form-control" id="name" name="name" value="{{network.name}}">
+			<input type="text" class="form-control" id="name" name="name" value="{{network.name}}">
 		</div>
 	</div>
 	<div class="form-group">
 		<label for="tenant_id" class="control-label col-sm-4"><span style="color: red;">* </span>虚拟机数据中心：</label>
 		<div class="col-sm-5 col-sm">
-			<select id="tenant_id" name="tenant_id" class="dialog-form-control select tenant_id" data="{{network.tenant_id}}" readonly="readonly"></select>
+			<select id="tenant_id" name="tenant_id" class="form-control select tenant_id" data="{{network.tenant_id}}" readonly="readonly"></select>
 		</div>
 	</div>
 	<div class="form-group">
 		<label for="cidr" class="control-label col-sm-4"><span style="color: red;">* </span>网络地址范围（CIDR）：</label>
 		<div class="col-sm-5 col-sm">
-			<input type="text" class="dialog-form-control" id="cidr" name="cidr" value="{{network.cidr}}">
+			<input type="text" class="form-control" id="cidr" name="cidr" value="{{network.cidr}}">
 		</div>
 	</div>
 	<div class="form-group">

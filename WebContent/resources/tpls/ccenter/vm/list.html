@@ -16,15 +16,14 @@
 						<th class="c2">
 							<label><input type="checkbox" class="selectAll"></label>
 						</th>
-						<th class="c9">名称</th>
-						<th class="c8">内部IP</th>
-						<th class="c8">浮动IP</th>
+						<th class="c10">名称</th>
+						<th class="c12">内部IP</th>
+						<th class="c12">浮动IP</th>
 						<th class="c12">配置</th>
-						<th class="c9">激活</th>
-						<th class="c9">可用域</th>
+						<th class="c6">可用域</th>
 						<th class="c10">虚拟数据中心</th>
-						<th class="c9">电源状态</th>
-						<th class="c10">运行时间</th>
+						<th class="c9">状态</th>
+						<th class="c15">创建时间</th>
 						<th class="c12">操作</th>
 					</tr>
 				</thead>
@@ -32,50 +31,53 @@
 				{{each list as item i}}
 					<tr>
 						<td><label><input type="checkbox"></label></td>
-						<td class="vm_name">{{item.name}}</td>
+						<td><a href="javascript:void(0);" class="vm_name" data="{{item.id}}">{{item.name}}</a></td>
 						<td>{{item.fixedIps}}</td>
-						<td>{{item.floatingIps}}</td>
+						<td>{{#item.floatingIps}}</td>
 						<td>
 						{{if item.flavor != null}}
-							{{item.flavor.ram}}MB|{{item.flavor.vcpus}}CPUs|{{item.flavor.disk}}GB
+							{{(item.flavor.ram%512==0)?(item.flavor.ram/1024):(item.flavor.ram/1024).toFixed(1)}}GB|{{item.flavor.vcpus}}CPUs|{{item.flavor.disk}}GB
 						{{/if}}
 						</td>
-						<td>
-			 			{{if item.vmState == 'actived'}}
-			 				<span class="text-success">已激活</span>
-			 				{{else}}
-			 				<span class="text-danger">待激活</span>
-			 			{{/if}}
-			 			</td>
 						<td>{{item.availability_zone}}</td>
 						<td>{{item.tenant_id}}</td>
 						<td>
-			 			{{if item.powerState == 'on'}}
-			 				<span class="text-success">运行中</span>
-			 				{{else}}
-			 				<span class="text-danger">未启动</span>
+			 			{{if item.vmState == 'ACTIVE'}} <span class="text-success">运行中</span>
+							{{else if item.vmState == 'BUILD'}} <span class="text-success">创建中</span>
+							{{else if item.vmState == 'REBUILD'}} <span class="text-success">重建中</span>
+							{{else if item.vmState == 'SUSPENDED'}} <span class="text-success">已挂起</span>
+							{{else if item.vmState == 'PAUSED'}} <span class="text-success">已暂停</span>
+							{{else if item.vmState == 'RESIZE'}} <span class="text-success">重建中</span>
+							{{else if item.vmState == 'VERIFY_RESIZE'}} <span class="text-success">确认重建</span>
+							{{else if item.vmState == 'REVERT_RESIZE'}} <span class="text-success">回退重建</span>
+							{{else if item.vmState == 'REBOOT'}} <span class="text-success">重启中</span>
+							{{else if item.vmState == 'HARD_REBOOT'}} <span class="text-success">硬重启中</span>
+							{{else if item.vmState == 'DELETED'}} <span class="text-success">已删除</span>
+							{{else if item.vmState == 'ERROR'}} <span class="text-danger">错误</span>
+							{{else if item.vmState == 'SHUTOFF'}} <span class="text-success">关机</span>
+							{{else}} <span class="text-danger">未知</span>
 			 			{{/if}}
 			 			</td>
-			 			<td>{{item.run_time}}</td>
+			 			<td>{{item.created_at}}</td>
 						<td>
-						<a class="btn-opt" data-toggle="tooltip" title="创建快照" data-act="stop" style="margin: 0;"><i class="glyphicon glyphicon-off"></i></a>
+						<a class="btn-opt" data-toggle="tooltip" title="创建快照" data-act="stop" style="margin: 0;"><i class="fa fa-camera"></i></a>
 						<!-- <a class="btn-opt" data-toggle="tooltip" title="控制台" data-act="delete"><i class="glyphicon glyphicon-trash"></i></a> -->
 						<div class="dropdown">
 							<span class="btn btn-more dropdown-toggle" data-toggle="dropdown" aria-expanded="false">更 多 <i class="fa fa-angle-down fa-fw"></i></span>
 							<ul class="dropdown-menu" style="right: 0;left: initial;">
-								<li><a href="#"><i class="fa fa-file-text fa-fw"></i>绑定浮动IP</a></li>
-								<li><a href="#"><i class="fa fa-gear fa-fw"></i>解除浮动IP绑定</a></li>
+								<li><a href="javascript:void(0)" class="attachIp" data="{{item.id}}"><i class="fa fa-gear fa-fw"></i>绑定浮动IP</a></li>
+								<li><a href="javascript:void(0)" class="dettachIp" data="{{item.id}}"><i class="fa fa-gear fa-fw"></i>解除浮动IP绑定</a></li>
 								<li><a href="javascript:void(0)" class="editName" data="{{item.name}}"><i class="fa fa-file-text fa-fw"></i>修改云主机名称</a></li>
 								<li><a href="javascript:void(0)" class="editSecurity" data="{{item.id}}"><i class="fa fa-file-text fa-fw"></i>编辑安全组</a></li>
 								<li><a href="#"><i class="fa fa-file-text fa-fw"></i>控制台</a></li>
 								<li><a href="#"><i class="fa fa-file-text fa-fw"></i>查看日志</a></li>
-								<li><a href="#"><i class="fa fa-file-text fa-fw"></i>暂停</a></li>
-								<li><a href="#"><i class="fa fa-file-text fa-fw"></i>挂起</a></li>
+								<li><a href="javascript:void(0)" class="pause" data="{{item.id}}"><i class="fa fa-file-text fa-fw"></i>暂停</a></li>
+								<li><a href="javascript:void(0)" class="suspend" data="{{item.id}}"><i class="fa fa-file-text fa-fw"></i>挂起</a></li>
 								<li><a href="javascript:void(0)" class="editVmType" data="{{item.id}}"><i class="fa fa-file-text fa-fw"></i>调整配置</a></li>
-								<li><a href="javascript:void(0)" class="rebootSoft"><i class="fa fa-file-text fa-fw"></i>软重启</a></li>
-								<li><a href="javascript:void(0)" class="rebootHard"><i class="fa fa-file-text fa-fw"></i>硬重启</a></li>
-								<li><a href="#"><i class="fa fa-file-text fa-fw"></i>关闭</a></li>
-								<li><a href="#"><i class="fa fa-file-text fa-fw"></i>重建</a></li>
+								<li><a href="javascript:void(0)" class="rebootSoft" data="{{item.id}}"><i class="fa fa-refresh fa-fw"></i>软重启</a></li>
+								<li><a href="javascript:void(0)" class="rebootHard" data="{{item.id}}"><i class="fa fa-refresh fa-fw"></i>硬重启</a></li>
+								<li><a href="javascript:void(0)" class="osStop" data="{{item.id}}"><i class="fa fa-power-off fa-fw"></i>关闭</a></li>
+								<li><a href="javascript:void(0)" class="rebuild" data="{{item.id}}"><i class="fa fa-file-text fa-fw"></i>重建</a></li>
 								<li><a href="javascript:void(0)" class="delete" data="{{item.id}}"><i class="fa fa-file-text fa-fw"></i>终止</a></li>
 							</ul>
 						</div>	
