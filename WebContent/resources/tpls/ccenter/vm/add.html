@@ -26,24 +26,44 @@
 								  <li><a  href="javascript:void(0)" data-image="disksnap">云硬盘快照</a></li>
 								</ul>
 								<div data-con="image" class="image-list">
+								{{if imageList==null || imageList.length==0}}
+									暂无镜像
+								{{else}}
 									{{each imageList as item i}}
+										{{if i==0}}
+										<div class="btn selected" data-con="{{item.id}}"><i class="image-icon-default {{item.type}}"></i>{{item.name}}</div>
+										{{else}}
 										<div class="btn" data-con="{{item.id}}"><i class="image-icon-default {{item.type}}"></i>{{item.name}}</div>
+										{{/if}}
 									{{/each}}
+								{{/if}}
 								</div>
 								<div data-con="snapshot"  class="image-list hide">
+								{{if snapshotList==null || snapshotList.length==0}}
+									暂无快照
+								{{else}}								
 									{{each snapshotList as item i}}
 										<div class="btn" data-con="{{item.id}}"><i class="image-icon-default {{item.type}}"></i>{{item.name}}</div>
 									{{/each}}
+								{{/if}}
 								</div>
 								<div data-con="disk"   class="image-list hide">
+								{{if diskList==null || diskList.length==0}}
+									暂无云硬盘
+								{{else}}								
 									{{each diskList as item i}}
 										<div class="btn" data-con="{{item.id}}"><i class="image-icon-default {{item.type}}"></i>{{item.name}}</div>
 									{{/each}}
+								{{/if}}
 								</div>
 								<div data-con="disksnap"   class="image-list hide">
+								{{if diskSnapList==null || diskSnapList.length==0}}
+									暂无云硬盘快照
+								{{else}}								
 									{{each diskSnapList as item i}}
 										<div class="btn" data-con="{{item.id}}"><i class="image-icon-default {{item.type}}"></i>{{item.name}}</div>
 									{{/each}}
+								{{/if}}
 								</div>
 							</div>
 							<input type="hidden" class="form-control" id="imageRef" name="imageRef">
