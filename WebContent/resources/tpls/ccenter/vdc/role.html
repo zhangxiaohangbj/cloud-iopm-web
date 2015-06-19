@@ -5,9 +5,9 @@
 	  <ul class="dropdown-menu dropdown-menu-right" role="menu" >
 	  	{{each list as item i}}
 	  		{{if i == 0}}
-	    	<li><a in-use="1" href="javascript:void(0);" data-id="{{item.id}}"><i class="fa fa-check fa-fw" style="opacity:1;"></i>{{item.name}}</a></li>
+	    	<li><a in-use="1" href="javascript:void(0);" data-id="{{item.id}}" data-name="{{item.name}}"><i class="fa fa-check fa-fw" style="opacity:1;"></i>{{item.name}}</a></li>
 	    	  {{else}}
-	    	<li><a href="javascript:void(0);"data-id="{{item.id}}"><i class="fa fa-check fa-fw"></i>{{item.name}}</a></li>  
+	    	<li><a href="javascript:void(0);"data-id="{{item.id}}" data-name="{{item.name}}"><i class="fa fa-check fa-fw"></i>{{item.name}}</a></li>  
 	    	{{/if}}
 	    {{/each}}
 	  </ul>
