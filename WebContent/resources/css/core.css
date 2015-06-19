@@ -42,7 +42,10 @@ header > .container,
 		max-width:1500px;
   	}
 }
-
+#page-main .page-body{
+	display:table;
+	width:100%;
+}
 #header-logo {
 	position: relative;
 	float: left;

@@ -471,6 +471,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
     	                submitText: "提交",
     	                submittingText: "提交中..."
     	            },
+    	            submitEnabled: [2,3,4],
     	            validate: {
 	            		0: function(){
 	            			return this.el.find('form').valid();
@@ -547,7 +548,10 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
     				$('#vm-networks .list-group-select').children().each(function(i,item){
     					var network = {};
     					network.uuid = $(item).find('li:first').attr('data-id');
-    					network.fixed_ip = $(item).find('select.select-fixedip').children('option:selected').val();
+    					var fixedIp = $(item).find('select.select-fixedip').children('option:selected').val();
+    					if(fixedIp!='DHCP'){
+    						network.fixed_ip = fixedIp;
+    					}
     					networkData.push(network);
     				});
     				

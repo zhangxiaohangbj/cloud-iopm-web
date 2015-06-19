@@ -7,7 +7,7 @@ define(['Common','bs/modal'],function(Common,Modal){
 				addCall: null,		//点击添加时回调
 				delCall: null,		//点击减少时回调
 				allData: [],		//左侧全部区域的数据
-				chosenData:[],		//右侧已选择部分数据
+				selectData:[],		//右侧已选择部分数据
 				doneCall: null,		//执行完成后的回调
 				doneData:null,		//执行完成后回调可能会用到的数据
 				groupSelectedClass: 'col-sm-6',		//已选择部分的class
