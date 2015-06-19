@@ -1,21 +1,21 @@
-<form class="form-horizontal" id="rebuild-server">
+<form class="form-horizontal" id="attach-floating-ip">
 	<div class="form-group">
 		<label for="name" class="control-label col-sm-4"><span style="color: red;">* </span>选择外部网络：</label>
-	 	<div class="col-sm-5 col-sm ip-pools">
-			
+	 	<div class="col-sm-5 col-sm">
+			<select class="form-control ip-pools" style="width:350px;" tabindex="1"></select>
 		</div>
 	</div>
 	<div class="form-group">
         <label for="publickey" class="control-label col-sm-4"><span style="color: red;">* </span>选择浮动IP：</label>
-        <div class="col-sm-5 col-sm floating-ips">
-            
+        <div class="col-sm-5 col-sm">
+            <select class="form-control floating-ips" style="width:350px;" tabindex="1"></select>
         </div>
     </div>
     
     <div class="form-group">
-        <label for="publickey" class="control-label col-sm-4"><span style="color: red;">* </span>选择待绑定的网卡：</label>
-        <div class="col-sm-5 col-sm floating-ips">
-            
+        <label for="publickey" class="control-label col-sm-4"><span style="color: red;">* </span>选择待绑定的网络接口：</label>
+        <div class="col-sm-5 col-sm">
+            <select class="form-control network-interface" style="width:350px;" tabindex="1"></select>
         </div>
     </div>
 </form>
