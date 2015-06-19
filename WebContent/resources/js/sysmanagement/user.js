@@ -223,7 +223,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 						var role_id = $(element).find("[name='role']").val();
 						var role_ids = role_id.split(",");
 						for(var i = 0; i<role_ids.length;i++){
-							roleList.push({"scopeId":vdc_id,"roleId":role_ids[i],"scopeType":"tenant"});
+							authorityList.push({"scopeId":vdc_id,"roleId":role_ids[i],"scopeType":"tenant"});
 						}
 					});
 					return authorityList;
