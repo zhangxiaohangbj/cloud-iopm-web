@@ -25,10 +25,13 @@
 					<tr>
 						<td><label><input type="checkbox"></label></td>
 						<td>{{item.name}}</td>
-						<td>{{item.name}}</td>
-						<td>{{item.name}}</td>
-						<td>{{item.name}}</td>
-						<td>{{item.name}}</td>
+						<td>{{item.trueName}}</td>
+						<td>{{item.phone}}</td>
+						<td>{{item.email}}</td>
+						<td>{{if item.status == 'normal'}}正常{{/if}}
+						{{if item.status == 'locked'}}已锁定{{/if}}
+						{{if item.status == 'delete'}}已删除{{/if}}
+						{{if item.status == 'disabled'}}已禁用{{/if}}</td>
 						<td>
 							<a class="btn-edit" data-toggle="tooltip" title="编辑" href="javascript:void(0)" data="{{item.id}}" data-act="stop" style="margin: 0 8px;"><li class="glyphicon glyphicon-edit"></li></a>
 							<a class="btn-delete" data-toggle="tooltip" title="删除" href="javascript:void(0)" data="{{item.id}}" style="margin: 0 8px;"><i class="fa fa-trash-o fa-fw"></i></a>

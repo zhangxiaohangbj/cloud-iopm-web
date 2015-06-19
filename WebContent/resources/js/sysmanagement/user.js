@@ -5,7 +5,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 		//先获取数据，进行加工后再去render
 		Common.render(true,{
 			tpl:'tpls/sysmanagement/user/list.html',
-			data:'/v2.0/subnets/page/1/10',  //需修改接口
+			data:'/v2.0/users/page/1/10',  //需修改接口
 			beforeRender: function(data){
 				return data.result;
 			},
