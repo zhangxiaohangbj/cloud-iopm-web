@@ -126,7 +126,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 				}
 		}
 
-		//删除子网
+		//解除绑定
 		$("#floatingipTable_wrapper a.btn-edit").on("click",function(){
 	    	 var id = $(this).attr("data")
 	    	 Dialog.confirm('确定要解除绑定吗?', function(result){
@@ -140,6 +140,28 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 	                    		Common.router.route();
 	                    	 }else{
 	                    		Dialog.success('解除失败')
+	 	                		setTimeout(function(){Dialog.closeAll()},3000);
+	                    	 }
+	                     });
+	             }else {
+	            	 //Dialog.close();
+	             }
+	         });
+		});
+		//删除floatingip
+		$("#floatingipTable_wrapper a.btn-delete").on("click",function(){
+	    	 var id = $(this).attr("data")
+	    	 Dialog.confirm('确定要删除浮动IP吗?', function(result){
+	             if(result) {
+	            	 var data = {"floatingip":{"id":id}};
+	            	 Common.xhr.del('/v2.0/floatingips/'+id,
+	                     function(data){
+	                    	 if(data){
+ 	                			Dialog.success('删除成功')
+ 	                			setTimeout(function(){Dialog.closeAll()},3000);
+	                    		Common.router.route();
+	                    	 }else{
+	                    		Dialog.success('删除失败')
 	 	                		setTimeout(function(){Dialog.closeAll()},3000);
 	                    	 }
 	                     });
