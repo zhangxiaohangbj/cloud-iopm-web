@@ -367,10 +367,12 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
     		},
     		editMount: function(){
     			$('.dropdown-menu a.edit_mount').on('click',function(){
-    				var id = $(this).parent('tr:first').attr("data-id");
+    				var tr = $(this).parent('tr:first'),
+    					id = tr.attr("data-id"),
+    					name = tr.find('.volume_name').text();
     				Common.render(false,'tpls/ccenter/block/volume/edit_mount.html','/resources/data/specs.txt',function(html){
     					Modal.show({
-    	    	            title: '挂载磁盘到云主机',
+    	    	            title: '挂载'+name+'磁盘到云主机',
     	    	            message: html,
     	    	            closeByBackdrop: false,
     	    	            nl2br: false,
@@ -394,7 +396,10 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
     	    	                action: function(Modal) {
     	    	                    Modal.close();
     	    	                	}
-    	    	            	}]
+    	    	            	}],
+    	    	            	onshown : function(){
+    	        	            	EventsHandler.initCheckBox();
+    	        	            }
     					});
     				})
     			})

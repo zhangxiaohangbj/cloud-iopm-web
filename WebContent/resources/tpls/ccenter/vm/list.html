@@ -1,6 +1,6 @@
 <div class="page-header clearfix">
 	<ol class="breadcrumb">
-	  <li class="active">云主机列表</li>
+	  <li class="active"><i class="icon-squre-d"></i>云主机列表</li>
 	</ol>
 	<p class="description">
 		提供一种随时获取的、弹性的计算能力，这种计算能力的体现就是 主机（Instance）。主机就是一台配置好了的服务器，它有您期望的硬件配置、操作系统和网络配置。通常情况下，
@@ -60,10 +60,9 @@
 			 			</td>
 			 			<td>{{item.created_at}}</td>
 						<td>
-						<a class="btn-opt" data-toggle="tooltip" title="创建快照" data-act="stop" style="margin: 0;"><i class="fa fa-camera"></i></a>
-						<!-- <a class="btn-opt" data-toggle="tooltip" title="控制台" data-act="delete"><i class="glyphicon glyphicon-trash"></i></a> -->
+						<a class="btn-opt" data-toggle="tooltip" title="备份"  style="margin: 0;"><i class="fa fa-files-o"></i></a>
 						<div class="dropdown">
-							<span class="btn btn-more dropdown-toggle" data-toggle="dropdown" aria-expanded="false">更 多 <i class="fa fa-angle-down fa-fw"></i></span>
+							<a class="btn-opt dropdown-toggle" data-toggle="dropdown" title="更多"  aria-expanded="false" ><i class="fa fa-angle-double-right"></i></a>
 							<ul class="dropdown-menu" style="right: 0;left: initial;">
 								<li><a href="javascript:void(0)" class="attachIp" data="{{item.id}}"><i class="fa fa-gear fa-fw"></i>绑定浮动IP</a></li>
 								<li><a href="javascript:void(0)" class="dettachIp" data="{{item.id}}"><i class="fa fa-gear fa-fw"></i>解除浮动IP绑定</a></li>
@@ -85,6 +84,13 @@
 					</tr>
     			{{/each}}
 				</tbody>
+				<tfoot>
+					<tr>
+						<td>
+							<span class="text-danger">*</span> 可通过在实例上"<span class="nums">右键</span>"来进行常用操作,"<span class="nums">双击</span>"来编辑基本属性
+						</td>
+					</tr>
+				</tfoot>
 			</table>
 		</div>
 	</div>
