@@ -1,13 +1,18 @@
 <div class="page-header clearfix">
 	<ol class="breadcrumb">
-	  <li class="active">任务执行日志-bootServer</li>
+	  <li class="active">任务执行日志-<span id="task_name"></span></li>
 	</ol>
+	<p class="description">
+		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+		您每次所执行的任务，我们都会进行详细的日志记录，如果执行的任务失败了，您可以查看执行节点的执行信息。
+		您可以查看一天内、一周内、一月内的日志详情。
+	</p>
 </div>
 	
 <div class="page-body">
 	<div class="pane">
 		<div class="pane-content">
-			<table class="table table-primary table-striped" id="monitorTable">
+			<table class="table table-primary table-striped" id="instanceTable">
 				<thead>
 					<tr>
 						<th style="width:30%">开始时间</th>
@@ -24,12 +29,12 @@
 						<td>{{item.status}}</td>
 						<td>
 						<a class="btn-opt" data-toggle="tooltip" title="查看详情" href="javascript:void(0)" data="{{item.id}}" data-act="stop" style="margin: 0;"><li class="glyphicon glyphicon-edit"></li></a>
-						<div class="dropdown">
+						<!-- <div class="dropdown">
 							<span class="btn btn-more dropdown-toggle" data-toggle="dropdown" aria-expanded="false">更 多 <i class="fa fa-angle-down fa-fw"></i></span>
 							<ul class="dropdown-menu" style="right: 0;left: initial;">
 								<li><a href="javascript:void(0)" class="delete" data="{{item.id}}"><i class="fa fa-trash-o fa-fw"></i>删除</a></li>
 							</ul>
-						</div>	
+						</div> -->	
 						</td>
 					</tr>
     			{{/each}}

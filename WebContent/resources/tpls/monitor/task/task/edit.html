@@ -8,7 +8,7 @@
 }
 -->
 </style>
-<div class="wizard" id="create-task-wizard" data-title="新建任务">
+<div class="wizard" id="create-task-wizard" data-title="编辑任务">
 	<!-- 基本信息 -->
 	<div class="wizard-card" data-cardname="basci" id="editTaskBasic">
 		<h3>基本信息</h3>
@@ -17,7 +17,7 @@
 					<div class="form-group">
 						<label for="taskGroupId" class="control-label col-sm-2"><span>* </span>任务分组：</label>
 						<div class="col-sm-7 col-sm">
-							<select class="form-control select" name="taskGroupId" value="{{taskGroupId}}">
+							<select class="form-control select" name="taskGroupId" value="{{taskGroupId}}" disabled="disabled">
 							 	{{each taskGroupList as item i}}
 							 		<option value="{{item.id}}">{{item.name}}</option>
 							 	{{/each}}
@@ -29,7 +29,7 @@
 					<div class="form-group">
 						<label for="name" class="control-label col-sm-2"><span>* </span>任务名称：</label>
 						<div class="col-sm-7 col-sm">
-							<input type="text" class="form-control" id="name" name="name" value="{{name}}">
+							<input type="text" class="form-control" id="name" name="name" value="{{name}}" readonly="readonly">
 						</div>
 					</div>
 				</div>
@@ -45,7 +45,7 @@
 					<div class="form-group">
 						<label for="className" class="control-label col-sm-2"><span>* </span>实现类：</label>
 						<div class="col-sm-7 col-sm">
-							<input type="text" class="form-control" id="className" name="className" value="{{className}}">
+							<input type="text" class="form-control" id="className" name="className" value="{{className}}" readonly="readonly">
 						</div>
 					</div>
 				</div>
@@ -53,7 +53,7 @@
 					<div class="form-group">
 						<label for="methodName" class="control-label col-sm-2"><span>* </span>实现方法：</label>
 						<div class="col-sm-7 col-sm">
-							<input type="text" class="form-control" id="methodName" name="methodName" value="{{methodName}}">
+							<input type="text" class="form-control" id="methodName" name="methodName" value="{{methodName}}" readonly="readonly">
 						</div>
 					</div>
 				</div>
@@ -81,15 +81,15 @@
 						<th style="width:10%" class="sorting_disabled">必选</th>
 						<th style="width:20%" class="sorting_disabled">策略</th>
 						<th style="width:30%" class="sorting_disabled">策略参数</th>
-						<th style="width:10%" class="sorting_disabled">操作</th>
+						<!-- <th style="width:10%" class="sorting_disabled">操作</th> -->
 					</tr>
 				</thead>
 				<tbody>
 				</tbody>
 			</table>
-			<div style="text-align: center;">
+			<!-- <div style="text-align: center;">
 				<span class="btn btn-primary addStrategy">添加行</span>
-			</div>
+			</div> -->
 		</div>
 	</div>
 	<div class="wizard-card" data-cardname="confirm" id="confirm">

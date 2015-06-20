@@ -265,7 +265,7 @@ define('Common', ['PubView', 'bs/modal', 'json', 'template', 'jq/dataTables-bs3'
                             link: '#task/taskGroup'
                         },*/
                         {
-                            text: '分组管理',
+                            text: '策略分组',
                             link: '#task/strategyGroup'
                         }
                     ]

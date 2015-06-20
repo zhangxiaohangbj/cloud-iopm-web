@@ -34,7 +34,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 	var bindTaskEvent = function(){
 		debugger
 		//dataTables
-		Common.initDataTable($('#monitorTable'),function($tar){debugger
+		Common.initDataTable($('#taskTable'),function($tar){debugger
 			commonEvent.timeButtons($tar);
 			
 			//这个必须添加，不然就是隐藏的效果，看不到页面
@@ -87,27 +87,27 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 		})
 		
 		//running  failed  success
-	    $("#monitorTable_wrapper a.instanceList").on("click",function(){
+	    $("#taskTable_wrapper a.instanceList").on("click",function(){
 	    	debugger;
 	    	var id = $(this).attr("data");
 	    	var name = $(this).attr("name");
 	    	task_id = id;
 	    	status = name;
 	    	Common.render(true,{
-				tpl:'tpls/monitor/task/monitor/list.html',
+				tpl:'tpls/monitor/task/monitor/instanceList.html',
 				data:'/cloud/task/instance?task_id='+task_id+'&timeBucket='+timeBucket+'&status='+status+'&deleted=false',
 				beforeRender: function(data){
 					return data;
 				},
-				callback: bindEvent
+				callback: bindInstanceEvent
 			});
 	    })
 	}
 	
-	var bindEvent = function(){
+	var bindInstanceEvent = function(){
 		debugger
 		//dataTables
-		Common.initDataTable($('#monitorTable'),function($tar){debugger
+		Common.initDataTable($('#instanceTable'),function($tar){debugger
 			commonEvent.timeButtons($tar);
 		
 			$tar.prev().find('.left-col:first').append(
@@ -136,34 +136,34 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 		$("[name=day]").on("click",function(){
 			timeBucket = "day";
 			Common.render(true,{
-				tpl:'tpls/monitor/task/monitor/list.html',
+				tpl:'tpls/monitor/task/monitor/instanceList.html',
 				data:'/cloud/task/instance?task_id='+task_id+'&timeBucket='+timeBucket+'&status='+status+'&deleted=false',
 				beforeRender: function(data){
 					return data;
 				},
-				callback: bindEvent
+				callback: bindInstanceEvent
 			});
 		})
 		$("[name=week]").on("click",function(){
 			timeBucket = "week";
 			Common.render(true,{
-				tpl:'tpls/monitor/task/monitor/list.html',
+				tpl:'tpls/monitor/task/monitor/instanceList.html',
 				data:'/cloud/task/instance?task_id='+task_id+'&timeBucket='+timeBucket+'&status='+status+'&deleted=false',
 				beforeRender: function(data){
 					return data;
 				},
-				callback: bindEvent
+				callback: bindInstanceEvent
 			});
 		})
 		$("[name=month]").on("click",function(){
 			timeBucket = "month";
 			Common.render(true,{
-				tpl:'tpls/monitor/task/monitor/list.html',
+				tpl:'tpls/monitor/task/monitor/instanceList.html',
 				data:'/cloud/task/instance?task_id='+task_id+'&timeBucket='+timeBucket+'&status='+status+'&deleted=false',
 				beforeRender: function(data){
 					return data;
 				},
-				callback: bindEvent
+				callback: bindInstanceEvent
 			});
 		})
 		
@@ -184,6 +184,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 		Common.xhr.ajax('/cloud/task/instance/task_instance_count?task_id='+task_id+'&timeBucket='+timeBucket,function(data){
 			if(data.length > 0){
 				var task = data[0];
+				$("#task_name").text(task.name);
 				$("#runningSpan").text("running("+task.runningCount+")");
 				$("#failedSpan").text("failed("+task.failedCount+")");
 				$("#successSpan").text("success("+task.successCount+")");
@@ -191,17 +192,17 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 		})
 		
 		//running  failed  success
-	    $("#monitorTable_wrapper a.instanceList").on("click",function(){
+	    $("#instanceTable_wrapper a.instanceList").on("click",function(){
 	    	debugger;
 	    	var name = $(this).attr("name");
 	    	status = name;
 	    	Common.render(true,{
-				tpl:'tpls/monitor/task/monitor/list.html',
+				tpl:'tpls/monitor/task/monitor/instanceList.html',
 				data:'/cloud/task/instance?task_id='+task_id+'&timeBucket='+timeBucket+'&status='+status+'&deleted=false',
 				beforeRender: function(data){
 					return data;
 				},
-				callback: bindEvent
+				callback: bindInstanceEvent
 			});
 	    })
 	    
@@ -221,7 +222,6 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 		
 		//事件处理
 		var EventsHandler = {
-    		
 	    }
 		
 		//弹窗初始化
@@ -229,7 +229,8 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 	    	//详情弹框
 	    	Detail : function(instanceId,cb){
 	    		//需要修改为真实数据源
-				Common.render('tpls/monitor/task/monitor/detail.html','/cloud/task/monitor?instanceId='+instanceId+'&deleted=false',function(html){
+				Common.render('tpls/monitor/task/monitor/monitorList.html','/cloud/task/monitor?instanceId='+instanceId+'&deleted=false',function(html){
+					debugger
 					Modal.show({
 	    	            title: '监控明细',
 	    	            message: html,
@@ -242,9 +243,38 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 	    }
 		
 	    //查看详情
-	    $("#monitorTable_wrapper a.btn-opt").on("click",function(){
+	    $("#instanceTable_wrapper a.btn-opt").on("click",function(){
 	    	EditData.Detail($(this).attr("data"),function(){
-	    		EventsHandler.formValidator();
+	    		var format = function(rowData) {
+				    // `rowData` is the original data object for the row
+	    			debugger;
+				    return '<table style="width:100%">'+
+				        '<tr>'+
+				            '<td style="width:100px">上下文:</td>'+
+				            '<td>'+rowData[5]+'</td>'+
+				        '</tr>'+
+				        '<tr>'+
+				            '<td style="width:100px">异常信息:</td>'+
+				            '<td>'+rowData[6]+'</td>'+
+				        '</tr>'+
+				    '</table>';
+				}
+	    		var table = Common.initDataTable("#monitorTable",{bFilter:false, bPaginage:false});
+    			$('#monitorTable tbody').on('click', 'td.details-control', function(){
+    		        var tr = $(this).closest('tr');
+    		        var row = table.row( tr );
+    		 
+    		        if ( row.child.isShown() ) {
+    		            // This row is already open - close it
+    		            row.child.hide();
+    		            tr.removeClass('shown');
+    		        }
+    		        else {
+    		            // Open this row
+    		            row.child(format(row.data()) ).show();
+    		            tr.addClass('shown');
+    		        }
+    		    } );
 	    	});
 	    });
 	    
