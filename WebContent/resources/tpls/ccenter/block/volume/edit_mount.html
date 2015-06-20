@@ -1,0 +1,9 @@
+<div class="vm-list clearfix">
+	{{each list as item i}}
+	<div class="col-sm-9">
+		<label data-id="{{item.id}}">
+			<input type="checkbox">{{item.name}}
+		</label>
+	</div>
+	{{/each}}
+</div>
