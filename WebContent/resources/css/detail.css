@@ -1,0 +1,11 @@
+.detail-info{
+	margin-bottom:30px;
+}
+.detail-info .row{
+	margin:5px;
+	padding:5px;
+}
+.detail-info .row .control-label{
+	text-align:right;
+	font-weight:normal;
+}

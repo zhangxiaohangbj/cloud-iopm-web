@@ -297,9 +297,9 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 					if(data && data.security_groups){
 						for(var i=0,l=data.security_groups.length;i<l;i++){
 							if(data.security_groups[i].name=='default'){
-								dataArr.push('<label><input type="checkbox" checked>'+data.security_groups[i].name+'</></label>');
+								dataArr.push('<label data-id="'+data.security_groups[i].name+'"><input type="checkbox" checked>'+data.security_groups[i].name+'</></label>');
 							}else{
-								dataArr.push('<label><input type="checkbox">'+data.security_groups[i].name+'</label>');
+								dataArr.push('<label data-id="'+data.security_groups[i].name+'"><input type="checkbox">'+data.security_groups[i].name+'</label>');
 							}
 						}
 						$('div.security-group').html(dataArr.join(''));
@@ -555,11 +555,48 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
     					});
     				})
     			});
+    			
+    			var getSecruityGroup = function(){
+    				var data = [];
+    				$('div.security-group').find('.icheckbox-info').each(function(){
+    					if($(this).hasClass('checked')){
+    						data.push($(this).parent().attr('data-id'))
+    					}
+    				});
+    				return data;
+    			}
+    			
     			//确认信息卡片被选中的监听
     			wizard.cards.confirm.on('selected',function(card){
     				//获取上几步中填写的值
-    				var serverData = wizard.serializeObject()
-    				$('.name-confirm').text(serverData.name)
+    				var serverData = wizard.serializeObject();
+    				//取网络相关的数据
+    				$('#vm-networks .list-group-select').children().each(function(i,item){
+    					var network_uuid = $(item).find('li:first').attr('data-id');
+    					var fixedIp = $(item).find('select.select-fixedip').children('option:selected').val();
+    					$('.network-confirm').text("网络："+network_uuid+"            IP:"+fixedIp)
+    				});
+    				var sgGroupStr = ""
+    				$('div.security-group').find('.icheckbox-info').each(function(){
+    					if($(this).hasClass('checked')){
+    						if(sgGroupStr==""){
+    							sgGroupStr = $(this).parent().attr('data-id');
+    						}else{
+    							sgGroupStr = sgGroupStr+ "," + $(this).parent().attr('data-id');
+    						}
+    					}
+    				});
+    				$('.name-confirm').text(serverData.name);
+    				$('.image-confirm').text(serverData.imageRef);
+    				$('.vdc-confirm').text(serverData.tenant_id);
+    				$('.az-confirm').text(serverData.availability_zone);
+    				$('.vmtype-confirm').text(serverData.flavorRef);
+    				$('.num-confirm').text(serverData.min_count);
+    				$('.keyname-confirm').text(serverData.key_name);
+    				$('.securitygroup-confirm').text(sgGroupStr);
+    				$('.userdata-confirm').text(serverData.user_data);
+    				$('.diskconfig-confirm').text(serverData.auto_disk_config);
+    				
 				});
     			DataIniter.initAvailableZone();
     			DataIniter.initPopver();
@@ -614,13 +651,6 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
     				});
     				
     				serverData.server.networks=networkData;
-    				var fixed_ip = $("#fixed_ip").val();
-    				if(fixed_ip!=null&&fixed_ip!="DHCP"){
-    					serverData.server.networks=[{
-	    						"uuid": 'af8c1f42-b21c-4d13-bc92-1852e22f4f98',
-	    						"fixed_ip": '192.168.0.115'//$("#fixed_ip").val()
-    					}]
-    				}
     				Common.xhr.postJSON('/'+current_vdc_id+'/servers',serverData,function(data){
     					wizard._submitting = false;
     					wizard.updateProgressBar(100);
