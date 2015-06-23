@@ -297,9 +297,9 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 					if(data && data.security_groups){
 						for(var i=0,l=data.security_groups.length;i<l;i++){
 							if(data.security_groups[i].name=='default'){
-								dataArr.push('<label data-id="'+data.security_groups[i].name+'"><input type="checkbox" checked>'+data.security_groups[i].name+'</></label>');
+								dataArr.push('<label data-id="'+data.security_groups[i].id+'" data-name="'+data.security_groups[i].name+'"><input type="checkbox" checked>'+data.security_groups[i].name+'</></label>');
 							}else{
-								dataArr.push('<label data-id="'+data.security_groups[i].name+'"><input type="checkbox">'+data.security_groups[i].name+'</label>');
+								dataArr.push('<label data-id="'+data.security_groups[i].name+'" data-name="'+data.security_groups[i].name+'"><input type="checkbox">'+data.security_groups[i].name+'</label>');
 							}
 						}
 						$('div.security-group').html(dataArr.join(''));
@@ -373,6 +373,10 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 				//基本信息所需事件
 				bindBasicWizard : function(){
 					//basic-1：动态获取镜像或者快照
+					
+					//获取默认选中的镜像id
+    				$('#imageRef').val($('.image-list').find('.selected:first').attr('data-con'));
+    				//处理镜像列表点击事件
 	    			wizard.el.find(".wizard-card .image-source a").click(function() {
 	    				var source = $(this).attr('data-image');
 	    				$(this).parent().siblings('.active').removeClass('active');
@@ -380,6 +384,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 	    				$(this).parents('ul:first').siblings('div').each(function(){
 	    					if($(this).attr('data-con') == source){
 	    						$(this).removeClass('hide').addClass('show');
+	    						//默认选中第一条
 	    						$(this).parent().find('[data-con='+source+']').find('*:first').addClass('selected');
 	    	    				$('#imageRef').val($(this).find('.selected:first').attr('data-con'));
 	    					}else{
@@ -560,7 +565,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
     				var data = [];
     				$('div.security-group').find('.icheckbox-info').each(function(){
     					if($(this).hasClass('checked')){
-    						data.push($(this).parent().attr('data-id'))
+    						data.push({"id":$(this).parent().attr('data-id'),"name":$(this).parent().attr('data-name')})
     					}
     				});
     				return data;
@@ -650,8 +655,12 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
     					networkData.push(network);
     				});
     				
-    				serverData.server.networks=networkData;
+    				serverData.server["networks"]=networkData;
+    				serverData.server["security_groups"]=getSecruityGroup();
     				Common.xhr.postJSON('/'+current_vdc_id+'/servers',serverData,function(data){
+    					if(data.error){
+    						Modal.error(data.message)
+    					}
     					wizard._submitting = false;
     					wizard.updateProgressBar(100);
     					closeWizard();
