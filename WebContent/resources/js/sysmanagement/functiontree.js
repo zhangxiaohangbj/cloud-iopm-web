@@ -22,6 +22,20 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 				);
 			Common.$pageContent.removeClass("loading");
 		});
+		//载入默认的数据 inits,创建数据载入类
+		var DataIniter = {
+			//已关联的url
+			getUrlList : function(id,name){
+				Common.render('tpls/sysmanagement/functiontree/relatedurllist.html','/v2.0/subnets/page/1/10',function(html){  //需修改接口
+    				$("#urllist").html(html);
+    				Common.initDataTable($('#UrlTable'),function($tar){
+    					$tar.prev().find('.left-col:first').append(
+							'功能项【'+name+'】关联的URL列表：<span class="btn btn-add">关联URL </span>'
+						);
+    				});
+    			})
+			}
+		}
 		var EventsHandler = {
 				//表单校验
 				formValidator: function(){
@@ -37,6 +51,103 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 			                }
 			            }
 			        });
+				},
+				//选择url关联
+				chooseUrl :function(){
+					$(document).off("click","#UrlTable_wrapper span.btn-add");
+					$(document).on("click","#UrlTable_wrapper span.btn-add",function(){
+						var obj = $(this);
+						Common.render('tpls/sysmanagement/functiontree/urllist.html','/v2.0/roles/page/10/1',function(html){ //需改接口
+							Modal.show({
+			    	            title: '选择关联URL',
+			    	            message: html,
+			    	            closeByBackdrop: false,
+			    	            nl2br: false,
+			    	            buttons: [{
+			    	                label: '确定',
+			    	                action: function(dialog) {
+			    	                	var serverData = [];
+			    	                	$("#chooseUrlTable input[type='checkbox']:checked").each(function(){
+			    	                		serverData.push({"id":$(this).val()});
+			    	                	})
+			    	                	Common.xhr.putJSON('/v2.0/OS-KSADM/roles/'+id,serverData,function(data){ //需修改接口
+			    	                		if(data){
+			    	                			Modal.success('保存成功')
+			    	                			setTimeout(function(){Modal.closeAll()},2000);
+			    	                			Common.router.route();
+											}else{
+												Modal.warning ('保存失败')
+											}
+										})
+			    	                	dialog.close();
+			    	                }
+			    	            }, {
+			    	                label: '取消',
+			    	                action: function(dialog) {
+			    	                    dialog.close();
+			    	                }
+			    	            }],
+			    	            onshown : function(dialog){
+			    	            	Common.initDataTable($('#chooseUrlTable'));
+			    	            }
+			    	        });
+						});
+						
+					});
+				},
+				//取消url关联
+				cancelUrl : function(){
+					$(document).off("click","#UrlTable_wrapper a.btn-cancel");
+					$(document).on("click","#UrlTable_wrapper a.btn-cancel",function(){
+	 			    	 var obj = $(this);
+	 			    	 var id = $(this).attr("data");
+	 			    	 Modal.confirm('确定要取消关联该URL吗?', function(result){
+	 			             if(result) {
+	 			            	 Common.xhr.del('/v2.0/OS-KSADM/roles/'+id,  //需修改接口
+	 			                     function(data){
+	 			                    	 if(data){
+	 			                    		 Modal.success('取消成功')
+	 			                			 setTimeout(function(){Modal.closeAll()},2000);
+	 			                    		 obj.parent().parent().remove();
+	 			                    	 }else{
+	 			                    		 Modal.warning ('取消失败')
+	 			                    	 }
+	 			                     });
+	 			             }else {
+	 			            	 Modal.closeAll();
+	 			             }
+	 			         });
+	 			    });
+				},
+				setDefaultUrl : function(){
+					$(document).off("click","#UrlTable_wrapper a.btn-set-default")
+					$(document).on("click","#UrlTable_wrapper a.btn-set-default",function(){
+	 			    	 var obj = $(this);
+	 			    	 var id = $(this).attr("data");
+	 			    	 var text;
+	 			    	 var old_text = obj.html();
+	 			    	 if(obj.html() == "设为默认"){
+	 			    		text = "取消默认";
+	 			    	 }else{
+	 			    		text = "设为默认";
+	 			    	 }
+	 			    	 Modal.confirm('确定要'+old_text+'该URL吗?', function(result){
+	 			             if(result) {
+	 			            	 Common.xhr.del('/v2.0/OS-KSADM/roles/'+id,  //需修改接口
+	 			                     function(data){
+	 			                    	 if(data){
+	 			                    		 Modal.success(old_text+'成功')
+	 			                			 setTimeout(function(){Modal.closeAll()},2000);
+	 			                    		 obj.html(text);
+	 			                    	 }else{
+	 			                    		 Modal.warning (old_text+'失败')
+	 			                    	 }
+	 			                     });
+	 			             }else {
+	 			            	 Modal.closeAll();
+	 			             }
+	 			         });
+	 			     });
 				}
 		}
 		//增加按钮
@@ -138,9 +249,64 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 	         });
 	     });
 	   //管理
-	     $("#RoleTable_wrapper a.btn-edit-authority").on("click",function(){
-		    	
-		    });
+	    $("#FunctionTable_wrapper a.btn-edit-authority").on("click",function(){
+	    	Common.render(true,{
+	 			tpl:'tpls/sysmanagement/functiontree/management.html',
+	 			data:'/v2.0/subnets/page/1/10',  //需修改接口
+	 			beforeRender: function(data){
+	 				//return data.result;
+	 				return data = [
+			 				{ id:1,name:"首页", open:true,isParent:true},
+			 				{ id:2,name:"基础环境", open:true,
+			 					children: [
+			 						{ id:21,name:"设备管理"},
+			 						{ id:22,name:"物理区域"},
+			 						{ id:23,name:"虚拟化环境"}
+			 					]},
+			 				{ id:3,name:"系统管理", open:true,
+			 					children: [
+		 		 						{ id:31,name:"用户管理"},
+		 		 						{ id:32,name:"角色管理"}
+		 		 					]}
+		
+			 				];
+	 			},
+	 			callback: function(data){
+	 				require(['jq/ztree'], function() {
+	            		var setting = {
+	            				edit: {
+	            					enable: true,
+	            					editNameSelectAll: true,
+	            					showRemoveBtn: true,
+	            					showRenameBtn: true
+	            				},
+	            				callback: {
+	            					onClick: onClick
+	            				}
+	            		};
+
+	            		var zNodes =data;
+	            		var code;
+	            		$.fn.zTree.init($("#functionTree"), setting, zNodes);
+	            		var treeObj = $.fn.zTree.getZTreeObj("functionTree");
+	                	var nodes = treeObj.getNodes();
+	                	DataIniter.getUrlList(nodes[0].id, nodes[0].name);
+	                	
+	            		function onClick(event, treeId, treeNode, clickFlag) {
+	            			DataIniter.getUrlList(treeNode.id, treeNode.name)
+	            		}
+	            		
+
+	            	});
+	 				//关联url
+	 				EventsHandler.chooseUrl();
+	 				//取消关联
+	 				EventsHandler.cancelUrl();
+	 			    //设置默认
+	 				EventsHandler.setDefaultUrl();
+	 			}
+	 		});
+		});
 	}
 	return {
 		init : init
