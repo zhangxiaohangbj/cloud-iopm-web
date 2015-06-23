@@ -5,7 +5,7 @@ define(['Common','bs/modal','bs/wizard','bs/tooltip','jq/form/validator-bs3'],fu
 		Common.$pageContent.addClass("loading");
 		//先获取数据，进行加工后再去render
 		Common.render(true,{
-			tpl:'tpls/ccenter/security/keypairlist.html',
+			tpl:'tpls/ccenter/security/keypair/list.html',
 			data:'/'+current_vdc_id+'/os-keypairs',
 			beforeRender: function(data){
 				return data.result;
@@ -80,7 +80,7 @@ define(['Common','bs/modal','bs/wizard','bs/tooltip','jq/form/validator-bs3'],fu
 		$("#KeypairTable_wrapper span.keypair-add").on("click",function(){
 	    	
 			//需要修改为真实数据源	
-			Common.render('tpls/ccenter/security/addkeypair.html','',function(html){	
+			Common.render('tpls/ccenter/security/keypair/add.html','',function(html){	
 				Modal.show({
     	            title: '创建密钥对',
     	            message: html,
@@ -99,7 +99,7 @@ define(['Common','bs/modal','bs/wizard','bs/tooltip','jq/form/validator-bs3'],fu
     	                			dialog.close();
     	                			
     	                			var data1 = data;
-    	                			Common.render('tpls/ccenter/security/downloadkeypair.html',data1,function(html){
+    	                			Common.render('tpls/ccenter/security/keypair/download.html',data1,function(html){
     	                				Modal.show({
     	                    	            title: '下载密钥对',
     	                    	            message: html,
@@ -154,7 +154,7 @@ define(['Common','bs/modal','bs/wizard','bs/tooltip','jq/form/validator-bs3'],fu
 		$("#KeypairTable_wrapper span.keypair-import").on("click",function(){
 	    	
 			//需要修改为真实数据源	
-			Common.render('tpls/ccenter/security/importkeypair.html','',function(html){	
+			Common.render('tpls/ccenter/security/keypair/import.html','',function(html){	
 				Modal.show({
     	            title: '导入密钥对',
     	            message: html,
@@ -206,7 +206,7 @@ define(['Common','bs/modal','bs/wizard','bs/tooltip','jq/form/validator-bs3'],fu
 		$("#KeypairTable_wrapper a.keypair-name").on("click",function(){
 	    	var id = $(this).attr("data");
 			//需要修改为真实数据源	
-			Common.render(true,'tpls/ccenter/security/keypairdetail.html','/'+current_vdc_id+'/os-keypairs/'+id,function(data){	
+			Common.render(true,'tpls/ccenter/security/keypair/detail.html','/'+current_vdc_id+'/os-keypairs/'+id,function(data){	
 //				alert("Value: " + JSON.stringify(data));
 				$("a.reload").on("click",function(){
     		    	Common.router.route();
