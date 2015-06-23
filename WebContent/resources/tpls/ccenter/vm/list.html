@@ -59,9 +59,10 @@
 			 			</td>
 			 			<td>{{item.created_at}}</td>
 						<td>
-						<a class="btn-opt" data-toggle="tooltip" title="备份"  style="margin: 0;"><i class="fa fa-files-o"></i></a>
+						<!-- <a class="btn-opt" data-toggle="tooltip" title="备份"  style="margin: 0;"><i class="fa fa-files-o"></i></a> -->
 						<a href="javascript:void(0)" class="btn-opt createSnapshot" data-toggle="tooltip" title="创建快照" data-act="stop" data="{{item.id}}" style="margin: 0;"><i class="fa fa-camera"></i></a>
 						<!-- <a class="btn-opt" data-toggle="tooltip" title="控制台" data-act="delete"><i class="glyphicon glyphicon-trash"></i></a> -->
+						{{if item.vmState != 'PAUSED' && item.vmState != 'SHUTOFF' && item.vmState != 'SUSPENDED'}}
 						<div class="dropdown">
 							<a class="btn-opt dropdown-toggle" data-toggle="dropdown" title="更多"  aria-expanded="false" ><i class="fa fa-angle-double-right"></i></a>
 							<ul class="dropdown-menu" style="right: 0;left: initial;">
@@ -81,6 +82,18 @@
 								<li><a href="javascript:void(0)" class="delete" data="{{item.id}}"><i class="fa fa-file-text fa-fw"></i>终止</a></li>
 							</ul>
 						</div>	
+						{{else}}
+						<div class="dropdown">
+                            <a class="btn-opt dropdown-toggle" data-toggle="dropdown" title="更多"  aria-expanded="false" ><i class="fa fa-angle-double-right"></i></a>
+                            <ul class="dropdown-menu" style="right: 0;left: initial;">
+                                <li><a href="javascript:void(0)" class="attachIp" data="{{item.id}}"><i class="fa fa-gear fa-fw"></i>绑定浮动IP</a></li>
+                                <li><a href="javascript:void(0)" class="dettachIp" data="{{item.id}}"><i class="fa fa-gear fa-fw"></i>解除浮动IP绑定</a></li>
+                                <li><a href="javascript:void(0)" class="editName" data="{{item.name}}"><i class="fa fa-file-text fa-fw"></i>修改云主机名称</a></li>
+                                <li><a href="javascript:void(0)" class="resume" data="{{item.id}}" vm_state="{{item.vmState}}"><i class="fa fa-file-text fa-fw"></i>恢复</a></li>
+                                <li><a href="javascript:void(0)" class="delete" data="{{item.id}}"><i class="fa fa-file-text fa-fw"></i>终止</a></li>
+                            </ul>
+                        </div>  
+						{{/if}}
 						</td>
 					</tr>
     			{{/each}}

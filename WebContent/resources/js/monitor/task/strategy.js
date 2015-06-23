@@ -49,15 +49,15 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 		                'memo': {
 		                    maxlength:255
 		                },
-		                'class_name': {
+		                'className': {
 		                	required: true,
 		                    maxlength:255
 		                },
-		                'method_name': {
+		                'methodName': {
 		                	required: true,
 		                    maxlength:255
 		                },
-		                'params_memo': {
+		                'paramsMemo': {
 		                    maxlength:1024
 		                }
 		            }
