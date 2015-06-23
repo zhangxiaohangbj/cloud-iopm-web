@@ -144,17 +144,36 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 	     $("#RoleTable_wrapper a.btn-edit-authority").on("click",function(){
 		    	var id= $(this).attr("data");
 		    	Common.xhr.ajax('/v2.0/subnets/'+id,function(data){  //需修改接口
+		    		data =[
+	    					{ id:1, pId:0, name:"首页", checked:true},
+	    					{ id:2, pId:0, name:"资源管理"},
+	    					{ id:3, pId:0, name:"安全管理", open:true},
+	    					{ id:31, pId:3, name:"用户管理"},
+	    					{ id:32, pId:3, name:"角色管理"},
+	    					{ id:33, pId:3, name:"菜单管理", open:true},
+	    					{ id:321, pId:33, name:"/sysmgr/menuItemAdd.htm"},
+	    					{ id:322, pId:33, name:"/sysmgr/menuItemDelete.htm"}
+	    				];
 		    		//功能权限树
 	    			Modal.show({
 	    	            title: '角色功能权限设置',
-	    	            message: "",
+	    	            message: '<div><ul id="authorityTree" class="ztree"></ul></div>',
 	    	            nl2br: false,
 	    	            buttons: [{
 	    	                label: '保存',
 	    	                action: function(dialog) {
-	    	            		var serverData = {
-		    	                	  };
-	    	                	Common.xhr.putJSON('/v2.0/users/'+id,serverData,function(data){
+	    	                	var treeObj = $.fn.zTree.getZTreeObj("authorityTree");
+	    	                	var nodes = treeObj.getCheckedNodes(true);
+	    	                	if(nodes.length == 0){
+	    	                		Modal.warning ('请选择权限');
+	    	                		return;
+	    	                	}
+	    	                	var serverData = [];
+	    	                	for(var i = 0; i< nodes.length; i++){
+	    	                		serverData.push({"id":nodes[i].id});
+	    	                	}
+	    	            		
+	    	                	Common.xhr.putJSON('/v2.0/users/'+id,serverData,function(data){  //需修改接口
 	    	                		if(data){
 	    	                			Modal.success('保存成功')
 	    	                			setTimeout(function(){Modal.closeAll()},2000);
@@ -171,7 +190,44 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 	    	                }
 	    	            }],
 	    	            onshown : function(){
-	    	            	
+	    	            	require(['jq/ztree'], function() {
+	    	            		var setting = {
+	    	            			check: {
+	    	            				enable: true
+	    	            			},
+	    	            			data: {
+	    	            				simpleData: {
+	    	            					enable: true
+	    	            				}
+	    	            			}
+	    	            		};
+
+	    	            		var zNodes =data;
+	    	            		var code;
+	    	            		$.fn.zTree.init($("#authorityTree"), setting, zNodes);
+
+	    	            		function setCheck() {
+	    	            			var zTree = $.fn.zTree.getZTreeObj("authorityTree"),
+	    	            					py = $("#py").attr("checked")? "p":"",
+	    	            					sy = $("#sy").attr("checked")? "s":"",
+	    	            					pn = $("#pn").attr("checked")? "p":"",
+	    	            					sn = $("#sn").attr("checked")? "s":"",
+	    	            					type = { "Y":py + sy, "N":pn + sn};
+	    	            			zTree.setting.check.chkboxType = type;
+	    	            			showCode('setting.check.chkboxType = { "Y" : "' + type.Y + '", "N" : "' + type.N + '" };');
+	    	            		}
+	    	            		function showCode(str) {
+	    	            			if (!code) code = $("#code");
+	    	            			code.empty();
+	    	            			code.append("<li>"+str+"</li>");
+	    	            		}
+
+	    	            		setCheck();
+	    	            		$("#py").bind("change", setCheck);
+	    	            		$("#sy").bind("change", setCheck);
+	    	            		$("#pn").bind("change", setCheck);
+	    	            		$("#sn").bind("change", setCheck);
+	    	            	});
 	    	            }
 	    	        });
 	    		});

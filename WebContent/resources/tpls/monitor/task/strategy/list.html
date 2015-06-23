@@ -2,6 +2,11 @@
 	<ol class="breadcrumb">
 	  <li class="active">策略管理</li>
 	</ol>
+	<p class="description">
+		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+		提供一种随时获取的、弹性的计算能力，这种计算能力的体现就是 主机（Instance）。主机就是一台配置好了的服务器，它有您期望的硬件配置、操作系统和网络配置。通常情况下，
+		您的请求可以在10秒到60秒的时间之内 完成，所以您完全可以动态地、按需使用计算能力
+	</p>
 </div>
 <div class="page-body">
 	<div class="pane">
@@ -9,22 +14,18 @@
 			<table class="table table-primary table-striped" id="strategyTable">
 				<thead>
 					<tr>
-						<th class="c2">
-							<label><input type="checkbox" class="selectAll"></label>
-						</th>
-						<th class="c4">策略分组</th>
-						<th class="c4">策略名称</th>
-						<th class="c4">策略描述</th>
-						<th class="c6">策略实现类</th>
-						<th class="c6">策略实现方法</th>
-						<th class="c2">创建时间</th>
-						<th class="c6 sorting_disabled">操作</th>
+						<th style="width:10%">策略分组</th>
+						<th style="width:10%">策略名称</th>
+						<th style="width:20%">策略描述</th>
+						<th style="width:20%">策略实现类</th>
+						<th style="width:10%">策略实现方法</th>
+						<th style="width:15%">创建时间</th>
+						<th style="width:15%">操作</th>
 					</tr>
 				</thead>
 				<tbody>
 				{{each list as item i}}
 					<tr>
-						<td><label><input type="checkbox"></label></td>
 						<td>{{item.strategyGroup.name}}</td>
 						<td>{{item.name}}</td>
 						<td>{{item.memo}}</td>
@@ -43,18 +44,6 @@
 					</tr>
     			{{/each}}
 				</tbody>
-				<tfoot>
-					<tr>
-						<td></td>
-						<td></td>
-						<td></td>
-						<td></td>
-						<td></td>
-						<td></td>
-						<td></td>
-						<td></td>
-					</tr>
-				</tfoot>
 			</table>
 		</div>
 	</div>
