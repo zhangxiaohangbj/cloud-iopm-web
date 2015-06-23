@@ -2,6 +2,10 @@
 	<ol class="breadcrumb">
 	  <li class="active">浮动IP列表</li>
 	</ol>
+	<p class="description">
+		弹性IP (Floating IP) 地址是相对于云环境内部网络的外部IP地址，可以将申请到的弹性IP绑定到云环境内私有网络中的主机（具有内部私有IP地址）或路由器，
+		并可以随时解绑，再分配到其他主机或者路由器，如此可以实现通过固定的弹性IP访问地址对外提供业务的功能。
+	</p>
 </div>
 <div class="page-body">
 	<div class="pane">
@@ -40,8 +44,7 @@
 			 			</td>
 						<td>
 						<a class="btn-edit" data-toggle="tooltip" title="解除绑定" href="javascript:void(0)" data="{{item.id}}" data-act="stop" style="margin: 0 8px;"><li class="glyphicon glyphicon-edit"></li></a>
-						<!--<a class="btn-delete" data-toggle="tooltip" title="释放浮动IP" href="javascript:void(0)" data="{{item.id}}" style="margin: 0 8px;"><i class="fa fa-trash-o fa-fw"></i></a>
-						  -->
+						<a class="btn-delete" data-toggle="tooltip" title="释放浮动IP" href="javascript:void(0)" data="{{item.id}}" style="margin: 0 8px;"><i class="fa fa-trash-o fa-fw"></i></a>
 						</td>
 					</tr>
     			{{/each}}

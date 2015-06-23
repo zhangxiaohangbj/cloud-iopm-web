@@ -73,6 +73,9 @@ input[disabled], select[disabled], textarea[disabled], input[readonly], select[r
  	overflow:hidden;
  	margin-left:18%;
  }
+ .wizard-cards .icheckbox-info{
+ 	margin-right:15px;
+ }
  .wizard-card-container{
  	margin-left:0;
  	/* float:right; */
@@ -113,6 +116,7 @@ input[disabled], select[disabled], textarea[disabled], input[readonly], select[r
  	width:100%;
  	padding:0 8px;
  	outline: none;
+ 	box-shadow:none;
  	background-color: #fff;
  }
  .wizard-input-section div.has-error  .form-control{
@@ -153,6 +157,9 @@ input[disabled], select[disabled], textarea[disabled], input[readonly], select[r
 
 .wizard-input-section div.form-group .col-sm{
 	padding-left:2px;
+}
+.wizard-input-section div.form-group .query-info{
+	padding:5px 0 0 15px;
 }
 .wizard-input-section div.form-group .config-detail-info{
 	height:30px;

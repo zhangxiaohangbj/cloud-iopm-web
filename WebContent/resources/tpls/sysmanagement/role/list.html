@@ -1,0 +1,45 @@
+<div class="page-header clearfix">
+	<ol class="breadcrumb">
+	  <li class="active">角色管理</li>
+	</ol>
+</div>
+<div class="page-body">
+	<div class="pane">
+		<div class="pane-content">
+			<table class="table table-primary table-striped" id="RoleTable">
+				<thead>
+					<tr>
+						<th class="c1">
+							<label><input type="checkbox" class="selectAll"></label>
+						</th>
+						<th class="c3">角色名称</th>
+						<th class="c4">角色描述</th>
+						<th class="c3 sorting_disabled">操作</th>
+					</tr>
+				</thead>
+				<tbody>
+				{{each list as item i}}
+					<tr>
+						<td><label><input type="checkbox"></label></td>
+						<td>{{item.name}}</td>
+						<td>{{item.description}}</td>
+						<td>
+							<!-- <a class="btn-edit" data-toggle="tooltip" title="编辑" href="javascript:void(0)" data="{{item.id}}" data-act="stop" style="margin: 0 8px;"><li class="glyphicon glyphicon-edit"></li></a> -->
+							<a class="btn-delete" data-toggle="tooltip" title="删除" href="javascript:void(0)" data="{{item.id}}" style="margin: 0 8px;"><i class="fa fa-trash-o fa-fw"></i></a>
+							<a class="btn-edit-authority" data-toggle="tooltip" title="权限设置" href="javascript:void(0)" data="{{item.id}}" style="margin: 0 8px;">权限设置</a>
+						</td>
+					</tr>
+    			{{/each}}
+				</tbody>
+				<tfoot>
+					<tr>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+					</tr>
+				</tfoot>
+			</table>
+		</div>
+	</div>
+</div>

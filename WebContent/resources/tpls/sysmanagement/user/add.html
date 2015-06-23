@@ -1,9 +1,9 @@
 <style>
 <!--
-.table-primary > tbody > tr > td, .table-primary > thead > tr > th{
+.wizard .table-primary > tbody > tr > td, .wizard .table-primary > thead > tr > th{
 	border-right: 1px solid #e4e9ec;
 }
-.table-primary .btn-primary{
+.wizard .table-primary .btn-primary{
 	float:right;
 }
 -->
@@ -15,9 +15,9 @@
 		<div class="wizard-card-content col-sm-8">
 				<div class="wizard-input-section">
 					<div class="form-group">
-						<label for="login-name" class="control-label col-sm-2"><span>* </span>账号：</label>
+						<label for="name" class="control-label col-sm-2"><span>* </span>账号：</label>
 						<div class="col-sm-7 col-sm">
-							<input type="text" class="form-control" id="login-name" name="login-name">
+							<input type="text" class="form-control" id="name" name="name">
 						</div>
 					</div>
 				</div>
@@ -69,17 +69,17 @@
 				</div>
 				<div class="wizard-input-section">
 					<div class="form-group">
-						<label for="true_name" class="control-label col-sm-2">姓名：</label>
+						<label for="trueName" class="control-label col-sm-2">姓名：</label>
 						<div class="col-sm-7 col-sm">
-							<input type="text" class="form-control" name="true_name">
+							<input type="text" class="form-control" name="trueName">
 						</div>
 					</div>
 				</div>
 				<div class="wizard-input-section">
 					<div class="form-group">
-						<label for="organ_id" class="control-label col-sm-2"><span>* </span>所属部门：</label>
+						<label for="organId" class="control-label col-sm-2"><span>* </span>所属部门：</label>
 						<div class="col-sm-7 col-sm">
-							<input type="text" class="form-control" name="organ_id" readonly="readonly">
+							<input type="text" class="form-control" name="organId" readonly="readonly">
 						</div>
 					</div>
 				</div>
@@ -88,10 +88,10 @@
 			<p>帮助说明；帮助说明；帮助说明；帮助说明；帮助说明；帮助说明；帮助说明；帮助说明；</p>
 		</div>
 	</div>
-	<div class="wizard-card" data-cardname="authority" id="authorityInfo">
+	<div class="wizard-card" data-cardname="authority">
 		<h3>权限信息</h3>
 		<div class="wizard-card-content col-sm-8">
-			<table class="table table-primary">
+			<table class="table table-primary" id="authorityInfo">
 				<thead>
 					<tr>
 						<th class="c3">关联VDC</th>
@@ -124,9 +124,9 @@
 		<div class="wizard-card-content col-sm-12" style="border-right: 0;">
 			<div class="wizard-input-section">
 					<div class="form-group">
-						<label for="login-name" class="control-label col-sm-2">账号：</label>
+						<label for="name" class="control-label col-sm-2">账号：</label>
 						<div class="col-sm-7 col-sm">
-							<label name="login-name"></label>
+							<label name="name"></label>
 						</div>
 					</div>
 				</div>
@@ -156,17 +156,17 @@
 				</div>
 				<div class="wizard-input-section">
 					<div class="form-group">
-						<label for="true_name" class="control-label col-sm-2">姓名：</label>
+						<label for="trueName" class="control-label col-sm-2">姓名：</label>
 						<div class="col-sm-7 col-sm">
-							<label name="true-name"></label>
+							<label name="trueName"></label>
 						</div>
 					</div>
 				</div>
 				<div class="wizard-input-section">
 					<div class="form-group">
-						<label for="organ_id" class="control-label col-sm-2">所属部门：</label>
+						<label for="organId" class="control-label col-sm-2">所属部门：</label>
 						<div class="col-sm-7 col-sm">
-							<label name="organ_id"></label>
+							<label name="organId"></label>
 						</div>
 					</div>
 				</div>

@@ -104,8 +104,12 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 	    })
 	}
 	
+<<<<<<< HEAD
 	var bindInstanceEvent = function(){
 		debugger
+=======
+	var bindEvent = function(){
+>>>>>>> branch 'master' of http://gitserver/iop/cloud-iopm-web.git
 		//dataTables
 		Common.initDataTable($('#instanceTable'),function($tar){debugger
 			commonEvent.timeButtons($tar);

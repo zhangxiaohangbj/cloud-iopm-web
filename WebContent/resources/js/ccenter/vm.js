@@ -8,7 +8,16 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 			tpl:'tpls/ccenter/vm/list.html',
 			data:'/'+current_vdc_id+'/servers/page/1/10',
 			beforeRender: function(data){
-				return data.result;
+				var vms = data.result
+	    		for(var i=0;i<vms.length;i++){
+	    			if(vms[i]['fixedIps']!=null){//ip 换行显示
+	    				vms[i]['fixedIps'] = vms[i]['fixedIps'].replace(new RegExp(/(,)/g),'<br>')
+	    			}
+	    			if(vms[i]['floatingIps']!=null){//ip 换行显示
+	    				vms[i]['floatingIps'] = vms[i]['floatingIps'].replace(new RegExp(/(,)/g),'<br>')
+	    			}
+	    		}
+				return vms;
 			},
 			callback: bindEvent
 		});
@@ -166,19 +175,19 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 							rateMemory = getMathRound(quotaUsages.ram,quotas.ram),
 							rateNums = getMathRound(quotaUsages.instances,quotas.instances),
 							styleCore = getClass(rateCore),styleMemory = getClass(rateMemory),styleNums=getClass(rateNums);
-							var renderData = {
-									core: {
-										total: quotas.cores, used: quotaUsages.cores, rate: rateCore, style: styleCore
-									},
-									memory: {
-										total: quotas.ram, used: quotaUsages.ram, rate: rateMemory, style: styleMemory
-									},
-									nums: {
-										total: quotas.instances, used: quotaUsages.instances, rate: rateNums, style: styleNums
-									}
-							}
+							var renderData = [
+							        {
+							        	name: 'core',title: '虚拟内核数量',total: quotas.cores, used: quotaUsages.cores, rate: rateCore, style: styleCore
+							        },
+							        {
+							        	name: 'memory',title: '内存总计',total: quotas.ram, used: quotaUsages.ram, rate: rateMemory, style: styleMemory
+							        },
+							        {
+							        	name: 'nums',title: '云主机数量',total: quotas.instances, used: quotaUsages.instances, rate: rateNums, style: styleNums
+							        }
+							 ];
 							//生成html数据
-							Common.render('tpls/ccenter/vm/quota.html',renderData,function(html){
+							Common.render('tpls/common/quota.html',renderData,function(html){
 								$('div.quotas').html(html);
 							});
 						})
@@ -288,9 +297,9 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 					if(data && data.security_groups){
 						for(var i=0,l=data.security_groups.length;i<l;i++){
 							if(data.security_groups[i].name=='default'){
-								dataArr.push('<label><input type="checkbox" checked>'+data.security_groups[i].name+'</></label>');
+								dataArr.push('<label data-id="'+data.security_groups[i].name+'"><input type="checkbox" checked>'+data.security_groups[i].name+'</></label>');
 							}else{
-								dataArr.push('<label><input type="checkbox">'+data.security_groups[i].name+'</></label>');
+								dataArr.push('<label data-id="'+data.security_groups[i].name+'"><input type="checkbox">'+data.security_groups[i].name+'</label>');
 							}
 						}
 						$('div.security-group').html(dataArr.join(''));
@@ -328,8 +337,11 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 	    				$(this).parents('ul:first').siblings('div').each(function(){
 	    					if($(this).attr('data-con') == source){
 	    						$(this).removeClass('hide').addClass('show');
+	    						$(this).parent().find('[data-con='+source+']').find('*:first').addClass('selected');
+	    	    				$('#imageRef').val($(this).find('.selected:first').attr('data-con'));
 	    					}else{
 	    						$(this).removeClass('show').addClass('hide');
+	    						$(this).find('.selected').removeClass('selected');
 	    					}
 	    				})
 	    			});
@@ -338,7 +350,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 	    				$(this).parents('.form-group:first').find('.selected').removeClass('selected');
 	    				$(this).addClass('selected');
 	    				var data = $(this).attr("data-con");
-	    				$(this).parents('.form-group:first').find('input[name=imageRef]').val(data);
+	    				$('#imageRef').val(data);
 	    			})
 				},
 				//详细信息 -绑定云主机数量spinbox
@@ -459,6 +471,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
     	                submitText: "提交",
     	                submittingText: "提交中..."
     	            },
+    	            submitEnabled: [2,3,4],
     	            validate: {
 	            		0: function(){
 	            			return this.el.find('form').valid();
@@ -475,16 +488,57 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
     			                    required: true,
     			                    minlength: 4,
     			                    maxlength:15
+    			                },
+    			                'imageRef': {
+    			                    required: true,
+    			                    minlength: 1
     			                }
     			            }
     					});
     				})
     			});
+    			
+    			var getSecruityGroup = function(){
+    				var data = [];
+    				$('div.security-group').find('.icheckbox-info').each(function(){
+    					if($(this).hasClass('checked')){
+    						data.push($(this).parent().attr('data-id'))
+    					}
+    				});
+    				return data;
+    			}
+    			
     			//确认信息卡片被选中的监听
     			wizard.cards.confirm.on('selected',function(card){
     				//获取上几步中填写的值
-    				var serverData = wizard.serializeObject()
-    				$('.name-confirm').text(serverData.name)
+    				var serverData = wizard.serializeObject();
+    				//取网络相关的数据
+    				$('#vm-networks .list-group-select').children().each(function(i,item){
+    					var network_uuid = $(item).find('li:first').attr('data-id');
+    					var fixedIp = $(item).find('select.select-fixedip').children('option:selected').val();
+    					$('.network-confirm').text("网络："+network_uuid+"            IP:"+fixedIp)
+    				});
+    				var sgGroupStr = ""
+    				$('div.security-group').find('.icheckbox-info').each(function(){
+    					if($(this).hasClass('checked')){
+    						if(sgGroupStr==""){
+    							sgGroupStr = $(this).parent().attr('data-id');
+    						}else{
+    							sgGroupStr = sgGroupStr+ "," + $(this).parent().attr('data-id');
+    						}
+    					}
+    				});
+    				$('.name-confirm').text(serverData.name);
+    				$('.image-confirm').text(serverData.imageRef);
+    				$('.vdc-confirm').text(serverData.tenant_id);
+    				$('.az-confirm').text(serverData.availability_zone);
+    				$('.vmtype-confirm').text(serverData.flavorRef);
+    				$('.num-confirm').text(serverData.min_count);
+    				$('.keyname-confirm').text(serverData.key_name);
+    				$('.securitygroup-confirm').text(sgGroupStr);
+    				$('.userdata-confirm').text(serverData.user_data);
+    				$('.diskconfig-confirm').text(serverData.auto_disk_config);
+    				
 				});
     			DataIniter.initAvailableZone();
     			DataIniter.initPopver();
@@ -531,18 +585,14 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
     				$('#vm-networks .list-group-select').children().each(function(i,item){
     					var network = {};
     					network.uuid = $(item).find('li:first').attr('data-id');
-    					network.fixed_ip = $(item).find('select.select-fixedip').children('option:selected').val();
+    					var fixedIp = $(item).find('select.select-fixedip').children('option:selected').val();
+    					if(fixedIp!='DHCP'){
+    						network.fixed_ip = fixedIp;
+    					}
     					networkData.push(network);
     				});
     				
     				serverData.server.networks=networkData;
-    				var fixed_ip = $("#fixed_ip").val();
-    				if(fixed_ip!=null&&fixed_ip!="DHCP"){
-    					serverData.server.networks=[{
-	    						"uuid": 'af8c1f42-b21c-4d13-bc92-1852e22f4f98',
-	    						"fixed_ip": '192.168.0.115'//$("#fixed_ip").val()
-    					}]
-    				}
     				Common.xhr.postJSON('/'+current_vdc_id+'/servers',serverData,function(data){
     					wizard._submitting = false;
     					wizard.updateProgressBar(100);

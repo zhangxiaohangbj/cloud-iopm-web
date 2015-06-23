@@ -5,7 +5,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 		//先获取数据，进行加工后再去render
 		Common.render(true,{
 			tpl:'tpls/sysmanagement/user/list.html',
-			data:'/v2.0/subnets/page/1/10',  //需修改接口
+			data:'/v2.0/users/page/10/1',
 			beforeRender: function(data){
 				return data.result;
 			},
@@ -23,25 +23,25 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 			Common.$pageContent.removeClass("loading");
 		});
 		//载入默认的数据 inits,创建数据载入类
-		var DataIniter = {
-			//vdc列表
-			initVdcList : function(){
-				Common.xhr.ajax('/v2.0/tenants',function(data){
-					var tenants = data.tenants;
-					var id = $('select.tenant_id').attr("data");
-					if(id!=null){
-						for (var i=0;i<tenants.length;i++) {
-							if (tenants[i].id==id) {
-								tenants[i].selected="selected";
-							}
-						}
-					}				
-					var html = Common.uiSelect(tenants);
-			    	$('select.tenant_id').html(html);
-			    	
-				})
-			}
-		}
+//		var DataIniter = {
+//			//vdc列表
+//			initVdcList : function(){
+//				Common.xhr.ajax('/v2.0/tenants',function(data){
+//					var tenants = data.tenants;
+//					var id = $('select.tenant_id').attr("data");
+//					if(id!=null){
+//						for (var i=0;i<tenants.length;i++) {
+//							if (tenants[i].id==id) {
+//								tenants[i].selected="selected";
+//							}
+//						}
+//					}				
+//					var html = Common.uiSelect(tenants);
+//			    	$('select.tenant_id').html(html);
+//			    	
+//				})
+//			}
+//		}
 		//载入后的事件
 		var EventsHandler = {
 			//选择部门
@@ -75,35 +75,43 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 				$(document).off("click","span.chooseVDC");
 				$(document).on("click","span.chooseVDC",function(){
 					var obj = $(this);
-					Common.render('tpls/sysmanagement/user/vdclist.html','/v2.0/tenants',function(html){
-						Modal.show({
-		    	            title: '选择VDC',
-		    	            message: html,
-		    	            closeByBackdrop: false,
-		    	            nl2br: false,
-		    	            buttons: [{
-		    	                label: '确定',
-		    	                action: function(dialog) {
-		    	                	if($("#chooseVDCTable input[type='radio']:checked").length == 0){
-		    	                		Modal.warning("请选择VDC");
-		    	                		return;
-		    	                	}
-		    	                	obj.parent().find(".vdc").html($("#chooseVDCTable input[type='radio']:checked").parent().next().html());
-		    	                	obj.parent().find("[name='vdc']").val($("#chooseVDCTable input[type='radio']:checked").next().val());
-		    	                	dialog.close();
-		    	                }
-		    	            }, {
-		    	                label: '取消',
-		    	                action: function(dialog) {
-		    	                    dialog.close();
-		    	                }
-		    	            }],
-		    	            onshown : function(dialog){
-		    	            	Common.initDataTable($('#chooseVDCTable'));
-		    	            }
-		    	        });
-					});
-					
+					var vdc_id = obj.prev().val();
+					Common.render({
+						tpl:'tpls/sysmanagement/user/vdclist.html',
+						data:'/v2.0/tenants',    //需修改接口
+						beforeRender: function(data){
+							data.vdc_id = vdc_id;
+							return data;
+						},
+						callback: function(html){
+							Modal.show({
+			    	            title: '选择VDC',
+			    	            message: html,
+			    	            closeByBackdrop: false,
+			    	            nl2br: false,
+			    	            buttons: [{
+			    	                label: '确定',
+			    	                action: function(dialog) {
+			    	                	if($("#chooseVDCTable input[type='radio']:checked").length == 0){
+			    	                		Modal.warning("请选择VDC");
+			    	                		return;
+			    	                	}
+			    	                	obj.parent().find(".vdc").html($("#chooseVDCTable input[type='radio']:checked").parent().next().html());
+			    	                	obj.parent().find("[name='vdc']").val($("#chooseVDCTable input[type='radio']:checked").next().val());
+			    	                	dialog.close();
+			    	                }
+			    	            }, {
+			    	                label: '取消',
+			    	                action: function(dialog) {
+			    	                    dialog.close();
+			    	                }
+			    	            }],
+			    	            onshown : function(dialog){
+			    	            	Common.initDataTable($('#chooseVDCTable'));
+			    	            }
+			    	        });
+						}
+					})
 				});
 			},
 			//选择角色
@@ -111,7 +119,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 				$(document).off("click","span.chooseRole");
 				$(document).on("click","span.chooseRole",function(){
 					var obj = $(this);
-					Common.render('tpls/sysmanagement/user/rolelist.html','/v2.0/tenants',function(html){
+					Common.render('tpls/sysmanagement/user/rolelist.html','/v2.0/roles/page/10/1',function(html){
 						Modal.show({
 		    	            title: '选择角色',
 		    	            message: html,
@@ -126,8 +134,8 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 		    	                		role_text += $(this).parent().next().html()+",";
 		    	                		role_id += $(this).next().val()+",";
 		    	                	})
-		    	                	obj.parent().find(".role").html(role_text);
-		    	                	obj.parent().find("[name='role']").val(role_id);
+		    	                	obj.parent().find(".role").html(role_text.substring(0,role_text.length-1));
+		    	                	obj.parent().find("[name='role']").val(role_id.substring(0,role_id.length-1));
 		    	                	dialog.close();
 		    	                }
 		    	            }, {
@@ -149,7 +157,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 			addAuthority :function(){
 				$(document).off("click","span.addAuthority");
 				$(document).on("click","span.addAuthority",function(){
-					$("#authorityInfo table tbody").append('<tr><td><span class="vdc"></span><span class="btn btn-primary chooseVDC">选择</span></td>'
+					$("#authorityInfo tbody").append('<tr><td><span class="vdc"></span><span class="btn btn-primary chooseVDC">选择</span></td>'
 							+'<td><span class="role"></span><span class="btn btn-primary chooseRole">选择</span></td>'
 							+'<td><a class="btn-delete" data-toggle="tooltip" title="删除" href="javascript:void(0)" style="margin: 0 8px;">'
 							+'<i class="fa fa-trash-o fa-fw"></i></a></td></tr>');
@@ -170,7 +178,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 				return $form.validate({
 					errorContainer: "_form",
 					rules:{
-						'login-name': {
+						'name': {
 		                    required: true,
 		                    maxlength:50
 		                },
@@ -190,10 +198,10 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 		                	email:true,
 		                    maxlength:50
 		                },
-		                'true_name': {
+		                'trueName': {
 		                    maxlength:50
 		                },
-		                'organ_id': {
+		                'organId': {
 		                    required: true,
 		                    maxlength:36
 		                }
@@ -206,6 +214,34 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 				})
 			}
 			
+		}
+		var jsonData = {
+				authorityJson:function(obj){
+					var authorityList = [];
+					$(obj+" tbody").find("tr").each(function(i,element){
+						var vdc_id = $(element).find("[name='vdc']").val();
+						var role_id = $(element).find("[name='role']").val();
+						var role_ids = role_id.split(",");
+						for(var i = 0; i<role_ids.length;i++){
+							authorityList.push({"scopeId":vdc_id,"roleId":role_ids[i],"scopeType":"tenant"});
+						}
+					});
+					return authorityList;
+				},
+				roleJson:function(obj){
+					var roleList = [];
+					$(obj+" tbody").find("tr").each(function(i,element){
+						var vdc_id = $(element).find("[name='vdc']").val();
+						var role_id = $(element).find("[name='role']").val();
+						var role_ids = role_id.split(",");
+						var roles = [];
+						for(var i = 0; i<role_ids.length;i++){
+							roles.push({"id":role_ids[i]})
+						}
+						roleList.push({"id":vdc_id,"roles":roles});
+					});
+					return roleList;
+				}
 		}
 		//增加按钮
 	    $("#UserTable_wrapper span.btn-add").on("click",function(){
@@ -263,7 +299,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 					$("#editUserBasic select").each(function(){
 						$("#confirm label[name='"+$(this).attr("name")+"']").html($(this).find("option:selected").html());
                 	});
-					$("#confirm .table tbody").html($("#authorityInfo .table tbody").html());
+					$("#confirm .table tbody").html($("#authorityInfo tbody").html());
 					$("#confirm .table .chooseVDC").remove();
 					$("#confirm .table .chooseRole").remove();
 					$("#confirm .table tr").each(function(){
@@ -287,8 +323,15 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
     			//创建提交数据
     			wizard.on("submit", function(wizard) {
     				var postData={
-    					user:wizard.serializeObject()
-    				};
+        					"name": $(" [name='name']").val(),
+        					"password": $(" [name='password']").val(),
+        					"status": $(" [name='status']").val(),
+        					"phone": $(" [name='phone']").val(),
+        					"email": $( " [name='email']").val(),
+        					"trueName": $( " [name='trueName']").val(),
+        					"organId": $( " [name='organId']").val()
+            				};
+    				postData.userRoleList = jsonData.authorityJson("#authorityInfo");
     				Common.xhr.postJSON('/v2.0/users',postData,function(data){
     					wizard._submitting = false;
     					wizard.updateProgressBar(100);
@@ -298,6 +341,112 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
     			});
 			});
 	    });
+		//编辑用户信息
+	    $("#UserTable_wrapper a.btn-edit").on("click",function(){
+	    	var id= $(this).attr("data");
+	    	Common.xhr.ajax('/v2.0/users/'+id,function(data){  //需修改接口
+	    		Common.render('tpls/sysmanagement/user/edit.html',data,function(html){
+	    			Modal.show({
+	    	            title: '用户信息编辑',
+	    	            message: html,
+	    	            nl2br: false,
+	    	            buttons: [{
+	    	                label: '保存',
+	    	                action: function(dialog) {
+	    	                	var valid = $(".form-horizontal").valid();
+	    	            		if(!valid) return false;
+	    	            		var serverData = {
+	    	        					"name": $(" [name='name']").val(),
+	    	        					"password": $(" [name='password']").val(),
+	    	        					"status": $(" [name='status']").val(),
+	    	        					"phone": $(" [name='phone']").val(),
+	    	        					"email": $( " [name='email']").val(),
+	    	        					"trueName": $( " [name='trueName']").val(),
+	    	        					"organId": $( " [name='organId']").val()
+	    	            				};
+	    	                	Common.xhr.putJSON('/v2.0/users/'+id,serverData,function(data){
+	    	                		if(data){
+	    	                			Modal.success('保存成功')
+	    	                			setTimeout(function(){Modal.closeAll()},2000);
+	    	                			Common.router.route();
+									}else{
+										Modal.warning ('保存失败')
+									}
+								})
+	    	                }
+	    	            }, {
+	    	                label: '取消',
+	    	                action: function(dialog) {
+	    	                    dialog.close();
+	    	                }
+	    	            }],
+	    	            onshown : function(){
+	    	            	EventsHandler.organChoose();
+	    	            	EventsHandler.user_form($(".form-horizontal"));
+	    	            }
+	    	        });
+	    		});
+	    		});
+	    });
+	    //删除用户
+	     $("#UserTable_wrapper a.btn-delete").on("click",function(){
+	    	 var id = $(this).attr("data");
+	    	 Modal.confirm('确定要删除该用户吗?', function(result){
+	             if(result) {
+	            	 Common.xhr.del('/v2.0/users/'+id,
+	                     function(data){
+	                    	 if(data){
+	                    		 Modal.success('删除成功')
+	                			 setTimeout(function(){Modal.closeAll()},2000);
+	                    		 Common.router.route();
+	                    	 }else{
+	                    		 Modal.warning ('删除失败')
+	                    	 }
+	                     });
+	             }else {
+	            	 Modal.closeAll();
+	             }
+	         });
+	     });
+	     //权限设置
+	     $("#UserTable_wrapper a.btn-edit-role").on("click",function(){
+		    	var id= $(this).attr("data");
+		    	Common.xhr.ajax('/v2.0/users/tenants/'+id,function(data){  //需修改接口
+		    		Common.render('tpls/sysmanagement/user/editrole.html',data,function(html){
+		    			Modal.show({
+		    	            title: '用户权限设置',
+		    	            message: html,
+		    	            nl2br: false,
+		    	            buttons: [{
+		    	                label: '保存',
+		    	                action: function(dialog) {
+		    	                	var serverData = jsonData.roleJson("#authorityInfo");
+		    	                	Common.xhr.postJSON('/v2.0/users/tenants/'+id,serverData,function(data){
+		    	                		if(data){
+		    	                			Modal.success('保存成功')
+		    	                			setTimeout(function(){Modal.closeAll()},2000);
+		    	                			Common.router.route();
+										}else{
+											Modal.warning ('保存失败')
+										}
+									})
+		    	                }
+		    	            }, {
+		    	                label: '取消',
+		    	                action: function(dialog) {
+		    	                    dialog.close();
+		    	                }
+		    	            }],
+		    	            onshown : function(){
+		    	            	EventsHandler.addAuthority();
+		    					EventsHandler.chooseVDC();
+		    					EventsHandler.chooseRole();
+		    					EventsHandler.delAuthority();
+		    	            }
+		    	        });
+		    		});
+		    		});
+		    });
 	}
 	return {
 		init:init
