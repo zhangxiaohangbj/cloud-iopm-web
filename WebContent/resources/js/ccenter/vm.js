@@ -373,6 +373,10 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 				//基本信息所需事件
 				bindBasicWizard : function(){
 					//basic-1：动态获取镜像或者快照
+					
+					//获取默认选中的镜像id
+    				$('#imageRef').val($('.image-list').find('.selected:first').attr('data-con'));
+    				//处理镜像列表点击事件
 	    			wizard.el.find(".wizard-card .image-source a").click(function() {
 	    				var source = $(this).attr('data-image');
 	    				$(this).parent().siblings('.active').removeClass('active');
@@ -380,6 +384,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 	    				$(this).parents('ul:first').siblings('div').each(function(){
 	    					if($(this).attr('data-con') == source){
 	    						$(this).removeClass('hide').addClass('show');
+	    						//默认选中第一条
 	    						$(this).parent().find('[data-con='+source+']').find('*:first').addClass('selected');
 	    	    				$('#imageRef').val($(this).find('.selected:first').attr('data-con'));
 	    					}else{
@@ -652,6 +657,9 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
     				
     				serverData.server.networks=networkData;
     				Common.xhr.postJSON('/'+current_vdc_id+'/servers',serverData,function(data){
+    					if(data.error){
+    						Modal.error(data.message)
+    					}
     					wizard._submitting = false;
     					wizard.updateProgressBar(100);
     					closeWizard();
