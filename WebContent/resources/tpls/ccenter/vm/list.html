@@ -18,12 +18,12 @@
 						<th class="c12">名称</th>
 						<th class="c12">内部IP</th>
 						<th class="c12">浮动IP</th>
-						<th class="c12">配置</th>
+						<th class="c13">配置</th>
 						<th class="c6">可用域</th>
 						<th class="c10">虚拟数据中心</th>
 						<th class="c6">状态</th>
 						<th class="c15">创建时间</th>
-						<th class="c13">操作</th>
+						<th class="c12">操作</th>
 					</tr>
 				</thead>
 				<tbody>
@@ -42,18 +42,18 @@
 						<td>{{item.vdcName}}</td>
 						<td>
 			 			{{if item.vmState == 'ACTIVE'}} <span class="text-success">运行中</span>
-							{{else if item.vmState == 'BUILD'}} <span class="text-success">创建中</span>
+							{{else if item.vmState == 'BUILD'}} <span class="text-warning">创建中</span>
 							{{else if item.vmState == 'REBUILD'}} <span class="text-success">重建中</span>
-							{{else if item.vmState == 'SUSPENDED'}} <span class="text-success">已挂起</span>
-							{{else if item.vmState == 'PAUSED'}} <span class="text-success">已暂停</span>
-							{{else if item.vmState == 'RESIZE'}} <span class="text-success">重建中</span>
+							{{else if item.vmState == 'SUSPENDED'}} <span class="text-danger">已挂起</span>
+							{{else if item.vmState == 'PAUSED'}} <span class="text-danger">已暂停</span>
+							{{else if item.vmState == 'RESIZE'}} <span class="text-danger">重建中</span>
 							{{else if item.vmState == 'VERIFY_RESIZE'}} <span class="text-success">确认重建</span>
 							{{else if item.vmState == 'REVERT_RESIZE'}} <span class="text-success">回退重建</span>
-							{{else if item.vmState == 'REBOOT'}} <span class="text-success">重启中</span>
-							{{else if item.vmState == 'HARD_REBOOT'}} <span class="text-success">硬重启中</span>
-							{{else if item.vmState == 'DELETED'}} <span class="text-success">已删除</span>
+							{{else if item.vmState == 'REBOOT'}} <span class="text-warning">重启中</span>
+							{{else if item.vmState == 'HARD_REBOOT'}} <span class="text-warning">硬重启中</span>
+							{{else if item.vmState == 'DELETED'}} <span class="text-danger">已删除</span>
 							{{else if item.vmState == 'ERROR'}} <span class="text-danger">错误</span>
-							{{else if item.vmState == 'SHUTOFF'}} <span class="text-success">关机</span>
+							{{else if item.vmState == 'SHUTOFF'}} <span class="text-danger">关机</span>
 							{{else}} <span class="text-danger">未知</span>
 			 			{{/if}}
 			 			</td>
