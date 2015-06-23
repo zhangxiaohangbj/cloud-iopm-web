@@ -1009,7 +1009,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 	    $("ul.dropdown-menu a.dettachIp").on("click",function(){
 	    	var serverName = $(this).parents('tr:first').find('a.vm_name').html();
 	    	var floatingIpStr = $(this).parents('tr:first').find('td.vm_floating_ips').html();
-	    	var ipStrList = floatingIpStr.split(',');
+	    	var ipStrList = floatingIpStr.split('<br>');
 	    	var floatingIpList = [];
 	    	for (var i in ipStrList){
 	    		floatingIpList.push({"value":ipStrList[i]});
@@ -1087,6 +1087,21 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
     	            }
     	        });
 	    	});
+	    });
+	    
+	  //恢复实例
+	    $("a.resume").on("click",function(){
+	    	var serverName = $(this).parents('tr:first').find('a.vm_name').html();
+	    	var serverId = $(this).attr("data");
+	    	var vmState = $(this).attr("vm_state");
+	    	if(vmState == "SUSPENDED"){
+	    		EditData.DoAction(serverId,serverName,{ "resume" : null},"恢复");
+	    	}else if(vmState == "PAUSED"){
+	    		EditData.DoAction(serverId,serverName,{ "unpause" : null},"恢复");
+	    	}else if(vmState == "SHUTOFF"){
+	    		EditData.DoAction(serverId,serverName,{ "start" : null},"恢复");
+	    	}
+	    	
 	    });
 	}	
 	return {
