@@ -164,8 +164,12 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 							if(current && current.length){
 								quotaUsages.cores = parseInt(quotaUsages.cores) + parseInt(current.attr('data-core'));
 								quotaUsages.ram = parseInt(quotaUsages.ram) + parseInt(current.attr('data-memory'));
+								quotaUsages.instances = parseInt(quotaUsages.instances) + parseInt(currentChosenObj.nums);
 							};
 							var getMathRound = function(used,total){
+								if(total==0||total==null||total==""){
+									return 0
+								}
 								return Math.round((parseInt(used)/parseInt(total))*100);
 							}
 							var getClass = function(rate){
@@ -493,6 +497,11 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 			            		required: true,
 			                    minlength: 4,
 			                    maxlength:255
+			                },
+			                'imageRef':{
+			                	required: true,
+			                    minlength: 1,
+			                    ignore: ""
 			                },
 			                'public_key':{
 			                	required: true
