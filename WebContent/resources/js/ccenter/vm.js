@@ -812,6 +812,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
                 Common.xhr.postJSON('/'+current_vdc_id+'/servers/'+id+'/action',rq,function(data){
                 	if(data.success){
                 		Modal.success("云主机["+name+"]已"+dc+"!");
+                		setTimeout(function(){Modal.closeAll()},3000);
                 	}else{
                 		Modal.error("云主机["+name+"]"+dc+"失败!");
                 	}
@@ -1117,7 +1118,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 	    	}else if(vmState == "PAUSED"){
 	    		EditData.DoAction(serverId,serverName,{ "unpause" : null},"恢复");
 	    	}else if(vmState == "SHUTOFF"){
-	    		EditData.DoAction(serverId,serverName,{ "start" : null},"恢复");
+	    		EditData.DoAction(serverId,serverName,{ "os-start" : null},"恢复");
 	    	}
 	    	
 	    });

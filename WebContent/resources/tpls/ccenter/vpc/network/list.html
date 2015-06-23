@@ -1,6 +1,6 @@
 <div class="page-header clearfix">
 	<ol class="breadcrumb">
-	  <li class="active">私有网络列表</li>
+	  <li class="active"><i class="icon-squre-d"></i>私有网络</li>
 	</ol>
 	<p class="description">
 		私有网络是一个隔离的二层网络广播域，在这个二层网络中，可以创建多个三层网络，即子网，私有网络之间是100%隔离的。
@@ -31,7 +31,7 @@
 					<tr>
 						<td><label><input type="checkbox"></label></td>
 						<td><a href="javascript:void(0);" class="network-name" data="{{item.id}}">{{item.name}}</a></td>
-						<td>{{item.tenant_id}}</td>
+						<td>{{item.vdc_name}}</td>
 						<td>{{if item["router:external"] == true}} 外部网络 {{else}} 内部私有网络 {{/if}}</td>
 						<td>{{item.cidr}}</td>
 						<td>{{if item.shared == true}} 共享 {{else}} 非共享 {{/if}}</td>
