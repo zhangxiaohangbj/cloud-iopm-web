@@ -169,7 +169,7 @@ input[disabled], select[disabled], textarea[disabled], input[readonly], select[r
 	width:150px;
 	font-size:12px;
 }
-.wizard-input-section div.form-group .list-group-item{
+/* .wizard-input-section div.form-group .list-group-item{
 	padding:5px;
 	position:relative;
 }
@@ -178,7 +178,11 @@ input[disabled], select[disabled], textarea[disabled], input[readonly], select[r
 	position:absolute;
 	right:0;
 	top:8px;
+} 
+.wizard-input-section div.form-group .list-group-item span{
+	color:#939090;
 }
+*/
 .nav-pills>li>a{
 	border-radius :0;
 	background:#eee;
@@ -189,9 +193,7 @@ input[disabled], select[disabled], textarea[disabled], input[readonly], select[r
 .nav-pills>li>a:hover{
 	background:#E5E4E4;
 }
-.wizard-input-section div.form-group .list-group-item span{
-	color:#939090;
-}
+
 .wizard-card[data-cardname=security] .wizard-input-section div.security-group label{
 	width:60%;
 	font-size:14px;
