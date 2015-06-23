@@ -157,8 +157,8 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 			addAuthority :function(){
 				$(document).off("click","span.addAuthority");
 				$(document).on("click","span.addAuthority",function(){
-					$("#authorityInfo tbody").append('<tr><td><span class="vdc"></span><span class="btn btn-primary chooseVDC">选择</span></td>'
-							+'<td><span class="role"></span><span class="btn btn-primary chooseRole">选择</span></td>'
+					$("#authorityInfo tbody").append('<tr><td><span class="vdc"></span><input type="hidden" name="vdc"/><span class="btn btn-primary chooseVDC">选择</span></td>'
+							+'<td><span class="role"></span><input type="hidden" name="role"/><span class="btn btn-primary chooseRole">选择</span></td>'
 							+'<td><a class="btn-delete" data-toggle="tooltip" title="删除" href="javascript:void(0)" style="margin: 0 8px;">'
 							+'<i class="fa fa-trash-o fa-fw"></i></a></td></tr>');
 					EventsHandler.chooseVDC();

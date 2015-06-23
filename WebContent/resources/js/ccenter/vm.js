@@ -373,6 +373,10 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 				//基本信息所需事件
 				bindBasicWizard : function(){
 					//basic-1：动态获取镜像或者快照
+					
+					//获取默认选中的镜像id
+    				$('#imageRef').val($('.image-list').find('.selected:first').attr('data-con'));
+    				//处理镜像列表点击事件
 	    			wizard.el.find(".wizard-card .image-source a").click(function() {
 	    				var source = $(this).attr('data-image');
 	    				$(this).parent().siblings('.active').removeClass('active');
@@ -380,6 +384,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 	    				$(this).parents('ul:first').siblings('div').each(function(){
 	    					if($(this).attr('data-con') == source){
 	    						$(this).removeClass('hide').addClass('show');
+	    						//默认选中第一条
 	    						$(this).parent().find('[data-con='+source+']').find('*:first').addClass('selected');
 	    	    				$('#imageRef').val($(this).find('.selected:first').attr('data-con'));
 	    					}else{
@@ -652,6 +657,9 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
     				
     				serverData.server.networks=networkData;
     				Common.xhr.postJSON('/'+current_vdc_id+'/servers',serverData,function(data){
+    					if(data.error){
+    						Modal.error(data.message)
+    					}
     					wizard._submitting = false;
     					wizard.updateProgressBar(100);
     					closeWizard();
@@ -1009,7 +1017,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 	    $("ul.dropdown-menu a.dettachIp").on("click",function(){
 	    	var serverName = $(this).parents('tr:first').find('a.vm_name').html();
 	    	var floatingIpStr = $(this).parents('tr:first').find('td.vm_floating_ips').html();
-	    	var ipStrList = floatingIpStr.split(',');
+	    	var ipStrList = floatingIpStr.split('<br>');
 	    	var floatingIpList = [];
 	    	for (var i in ipStrList){
 	    		floatingIpList.push({"value":ipStrList[i]});
@@ -1087,6 +1095,21 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
     	            }
     	        });
 	    	});
+	    });
+	    
+	  //恢复实例
+	    $("a.resume").on("click",function(){
+	    	var serverName = $(this).parents('tr:first').find('a.vm_name').html();
+	    	var serverId = $(this).attr("data");
+	    	var vmState = $(this).attr("vm_state");
+	    	if(vmState == "SUSPENDED"){
+	    		EditData.DoAction(serverId,serverName,{ "resume" : null},"恢复");
+	    	}else if(vmState == "PAUSED"){
+	    		EditData.DoAction(serverId,serverName,{ "unpause" : null},"恢复");
+	    	}else if(vmState == "SHUTOFF"){
+	    		EditData.DoAction(serverId,serverName,{ "start" : null},"恢复");
+	    	}
+	    	
 	    });
 	}	
 	return {
