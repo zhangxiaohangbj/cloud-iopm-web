@@ -97,7 +97,7 @@ define(function() {
                 },
                 {
                     text: '<i class="fa fa-tachometer"></i>云主机类型管理',
-                    link: '#vmtype'
+                    link: '#vmtype/'
                 },
                 {
                     text: '<i class="fa fa-database"></i>磁盘管理',
