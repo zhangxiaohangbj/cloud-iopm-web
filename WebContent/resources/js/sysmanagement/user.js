@@ -221,9 +221,26 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 					$(obj+" tbody").find("tr").each(function(i,element){
 						var vdc_id = $(element).find("[name='vdc']").val();
 						var role_id = $(element).find("[name='role']").val();
-						authorityList.push({"scopeId":vdc_id,"roleId":role_id,"scopeType":"tenant"});
+						var role_ids = role_id.split(",");
+						for(var i = 0; i<role_ids.length;i++){
+							authorityList.push({"scopeId":vdc_id,"roleId":role_ids[i],"scopeType":"tenant"});
+						}
 					});
 					return authorityList;
+				},
+				roleJson:function(obj){
+					var roleList = [];
+					$(obj+" tbody").find("tr").each(function(i,element){
+						var vdc_id = $(element).find("[name='vdc']").val();
+						var role_id = $(element).find("[name='role']").val();
+						var role_ids = role_id.split(",");
+						var roles = [];
+						for(var i = 0; i<role_ids.length;i++){
+							roles.push({"id":role_ids[i]})
+						}
+						roleList.push({"id":vdc_id,"roles":roles});
+					});
+					return roleList;
 				}
 		}
 		//增加按钮
@@ -394,7 +411,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 	     //权限设置
 	     $("#UserTable_wrapper a.btn-edit-role").on("click",function(){
 		    	var id= $(this).attr("data");
-		    	Common.xhr.ajax('/v2.0/users/'+id,function(data){  //需修改接口
+		    	Common.xhr.ajax('/v2.0/users/tenants/'+id,function(data){  //需修改接口
 		    		Common.render('tpls/sysmanagement/user/editrole.html',data,function(html){
 		    			Modal.show({
 		    	            title: '用户权限设置',
@@ -403,10 +420,8 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 		    	            buttons: [{
 		    	                label: '保存',
 		    	                action: function(dialog) {
-		    	            		var serverData = {
-		    	            				"userRoleList ": jsonData.authorityJson("#authorityInfo")
-			    	                	  };
-		    	                	Common.xhr.putJSON('/v2.0/users/'+id,serverData,function(data){
+		    	                	var serverData = jsonData.roleJson("#authorityInfo");
+		    	                	Common.xhr.postJSON('/v2.0/users/tenants/'+id,serverData,function(data){
 		    	                		if(data){
 		    	                			Modal.success('保存成功')
 		    	                			setTimeout(function(){Modal.closeAll()},2000);

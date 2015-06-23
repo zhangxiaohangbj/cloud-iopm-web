@@ -28,11 +28,11 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 					$(".form-horizontal").validate({
 						errorContainer: '_form',
 			            rules: {
-			            	'role_name': {
+			            	'name': {
 			                    required: true,
 			                    maxlength:50
 			                },
-			                'role_desc': {
+			                'description': {
 			                    maxlength:100
 			                }
 			            }
@@ -51,8 +51,11 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
     	                action: function(dialog) {
     	                	var valid = $(".form-horizontal").valid();
     	            		if(!valid) return false;
-    	                	var serverData = $(".form-horizontal").serializeArray();
-    	                	Common.xhr.postJSON('/v2.0/OS-KSADM/roles',serverData,function(data){  //需修改接口
+    	                	var serverData ={
+    	                			"name": $("[name='name']").val(),
+    	                			"description": $("[name='description']").val()
+        					};
+    	                	Common.xhr.postJSON('/v2.0/OS-KSADM/roles',serverData,function(data){
     	                		if(data){
     	                			Modal.success('保存成功')
     	                			setTimeout(function(){Modal.closeAll()},2000);
@@ -75,48 +78,48 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
     		});
 	    });
 		//编辑用户角色
-	    $("#RoleTable_wrapper a.btn-edit").on("click",function(){
-	    	var id= $(this).attr("data");
-	    	Common.xhr.ajax('/v2.0/subnets/'+id,function(data){  //需修改接口
-	    		data={
-	    				"role_name":"role1",
-	    				"role_desc":"role1......."
-	    		}
-	    		Common.render('tpls/sysmanagement/role/edit.html',data,function(html){
-	    			Modal.show({
-	    	            title: '编辑角色',
-	    	            message: html,
-	    	            nl2br: false,
-	    	            buttons: [{
-	    	                label: '保存',
-	    	                action: function(dialog) {
-	    	                	var valid = $(".form-horizontal").valid();
-	    	            		if(!valid) return false;
-	    	            		var serverData = {
-		    	                	  };
-	    	                	Common.xhr.putJSON('/v2.0/OS-KSADM/roles/'+id,serverData,function(data){ //需修改接口
-	    	                		if(data){
-	    	                			Modal.success('保存成功')
-	    	                			setTimeout(function(){Modal.closeAll()},2000);
-	    	                			Common.router.route();
-									}else{
-										Modal.warning ('保存失败')
-									}
-								})
-	    	                }
-	    	            }, {
-	    	                label: '取消',
-	    	                action: function(dialog) {
-	    	                    dialog.close();
-	    	                }
-	    	            }],
-	    	            onshown : function(){
-	    	            	EventsHandler.formValidator();
-	    	            }
-	    	        });
-	    		});
-	    		});
-	    });
+//	    $("#RoleTable_wrapper a.btn-edit").on("click",function(){
+//	    	var id= $(this).attr("data");
+//	    	Common.xhr.ajax('/v2.0/subnets/'+id,function(data){  //需修改接口
+//	    		data={
+//	    				"role_name":"role1",
+//	    				"role_desc":"role1......."
+//	    		}
+//	    		Common.render('tpls/sysmanagement/role/edit.html',data,function(html){
+//	    			Modal.show({
+//	    	            title: '编辑角色',
+//	    	            message: html,
+//	    	            nl2br: false,
+//	    	            buttons: [{
+//	    	                label: '保存',
+//	    	                action: function(dialog) {
+//	    	                	var valid = $(".form-horizontal").valid();
+//	    	            		if(!valid) return false;
+//	    	            		var serverData = {
+//		    	                	  };
+//	    	                	Common.xhr.putJSON('/v2.0/OS-KSADM/roles/'+id,serverData,function(data){ //需修改接口
+//	    	                		if(data){
+//	    	                			Modal.success('保存成功')
+//	    	                			setTimeout(function(){Modal.closeAll()},2000);
+//	    	                			Common.router.route();
+//									}else{
+//										Modal.warning ('保存失败')
+//									}
+//								})
+//	    	                }
+//	    	            }, {
+//	    	                label: '取消',
+//	    	                action: function(dialog) {
+//	    	                    dialog.close();
+//	    	                }
+//	    	            }],
+//	    	            onshown : function(){
+//	    	            	EventsHandler.formValidator();
+//	    	            }
+//	    	        });
+//	    		});
+//	    		});
+//	    });
 	    //删除角色
 	     $("#RoleTable_wrapper a.btn-delete").on("click",function(){
 	    	 var id = $(this).attr("data");

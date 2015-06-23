@@ -1,5 +1,6 @@
 define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3'],function(Common,Modal){
 	Common.requestCSS('css/wizard.css');
+	Common.requestCSS('css/detail.css');
 	var current_vdc_id = '9cc717d8047e46e5bf23804fc4400247';
 	var init = function(){
 		Common.$pageContent.addClass("loading");
@@ -235,6 +236,17 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
     				wizard.form.each(function(){
     					$(this).validate({
                             errorContainer: '_form',
+                            /*errorPlacement: function(error, element) {
+                            	debugger
+                                if ( element.is(":radio") )
+                                    error.appendTo( element.parent().next().next() );
+                                else if ( element.is(":checkbox") )
+                                    error.appendTo ( element.next() );
+                                else
+                            	alert($(error).html());
+                            	//alert($(element).parent().html());
+                            	$(error).appendTo( $(element).parents('.form-group:first') );
+                            },*/
                             rules: {
     			            	'volume_name': {
     			                    required: true,
@@ -323,8 +335,105 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
     			});
 			});
 	    });
-	    
-	}
+	    var moreAction = {
+	    		detail: function(){
+    			 //页面列表相关  （编辑、明细）
+	    		    $("#VolumeTable_wrapper a.volume_name").on("click",function(){
+	    		    	var id = $(this).parent('tr:first').attr("data-id");
+	    		    	var tmpDetailData = {
+	    	    	            name : "Tiger Nixon",
+	    	    	            id: "di91jd9d29f9f29",
+	    	    	            size:"20GB",
+	    	    	            status: "in-use",
+	    	    	            vm_id: "private",
+	    	    	            type: "ceth(分布式)",
+	    	    	            vdc_id : "vdc1",
+	    	    	            available_zone: "WDK1",
+	    	    	            read_only:"1",
+	    	    	            description:"可用磁盘数据",
+	    	    	            mount_list: [{
+	    	    	            	name:'nexus-server',
+	    	    	            	id: 'nexus-server'
+	    	    	            }],
+	    	    	            mount_path: '/opt/vdc',
+	    	    	            create_time: '2015-04-24 17:14:57'
+	    		    	}
+	    		    	Common.render(true,'tpls/ccenter/block/volume/detail.html',tmpDetailData,function(html){
+	    		    		$("a.reload").on("click",function(){
+	    	    		    	Common.router.route();
+	    	    		  });
+	    		    	});
+	    		    })
+    		},
+    		editMount: function(){
+    			$('.dropdown-menu a.edit_mount').on('click',function(){
+    				var tr = $(this).parent('tr:first'),
+    					id = tr.attr("data-id"),
+    					name = tr.find('.volume_name').text();
+    				Common.render(false,'tpls/ccenter/block/volume/edit_mount.html','/resources/data/specs.txt',function(html){
+    					Modal.show({
+    	    	            title: '挂载'+name+'磁盘到云主机',
+    	    	            message: html,
+    	    	            closeByBackdrop: false,
+    	    	            nl2br: false,
+    	    	            buttons: [{
+    	    	                label: '确定',
+    	    	                action: function(Modal) {
+    	    	                	Common.xhr.postJSON('/v2.0/networks',postData,function(data){
+	    	    	                		if(data){
+	    	    	                			Modal.close();
+	    	    	                			Modal.success('保存成功')
+	    	     	                			setTimeout(function(){Modal.closeAll()},3000);
+	    	    	                			Common.router.route();
+	    									}else{
+	    										alert("保存失败");
+	    									}
+	    	    	    				});
+    	    	                	 }
+    	    	            	},
+    	    	            	{
+    	    	                label: '取消',
+    	    	                action: function(Modal) {
+    	    	                    Modal.close();
+    	    	                	}
+    	    	            	}],
+    	    	            	onshown : function(){
+    	        	            	EventsHandler.initCheckBox();
+    	        	            }
+    					});
+    				})
+    			})
+    		},
+    		//删除
+    		deleteVolume: function(){
+    			$("#networkTable_wrapper a.delete").on("click",function(){
+    				var id = $(this).parent('tr:first').attr("data-id");
+	       	    	 Modal.confirm('确定要删除该磁盘吗?', function(result){
+	       	             if(result) {
+	       	            	 /*Common.xhr.del('/v2.0/networks/'+id,"",
+	       	                     function(data){
+	       	                    	 if(data){
+	        	                			Modal.success('删除成功')
+	        	                			setTimeout(function(){Modal.closeAll()},3000);
+	       	                    		Common.router.route();
+	       	                    	 }else{
+	       	                    		Modal.success('删除失败')
+	       	 	                		setTimeout(function(){Modal.closeAll()},3000);
+	       	                    	 }
+	       	                     });*/
+	       	             }else {
+	       	            	 //Modal.close();
+	       	             }
+	       	         });
+	       		})
+    		}
+	    };
+	    for(var key in moreAction){
+	    	if(typeof moreAction[key] === 'function'){
+	    		moreAction[key]();
+	    	}
+	    }
+	};
 	return {
 		init : init
 	}

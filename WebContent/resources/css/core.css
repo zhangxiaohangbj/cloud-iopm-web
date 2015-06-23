@@ -42,7 +42,10 @@ header > .container,
 		max-width:1500px;
   	}
 }
-
+#page-main .page-body{
+	display:table;
+	width:100%;
+}
 #header-logo {
 	position: relative;
 	float: left;
@@ -408,6 +411,32 @@ body{
 	margin:0;
 	padding:0;
 }
+
+.icon-squre-d {
+	position: relative;
+	display: inline-block;
+	width: 1em;
+	height: 1em;
+	margin-right: .25em;
+	vertical-align: middle;
+}
+.icon-squre-d:before,
+.icon-squre-d:after {
+	content: " ";
+	display: block;
+	width: 55%;
+	height: 55%;
+	position: absolute;
+	left: 0; top: 0;
+}
+.icon-squre-d:before {
+	top: 25%;
+	left: 25%;
+	background-color: #D3EEF9;
+}
+.icon-squre-d:after {
+	background-color: #5FC3E7;
+}
 #page-main > .page-content > .page-header > .description{
 	width:85%;
 	color:#9B9A9A;
@@ -479,7 +508,7 @@ body{
 .table-primary > tbody > tr > td,
 .table-primary > tfoot > tr > td,
 .table-primary.dataTable > tbody > tr > td,
-.table-primary.dataTable > tfoot > tr > td {
+{
     padding: 9px 8px;
     border-top: 1px solid #e4e9ec;
 }
@@ -542,7 +571,7 @@ table.dataTable > tbody > tr > td .btn-opt i {
     padding: 0.2em 0.6em;
 }
 table.dataTable + .row {
-    margin-top: 30px;
+    margin-top: 50px;
 }
 table.dataTable + .row > [class*="col-"] {
     padding: 0 15px 0 20px;
@@ -577,7 +606,7 @@ table.dataTable + .row > [class*="col-"] {
 	float:right;
 	padding-top: 0;
 }
-.dataTables_info span.nums{
+.dataTables_wrapper span.nums{
 	color:#36b3df;
 }
 .dataTables_wrapper .btn{
@@ -697,8 +726,16 @@ i.image-icon-default.centos {
 .table-primary thead .c30{
 	width:30%;
 }
-.table-primary tfoot tr{
-	height:50px;
+.dataTables_wrapper table.dataTable tfoot{
+	display:block;
+	position:absolute;
+	width:100%;
+}
+.dataTables_wrapper table.dataTable tfoot tr td{
+	color:#9B9A9A;
+	width:100%;
+	border:0;
+	padding-left:0;
 }
 .tableMenus  select.select-envir{
 	float:right;
@@ -774,3 +811,4 @@ i.image-icon-default.centos {
 	color: red;
 }
 /*弹框样式结束*/
+

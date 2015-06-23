@@ -297,9 +297,9 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 					if(data && data.security_groups){
 						for(var i=0,l=data.security_groups.length;i<l;i++){
 							if(data.security_groups[i].name=='default'){
-								dataArr.push('<label><input type="checkbox" checked>'+data.security_groups[i].name+'</></label>');
+								dataArr.push('<label data-id="'+data.security_groups[i].name+'"><input type="checkbox" checked>'+data.security_groups[i].name+'</></label>');
 							}else{
-								dataArr.push('<label><input type="checkbox">'+data.security_groups[i].name+'</label>');
+								dataArr.push('<label data-id="'+data.security_groups[i].name+'"><input type="checkbox">'+data.security_groups[i].name+'</label>');
 							}
 						}
 						$('div.security-group').html(dataArr.join(''));
@@ -322,6 +322,49 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 				}else{
 					Modal.error('尚未选择所属vdc');
 				}
+			},
+			//外部网络
+			initExtNetwork: function(serverId){
+				Common.xhr.getSync('/'+current_vdc_id+'/servers/'+serverId+'/list-floating-pools',function(data){
+            		var poolList = []; 
+					if(data){
+						for (var i=0;i<data.length;i++) {
+							poolList.push({"value":data[i].id,"name":data[i].name});
+						}
+					}
+					var html = Common.uiSelect(poolList);
+			    	$('select.ip-pools').html(html);
+				});
+			},
+			
+			//浮动IP
+			initFloatingIp: function(serverId){
+				var poolId = $('select.ip-pools').val();
+        		Common.xhr.ajax('/'+current_vdc_id+'/servers/'+serverId+'/list-unallocated-floating-ips?network_id='+poolId,function(data){
+            		var ipList = []; 
+					if(data){
+						for (var i=0;i<data.length;i++) {
+							ipList.push({"value":data[i].id,"name":data[i].floating_ip_address});
+						}
+					}
+					var html = Common.uiSelect(ipList);
+			    	$('select.floating-ips').html(html);
+			    	
+				});
+			},
+			//网卡
+			initNetworkInterface:function(serverId){
+				Common.xhr.ajax('/'+current_vdc_id+'/servers/'+serverId+'/list-network-interfaces',function(data){
+					var ncList = []; 
+					if(data){
+						for (var i=0;i<data.length;i++) {
+							ncList.push({"value":data[i].port_id,"name":data[i].ip_address});
+						}
+					}
+					var html = Common.uiSelect(ncList);
+			    	$('select.network-interface').html(html);
+			    	
+				});
 			}
 			
 		};
@@ -436,6 +479,21 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 				    	checkboxClass: "icheckbox-info",
 				        radioClass: "iradio-info"
 				    })
+				},
+				//表单校验
+				formValidator: function(){
+					return $(".form-horizontal").validate({
+			            rules: {
+			            	'name': {
+			            		required: true,
+			                    minlength: 4,
+			                    maxlength:255
+			                },
+			                'public_key':{
+			                	required: true
+			                }
+			            }
+			        });
 				}
 		};
 		
@@ -497,11 +555,48 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
     					});
     				})
     			});
+    			
+    			var getSecruityGroup = function(){
+    				var data = [];
+    				$('div.security-group').find('.icheckbox-info').each(function(){
+    					if($(this).hasClass('checked')){
+    						data.push($(this).parent().attr('data-id'))
+    					}
+    				});
+    				return data;
+    			}
+    			
     			//确认信息卡片被选中的监听
     			wizard.cards.confirm.on('selected',function(card){
     				//获取上几步中填写的值
-    				var serverData = wizard.serializeObject()
-    				$('.name-confirm').text(serverData.name)
+    				var serverData = wizard.serializeObject();
+    				//取网络相关的数据
+    				$('#vm-networks .list-group-select').children().each(function(i,item){
+    					var network_uuid = $(item).find('li:first').attr('data-id');
+    					var fixedIp = $(item).find('select.select-fixedip').children('option:selected').val();
+    					$('.network-confirm').text("网络："+network_uuid+"            IP:"+fixedIp)
+    				});
+    				var sgGroupStr = ""
+    				$('div.security-group').find('.icheckbox-info').each(function(){
+    					if($(this).hasClass('checked')){
+    						if(sgGroupStr==""){
+    							sgGroupStr = $(this).parent().attr('data-id');
+    						}else{
+    							sgGroupStr = sgGroupStr+ "," + $(this).parent().attr('data-id');
+    						}
+    					}
+    				});
+    				$('.name-confirm').text(serverData.name);
+    				$('.image-confirm').text(serverData.imageRef);
+    				$('.vdc-confirm').text(serverData.tenant_id);
+    				$('.az-confirm').text(serverData.availability_zone);
+    				$('.vmtype-confirm').text(serverData.flavorRef);
+    				$('.num-confirm').text(serverData.min_count);
+    				$('.keyname-confirm').text(serverData.key_name);
+    				$('.securitygroup-confirm').text(sgGroupStr);
+    				$('.userdata-confirm').text(serverData.user_data);
+    				$('.diskconfig-confirm').text(serverData.auto_disk_config);
+    				
 				});
     			DataIniter.initAvailableZone();
     			DataIniter.initPopver();
@@ -556,13 +651,6 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
     				});
     				
     				serverData.server.networks=networkData;
-    				var fixed_ip = $("#fixed_ip").val();
-    				if(fixed_ip!=null&&fixed_ip!="DHCP"){
-    					serverData.server.networks=[{
-	    						"uuid": 'af8c1f42-b21c-4d13-bc92-1852e22f4f98',
-	    						"fixed_ip": '192.168.0.115'//$("#fixed_ip").val()
-    					}]
-    				}
     				Common.xhr.postJSON('/'+current_vdc_id+'/servers',serverData,function(data){
     					wizard._submitting = false;
     					wizard.updateProgressBar(100);
@@ -619,7 +707,6 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 				
 		    	//生成html数据
 				Common.render('tpls/ccenter/vm/security.html',pageData,function(html){
-//					alert(""+JSON.stringify(pageData));
 					
 					Modal.show({
 	    	            title: '编辑安全组',
@@ -656,7 +743,8 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 	    	            	require(['js/common/choose'],function(choose){
 	    						var options = {
 	    								selector: '#edit-security-group',
-	    								list: pageData.unattched
+	    								allData: pageData.unattched,
+	    								chosenData: pageData.attched
 	    						};
 	    						choose.initChoose(options);
 	    					})
@@ -701,6 +789,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 	    	},
 	    	
 	    	DoAction:function(id,name,rq,dc){
+	    		debugger
 	    		Common.$pageContent.addClass("loading");
                 Common.xhr.postJSON('/'+current_vdc_id+'/servers/'+id+'/action',rq,function(data){
                 	if(data.success){
@@ -753,7 +842,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 	    
 	    //删除云主机
 	    $("ul.dropdown-menu a.delete").on("click",function(){
-	    	var serverName = $(this).parents('tr:first').find('td.vm_name').html();
+	    	var serverName = $(this).parents('tr:first').find('a.vm_name').html();
 	    	var serverId = $(this).attr("data");
 	    	Modal.confirm("你已经选择了 【"+serverName+"】 。 请确认您的选择。终止的云主机均无法恢复。",function(result){
 	            if(result) {
@@ -771,7 +860,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 	    
 	    //软重启云主机
 	    $("ul.dropdown-menu a.rebootSoft").on("click",function(){
-	    	var serverName = $(this).parents('tr:first').find('td.vm_name').html();
+	    	var serverName = $(this).parents('tr:first').find('a.vm_name').html();
 	    	var serverId = $(this).attr("data");
 	    	Modal.confirm({title:"确认：软重启云主机",
 	    		message:"你已经选择了 ["+serverName+"] 。  请确认您的选择。重启云主机会丢失所以没有存放在永久存储设备上的数据。 ",
@@ -783,7 +872,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 	    });
 	    //硬重启云主机
 	    $("ul.dropdown-menu a.rebootHard").on("click",function(){
-	    	var serverName = $(this).parents('tr:first').find('td.vm_name').html();
+	    	var serverName = $(this).parents('tr:first').find('a.vm_name').html();
 	    	var serverId = $(this).attr("data");
 	    	Modal.confirm({title:"确认：硬重启云主机",
 	    		message:"你已经选择了 ["+serverName+"] 。  请确认您的选择。重启云主机会丢失所以没有存放在永久存储设备上的数据。 ",
@@ -796,7 +885,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 	    
 	    //关闭云主机
 	    $("ul.dropdown-menu a.osStop").on("click",function(){
-	    	var serverName = $(this).parents('tr:first').find('td.vm_name').html();
+	    	var serverName = $(this).parents('tr:first').find('a.vm_name').html();
 	    	var serverId = $(this).attr("data");
 	    	Modal.confirm({title:"确认：关闭云主机",
 	    		message:"你已经选择了 ["+serverName+"] 。  请确认您的选择。关闭该云主机。 ",
@@ -809,7 +898,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 	    
 	    //暂停云主机
 	    $("ul.dropdown-menu a.pause").on("click",function(){
-	    	var serverName = $(this).parents('tr:first').find('td.vm_name').html();
+	    	var serverName = $(this).parents('tr:first').find('a.vm_name').html();
 	    	var serverId = $(this).attr("data");
 	    	Modal.confirm({title:"确认：暂停云主机",
 	    		message:"你已经选择了 ["+serverName+"] 。  请确认您的选择。暂停该云主机。 ",
@@ -822,7 +911,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 	    
 	    //挂起云主机
 	    $("ul.dropdown-menu a.suspend").on("click",function(){
-	    	var serverName = $(this).parents('tr:first').find('td.vm_name').html();
+	    	var serverName = $(this).parents('tr:first').find('a.vm_name').html();
 	    	var serverId = $(this).attr("data");
 	    	Modal.confirm({title:"确认：挂起云主机",
 	    		message:"你已经选择了 ["+serverName+"] 。  请确认您的选择。挂起该云主机。 ",
@@ -835,14 +924,13 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 	    
 	    //重建云主机
 	    $("ul.dropdown-menu a.rebuild").on("click",function(){
-	    	var serverName = $(this).parents('tr:first').find('td.vm_name').html();
+	    	var serverName = $(this).parents('tr:first').find('a.vm_name').html();
 	    	var serverId = $(this).attr("data");
 	    	var imageList;
 	    	Common.xhr.getSync('/v2/images/?owner='+current_vdc_id,function(data){
     			imageList=data;
     		});
-//	    	Common.render('tpls/ccenter/vm/rebuild.html',imageList,function(html){
-	    	Common.render('tpls/ccenter/vm/rebuild.html','/resources/data/image.txt',function(html){	
+	    	Common.render('tpls/ccenter/vm/rebuild.html',imageList,function(html){
 	    		Modal.show({
     	            title: '重建云主机',
     	            message: html,
@@ -865,26 +953,15 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
     	                }
     	            }],
     	            onshown : function(dialog){
-    	            	
-//    	            var list=[{"id":"aaa","name"},{}];
-//    	            	for (var i=0;i<tenants.length;i++) {
-//							if (tenants[i].id==id) {
-//								tenants[i].selected="selected";
-//							}
-//						}
-//					}				
-//					var html = Common.uiSelect(tenants);
-			    	//$('select.tenant_id').html(html);
 			    	
     	            }
     	        });
 	    	});
 	    });
 	    
-	  //绑定floatingIp
+	    //绑定floatingIp
 	    $("ul.dropdown-menu a.attachIp").on("click",function(){
 	    	var serverId = $(this).attr("data");
-	    	var imageList;
 	    	Common.render('tpls/ccenter/vm/attachip.html','',function(html){	
 	    		Modal.show({
     	            title: '绑定浮动IP',
@@ -894,6 +971,20 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
     	            buttons: [{
     	                label: '绑定',
     	                action: function(dialog) {
+    	                	var ipId = $('select.floating-ips').val();
+    	                	var portId = $('select.network-interface').val();
+    	                	
+    	                	Common.xhr.postJSON('/'+current_vdc_id+'/servers/'+serverId+'/add-floating-ip?floating_ip_id='+ipId+'&port_id='+portId,null,function(data){
+    	                    	debugger
+    	                		if(data.success){
+    	                    		dialog.close();
+    	                    		Modal.success("浮动IP绑定成功!");
+    	                    		setTimeout(function(){Modal.closeAll()},3000);
+    	                			Common.router.route();
+    	                    	}else{
+    	                    		Modal.error("浮动IP绑定失败!");
+    	                    	}
+    	                    });	    
     	                 	dialog.close();
     	                }
     	            }, {
@@ -903,13 +994,100 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
     	                }
     	            }],
     	            onshown : function(dialog){
-//    	    			${''}
+    	            	DataIniter.initExtNetwork(serverId);
+    	            	DataIniter.initFloatingIp(serverId);
+    	            	DataIniter.initNetworkInterface(serverId);
+    	            	$('select.ip-pools').change(function(){
+    	            		DataIniter.initFloatingIp(serverId);
+    	            	})
     	            }
     	        });
 	    	});
 	    });
 	    
+	  //解绑floatingIp
+	    $("ul.dropdown-menu a.dettachIp").on("click",function(){
+	    	var serverName = $(this).parents('tr:first').find('a.vm_name').html();
+	    	var floatingIpStr = $(this).parents('tr:first').find('td.vm_floating_ips').html();
+	    	var ipStrList = floatingIpStr.split(',');
+	    	var floatingIpList = [];
+	    	for (var i in ipStrList){
+	    		floatingIpList.push({"value":ipStrList[i]});
+	    	}
+	    	
+	    	var serverId = $(this).attr("data");
+	    	debugger
+	    	Common.render('tpls/ccenter/vm/dettachip.html',floatingIpList,function(html){	
+	    		Modal.show({
+    	            title: '解除浮动IP绑定',
+    	            message: html,
+    	            closeByBackdrop: false,
+    	            nl2br: false,
+    	            buttons: [{
+    	                label: '解除绑定',
+    	                action: function(dialog) {
+    	                	var ip = $('select.floating-ips').val();
+    	                	
+    	                	Common.xhr.postJSON('/'+current_vdc_id+'/servers/'+serverId+'/remove-floating-ip?floating_ip='+ip,null,function(data){
+    	                    	debugger
+    	                		if(data.success){
+    	                    		dialog.close();
+    	                    		Modal.success("浮动IP["+ip+"]解除绑定成功!");
+    	                    		setTimeout(function(){Modal.closeAll()},3000);
+    	                			Common.router.route();
+    	                    	}else{
+    	                    		Modal.error("浮动IP["+ip+"]解除绑定失败!");
+    	                    	}
+    	                    });	    
+    	                 	dialog.close();
+    	                }
+    	            }, {
+    	                label: '取消',
+    	                action: function(dialog) {
+    	                    dialog.close();
+    	                }
+    	            }],
+    	            onshown : function(dialog){
+    	            	var html=Common.uiSelect(floatingIpList);
+    	            	$('select.floating-ips').html(html);
+    	            	
+    	            }
+    	        });
+	    	});
+	    });
 	    
+	    //创建快照
+	    $("a.createSnapshot").on("click",function(){
+	    	var serverName = $(this).parents('tr:first').find('a.vm_name').html();
+	    	var serverId = $(this).attr("data");
+	    	Common.render('tpls/ccenter/vm/snapshot.html','',function(html){	
+	    		Modal.show({
+    	            title: '创建快照',
+    	            message: html,
+    	            closeByBackdrop: false,
+    	            nl2br: false,
+    	            buttons: [{
+    	                label: '创建',
+    	                action: function(dialog) {
+    	                	var valid = $(".form-horizontal").valid();
+    	            		if(!valid) return false;
+    	                	var postData={"createSnapshot":{}};
+    	                	postData.createSnapshot.name=$('#create-snapshot input.name').val();
+    	                	EditData.DoAction(serverId,serverName,postData,"创建快照");
+    	                 	dialog.close();
+    	                }
+    	            }, {
+    	                label: '取消',
+    	                action: function(dialog) {
+    	                    dialog.close();
+    	                }
+    	            }],
+    	            onshown : function(dialog){
+    	            	dialog.setData("formvalid",EventsHandler.formValidator());
+    	            }
+    	        });
+	    	});
+	    });
 	}	
 	return {
 		init : init
