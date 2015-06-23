@@ -492,6 +492,27 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 	    $(".members").on("click",function(){
 	    	more.Member($(this).attr("data"));
 	    });
+	  //查看使用情况
+	    $("ul.dropdown-menu a.usage").on("click",function(){
+	    	var vdc_id = $(this).attr("data");
+	    	var vdc_name = $(this).attr("data-name");
+	    	Common.render(true,{
+				tpl:'tpls/ccenter/vdc/usage.html',
+				data:'resources/data/usage.txt',
+				beforeRender: function(data){
+					var usageData = {
+							vdc_name:vdc_name,
+							usageList:data.tenant_usage.server_usages
+					}
+					return usageData;
+				},
+				callback: function(){
+					$("#reservation").daterangepicker(
+							);
+					
+				}
+			});
+	    });
 	    //外部网络管理
 	  /*  $("ul.dropdown-menu a.floatIP").on("click",function(){
 	    	var net_id =  renderData.netList[0].id
