@@ -142,8 +142,10 @@ define('Common',
                 }
             },
             resize: function() {
+                var that = this;
                 if(this.$pageMain && this.$pageContent) {
                     this.$pageMain.css({minHeight: 0});
+                    debugger;
                     //dom
                     var $aside = $("aside");
                     //height
@@ -923,6 +925,11 @@ require(['PubView', 'Common', 'commons/router_table'], function(PubView, Common,
                     navItemCur = $navWrapper.find('li[index="'+index+'"]');
                     navCurIndex = index;
                     PubView.activeHeader(index, 1);
+                    // click to reload
+                    var tlink = $(this).children("a:first").attr("href"), pos;
+                    if(tlink && (pos = tlink.indexOf(Common.hash)) > -1 && pos == tlink.length - Common.hash.length) {
+                        Common.router.reload();
+                    }
                 });
                 //初始化nav宽度数组和选中位置
                 $navItems.each(function(i) {
@@ -964,7 +971,18 @@ require(['PubView', 'Common', 'commons/router_table'], function(PubView, Common,
             return Common.pub.sideBarDataMap[Common.pub.headerNavIndex] ?
                 $.extend(
                     {
-                        data: Common.pub.sideBarDataMap[Common.pub.headerNavIndex]
+                        data: Common.pub.sideBarDataMap[Common.pub.headerNavIndex],
+                        rendered: function($sideBar) {
+                            if($sideBar) {
+                                // click to reload
+                                $(document).on("click", "#side-bar li > a:not(.nav-first-level)", function() {
+                                    var tlink = $(this).attr("href"), pos;
+                                    if(tlink && (pos = tlink.indexOf(Common.hash)) > -1 && pos == tlink.length - Common.hash.length) {
+                                        Common.router.reload();
+                                    }
+                                });
+                            }
+                        }
                     },
                     Common.pub.sideBarNavIndex ? {current: Common.pub.sideBarNavIndex} : null
                 ) : null;
@@ -972,4 +990,6 @@ require(['PubView', 'Common', 'commons/router_table'], function(PubView, Common,
     });
 
     Common.resize();
+
+    $(window).off("resize.content").on("resize.content", Common.resize);
 });

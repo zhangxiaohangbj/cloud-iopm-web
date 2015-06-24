@@ -203,30 +203,8 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 	    	            		};
 
 	    	            		var zNodes =data;
-	    	            		var code;
 	    	            		$.fn.zTree.init($("#authorityTree"), setting, zNodes);
 
-	    	            		function setCheck() {
-	    	            			var zTree = $.fn.zTree.getZTreeObj("authorityTree"),
-	    	            					py = $("#py").attr("checked")? "p":"",
-	    	            					sy = $("#sy").attr("checked")? "s":"",
-	    	            					pn = $("#pn").attr("checked")? "p":"",
-	    	            					sn = $("#sn").attr("checked")? "s":"",
-	    	            					type = { "Y":py + sy, "N":pn + sn};
-	    	            			zTree.setting.check.chkboxType = type;
-	    	            			showCode('setting.check.chkboxType = { "Y" : "' + type.Y + '", "N" : "' + type.N + '" };');
-	    	            		}
-	    	            		function showCode(str) {
-	    	            			if (!code) code = $("#code");
-	    	            			code.empty();
-	    	            			code.append("<li>"+str+"</li>");
-	    	            		}
-
-	    	            		setCheck();
-	    	            		$("#py").bind("change", setCheck);
-	    	            		$("#sy").bind("change", setCheck);
-	    	            		$("#pn").bind("change", setCheck);
-	    	            		$("#sn").bind("change", setCheck);
 	    	            	});
 	    	            }
 	    	        });
