@@ -13,6 +13,7 @@
 
 	<mvc:view-controller path="/" view-name="index"/>
 	<mvc:view-controller path="/login" view-name="login"/>
+	<mvc:view-controller path="/sessionInfo" view-name="sessionInfo"/>
 	<mvc:view-controller path="/auth/commons/error" view-name="auth/commons/error"/>
 	<mvc:view-controller path="/tab-blank" view-name="tab-blank"/>
 
