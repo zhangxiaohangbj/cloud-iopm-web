@@ -2,6 +2,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 	Common.requestCSS('css/wizard.css');
 	Common.requestCSS('css/detail.css');
 	var current_vdc_id = '9cc717d8047e46e5bf23804fc4400247';
+	var wizard;
 	var init = function(){
 		Common.$pageContent.addClass("loading");
 		Common.render(true,{
@@ -113,6 +114,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 							//获取vdc的配额使用情况
 							Common.xhr.ajax('/v2.0/'+vdc_id+'/limits',function(quotaUsages){
 								var getMathRound = function(used,total){
+									if(total == 0) return 100;
 									return Math.round((parseInt(used)/parseInt(total))*100);
 								}
 								var getClass = function(rate){
@@ -132,7 +134,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 											        	name: 'diskNums',title: '磁盘数量',total: quotas.disks, used: quotaUsages.disks, rate: rateDiskNums, style: styleDiskNums
 											        }
 											 ];
-								var check = function(){
+								/*var check = function(){
 									var flag = true;
 									$.each(renderData,function(i,item){
 										if(item.rate >100){
@@ -141,13 +143,12 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 										}
 									});
 									return flag;
-								}
-								if(check()){
-									//生成html数据
-									Common.render('tpls/common/quota.html',renderData,function(html){
-										$('div.quotas').html(html);
-									});
-								}
+								}*/
+								//生成html数据
+								Common.render('tpls/common/quota.html',renderData,function(html){
+									$('div.quotas').html(html);
+									EventsHandler.checkNextWizard();
+								});
 								
 							})
 						})
@@ -184,10 +185,24 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 				    	checkboxClass: "icheckbox-info"
 				    })
 				},
+				//input propertychange
 				inputListener: function(){
-					$('#volume_size').on('input propertychange',function(){
+					$('#volume_size').on('blur',function(){
 						if($(this).parents('form:first').validate().element('#volume_size')){
 							DataIniter.initQuato();//重新加载配额数据
+						}
+					})
+				},
+				checkNextWizard: function(){
+					$('.form-group .progress-bar').each(function(){
+						var info = $(this).parent().prev(),
+							dataAll = parseInt(info.attr('data-all')),
+							dataUsed = parseInt(info.attr('data-used'));
+						if(parseInt($(this).attr('aria-valuenow')) > 100 || dataAll < dataUsed || dataAll == 0){
+							wizard.disableNextButton();
+							Modal.error(info.find('.quota-key').html()+'超出配额');
+						}else{
+							wizard.enableNextButton();
 						}
 					})
 				}
@@ -199,7 +214,6 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 				$('body').append(html);
 				//wizard show
     			$.fn.wizard.logging = true;
-    			var wizard;
     			
 				//同步currentChosenObj
 		    	currentChosenObj.vdc = $('select.tenant_id').children('option:selected').val();
@@ -211,6 +225,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 		    	});
 		    	DataIniter.initQuato();
 		    	DataIniter.initUserVms();
+		    	
 		    	//
     			wizard = $('#create-volume-wizard').wizard({
     				keyboard : false,
@@ -231,6 +246,10 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 	            		}
     	            }
     			});
+    			/*//配额超出后禁用下一步
+    			wizard.cards.basic.on('selected',function(card){
+    				EventsHandler.checkNextWizard();
+    			});*/
     			//加载时载入validate
     			wizard.on('show',function(){
     				wizard.form.each(function(){
