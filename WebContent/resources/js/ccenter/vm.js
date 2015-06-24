@@ -290,7 +290,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 						progressBar.html(useRate+'%');
 						this.updateQuotaSpecs(nData - oData);
 					}else{
-						Modal.error($(this).find('.quota-key').html()+'超出配额');
+						Modal.error($this.find('.quota-key').html()+'超出配额');
 					}
 				}
 			},
