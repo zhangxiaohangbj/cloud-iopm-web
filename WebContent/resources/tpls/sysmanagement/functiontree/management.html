@@ -1,3 +1,17 @@
+<style type="text/css">
+	div#rMenu {position:absolute; visibility:hidden; top:0; background-color: #E0E0E0;text-align: left;padding: 2px;}
+	div#rMenu ul{
+		margin: 0;
+		padding: 0;
+	}
+	div#rMenu ul li{
+		margin: 1px 0;
+		padding: 0 5px;
+		cursor: pointer;
+		list-style: none outside none;
+		background-color: #DFDFDF;
+	}
+</style>
 <div class="page-header clearfix">
 	<ol class="breadcrumb">
 	  <li class="active">功能树管理</li>
@@ -13,6 +27,14 @@
 				<div class="right" style="float: right;width: 750px;" id="urllist">
 				
 				</div>
+			</div>
+			<div id="rMenu">
+				<ul>
+					<li id="m_add">增加同级功能项</li>
+					<li id="m_add_child">增加子功能项</li>
+					<li id="m_edit">编辑</li>
+					<li id="m_del">删除</li>
+				</ul>
 			</div>
 		</div>
 	</div>
