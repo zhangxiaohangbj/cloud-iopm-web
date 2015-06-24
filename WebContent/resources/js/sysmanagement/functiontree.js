@@ -52,6 +52,9 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 			                'item_name': {
 			                    required: true,
 			                    maxlength:50
+			                },
+			                'seq': {
+			                	digits: true
 			                }
 			            }
 			        });
@@ -276,31 +279,34 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 	 			data:'/v2.0/subnets/page/1/10',  //需修改接口
 	 			beforeRender: function(data){
 	 				//return data.result;
-	 				return data = [
-			 				{ id:1,name:"首页", open:true,isParent:true},
-			 				{ id:2,name:"基础环境", open:true,
-			 					children: [
-			 						{ id:21,name:"设备管理"},
-			 						{ id:22,name:"物理区域"},
-			 						{ id:23,name:"虚拟化环境"}
-			 					]},
-			 				{ id:3,name:"系统管理", open:true,
-			 					children: [
-		 		 						{ id:31,name:"用户管理"},
-		 		 						{ id:32,name:"角色管理"}
-		 		 					]}
-		
-			 				];
+	 				return data =[
+	    					{ id:1, pId:0, name:"首页", checked:true},
+	    					{ id:2, pId:0, name:"基础环境"},
+	    					{ id:21,pId:2,name:"设备管理"},
+	 						{ id:22,pId:2,name:"物理区域"},
+	 						{ id:23,pId:2,name:"虚拟化环境"},
+	    					{ id:3, pId:0, name:"系统管理"},
+	    					{ id:31, pId:3, name:"用户管理"},
+	    					{ id:32, pId:3, name:"角色管理"}
+	    				];
 	 			},
 	 			callback: function(data){
 	 				require(['jq/ztree'], function() {
 	            		var setting = {
 	            				view: {
-	            					dblClickExpand: false
+	            					showLine: false
 	            				},
 	            				callback: {
 	            					onClick: onClick,
 	            					onRightClick: OnRightClick
+	            				},
+	            				data:{
+	            					simpleData: {
+    	            					enable: true
+    	            				},
+    	            				keep:{
+    	            					parent:true  //即使该节点的子节点被全部删除或移走，依旧保持父节点状态
+    	            				}
 	            				}
 	            		};
 

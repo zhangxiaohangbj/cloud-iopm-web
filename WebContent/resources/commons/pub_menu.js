@@ -285,7 +285,7 @@ define(function() {
                 },
                 {
                     text: '<i class="fa fa-sitemap"></i>组织机构管理',
-                    link: '#organization'
+                    link: '#organ'
                 }
             ]
 
