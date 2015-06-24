@@ -299,6 +299,10 @@ define(function() {
             if(item.items) {
                 level ++;
                 $.each(item.items, function(i) {
+                    if(item.link) {
+                        var link = item.link.substring(item.link.lastIndexOf("#") + 1);
+                        prefix = prefix + (prefix.length > 1 ? '/' : '') + link;
+                    }
                     initItemsLink(prefix, item.items[i], level);
                 });
             } else if(item.link) {
