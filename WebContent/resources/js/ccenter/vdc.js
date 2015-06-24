@@ -526,6 +526,10 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 		    	QuotaSets : function(id){
 		    		//先获取QuotaSets后，再render
 		    		Common.xhr.ajax('/v2.0/9cc717d8047e46e5bf23804fc4400247/os-quota-sets/' + id,function(data){
+		    			/*var quotaData = data.quota_set;
+		    			if(quotaData == null){
+		    				quotaData = [];
+		    			}*/
 		    			Common.render('tpls/ccenter/vdc/quota.html',data.quota_set,function(html){
 		    				Modal.show({
 			    	            title: '配额',
