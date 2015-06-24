@@ -274,6 +274,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 	     });
 	   //管理
 	    $("#FunctionTable_wrapper a.btn-edit-authority").on("click",function(){
+	    	var id = $(this).attr("data");
 	    	Common.render(true,{
 	 			tpl:'tpls/sysmanagement/functiontree/management.html',
 	 			data:'/v2.0/subnets/page/1/10',  //需修改接口
@@ -373,7 +374,8 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 		                	                			"item_name": $("[name='item_name']").val(),
 		                	                			"seq": $("[name='seq']").val(),
 		                	                			"parent_item_id" : node.id,
-		                	                			"is_menu":$("[name='is_menu']:checked").val().length? 1:0
+		                	                			"is_menu":$("[name='is_menu']:checked").val().length? 1:0,
+		                	                			"tree_id":id
 		                    					};
 		                	                	Common.xhr.postJSON('/v2.0/OS-KSADM/roles',serverData,function(data){  //需修改接口
 		                	                		if(data){
@@ -421,7 +423,8 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 		                	                			"item_name": $("[name='item_name']").val(),
 		                	                			"seq": $("[name='seq']").val(),
 		                	                			"parent_item_id" : node.getParentNode()? node.getParentNode().id:"root",
-		                	                			"is_menu":$("[name='is_menu']:checked").val().length? 1:0
+		                	                			"is_menu":$("[name='is_menu']:checked").val().length? 1:0,
+		                	                			"tree_id":id
 		                    					};
 		                	                	Common.xhr.postJSON('/v2.0/OS-KSADM/roles',serverData,function(data){  //需修改接口
 		                	                		if(data){
