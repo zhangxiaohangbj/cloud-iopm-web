@@ -1,5 +1,5 @@
 {{each list as item i}}
-<div data="{{item.name}}"  class="specs">
+<div data="{{item.name}}"  class="specs {{item.name}}">
 	<div class="progress-info clearfix" data-all="{{item.total}}" data-used="{{item.used}}">
 	  	<span class="quota-key">{{item.title}}</span>
 	  	<span  class="quota-desc">{{item.total}}中的{{item.used}}个已使用</span>

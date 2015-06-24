@@ -1,0 +1,33 @@
+<style>
+<!--
+.dataTables_length select.input-sm {
+	width: 40%;
+}
+-->
+</style>
+<form class="form-horizontal">
+	<table class="table table-primary table-striped" id="chooseUrlTable">
+		<thead>
+			<tr>
+				<th class="c1">
+					<label><input type="checkbox" class="selectAll"></label>
+				</th>
+				<th class="c3">URL名称</th>
+				<th class="c4">端点地址</th>
+				<th class="c3">URL地址</th>
+				<th class="c2">method</th>
+			</tr>
+		</thead>
+		<tbody>
+		{{each result as item i}}
+			<tr>
+				<td><label><input type="checkbox" value="{{item.id}}"></label></td>
+				<td>{{item.name}}</td>
+				<td>{{item.name}}</td>
+				<td>{{item.name}}</td>
+				<td>{{item.name}}</td>
+			</tr>
+	 			{{/each}}
+		</tbody>
+	</table>
+</form>
