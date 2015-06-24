@@ -164,8 +164,12 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 							if(current && current.length){
 								quotaUsages.cores = parseInt(quotaUsages.cores) + parseInt(current.attr('data-core'));
 								quotaUsages.ram = parseInt(quotaUsages.ram) + parseInt(current.attr('data-memory'));
+								quotaUsages.instances = parseInt(quotaUsages.instances) + parseInt(currentChosenObj.nums);
 							};
 							var getMathRound = function(used,total){
+								if(total==0||total==null||total==""){
+									return 0
+								}
 								return Math.round((parseInt(used)/parseInt(total))*100);
 							}
 							var getClass = function(rate){
@@ -286,7 +290,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 						progressBar.html(useRate+'%');
 						this.updateQuotaSpecs(nData - oData);
 					}else{
-						Modal.error($(this).find('.quota-key').html()+'超出配额');
+						Modal.error($this.find('.quota-key').html()+'超出配额');
 					}
 				}
 			},
@@ -297,9 +301,9 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 					if(data && data.security_groups){
 						for(var i=0,l=data.security_groups.length;i<l;i++){
 							if(data.security_groups[i].name=='default'){
-								dataArr.push('<label data-id="'+data.security_groups[i].name+'"><input type="checkbox" checked>'+data.security_groups[i].name+'</></label>');
+								dataArr.push('<label data-id="'+data.security_groups[i].id+'" data-name="'+data.security_groups[i].name+'"><input type="checkbox" checked>'+data.security_groups[i].name+'</></label>');
 							}else{
-								dataArr.push('<label data-id="'+data.security_groups[i].name+'"><input type="checkbox">'+data.security_groups[i].name+'</label>');
+								dataArr.push('<label data-id="'+data.security_groups[i].name+'" data-name="'+data.security_groups[i].name+'"><input type="checkbox">'+data.security_groups[i].name+'</label>');
 							}
 						}
 						$('div.security-group').html(dataArr.join(''));
@@ -494,6 +498,11 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 			                    minlength: 4,
 			                    maxlength:255
 			                },
+			                'imageRef':{
+			                	required: true,
+			                    minlength: 1,
+			                    ignore: ""
+			                },
 			                'public_key':{
 			                	required: true
 			                }
@@ -565,7 +574,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
     				var data = [];
     				$('div.security-group').find('.icheckbox-info').each(function(){
     					if($(this).hasClass('checked')){
-    						data.push($(this).parent().attr('data-id'))
+    						data.push({"id":$(this).parent().attr('data-id'),"name":$(this).parent().attr('data-name')})
     					}
     				});
     				return data;
@@ -655,7 +664,8 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
     					networkData.push(network);
     				});
     				
-    				serverData.server.networks=networkData;
+    				serverData.server["networks"]=networkData;
+    				serverData.server["security_groups"]=getSecruityGroup();
     				Common.xhr.postJSON('/'+current_vdc_id+'/servers',serverData,function(data){
     					if(data.error){
     						Modal.error(data.message)
@@ -802,6 +812,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
                 Common.xhr.postJSON('/'+current_vdc_id+'/servers/'+id+'/action',rq,function(data){
                 	if(data.success){
                 		Modal.success("云主机["+name+"]已"+dc+"!");
+                		setTimeout(function(){Modal.closeAll()},3000);
                 	}else{
                 		Modal.error("云主机["+name+"]"+dc+"失败!");
                 	}
@@ -1107,7 +1118,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 	    	}else if(vmState == "PAUSED"){
 	    		EditData.DoAction(serverId,serverName,{ "unpause" : null},"恢复");
 	    	}else if(vmState == "SHUTOFF"){
-	    		EditData.DoAction(serverId,serverName,{ "start" : null},"恢复");
+	    		EditData.DoAction(serverId,serverName,{ "os-start" : null},"恢复");
 	    	}
 	    	
 	    });
