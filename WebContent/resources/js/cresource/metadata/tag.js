@@ -118,11 +118,12 @@ define(['Common','bs/modal','jq/form/wizard','jq/form/validator-bs3','bs/tooltip
                                     }
 
                                     var tag = {
+                                        "id":data,
                                         "name":$("#edit-name").val(),
                                         "value":$("#edit-tag-value").val()
                                     }
-                                    Common.xhr.putJSON('/resource-manager/v2/region',tag,function(data){
-                                        if(data){
+                                    Common.xhr.putJSON('/resource-manager/v2/tag',tag,function(data){
+                                        if(data && data.error !="true"){
                                             Modal.success('保存成功');
                                             setTimeout(function(){Modal.closeAll()},2000);
                                             Common.router.route();
@@ -133,7 +134,7 @@ define(['Common','bs/modal','jq/form/wizard','jq/form/validator-bs3','bs/tooltip
                                 }
                             }],
                         onshown : function(){
-                            formValidator($("#editRegion"));
+                            formValidator($("#editTag"));
                         }
                     });
 

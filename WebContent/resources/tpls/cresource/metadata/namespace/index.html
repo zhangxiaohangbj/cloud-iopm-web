@@ -1,0 +1,40 @@
+<div class="page-header clearfix">
+    <ol class="breadcrumb">
+        <li class="active">命名空间列表</li>
+    </ol>
+</div>
+<div class="page-body">
+    <div class="pane">
+        <div class="pane-content">
+            <table class="table table-primary table-striped" id="namespaceTable">
+                <thead>
+                <tr>
+                    <th class="c1"><label><input type="checkbox"></label></th>
+                    <th class="c2">名称</th>
+                    <th class="c2">展示名称</th>
+                    <th class="c2">描述</th>
+                    <th class="c2">创建者</th>
+                    <th class="c3 sorting_disabled" >操作</th>
+                </tr>
+                </thead>
+                <tbody>
+                {{each namespace as item i}}
+                <tr>
+                    <td><label><input type="checkbox"></label></td>
+                    <td>{{item.namespace}}</td>
+                    <td>{{item.display_name}}</td>
+                    <td>{{item.description}}</td>
+                    <td>admin</td>
+                    <td>
+                        <a class="btn-opt pull-left bind" data-toggle="tooltip" data-act="edit" style="margin: 0 5px;" data="{{item.namespace}}">绑定资源类型</a>
+                        <a class="btn-opt pull-left edit" data-toggle="tooltip" data-act="delete" style="margin: 0 5px;" data="{{item.namespace}}">修改</a>
+                        <a class="btn-opt pull-left delete" data-toggle="tooltip" data-act="delete" style="margin: 0 5px;" data="{{item.namespace}}">删除</a>
+                    </td>
+                </tr>
+                {{/each}}
+                </tbody>
+
+            </table>
+        </div>
+    </div>
+</div>

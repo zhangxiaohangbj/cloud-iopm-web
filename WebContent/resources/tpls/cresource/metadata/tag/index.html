@@ -9,8 +9,9 @@
             <table class="table table-primary table-striped" id="tagTable">
                 <thead>
                 <tr>
-                    <th class="c1"><label><input type="checkbox"></label>选择</th>
+                    <th class="c1"><label><input type="checkbox"></label></th>
                     <th class="c2">标签分组</th>
+                    <th class="c2">标签名称</th>
                     <th class="c2">标签值</th>
                     <th class="c2">资源数量</th>
                     <th class="c2 sorting_disabled" >操作</th>
@@ -20,9 +21,10 @@
                 {{each tag as item i}}
                 <tr>
                     <td><label><input type="checkbox"></label></td>
-                    <td>磁盘类型</td>
-                    <td>普通SATA</td>
-                    <td>{{item.id}}</td>
+                    <td>{{item.namespace}}</td>
+                    <td>{{item.name}}</td>
+                    <td>{{item.value}}</td>
+                    <td>10</td>
                     <td>
                         <a class="btn-opt pull-left edit" data-toggle="tooltip" data-act="edit" style="margin: 0 5px;" data="{{item.id}}">修改</a>
                         <a class="btn-opt pull-left delete" data-toggle="tooltip" data-act="delete" style="margin: 0 5px;" data="{{item.id}}">删除</a>

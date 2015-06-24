@@ -167,7 +167,7 @@ define(['Common','bs/modal','jq/form/wizard','jq/form/validator-bs3','bs/tooltip
         //创建按钮
         $("#ZoneTable_wrapper span.btn-add").on("click",function(){
             var selectData= {"data":renderData};
-            Common.render('tpls/cresource/zone/add.html',selectData,function(html){
+            Common.render('tpls/cresource/zone/add2.html',selectData,function(html){
                 $('body').append(html);
 
                 //
