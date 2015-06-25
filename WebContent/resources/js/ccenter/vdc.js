@@ -9,9 +9,9 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 		Common.$pageContent.addClass("loading");
 		Common.render(true,{
 			tpl:'tpls/ccenter/vdc/list.html',
-			data:'/v2.0/tenants/page/10/1',
+			data:'/v2.0/tenants',
 			beforeRender: function(data){
-				return data.result;
+				return data.tenants;
 			},
 			callback: bindEvent
 		});
