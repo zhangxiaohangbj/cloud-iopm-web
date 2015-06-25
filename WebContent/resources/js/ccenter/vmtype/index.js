@@ -212,9 +212,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
             more.accessFlavor($(this).attr("data"));
         });
 
-        $("ul.dropdown-menu a.testVNC").on("click",function(){
-            more.testVNC($(this).attr("data"));
-        });
+
 	    //更多
 	    var more = {
 		    	//更新flavor
@@ -333,21 +331,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 
             },
 
-            testVNC: function(key){
 
-                Common.render('tpls/ccenter/vmtype/test.html', '', function (html) {
-                    Modal.show({
-                        size: 'size-_console',
-                        title: '控制台',
-                        message: html,
-                        nl2br: false,
-                        onshown: function () {
-
-                        }
-                    });
-                });
-
-            }
 	    }
 	}
 	return {
