@@ -33,7 +33,7 @@
 				{{each list as item i}}
 					<tr data-id="{{item.id}}">
 						<td><label><input type="checkbox"></label></td>
-						<td><a class="volume_name" href="javascript:void(0);">{{item.name}}</a></td>
+						<td><a class="volume_name" href="#ccenter/block/detail!{{item.id}}">{{item.name}}</a></td>
 						<td>{{item.size}}</td>
 						<td>
 			 			{{if item.status == 'in-use'}}

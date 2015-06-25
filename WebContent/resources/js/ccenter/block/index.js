@@ -1,6 +1,5 @@
 define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3'],function(Common,Modal){
 	Common.requestCSS('css/wizard.css');
-	Common.requestCSS('css/detail.css');
 	var current_vdc_id = '9cc717d8047e46e5bf23804fc4400247';
 	var wizard;
 	var init = function(){
@@ -110,7 +109,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 						//获取vdc的配额
 						Common.xhr.ajax('/v2.0/'+current_vdc_id+'/os-quota-sets/'+vdc_id,function(quotas){
 							if(!quotas) return;
-							quotas = quotas.quota_set
+							quotas = quotas.quota_set || {};
 							//获取vdc的配额使用情况
 							Common.xhr.ajax('/v2.0/'+vdc_id+'/limits',function(quotaUsages){
 								var getMathRound = function(used,total){
@@ -123,8 +122,8 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 								if($('#volume_size').val()){
 									quotaUsages.diskTotalSizes = parseInt(quotaUsages.diskTotalSizes) + parseInt($('#volume_size').val());
 								}
-								var rateDiskNums = getMathRound(quotaUsages.disks,quotas.disks),
-								rateDiskTotalSizes = getMathRound(quotaUsages.diskTotalSizes,quotas.diskTotalSizes),
+								var rateDiskNums = getMathRound(quotaUsages.disks,quotas.disks || 0),
+								rateDiskTotalSizes = getMathRound(quotaUsages.diskTotalSizes,quotas.diskTotalSizes || 0),
 								styleDiskNums = getClass(rateDiskNums),styleDiskTotalSizes = getClass(rateDiskTotalSizes);
 								var renderData = [
 											        {
@@ -355,35 +354,13 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 			});
 	    });
 	    var moreAction = {
-	    		detail: function(){
+	    		/*detail: function(){
     			 //页面列表相关  （编辑、明细）
 	    		    $("#VolumeTable_wrapper a.volume_name").on("click",function(){
 	    		    	var id = $(this).parent('tr:first').attr("data-id");
-	    		    	var tmpDetailData = {
-	    	    	            name : "Tiger Nixon",
-	    	    	            id: "di91jd9d29f9f29",
-	    	    	            size:"20GB",
-	    	    	            status: "in-use",
-	    	    	            vm_id: "private",
-	    	    	            type: "ceth(分布式)",
-	    	    	            vdc_id : "vdc1",
-	    	    	            available_zone: "WDK1",
-	    	    	            read_only:"1",
-	    	    	            description:"可用磁盘数据",
-	    	    	            mount_list: [{
-	    	    	            	name:'nexus-server',
-	    	    	            	id: 'nexus-server'
-	    	    	            }],
-	    	    	            mount_path: '/opt/vdc',
-	    	    	            create_time: '2015-04-24 17:14:57'
-	    		    	}
-	    		    	Common.render(true,'tpls/ccenter/block/volume/detail.html',tmpDetailData,function(html){
-	    		    		$("a.reload").on("click",function(){
-	    	    		    	Common.router.route();
-	    	    		  });
-	    		    	});
+	    		    	
 	    		    })
-    		},
+    		},*/
     		editMount: function(){
     			$('.dropdown-menu a.edit_mount').on('click',function(){
     				var tr = $(this).parent('tr:first'),

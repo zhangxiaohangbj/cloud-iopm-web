@@ -1,0 +1,85 @@
+<form class="form-horizontal" id="editStrategy">
+	<div class="form-group">
+		<label for="name" class="control-label col-sm-4"><span style="color: red;">* </span>名称：</label>
+	 	<div class="col-sm-5 col-sm">
+			<input type="text" class="form-control" name="name" value="{{name}}">
+		</div>
+	</div>
+	<div class="form-group">
+		<label for="description" class="control-label col-sm-4">描述：</label>
+	 	<div class="col-sm-5 col-sm">
+			<textarea class="form-control" style="height:auto;" rows="4" name="description" placeholder="">{{properties.description}}</textarea>
+		</div>
+	</div>
+	<div class="form-group">
+		<label for="imageSource" class="control-label col-sm-4"><span style="color: red;"></span>镜像源：</label>
+	 	<div class="col-sm-5 col-sm">
+		 	<select class="form-control select" name="imageSource" value="address">
+			 	<option value="address">镜像地址</option>
+			 	<option value="file">镜像文件</option>
+		 	</select>
+		</div>
+	</div>
+	<div class="form-group">
+		<label for="className" class="control-label col-sm-4"><span style="color: red;">* </span>镜像地址：</label>
+	 	<div class="col-sm-5 col-sm">
+			<input type="text" class="form-control" name="className" value="{{className}}">
+		</div>
+	</div>
+	<div class="form-group hidden">
+		<label for="className" class="control-label col-sm-4"><span style="color: red;">* </span>镜像文件：</label>
+	 	<div class="col-sm-5 col-sm">
+			<input type="file" class="form-control" name="className" value="{{className}}">
+		</div>
+	</div>
+	<div class="form-group">
+		<label for="strategyGroupId" class="control-label col-sm-4"><span style="color: red;">* </span>格式：</label>
+	 	<div class="col-sm-5 col-sm">
+		 	<select class="form-control select" name="strategyGroupId" value="{{strategyGroupId}}">
+			 	<option value="address">AKI</option>
+			 	<option value="file">AMI</option>
+			 	<option value="file">ARI</option>
+		 	</select>
+		</div>
+	</div>
+	<div class="form-group">
+		<label for="strategyGroupId" class="control-label col-sm-4"><span style="color: red;"></span>最小磁盘(GB)：</label>
+	 	<div class="col-sm-5 col-sm">
+		 	<div class="spinbox"  id="setVmNums">
+			  <input type="text" name="min_count" style="height:35px;"  class="form-control input-mini spinbox-input">
+			  <div class="spinbox-buttons btn-group btn-group-vertical">
+			    <button type="button" class="btn btn-default spinbox-up btn-xs">
+			      <span class="glyphicon glyphicon-chevron-up"></span><span class="sr-only">Increase</span>
+			    </button>
+			    <button type="button" class="btn btn-default spinbox-down btn-xs">
+			      <span class="glyphicon glyphicon-chevron-down"></span><span class="sr-only">Decrease</span>
+			    </button>
+			  </div>
+			</div>
+		</div>
+	</div>
+	<div class="form-group">
+		<label for="strategyGroupId" class="control-label col-sm-4"><span style="color: red;"></span>最小内存(MB)：</label>
+	 	<div class="col-sm-5 col-sm">
+		 	<div class="spinbox"  id="setVmNums">
+			  <input type="text" name="min_count" style="height:35px;"  class="form-control input-mini spinbox-input">
+			  <div class="spinbox-buttons btn-group btn-group-vertical">
+			    <button type="button" class="btn btn-default spinbox-up btn-xs">
+			      <span class="glyphicon glyphicon-chevron-up"></span><span class="sr-only">Increase</span>
+			    </button>
+			    <button type="button" class="btn btn-default spinbox-down btn-xs">
+			      <span class="glyphicon glyphicon-chevron-down"></span><span class="sr-only">Decrease</span>
+			    </button>
+			  </div>
+			</div>
+		</div>
+	</div>
+	<div class="form-group">
+		<label for="className" class="control-label col-sm-4"><span style="color: red;"></span></label>
+	 	<div class="col-sm-5 col-sm">
+			公有：<input type="checkbox" checked>
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+			受保护的：<input type="checkbox" checked>
+		</div>
+	</div>
+</form>

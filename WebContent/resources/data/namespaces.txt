@@ -1,0 +1,465 @@
+{
+    "first": "/v2/metadefs/namespaces",
+    "namespaces": [
+        {
+            "display_name": "Watchdog Behavior",
+            "description": "Compute drivers may enable watchdog behavior over instances.  See: http://docs.openstack.org/admin-guide-cloud/content/customize-flavors.html",
+            "created_at": "2015-06-17T09:23:59Z",
+            "namespace": "OS::Compute::Watchdog",
+            "visibility": "public",
+            "protected": true,
+            "owner": "admin",
+            "resource_type_associations": [
+                {
+                    "created_at": "2015-06-17T09:23:59Z",
+                    "name": "OS::Glance::Image"
+                },
+                {
+                    "created_at": "2015-06-17T09:23:59Z",
+                    "properties_target": "image",
+                    "name": "OS::Cinder::Volume"
+                },
+                {
+                    "created_at": "2015-06-17T09:23:59Z",
+                    "name": "OS::Nova::Flavor"
+                }
+            ],
+            "self": "/v2/metadefs/namespaces/OS::Compute::Watchdog",
+            "schema": "/v2/schemas/metadefs/namespace"
+        },
+        {
+            "display_name": "Instances per Host",
+            "description": "Properties related to the Nova scheduler filter AggregateNumInstancesFilter. Filters aggregate hosts by the number of running instances on it. Hosts in the aggregate with too many instances will be filtered out. The filter must be enabled in the Nova scheduler to use these properties.",
+            "created_at": "2015-06-17T09:23:59Z",
+            "namespace": "OS::Compute::AggregateNumInstancesFilter",
+            "visibility": "public",
+            "protected": false,
+            "owner": "admin",
+            "resource_type_associations": [
+                {
+                    "created_at": "2015-06-17T09:23:59Z",
+                    "name": "OS::Nova::Aggregate"
+                }
+            ],
+            "self": "/v2/metadefs/namespaces/OS::Compute::AggregateNumInstancesFilter",
+            "schema": "/v2/schemas/metadefs/namespace"
+        },
+        {
+            "display_name": "Shutdown Behavior",
+            "description": "These properties allow modifying the shutdown behavior for stop, rescue, resize, and shelve operations.",
+            "created_at": "2015-06-17T09:23:59Z",
+            "namespace": "OS::Compute::GuestShutdownBehavior",
+            "visibility": "public",
+            "protected": true,
+            "owner": "admin",
+            "resource_type_associations": [
+                {
+                    "created_at": "2015-06-17T09:23:59Z",
+                    "name": "OS::Glance::Image"
+                }
+            ],
+            "self": "/v2/metadefs/namespaces/OS::Compute::GuestShutdownBehavior",
+            "schema": "/v2/schemas/metadefs/namespace"
+        },
+        {
+            "display_name": "Flavor Quota",
+            "description": "Compute drivers may enable quotas on CPUs available to a VM, disk tuning, bandwidth I/O, and instance VIF traffic control.  See: http://docs.openstack.org/admin-guide-cloud/content/customize-flavors.html",
+            "created_at": "2015-06-17T09:23:59Z",
+            "namespace": "OS::Compute::Quota",
+            "visibility": "public",
+            "protected": true,
+            "owner": "admin",
+            "resource_type_associations": [
+                {
+                    "created_at": "2015-06-17T09:23:59Z",
+                    "name": "OS::Nova::Flavor"
+                }
+            ],
+            "self": "/v2/metadefs/namespaces/OS::Compute::Quota",
+            "schema": "/v2/schemas/metadefs/namespace"
+        },
+        {
+            "display_name": "Virtual CPU Topology",
+            "description": "This provides the preferred socket/core/thread counts for the virtual CPU instance exposed to guests. This enables the ability to avoid hitting limitations on vCPU topologies that OS vendors place on their products. See also: http://git.openstack.org/cgit/openstack/nova-specs/tree/specs/juno/virt-driver-vcpu-topology.rst",
+            "created_at": "2015-06-17T09:23:58Z",
+            "namespace": "OS::Compute::VirtCPUTopology",
+            "visibility": "public",
+            "protected": true,
+            "owner": "admin",
+            "resource_type_associations": [
+                {
+                    "created_at": "2015-06-17T09:23:58Z",
+                    "prefix": "hw_",
+                    "name": "OS::Glance::Image"
+                },
+                {
+                    "created_at": "2015-06-17T09:23:58Z",
+                    "prefix": "hw_",
+                    "properties_target": "image",
+                    "name": "OS::Cinder::Volume"
+                },
+                {
+                    "created_at": "2015-06-17T09:23:58Z",
+                    "prefix": "hw:",
+                    "name": "OS::Nova::Flavor"
+                }
+            ],
+            "self": "/v2/metadefs/namespaces/OS::Compute::VirtCPUTopology",
+            "schema": "/v2/schemas/metadefs/namespace"
+        },
+        {
+            "display_name": "VMware Quota for Flavors",
+            "description": "The VMware compute driver allows various compute quotas to be specified on flavors. When specified, the VMWare driver will ensure that the quota is enforced. These are properties specific to VMWare compute drivers and will only have an effect if the VMWare compute driver is enabled in Nova. For a list of hypervisors, see: https://wiki.openstack.org/wiki/HypervisorSupportMatrix. For flavor customization, see: http://docs.openstack.org/admin-guide-cloud/content/customize-flavors.html",
+            "created_at": "2015-06-17T09:23:58Z",
+            "namespace": "OS::Compute::VMwareQuotaFlavor",
+            "visibility": "public",
+            "protected": true,
+            "owner": "admin",
+            "resource_type_associations": [
+                {
+                    "created_at": "2015-06-17T09:23:58Z",
+                    "name": "OS::Nova::Flavor"
+                }
+            ],
+            "self": "/v2/metadefs/namespaces/OS::Compute::VMwareQuotaFlavor",
+            "schema": "/v2/schemas/metadefs/namespace"
+        },
+        {
+            "display_name": "XenAPI Driver Options",
+            "description": "The XenAPI compute driver options.  \n\nThese are properties specific to compute drivers.  For a list of all hypervisors, see here: https://wiki.openstack.org/wiki/HypervisorSupportMatrix.",
+            "created_at": "2015-06-17T09:23:58Z",
+            "namespace": "OS::Compute::XenAPI",
+            "visibility": "public",
+            "protected": true,
+            "owner": "admin",
+            "resource_type_associations": [
+                {
+                    "created_at": "2015-06-17T09:23:58Z",
+                    "name": "OS::Glance::Image"
+                }
+            ],
+            "self": "/v2/metadefs/namespaces/OS::Compute::XenAPI",
+            "schema": "/v2/schemas/metadefs/namespace"
+        },
+        {
+            "display_name": "Disk Allocation per Host",
+            "description": "Properties related to the Nova scheduler filter AggregateDiskFilter. Filters aggregate hosts based on the available disk space compared to the requested disk space. Hosts in the aggregate with not enough usable disk will be filtered out. The filter must be enabled in the Nova scheduler to use these properties.",
+            "created_at": "2015-06-17T09:23:58Z",
+            "namespace": "OS::Compute::AggregateDiskFilter",
+            "visibility": "public",
+            "protected": true,
+            "owner": "admin",
+            "resource_type_associations": [
+                {
+                    "created_at": "2015-06-17T09:23:58Z",
+                    "name": "OS::Nova::Aggregate"
+                }
+            ],
+            "self": "/v2/metadefs/namespaces/OS::Compute::AggregateDiskFilter",
+            "schema": "/v2/schemas/metadefs/namespace"
+        },
+        {
+            "display_name": "libvirt Driver Options for Images",
+            "description": "The libvirt Compute Driver Options for Glance Images.  \n\nThese are properties specific to compute drivers.  For a list of all hypervisors, see here: https://wiki.openstack.org/wiki/HypervisorSupportMatrix.",
+            "created_at": "2015-06-17T09:23:58Z",
+            "namespace": "OS::Compute::LibvirtImage",
+            "visibility": "public",
+            "protected": true,
+            "owner": "admin",
+            "resource_type_associations": [
+                {
+                    "created_at": "2015-06-17T09:23:58Z",
+                    "name": "OS::Glance::Image"
+                }
+            ],
+            "self": "/v2/metadefs/namespaces/OS::Compute::LibvirtImage",
+            "schema": "/v2/schemas/metadefs/namespace"
+        },
+        {
+            "display_name": "Instance Config Data",
+            "description": "Instances can perform self-configuration based on data made available to the running instance. These properties affect instance configuration.",
+            "created_at": "2015-06-17T09:23:57Z",
+            "namespace": "OS::Compute::InstanceData",
+            "visibility": "public",
+            "protected": true,
+            "owner": "admin",
+            "resource_type_associations": [
+                {
+                    "created_at": "2015-06-17T09:23:57Z",
+                    "name": "OS::Glance::Image"
+                },
+                {
+                    "created_at": "2015-06-17T09:23:57Z",
+                    "properties_target": "image",
+                    "name": "OS::Cinder::Volume"
+                }
+            ],
+            "self": "/v2/metadefs/namespaces/OS::Compute::InstanceData",
+            "schema": "/v2/schemas/metadefs/namespace"
+        },
+        {
+            "display_name": "Common Operating System Properties",
+            "description": "When adding an image to Glance, you may specify some common image properties that may prove useful to consumers of your image.",
+            "created_at": "2015-06-17T09:23:57Z",
+            "namespace": "OS::OperatingSystem",
+            "visibility": "private",
+            "protected": true,
+            "owner": "admin",
+            "resource_type_associations": [
+                {
+                    "created_at": "2015-06-17T09:23:57Z",
+                    "name": "OS::Glance::Image"
+                },
+                {
+                    "created_at": "2015-06-17T09:23:57Z",
+                    "properties_target": "image",
+                    "name": "OS::Cinder::Volume"
+                }
+            ],
+            "self": "/v2/metadefs/namespaces/OS::OperatingSystem",
+            "schema": "/v2/schemas/metadefs/namespace"
+        },
+        {
+            "display_name": "Runtime Environment",
+            "description": "Software is written in a specific programming language and the language must execute within a runtime environment. The runtime environment provides an abstraction to utilizing a computer's processor, memory (RAM), and other system resources.",
+            "created_at": "2015-06-17T09:23:57Z",
+            "namespace": "OS::Software::Runtimes",
+            "visibility": "public",
+            "protected": true,
+            "owner": "admin",
+            "resource_type_associations": [
+                {
+                    "created_at": "2015-06-17T09:23:57Z",
+                    "name": "OS::Glance::Image"
+                },
+                {
+                    "created_at": "2015-06-17T09:23:57Z",
+                    "properties_target": "image",
+                    "name": "OS::Cinder::Volume"
+                },
+                {
+                    "created_at": "2015-06-17T09:23:57Z",
+                    "name": "OS::Nova::Instance"
+                }
+            ],
+            "self": "/v2/metadefs/namespaces/OS::Software::Runtimes",
+            "schema": "/v2/schemas/metadefs/namespace"
+        },
+        {
+            "display_name": "VMware Driver Options",
+            "description": "The VMware compute driver options.  \n\nThese are properties specific to VMWare compute drivers and will only have an effect if the VMWare compute driver is enabled in Nova.  For a list of all hypervisors, see here: https://wiki.openstack.org/wiki/HypervisorSupportMatrix.",
+            "created_at": "2015-06-17T09:23:57Z",
+            "namespace": "OS::Compute::VMware",
+            "visibility": "public",
+            "protected": true,
+            "owner": "admin",
+            "resource_type_associations": [
+                {
+                    "created_at": "2015-06-17T09:23:57Z",
+                    "name": "OS::Glance::Image"
+                }
+            ],
+            "self": "/v2/metadefs/namespaces/OS::Compute::VMware",
+            "schema": "/v2/schemas/metadefs/namespace"
+        },
+        {
+            "display_name": "Random Number Generator",
+            "description": "If a random-number generator device has been added to the instance through its image properties, the device can be enabled and configured.",
+            "created_at": "2015-06-17T09:23:56Z",
+            "namespace": "OS::Compute::RandomNumberGenerator",
+            "visibility": "public",
+            "protected": true,
+            "owner": "admin",
+            "resource_type_associations": [
+                {
+                    "created_at": "2015-06-17T09:23:56Z",
+                    "name": "OS::Nova::Flavor"
+                }
+            ],
+            "self": "/v2/metadefs/namespaces/OS::Compute::RandomNumberGenerator",
+            "schema": "/v2/schemas/metadefs/namespace"
+        },
+        {
+            "display_name": "IO Ops per Host",
+            "description": "Properties related to the Nova scheduler filter AggregateIoOpsFilter. Filters aggregate hosts based on the number of instances currently changing state. Hosts in the aggregate with too many instances changing state will be filtered out. The filter must be enabled in the Nova scheduler to use these properties.",
+            "created_at": "2015-06-17T09:23:56Z",
+            "namespace": "OS::Compute::AggregateIoOpsFilter",
+            "visibility": "public",
+            "protected": true,
+            "owner": "admin",
+            "resource_type_associations": [
+                {
+                    "created_at": "2015-06-17T09:23:56Z",
+                    "name": "OS::Nova::Aggregate"
+                }
+            ],
+            "self": "/v2/metadefs/namespaces/OS::Compute::AggregateIoOpsFilter",
+            "schema": "/v2/schemas/metadefs/namespace"
+        },
+        {
+            "display_name": "Compute Host Capabilities",
+            "description": "Hardware capabilities provided by the compute host. This provides the ability to fine tune the hardware specification required when an instance is requested. The ComputeCapabilitiesFilter should be enabled in the Nova scheduler to use these properties. When enabled, this filter checks that the capabilities provided by the compute host satisfy any extra specifications requested. Only hosts that can provide the requested capabilities will be eligible for hosting the instance.",
+            "created_at": "2015-06-17T09:23:56Z",
+            "namespace": "OS::Compute::HostCapabilities",
+            "visibility": "public",
+            "protected": true,
+            "owner": "admin",
+            "resource_type_associations": [
+                {
+                    "created_at": "2015-06-17T09:23:56Z",
+                    "prefix": "capabilities:",
+                    "name": "OS::Nova::Flavor"
+                },
+                {
+                    "created_at": "2015-06-17T09:23:56Z",
+                    "prefix": "aggregate_instance_extra_specs:",
+                    "name": "OS::Nova::Aggregate"
+                }
+            ],
+            "self": "/v2/metadefs/namespaces/OS::Compute::HostCapabilities",
+            "schema": "/v2/schemas/metadefs/namespace"
+        },
+        {
+            "display_name": "VMware Driver Options for Flavors",
+            "description": "VMware Driver Options for Flavors may be used to customize and manage Nova Flavors. These are properties specific to VMWare compute drivers and will only have an effect if the VMWare compute driver is enabled in Nova. See: http://docs.openstack.org/admin-guide-cloud/content/customize-flavors.html",
+            "created_at": "2015-06-17T09:23:56Z",
+            "namespace": "OS::Compute::VMwareFlavor",
+            "visibility": "public",
+            "protected": true,
+            "owner": "admin",
+            "resource_type_associations": [
+                {
+                    "created_at": "2015-06-17T09:23:56Z",
+                    "name": "OS::Nova::Flavor"
+                }
+            ],
+            "self": "/v2/metadefs/namespaces/OS::Compute::VMwareFlavor",
+            "schema": "/v2/schemas/metadefs/namespace"
+        },
+        {
+            "display_name": "libvirt Driver Options",
+            "description": "The libvirt compute driver options.  \n\nThese are properties that affect the libvirt compute driver and may be specified on flavors and images.  For a list of all hypervisors, see here: https://wiki.openstack.org/wiki/HypervisorSupportMatrix.",
+            "created_at": "2015-06-17T09:23:56Z",
+            "namespace": "OS::Compute::Libvirt",
+            "visibility": "public",
+            "protected": true,
+            "owner": "admin",
+            "resource_type_associations": [
+                {
+                    "created_at": "2015-06-17T09:23:56Z",
+                    "prefix": "hw_",
+                    "name": "OS::Glance::Image"
+                },
+                {
+                    "created_at": "2015-06-17T09:23:56Z",
+                    "prefix": "hw:",
+                    "name": "OS::Nova::Flavor"
+                }
+            ],
+            "self": "/v2/metadefs/namespaces/OS::Compute::Libvirt",
+            "schema": "/v2/schemas/metadefs/namespace"
+        },
+        {
+            "display_name": "Common Image Properties",
+            "description": "When adding an image to Glance, you may specify some common image properties that may prove useful to consumers of your image.",
+            "created_at": "2015-06-17T09:23:55Z",
+            "namespace": "OS::Glance::CommonImageProperties",
+            "visibility": "private",
+            "protected": true,
+            "owner": "admin",
+            "self": "/v2/metadefs/namespaces/OS::Glance::CommonImageProperties",
+            "schema": "/v2/schemas/metadefs/namespace"
+        },
+        {
+            "display_name": "Hypervisor Selection",
+            "description": "OpenStack Compute supports many hypervisors, although most installations use only one hypervisor. For installations with multiple supported hypervisors, you can schedule different hypervisors using the ImagePropertiesFilter. This filters compute nodes that satisfy any architecture, hypervisor type, or virtual machine mode properties specified on the instance's image properties.",
+            "created_at": "2015-06-17T09:23:55Z",
+            "namespace": "OS::Compute::Hypervisor",
+            "visibility": "public",
+            "protected": true,
+            "owner": "admin",
+            "resource_type_associations": [
+                {
+                    "created_at": "2015-06-17T09:23:55Z",
+                    "name": "OS::Glance::Image"
+                }
+            ],
+            "self": "/v2/metadefs/namespaces/OS::Compute::Hypervisor",
+            "schema": "/v2/schemas/metadefs/namespace"
+        },
+        {
+            "display_name": "Database Software",
+            "description": "A database is an organized collection of data. The data is typically organized to model aspects of reality in a way that supports processes requiring information. Database management systems are computer software applications that interact with the user, other applications, and the database itself to capture and analyze data. (http://en.wikipedia.org/wiki/Database)",
+            "created_at": "2015-06-17T09:23:54Z",
+            "namespace": "OS::Software::DBMS",
+            "visibility": "public",
+            "protected": true,
+            "owner": "admin",
+            "resource_type_associations": [
+                {
+                    "created_at": "2015-06-17T09:23:54Z",
+                    "name": "OS::Glance::Image"
+                },
+                {
+                    "created_at": "2015-06-17T09:23:54Z",
+                    "properties_target": "image",
+                    "name": "OS::Cinder::Volume"
+                },
+                {
+                    "created_at": "2015-06-17T09:23:54Z",
+                    "name": "OS::Nova::Instance"
+                },
+                {
+                    "created_at": "2015-06-17T09:23:55Z",
+                    "name": "OS::Trove::Instance"
+                }
+            ],
+            "self": "/v2/metadefs/namespaces/OS::Software::DBMS",
+            "schema": "/v2/schemas/metadefs/namespace"
+        },
+        {
+            "display_name": "Trusted Compute Pools (Intel® TXT)",
+            "description": "Trusted compute pools with Intel® Trusted Execution Technology (Intel® TXT) support IT compliance by protecting virtualized data centers - private, public, and hybrid clouds against attacks toward hypervisor and BIOS, firmware, and other pre-launch software components. The Nova trust scheduling filter must be enabled and configured with the trust attestation service in order to use this feature.",
+            "created_at": "2015-06-17T09:23:54Z",
+            "namespace": "OS::Compute::Trust",
+            "visibility": "public",
+            "protected": true,
+            "owner": "admin",
+            "resource_type_associations": [
+                {
+                    "created_at": "2015-06-17T09:23:54Z",
+                    "name": "OS::Nova::Flavor"
+                }
+            ],
+            "self": "/v2/metadefs/namespaces/OS::Compute::Trust",
+            "schema": "/v2/schemas/metadefs/namespace"
+        },
+        {
+            "display_name": "Web Servers",
+            "description": "A web server is a computer system that processes requests via HTTP, the basic network protocol used to distribute information on the World Wide Web. The most common use of web servers is to host websites, but there are other uses such as gaming, data storage, running enterprise applications, handling email, FTP, or other web uses. (http://en.wikipedia.org/wiki/Web_server)",
+            "created_at": "2015-06-17T09:23:54Z",
+            "namespace": "OS::Software::WebServers",
+            "visibility": "public",
+            "protected": true,
+            "owner": "admin",
+            "resource_type_associations": [
+                {
+                    "created_at": "2015-06-17T09:23:54Z",
+                    "name": "OS::Glance::Image"
+                },
+                {
+                    "created_at": "2015-06-17T09:23:54Z",
+                    "properties_target": "image",
+                    "name": "OS::Cinder::Volume"
+                },
+                {
+                    "created_at": "2015-06-17T09:23:54Z",
+                    "name": "OS::Nova::Instance"
+                }
+            ],
+            "self": "/v2/metadefs/namespaces/OS::Software::WebServers",
+            "schema": "/v2/schemas/metadefs/namespace"
+        }
+    ],
+    "schema": "/v2/schemas/metadefs/namespaces"
+}
