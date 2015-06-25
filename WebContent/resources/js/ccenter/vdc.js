@@ -296,7 +296,11 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 						require(['js/common/choose'],function(choose){
 							var options = {
 									selector: '#vdcAZ',
-									allData: azList
+									allData: azList,
+									doneCall:function(){
+										EventsHandler.keyup("#vdcAZ .show-all");
+    	    	    	            	EventsHandler.keyup("#vdcAZ .show-selected");
+									}
 							};
 							choose.initChoose(options);
 						})
@@ -329,6 +333,10 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 							delCall: function($clone){
 								//去除角色窗及取消事件绑定
 								$clone.children("li:last").remove();
+							},
+							doneCall:function(){
+								EventsHandler.keyup("#vdc-users .show-all");
+    	    	            	EventsHandler.keyup("#vdc-users .show-selected");
 							},
 							allData: cacheData.userList
 					};
@@ -406,7 +414,6 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
     				//载入事件
     				EventsHandler.userChosen();
     				EventsHandler.veChange();
-    				//EventsHandler.netChange();
     			});
     			wizard.show();
     			
@@ -522,6 +529,9 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 					return usageData;
 				},
 				callback: function(){
+					 $("#reload").on("click",function(){
+						 Common.router.reload();
+					 })
 					 $('#time_text').daterangepicker(null, function(start, end, label) {
 				            console.log(start.toISOString(), end.toISOString(), label);
 				      });	
