@@ -1,3 +1,4 @@
+//整行注释的代码用于屏蔽掉删除操作，如果管理员可以具有删除操作，后期在注释的地方加上权限控制即可
 define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3'],function(Common,Modal){
 	Common.requestCSS('css/wizard.css');
 	var strategyGroupSelect = "";
@@ -67,7 +68,6 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 		        });
 			},
 			addRow: function(rowData){
-				debugger;
 				//行内容
 				var rowHtml = '';
 				if(rowData){  //修改
@@ -107,7 +107,6 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 				//选择完策略分组后 初始化策略下拉框内容
 				$(document).off("change","#strategyTable [name='strategyGroup"+rowCount+"']");
 				$(document).on("change","#strategyTable [name='strategyGroup"+rowCount+"']",function(){
-					debugger;
 					var rowNo = $(this).parents('td:first').prev().find('.rowCount').html();
 					EventsHandler.initStrategyOptions(rowNo,null);
 				});
@@ -136,7 +135,6 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 				});
 				
 				//新增行后初始化行数据
-				debugger;
 				if(rowData){
 					$("#strategyTable [name='id"+rowCount+"']").val(rowData.id);
 					$("#strategyTable [name='strategyGroup"+rowCount+"']").find("option[value='"+rowData.strategyGroupId+"']").attr("selected",true);
@@ -157,7 +155,6 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 			},
 			initStrategyOptions : function(rowNo,value){
 				//初始化 策略  下拉框数据,如果value不为空，则设置选中项
-				debugger;
 				var strategyGroupId = $("#strategyTable [name='strategyGroup"+rowNo+"']").val();
 	    		Common.xhr.ajax('/cloud/task/strategy?strategyGroupId='+strategyGroupId,function(data){
 	    			var selectData = [];
@@ -265,7 +262,6 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 	    			});
 	    			//创建提交数据
 	    			wizard.on("submit", function(wizard) {
-	    				debugger;
 	    				var wizardData = wizard.serializeObject();
 	    				var list = [];
 	    				for(var i=1;i<=(rowCount-1);i++){
@@ -297,9 +293,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 	    						delete wizardData["initParamsValue"+i];
 	    					}
 	    				}
-	    				debugger;
 	    				wizardData["list"] = list;
-	    				debugger;
 	    				Common.xhr.postJSON('/cloud/task/task',wizardData,function(data){
 	    					wizard._submitting = false;
 	    					wizard.updateProgressBar(100);
@@ -313,7 +307,6 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 	    	//编辑弹框
 	    	Edit : function(id,cb){
 	    		Common.xhr.ajax('/cloud/task/task/'+id,function(data){
-	    			debugger;
 	    			data.taskGroupList = renderData.taskGroupList;
 	    			//需要修改为真实数据源
 					Common.render('tpls/monitor/task/task/edit.html',data,function(html){
@@ -406,7 +399,6 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 		    			});
 		    			//创建提交数据
 		    			wizard.on("submit", function(wizard) {
-		    				debugger;
 		    				var wizardData = wizard.serializeObject();
 		    				var list = [];
 		    				var taskStragetyIds = "";
@@ -453,9 +445,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 //			    			    }
 //			    			}
 			    			
-			    			debugger;
 		    				wizardData["list"] = list;
-		    				debugger;
 		    				
 		    				Common.xhr.putJSON('/cloud/task/task/'+data.id,wizardData,function(data){
 		    					wizard._submitting = false;
@@ -483,7 +473,6 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 	    
 	    //删除
 	    $("#taskTable_wrapper a.delete").on("click",function(){
-	    	debugger;
 	    	var id = $(this).attr("data");
 	    	Modal.confirm('确定要删除吗?', function(result){
 	    		if(result) {
