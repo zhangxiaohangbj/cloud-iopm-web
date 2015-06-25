@@ -1,4 +1,4 @@
-define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3'],function(Common,Modal){
+define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3','bs/daterangepicker'],function(Common,Modal){
 	Common.requestCSS('css/wizard.css');
 	var cacheData = {
 			roleList: null,
@@ -63,9 +63,9 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
     					"cores": $(obj + " [name='cores']").val(),
     					"instances": $(obj + " [name='instances']").val(),
     					"injected_file_content_bytes": $(obj +" [name='injected_file_content_bytes']").val(),
-    					"disks": $(obj + " [name='disks']").val(),
-    					"diskSnapshots": $(obj +" [name='diskSnapshots']").val(),
-    					"diskTotalSizes": $(obj +" [name='diskTotalSizes']").val(),
+    					"volumes": $(obj + " [name='volumes']").val(),
+    					"snapshots": $(obj +" [name='snapshots']").val(),
+    					"gigabytes": $(obj +" [name='gigabytes']").val(),
     					"ram": $(obj +" [name='ram']").val(),
     					"security_group_rules": $(obj +" [name='security_group_rules']").val(),
     					"floating_ips": $(obj +" [name='floating_ips']").val(),
@@ -187,15 +187,15 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 			                    required: true,
 			                    digits:true
 			                },
-			                'disks': {
+			                'volumes': {
 			                    required: true,
 			                    digits:true
 			                },
-			                'diskSnapshots': {
+			                'snapshots': {
 			                    required: true,
 			                    digits:true
 			                },
-			                'diskTotalSizes': {
+			                'gigabytes': {
 			                    required: true,
 			                    digits:true
 			                },
@@ -268,6 +268,21 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 								$(".list-group .loadmore").css("cursor","default");
 							}
 						});
+					});
+				},
+				keyup:function(obj){
+					$(obj).find(".search-query").keyup(function(event){
+						var myEvent = event || window.evnet;
+						if (myEvent.stopPropagation) myEvent.stopPropagation();
+						else window.event.cancelBubble = true;
+						var keyCode = myEvent.keyCode;
+						if((keyCode >= 48 && keyCode <= 105) || keyCode == 8 || keyCode == 46 || keyCode==32){
+							var children = $(obj).find(".list-group-item");
+							children.hide();
+							var test = $(this).val();
+							children.find(".display_name:contains("+test+")").parent().parent().show();
+						}
+						
 					});
 				}
 		}
@@ -507,12 +522,39 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 					return usageData;
 				},
 				callback: function(){
-					$("#reservation").daterangepicker(
-							);
-					
+					 $('#time_text').daterangepicker(null, function(start, end, label) {
+				            console.log(start.toISOString(), end.toISOString(), label);
+				      });	
+					 $("#submit_usage").on("click",function(){
+					    	var time = $.trim($("#time_text").val());
+					    	if(time == null || time == "")return;
+					    	var start =  $.trim(time.split("-")[0]);
+					    	var end = $.trim(time.split("-")[1]);
+					    	Common.xhr.get('resources/data/usage.txt',function(data){
+								//renderData.veList = veList;
+					    		var usageList = $("#usageList");
+					    		usageList.empty();
+					    		var list = data.tenant_usage.server_usages;
+					    		var usageData = [];
+					    		if(list){
+					    			for(var key in list){
+					    				var obj = list[key];
+					    				usageData.push("<tr>");
+					    				usageData.push("<td>",obj.name,"</td>");
+					    				usageData.push("<td>",obj.vcpus,"</td>");
+					    				usageData.push("<td>",obj.vcpus,"</td>");
+					    				usageData.push("<td>",obj.vcpus,"</td>");
+					    				usageData.push("<td>",obj.vcpus,"</td>");
+					    				usageData.push("</tr>");
+					    				usageList.html(usageData.join(""));
+					    			}
+					    		}
+							});
+					  });
 				}
 			});
 	    });
+	 
 	    //外部网络管理
 	  /*  $("ul.dropdown-menu a.floatIP").on("click",function(){
 	    	var net_id =  renderData.netList[0].id
@@ -606,6 +648,8 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
     	    	    	            onshown : function(){
     	    	    	            	EventsHandler.veChange();
     	    	    	            	chooseWrapper.remove();
+    	    	    	            	EventsHandler.keyup("#vdcAZ .show-all");
+    	    	    	            	EventsHandler.keyup("#vdcAZ .show-selected");
     	    	    	            }
     	    	    	        });
     	        			};
@@ -771,6 +815,8 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 	    	    	            onshown : function(){
 	    	    	            	EventsHandler.userChosen();
 	    	    	            	chooseWrapper.remove();
+	    	    	            	EventsHandler.keyup("#vdc-users .show-all");
+	    	    	            	EventsHandler.keyup("#vdc-users .show-selected");
 	    	    	            },
 	    	    	            onhide : function(){
 	    	    	            	userIndex = 1;

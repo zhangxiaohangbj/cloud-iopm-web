@@ -66,10 +66,10 @@
 		<label class="control-label col-sm-3">
 	 	<span style="color: red;">* </span>云硬盘：</label>
 	 	<div class="col-sm-7 col-sm">
-	 	    {{if disks}}
-			<input type="text" class="form-control" name="disks" value="{{disks}}">
+	 	    {{if volumes}}
+			<input type="text" class="form-control" name="volumes" value="{{volumes}}">
 			{{else}}
-			<input type="text" class="form-control" name="disks" value="10">
+			<input type="text" class="form-control" name="volumes" value="10">
 			{{/if}}
 		</div>
 	</div>
@@ -77,10 +77,10 @@
 		<label class="control-label col-sm-3">
 	 	<span style="color: red;">* </span>云硬盘快照：</label>
 	 	<div class="col-sm-7 col-sm">
-	 	 	{{if diskSnapshots}}
-			<input type="text" class="form-control" name="diskSnapshots" value="{{diskSnapshots}}">
+	 	 	{{if snapshots}}
+			<input type="text" class="form-control" name="snapshots" value="{{snapshots}}">
 			{{else}}
-			<input type="text" class="form-control" name="diskSnapshots" value="10">
+			<input type="text" class="form-control" name="snapshots" value="10">
 			{{/if}}
 		</div>
 	</div>
@@ -89,9 +89,9 @@
 	 	<span style="color: red;">* </span>云硬盘和快照的总大小（GB）：</label>
 	 	<div class="col-sm-7 col-sm">
 	 	   {{if diskTotalSizes}}
-			<input type="text" class="form-control" name="diskTotalSizes" value="{{diskTotalSizes}}">
+			<input type="text" class="form-control" name="gigabytes" value="{{gigabytes}}">
 			{{else}}
-			<input type="text" class="form-control" name="diskTotalSizes" value="1000">
+			<input type="text" class="form-control" name="gigabytes" value="1000">
 			{{/if}}
 			
 		</div>

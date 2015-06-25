@@ -97,7 +97,7 @@ define(function() {
                 },
                 {
                     text: '<i class="fa fa-tachometer"></i>云主机类型管理',
-                    link: '#vmtype'
+                    link: '#vmtype/'
                 },
                 {
                     text: '<i class="fa fa-database"></i>磁盘管理',
@@ -105,7 +105,7 @@ define(function() {
                 },
                 {
                     text: '<i class="fa fa-cube"></i>镜像管理',
-                    link: ''
+                    link: '#image'
                 },
                 {
                     text: '<i class="fa fa-vimeo-square"></i>VPC管理<i class="fa icon-arrow"></i>',
@@ -256,7 +256,7 @@ define(function() {
                          link: '#task/taskGroup'
                          },*/
                         {
-                            text: '分组管理',
+                            text: '策略分组',
                             link: '#task/strategyGroup'
                         }
                     ]

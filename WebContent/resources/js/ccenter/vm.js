@@ -692,7 +692,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 	  //更多按钮
 	    var EditData = {
 	    		//编辑云主机名称弹框
-	    	EditVmName : function(name){
+	    	EditVmName : function(id){
 	    		Common.render('tpls/ccenter/vm/editvmname.html','',function(html){
 	    			Modal.show({
 	    	            title: '编辑云主机',
@@ -701,7 +701,12 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 	    	            buttons: [{
 	    	                label: '保存',
 	    	                action: function(dialog) {
-	    	                	Common.xhr.ajax('/resources/data/arrays.txt',function(data){
+                                var serverData = {
+                                    "server": {
+                                        "name": $("#editVmName [name='server-name']").val()
+                                    }
+                                };
+	    	                	Common.xhr.putJSON('/'+current_vdc_id+'/servers/'+id+'/',serverData, function(data){
 	    	                		if(data){
 	    	                			alert("保存成功");
 	    	                			dialog.close();
@@ -785,7 +790,8 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 				
 	    	},
 	    	//编辑虚拟机大小弹框
-	    	EditVmType : function(id,cb){
+	    	EditVmType : function(data){
+                alert(data);
 	    		Common.render('tpls/ccenter/vm/editvmtype.html',renderData,function(html){
 		    		Modal.show({
 	    	            title: '编辑虚拟机大小',
@@ -811,7 +817,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 	    	                    dialog.close();
 	    	                }
 	    	            }],
-	    	            onshown : cb  //Modal show后回调
+
 	    	        });
 	    		});
 	    	},
@@ -852,20 +858,9 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 	    //修改虚拟机大小
 	    $("ul.dropdown-menu a.editVmType").on("click",function(){
 	    	//获取云主机个数,规格等信息
-	    	Common.xhr.ajax('/resources/data/arrays.txt',function(data){
-	    		data.nums = 1;
-	    		data.vcd_id = "58c41046-408e-b959-d63147471w";
-	    		data.vcd_name = "micro-2 (1vCPU / 1G)";
-	    		currentChosenObj.nums = data.nums;  //data:云主机个数
-	    		EditData.EditVmType($(this).attr("data"),function(){
-	    			$("#editVmDetail div.col-sm:first").html(data.vcd_name);
-	    			$("[name='flavorRef']").val(data.vcd_id);
-	    			
-		    		DataIniter.initPopver();
-		    		DataIniter.initQuatos(data.vcd_id);  //data:vcd_id
-		    		EventsHandler.specsChange();
-		    	});
-	    	})
+            var data = $(this).attr("data")
+	    	EditData.EditVmType($(this).attr("data"));
+
 	    });
 	    
 	    //删除云主机
@@ -1131,6 +1126,58 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 	    	}
 	    	
 	    });
+
+        //获取控制台
+        $("a.vncConsole").on("click",function(){
+            var serverId = $(this).attr("data");
+            var info = {
+                "os-getVNCConsole": {
+                    "type": "novnc"
+                }
+            }
+            Common.xhr.postJSON('/'+current_vdc_id+'/servers/'+serverId+'/action',info,function(data){
+                var url = data['console']['url'];
+                Common.render('tpls/ccenter/vm/vncconsole.html', {url: url}, function (html) {
+                    Modal.show({
+                        size: 'size-_console',
+                        title: '控制台',
+                        message: html,
+                        nl2br: false,
+                        onshown: function () {
+
+                        }
+                    });
+                });
+            });
+
+        });
+
+        //显示日志输出
+        $("a.consoleOutput").on("click",function(){
+            var serverId = $(this).attr("data");
+            var info = {
+                "os-getConsoleOutput": {
+                    "length": 50
+                }
+            }
+            Common.xhr.postJSON('/'+current_vdc_id+'/servers/'+serverId+'/action',info,function(data){
+                var output = data['output'];
+                debugger
+                //alert(output)
+                Common.render('tpls/ccenter/vm/consoleoutput.html', output, function (html) {
+                    Modal.show({
+                        size: 'size-_console',
+                        title: '控制台',
+                        message: html,
+                        nl2br: false,
+                        onshown: function () {
+
+                        }
+                    });
+                });
+            });
+
+        });
 	}	
 	return {
 		init : init
