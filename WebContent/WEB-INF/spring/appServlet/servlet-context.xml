@@ -45,7 +45,6 @@
     <bean id="fmXmlEscape" class="freemarker.template.utility.XmlEscape"/>
 	 -->
 	<bean class="org.springframework.web.servlet.view.ContentNegotiatingViewResolver">
-		<property name="defaultContentType" value="application/json" /> 
 		<property name="contentNegotiationManager">
 			<bean class="org.springframework.web.accept.ContentNegotiationManagerFactoryBean">
 				<property name="mediaTypes">
@@ -56,6 +55,7 @@
 						<prop key="jsonp">application/x-javascript</prop>
 					</props>
 				</property>
+				<property name="defaultContentType" value="application/json"></property>
 			</bean>
 		</property>
 		<property name="viewResolvers">
