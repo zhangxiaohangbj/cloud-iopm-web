@@ -23,9 +23,15 @@
 						<i class="type_icons {{item.icon_type}}"></i>
 					</li>
 				{{/if}}
+				{{if typeof item ==='string'}}
+					<li class="member adjust" data-id="{{item}}" data-name="{{item}}">
+					<span class="display_name">{{item}}</span>
+				</li>
+					{{else}}
 				<li class="member adjust" data-id="{{item.id}}" data-name="{{item.name}}">
 					<span class="display_name">{{item.name}}</span>
 				</li>
+				{{/if}}
 				<li class="pull-right adjust icon"><i class="fa fa-plus-circle"></i></li>
 		  	</ul>
 		  	{{/each}}
@@ -49,11 +55,17 @@
 		  </div>
 		  <!-- List group -->
 		  <div class="list-group list-group-select">
-			  {{each chosenData as item i}}
+			  {{each selectData as item i}}
 			  	<ul class="nav nav-pills btn-group btn-group-sm list-group-item">
+			  	  {{if typeof item ==='string'}}
+					<li class="member adjust" data-id="{{item}}" data-name="{{item}}">
+						<span class="display_name">{{item}}</span>
+					</li>
+					{{else}}
 					<li class="member adjust" data-id="{{item.id}}" data-name="{{item.name}}">
 						<span class="display_name">{{item.name}}</span>
 					</li>
+				  {{/if}}
 					<li class="pull-right adjust icon"><i class="fa fa-minus-circle"></i></li>
 			  	</ul>
 			  {{/each}}

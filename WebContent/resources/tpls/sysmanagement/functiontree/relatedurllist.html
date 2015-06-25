@@ -1,0 +1,39 @@
+<table class="table table-primary table-striped" id="UrlTable">
+	<thead>
+		<tr>
+			<th class="c1">
+				<label><input type="checkbox" class="selectAll"></label>
+			</th>
+			<th class="c3">URL名称</th>
+			<th class="c4">端点地址</th>
+			<th class="c3">URL地址</th>
+			<th class="c2">method</th>
+			<th class="c3 sorting_disabled">操作</th>
+		</tr>
+	</thead>
+	<tbody>
+	{{each result as item i}}
+		<tr>
+			<td><label><input type="checkbox"></label></td>
+			<td>{{item.name}}</td>
+			<td>{{item.name}}</td>
+			<td>{{item.name}}</td>
+			<td>POST</td>
+			<td>
+				<a class="btn-cancel" data-toggle="tooltip" title="取消关联" href="javascript:void(0)" data="{{item.id}}" data-act="stop">取消关联</a>
+				<a class="btn-set-default" data-toggle="tooltip" title="设为默认" href="javascript:void(0)" data="{{item.id}}">设为默认</a>
+			</td>
+		</tr>
+ 			{{/each}}
+	</tbody>
+	<tfoot>
+		<tr>
+			<td></td>
+			<td></td>
+			<td></td>
+			<td></td>
+			<td></td>
+			<td></td>
+		</tr>
+	</tfoot>
+</table>

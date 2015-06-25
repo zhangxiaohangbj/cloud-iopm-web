@@ -211,6 +211,10 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
         $("ul.dropdown-menu a.updateAccessVdc").on("click",function(){
             more.accessFlavor($(this).attr("data"));
         });
+
+        $("ul.dropdown-menu a.testVNC").on("click",function(){
+            more.testVNC($(this).attr("data"));
+        });
 	    //更多
 	    var more = {
 		    	//更新flavor
@@ -226,12 +230,12 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 			    	                action: function(dialog) {
 			    	                	var flavorData = {
                                             "flavor":{
-                                                "name": $("#addFlavor [name='name']").val(),
-                                                "vcpus": $("#addFlavor [name='vcpus']").val(),
-                                                "ram": $("#addFlavor [name='ram']").val(),
-                                                "disk": $("#addFlavor [name='disk']").val(),
+                                                "name": $("#editFlavor [name='name']").val(),
+                                                "vcpus": $("#editFlavor [name='vcpus']").val(),
+                                                "ram": $("#editFlavor [name='ram']").val(),
+                                                "disk": $("#editFlavor [name='disk']").val(),
                                                 //"OS-FLV-EXT-DATA:ephemera": $("#addFlavor [name='ephemera']").val(),
-                                                "swap": $("#addFlavor [name='swap']").val()
+                                                "swap": $("#editFlavor [name='swap']").val()
                                             }
 			    	        			};
 			    	                	Common.xhr.putJSON('/v2/123/flavors/',flavorData,function(data){
@@ -312,6 +316,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
                                         }
                                         unselectedList.push(renderData.vdcList[i])
                                     }
+                                    debugger
                                     var options = {
                                         selector: '#flavorVdcAccess',
                                         allData: unselectedList,
@@ -325,6 +330,22 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 
                     });
                 })
+
+            },
+
+            testVNC: function(key){
+
+                Common.render('tpls/ccenter/vmtype/test.html', '', function (html) {
+                    Modal.show({
+                        size: 'size-_console',
+                        title: '控制台',
+                        message: html,
+                        nl2br: false,
+                        onshown: function () {
+
+                        }
+                    });
+                });
 
             }
 	    }

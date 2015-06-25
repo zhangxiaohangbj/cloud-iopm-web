@@ -100,6 +100,7 @@
 		<property name="returnValueHandlers">
 			<list>
 				<bean class="com.inspur.cloudframework.spring.web.servlet.mvc.method.annotation.ModelAndViewMethodReturnValueHandler">
+					<property name="generate" value="true" />
 				</bean>
 			</list>
 		</property>

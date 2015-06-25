@@ -1,0 +1,36 @@
+<form class="form-horizontal" id="add_metadata" data-title="增加元数据">
+			<!-- 基本信息 -->
+
+
+
+                        <div class="form-group">
+                            <label for="select-namespace" class="control-label col-sm-2"><span>* </span>命名空间：</label>
+                            <div  class="col-sm-9 col-sm">
+                                <select name="select-namespace" id="select-namespace" class="form-control select select-namespace">
+                                    {{#uiSelectList(flavor_namespaces)}}
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="select-key" class="control-label col-sm-2"><span>* </span>键：</label>
+                            <div class="col-sm-9 col-sm">
+                                <select name="select-key" id="select-key" class="form-control select select-key">
+
+                                </select>
+                            </div>
+
+                        </div>
+                        <div class="form-group" id="operation_group"></div>
+
+                        <div class="form-group">
+                            <label for="value" class="control-label col-sm-2"><span>* </span>值：</label>
+                            <div class="col-sm-9 col-sm" id="value_div">
+                                <input type="text" class="form-control" id="value" name="value" >
+                            </div>
+
+                        </div>
+
+
+
+
+</form>

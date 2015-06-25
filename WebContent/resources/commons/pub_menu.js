@@ -97,11 +97,11 @@ define(function() {
                 },
                 {
                     text: '<i class="fa fa-tachometer"></i>云主机类型管理',
-                    link: '#vmtype'
+                    link: '#vmtype/'
                 },
                 {
                     text: '<i class="fa fa-database"></i>磁盘管理',
-                    link: '#block'
+                    link: '#block/'
                 },
                 {
                     text: '<i class="fa fa-cube"></i>镜像管理',
@@ -285,7 +285,7 @@ define(function() {
                 },
                 {
                     text: '<i class="fa fa-sitemap"></i>组织机构管理',
-                    link: '#organization'
+                    link: '#organ'
                 }
             ]
 
@@ -299,6 +299,10 @@ define(function() {
             if(item.items) {
                 level ++;
                 $.each(item.items, function(i) {
+                    if(item.link) {
+                        var link = item.link.substring(item.link.lastIndexOf("#") + 1);
+                        prefix = prefix + (prefix.length > 1 ? '/' : '') + link;
+                    }
                     initItemsLink(prefix, item.items[i], level);
                 });
             } else if(item.link) {

@@ -1,10 +1,9 @@
 <div class="page-header clearfix">
 	<ol class="breadcrumb">
-	  <li class="active">虚拟数据中心列表</li>
+	  <li class="active"><i class="icon-squre-d"></i>虚拟数据中心</li>
 	</ol>
 	<p class="description">
-		提供一种随时获取的、弹性的计算能力，这种计算能力的体现就是 主机（Instance）。主机就是一台配置好了的服务器，它有您期望的硬件配置、操作系统和网络配置。通常情况下，
-		您的请求可以在10秒到60秒的时间之内 完成，所以您完全可以动态地、按需使用计算能力
+		虚拟数据中心管理是以租户粒度的资源管理，其成员用户可在虚拟数据中心所管理的资源范围内创建不同规格的云主机。
 	</p>
 </div>
 <div class="page-body">
@@ -38,12 +37,13 @@
 						<td>
 						<a class="btn-opt members" href="javascript:void(0)" data="{{item.id}}" data-toggle="tooltip" title="成员管理" data-act="stop" style="margin: 0;"><i class="fa fa-file-text fa-fw"></i></a>
 						<div class="dropdown">
-							<span class="btn btn-more dropdown-toggle" data-toggle="dropdown" aria-expanded="false">更 多 <i class="fa fa-angle-down fa-fw"></i></span>
+						    <a class="btn-opt dropdown-toggle" data-toggle="dropdown" title="更多"  aria-expanded="false" ><i class="fa fa-angle-double-right"></i></a>
+							<!-- <span class="btn btn-more dropdown-toggle" data-toggle="dropdown" aria-expanded="false">更 多 <i class="fa fa-angle-down fa-fw"></i></span> -->
 							<ul class="dropdown-menu" style="right: 0;left: initial;">
 								<li><a href="javascript:void(0)"  data="{{item.id}}" class="updateQuota"><i class="fa fa-file-text fa-fw"></i>配额管理</a></li>
 								<li><a href="javascript:void(0)" data="{{item.id}}" data-env="{{item.virtualEnvId}}" class="vdcAz"><i class="fa fa-gear fa-fw"></i>可用分区管理</a></li>
 								<!-- <li><a href="javascript:void(0)" data="{{item.id}}" class="floatIP" data="{{item.name}}"><i class="fa fa-file-text fa-fw"></i>外部网络管理</a></li> -->
-								<li><a href="javascript:void(0)" class="editSecurity" data="{{item.id}}"><i class="fa fa-file-text fa-fw"></i>使用情况</a></li>
+								<li><a href="javascript:void(0)" class="usage" data="{{item.id}}" data-name="{{item.name}}"><i class="fa fa-file-text fa-fw"></i>使用情况</a></li>
 								<li><a href="javascript:void(0)" data="{{item.id}}" class="editTenantBasic"><i class="fa fa-file-text fa-fw"></i>编辑</a></li>
 								<li><a href="javascript:void(0)" data="{{item.id}}" class="deleteTenant"><i class="fa fa-file-text fa-fw"></i>删除</a></li>
 							</ul>

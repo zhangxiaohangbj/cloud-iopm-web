@@ -9,9 +9,9 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 		Common.$pageContent.addClass("loading");
 		Common.render(true,{
 			tpl:'tpls/ccenter/vdc/list.html',
-			data:'/v2.0/tenants/page/10/1',
+			data:'/v2.0/tenants',
 			beforeRender: function(data){
-				return data.result;
+				return data.tenants;
 			},
 			callback: bindEvent
 		});
@@ -492,6 +492,27 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 	    $(".members").on("click",function(){
 	    	more.Member($(this).attr("data"));
 	    });
+	  //查看使用情况
+	    $("ul.dropdown-menu a.usage").on("click",function(){
+	    	var vdc_id = $(this).attr("data");
+	    	var vdc_name = $(this).attr("data-name");
+	    	Common.render(true,{
+				tpl:'tpls/ccenter/vdc/usage.html',
+				data:'resources/data/usage.txt',
+				beforeRender: function(data){
+					var usageData = {
+							vdc_name:vdc_name,
+							usageList:data.tenant_usage.server_usages
+					}
+					return usageData;
+				},
+				callback: function(){
+					$("#reservation").daterangepicker(
+							);
+					
+				}
+			});
+	    });
 	    //外部网络管理
 	  /*  $("ul.dropdown-menu a.floatIP").on("click",function(){
 	    	var net_id =  renderData.netList[0].id
@@ -505,6 +526,10 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 		    	QuotaSets : function(id){
 		    		//先获取QuotaSets后，再render
 		    		Common.xhr.ajax('/v2.0/9cc717d8047e46e5bf23804fc4400247/os-quota-sets/' + id,function(data){
+		    			/*var quotaData = data.quota_set;
+		    			if(quotaData == null){
+		    				quotaData = [];
+		    			}*/
 		    			Common.render('tpls/ccenter/vdc/quota.html',data.quota_set,function(html){
 		    				Modal.show({
 			    	            title: '配额',
