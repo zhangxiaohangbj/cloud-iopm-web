@@ -13,7 +13,6 @@ define(['Common','bs/modal'],function(Common,Modal){
 				groupSelectedClass: 'col-sm-6',		//已选择部分的class
 				groupAllClass: 'col-sm-6'		//全部区域部分的class
 		};
-
 		var renderOptions = $.extend({},defaults,options);
 		Common.render('tpls/common/choose.html',renderOptions,function(html){
 			//off click事件,防止多次bind

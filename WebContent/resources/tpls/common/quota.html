@@ -1,11 +1,11 @@
 {{each list as item i}}
-<div data="{{item.name}}"  class="specs {{item.name}}">
+<div data="{{item.name}}"  class="{{item.className || 'specs' }} {{item.name}}">
 	<div class="progress-info clearfix" data-all="{{item.total}}" data-used="{{item.used}}">
 	  	<span class="quota-key">{{item.title}}</span>
 	  	<span  class="quota-desc">{{item.total}}中的{{item.used}}个已使用</span>
 	</div>
 	<div class="progress">
-		<div class="progress-bar {{item.style}}" role="progressbar" aria-valuenow="{{item.rate}}" aria-valuemin="0" aria-valuemax="100" style="width: {{item.rate}}%">
+		<div class="progress-bar {{item.style}}" role="progressbar" aria-valuenow="{{item.rate}}" aria-valuemin="0" aria-valuemax="100" style="width: {{item.rate}}%;{{if item.rate ==0}} color:#333;{{/if}}">
 		    {{item.rate}}%
 		</div>
 	</div>

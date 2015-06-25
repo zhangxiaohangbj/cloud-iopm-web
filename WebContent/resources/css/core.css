@@ -810,5 +810,9 @@ i.image-icon-default.centos {
 .dialog-modal .form-group label span {
 	color: red;
 }
+.size-_console .modal-dialog {
+    width: 800px;
+
+}
 /*弹框样式结束*/
 

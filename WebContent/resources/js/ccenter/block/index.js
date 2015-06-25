@@ -1,7 +1,7 @@
 define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3'],function(Common,Modal){
 	Common.requestCSS('css/wizard.css');
-	Common.requestCSS('css/detail.css');
 	var current_vdc_id = '9cc717d8047e46e5bf23804fc4400247';
+	var wizard;
 	var init = function(){
 		Common.$pageContent.addClass("loading");
 		Common.render(true,{
@@ -109,10 +109,11 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 						//获取vdc的配额
 						Common.xhr.ajax('/v2.0/'+current_vdc_id+'/os-quota-sets/'+vdc_id,function(quotas){
 							if(!quotas) return;
-							quotas = quotas.quota_set
+							quotas = quotas.quota_set || {};
 							//获取vdc的配额使用情况
 							Common.xhr.ajax('/v2.0/'+vdc_id+'/limits',function(quotaUsages){
 								var getMathRound = function(used,total){
+									if(total == 0) return 100;
 									return Math.round((parseInt(used)/parseInt(total))*100);
 								}
 								var getClass = function(rate){
@@ -121,8 +122,8 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 								if($('#volume_size').val()){
 									quotaUsages.diskTotalSizes = parseInt(quotaUsages.diskTotalSizes) + parseInt($('#volume_size').val());
 								}
-								var rateDiskNums = getMathRound(quotaUsages.disks,quotas.disks),
-								rateDiskTotalSizes = getMathRound(quotaUsages.diskTotalSizes,quotas.diskTotalSizes),
+								var rateDiskNums = getMathRound(quotaUsages.disks,quotas.disks || 0),
+								rateDiskTotalSizes = getMathRound(quotaUsages.diskTotalSizes,quotas.diskTotalSizes || 0),
 								styleDiskNums = getClass(rateDiskNums),styleDiskTotalSizes = getClass(rateDiskTotalSizes);
 								var renderData = [
 											        {
@@ -132,7 +133,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 											        	name: 'diskNums',title: '磁盘数量',total: quotas.disks, used: quotaUsages.disks, rate: rateDiskNums, style: styleDiskNums
 											        }
 											 ];
-								var check = function(){
+								/*var check = function(){
 									var flag = true;
 									$.each(renderData,function(i,item){
 										if(item.rate >100){
@@ -141,13 +142,12 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 										}
 									});
 									return flag;
-								}
-								if(check()){
-									//生成html数据
-									Common.render('tpls/common/quota.html',renderData,function(html){
-										$('div.quotas').html(html);
-									});
-								}
+								}*/
+								//生成html数据
+								Common.render('tpls/common/quota.html',renderData,function(html){
+									$('div.quotas').html(html);
+									EventsHandler.checkNextWizard();
+								});
 								
 							})
 						})
@@ -184,10 +184,24 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 				    	checkboxClass: "icheckbox-info"
 				    })
 				},
+				//input propertychange
 				inputListener: function(){
-					$('#volume_size').on('input propertychange',function(){
+					$('#volume_size').on('blur',function(){
 						if($(this).parents('form:first').validate().element('#volume_size')){
 							DataIniter.initQuato();//重新加载配额数据
+						}
+					})
+				},
+				checkNextWizard: function(){
+					$('.form-group .progress-bar').each(function(){
+						var info = $(this).parent().prev(),
+							dataAll = parseInt(info.attr('data-all')),
+							dataUsed = parseInt(info.attr('data-used'));
+						if(parseInt($(this).attr('aria-valuenow')) > 100 || dataAll < dataUsed || dataAll == 0){
+							wizard.disableNextButton();
+							Modal.error(info.find('.quota-key').html()+'超出配额');
+						}else{
+							wizard.enableNextButton();
 						}
 					})
 				}
@@ -199,7 +213,6 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 				$('body').append(html);
 				//wizard show
     			$.fn.wizard.logging = true;
-    			var wizard;
     			
 				//同步currentChosenObj
 		    	currentChosenObj.vdc = $('select.tenant_id').children('option:selected').val();
@@ -211,6 +224,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 		    	});
 		    	DataIniter.initQuato();
 		    	DataIniter.initUserVms();
+		    	
 		    	//
     			wizard = $('#create-volume-wizard').wizard({
     				keyboard : false,
@@ -336,35 +350,6 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 			});
 	    });
 	    var moreAction = {
-	    		detail: function(){
-    			 //页面列表相关  （编辑、明细）
-	    		    $("#VolumeTable_wrapper a.volume_name").on("click",function(){
-	    		    	var id = $(this).parent('tr:first').attr("data-id");
-	    		    	var tmpDetailData = {
-	    	    	            name : "Tiger Nixon",
-	    	    	            id: "di91jd9d29f9f29",
-	    	    	            size:"20GB",
-	    	    	            status: "in-use",
-	    	    	            vm_id: "private",
-	    	    	            type: "ceth(分布式)",
-	    	    	            vdc_id : "vdc1",
-	    	    	            available_zone: "WDK1",
-	    	    	            read_only:"1",
-	    	    	            description:"可用磁盘数据",
-	    	    	            mount_list: [{
-	    	    	            	name:'nexus-server',
-	    	    	            	id: 'nexus-server'
-	    	    	            }],
-	    	    	            mount_path: '/opt/vdc',
-	    	    	            create_time: '2015-04-24 17:14:57'
-	    		    	}
-	    		    	Common.render(true,'tpls/ccenter/block/volume/detail.html',tmpDetailData,function(html){
-	    		    		$("a.reload").on("click",function(){
-	    	    		    	Common.router.route();
-	    	    		  });
-	    		    	});
-	    		    })
-    		},
     		editMount: function(){
     			$('.dropdown-menu a.edit_mount').on('click',function(){
     				var tr = $(this).parent('tr:first'),
