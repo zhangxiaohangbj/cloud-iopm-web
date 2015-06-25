@@ -155,20 +155,20 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 				vdc_id = vdc_id || currentChosenObj.vdc || $('select.tenant_id').find('option:selected').val();
 				if(vdc_id){
 					//获取vdc的配额
-					Common.xhr.ajax('/v2.0/'+current_vdc_id+'/os-quota-sets/'+vdc_id,function(quotas){
+					Common.xhr.ajax('/v2.0/'+vdc_id+'/os-quota-sets/'+vdc_id,function(quotas){
 						quotas = quotas.quota_set
 						//获取vdc的配额使用情况
 						Common.xhr.ajax('/v2.0/'+vdc_id+'/limits',function(quotaUsages){
 							//当前配额 等于 当前vdc下总配额 减去  当前选中规格的额度
 							var current = currentChosenObj.specs;
 							if(current && current.length){
-								quotaUsages.cores = parseInt(quotaUsages.cores) + parseInt(current.attr('data-core'));
-								quotaUsages.ram = parseInt(quotaUsages.ram) + parseInt(current.attr('data-memory'));
+								quotaUsages.cores = parseInt(quotaUsages.cores) + parseInt(current.attr('data-core'))*parseInt(currentChosenObj.nums);
+								quotaUsages.ram = parseInt(quotaUsages.ram) + parseInt(current.attr('data-memory'))*parseInt(currentChosenObj.nums);
 								quotaUsages.instances = parseInt(quotaUsages.instances) + parseInt(currentChosenObj.nums);
 							};
 							var getMathRound = function(used,total){
 								if(total==0||total==null||total==""){
-									return 0
+									return 100;
 								}
 								return Math.round((parseInt(used)/parseInt(total))*100);
 							}
@@ -187,7 +187,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 							        	name: 'memory',title: '内存总计',total: quotas.ram, used: quotaUsages.ram, rate: rateMemory, style: styleMemory
 							        },
 							        {
-							        	name: 'nums',title: '云主机数量',total: quotas.instances, used: quotaUsages.instances, rate: rateNums, style: styleNums
+							        	name: '',title: '云主机数量',total: quotas.instances, used: quotaUsages.instances, rate: rateNums, style: styleNums, className: 'nums'
 							        }
 							 ];
 							//生成html数据
@@ -253,18 +253,15 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 					used = used + (change != null ? change*(nData - oData) : currentChosenObj.nums*(nData - oData));
 					//使用率
 					var useRate = Math.round(used/total*100);
-					if(useRate <= 100){
-						//更新dom内容-info
-						info.attr('data-used',used);
-						info.find('span.quota-desc').html(total+'中的'+used+'已使用');
-						//更新进度条
-						progressBar.width(useRate+"%");
-						progressBar.attr('aria-valuenow',useRate);
-						progressBar.html(useRate+'%');
-					}else{
-						Modal.error($(this).find('.quota-key').html()+"超出配额");
-					}
-				})
+					//更新dom内容-info
+					info.attr('data-used',used);
+					info.find('span.quota-desc').html(total+'中的'+used+'已使用');
+					//更新进度条
+					progressBar.width(useRate+"%");
+					progressBar.attr('aria-valuenow',useRate);
+					progressBar.html(useRate+'%');
+				});
+				EventsHandler.checkNextWizard();
 			},
 			//更新配额值,虚机数
 			updateQuotaNums : function(){
@@ -280,23 +277,19 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 					used = used + nData - oData;
 					//更新vm个数，需要计算占用的core和memory
 					var useRate = Math.round(used/total*100);
-					if(useRate <= 100){
-						//更新dom内容-info
-						info.attr('data-used',used);
-						info.find('span.quota-desc').html(total+'中的'+used+'已使用');
-						//更新进度条
-						progressBar.width(useRate+"%");
-						progressBar.attr('aria-valuenow',useRate);
-						progressBar.html(useRate+'%');
-						this.updateQuotaSpecs(nData - oData);
-					}else{
-						Modal.error($this.find('.quota-key').html()+'超出配额');
-					}
+					//更新dom内容-info
+					info.attr('data-used',used);
+					info.find('span.quota-desc').html(total+'中的'+used+'已使用');
+					//更新进度条
+					progressBar.width(useRate+"%");
+					progressBar.attr('aria-valuenow',useRate);
+					progressBar.html(useRate+'%');
+					this.updateQuotaSpecs(nData - oData);
 				}
 			},
 			//载入安全组
 			initSecurityGroup : function(){
-				Common.xhr.get('/v2.0/security-groups',{"vdcId":current_vdc_id},function(data){
+				Common.xhr.get('/v2.0/security-groups',{"vdcId":currentChosenObj.vdc},function(data){
 			    	var dataArr = [];
 					if(data && data.security_groups){
 						for(var i=0,l=data.security_groups.length;i<l;i++){
@@ -329,7 +322,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 			},
 			//外部网络
 			initExtNetwork: function(serverId){
-				Common.xhr.getSync('/'+current_vdc_id+'/servers/'+serverId+'/list-floating-pools',function(data){
+				Common.xhr.getSync('/'+currentChosenObj.vdc+'/servers/'+serverId+'/list-floating-pools',function(data){
             		var poolList = []; 
 					if(data){
 						for (var i=0;i<data.length;i++) {
@@ -344,7 +337,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 			//浮动IP
 			initFloatingIp: function(serverId){
 				var poolId = $('select.ip-pools').val();
-        		Common.xhr.ajax('/'+current_vdc_id+'/servers/'+serverId+'/list-unallocated-floating-ips?network_id='+poolId,function(data){
+        		Common.xhr.ajax('/'+currentChosenObj.vdc+'/servers/'+serverId+'/list-unallocated-floating-ips?network_id='+poolId,function(data){
             		var ipList = []; 
 					if(data){
 						for (var i=0;i<data.length;i++) {
@@ -358,7 +351,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 			},
 			//网卡
 			initNetworkInterface:function(serverId){
-				Common.xhr.ajax('/'+current_vdc_id+'/servers/'+serverId+'/list-network-interfaces',function(data){
+				Common.xhr.ajax('/'+currentChosenObj.vdc+'/servers/'+serverId+'/list-network-interfaces',function(data){
 					var ncList = []; 
 					if(data){
 						for (var i=0;i<data.length;i++) {
@@ -413,7 +406,8 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 		    					min: 1,
 		    					max: 5
 	    				});
-	    				$('#setVmNums').on('changed.bs.spinbox', function () {
+	    				$(document).off("changed.bs.spinbox","#setVmNums");
+	    				$(document).on("changed.bs.spinbox","#setVmNums",function(event){
 	    					//同步currentChosenObj 第一次会执行两次，待解决
 							currentChosenObj.prevNums = currentChosenObj.nums;
     				    	currentChosenObj.nums = $(this).spinbox('value');
@@ -508,6 +502,19 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 			                }
 			            }
 			        });
+				},
+				checkNextWizard: function(){
+					$('.form-group .progress-bar').each(function(){
+						var info = $(this).parent().prev(),
+							dataAll = parseInt(info.attr('data-all')),
+							dataUsed = parseInt(info.attr('data-used'));
+						if(parseInt($(this).attr('aria-valuenow')) > 100 || dataAll < dataUsed || dataAll == 0){
+							wizard.disableNextButton();
+							Modal.error(info.find('.quota-key').html()+'超出配额');
+						}else{
+							wizard.enableNextButton();
+						}
+					})
 				}
 		};
 		
@@ -612,6 +619,9 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
     				$('.diskconfig-confirm').text(serverData.auto_disk_config);
     				
 				});
+    			wizard.cards.detail.on('selected',function(card){
+    				EventsHandler.checkNextWizard();
+    			})
     			DataIniter.initAvailableZone();
     			DataIniter.initPopver();
     			DataIniter.initQuatos();
@@ -666,7 +676,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
     				
     				serverData.server["networks"]=networkData;
     				serverData.server["security_groups"]=getSecruityGroup();
-    				Common.xhr.postJSON('/'+current_vdc_id+'/servers',serverData,function(data){
+    				Common.xhr.postJSON('/'+currentChosenObj.vdc+'/servers',serverData,function(data){
     					if(data.error){
     						Modal.error(data.message)
     					}
@@ -807,7 +817,6 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 	    	},
 	    	
 	    	DoAction:function(id,name,rq,dc){
-	    		debugger
 	    		Common.$pageContent.addClass("loading");
                 Common.xhr.postJSON('/'+current_vdc_id+'/servers/'+id+'/action',rq,function(data){
                 	if(data.success){

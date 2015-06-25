@@ -101,7 +101,7 @@ define(function() {
                 },
                 {
                     text: '<i class="fa fa-database"></i>磁盘管理',
-                    link: '#block'
+                    link: '#block/'
                 },
                 {
                     text: '<i class="fa fa-cube"></i>镜像管理',

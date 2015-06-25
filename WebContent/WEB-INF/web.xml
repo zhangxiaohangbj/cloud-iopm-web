@@ -25,7 +25,7 @@
     <filter-class>com.inspur.cloud.am.AccessFilter</filter-class>
     <init-param>
         <param-name>excludes</param-name>
-        <param-value>.jpg,.css,.html,.jsp,.png,.js,.gif,.woff</param-value>
+        <param-value>.jpg,.gif,.png,.css,.js,.woff</param-value>
     </init-param>
 	</filter>
 	<filter-mapping>

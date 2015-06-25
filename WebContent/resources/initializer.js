@@ -47,6 +47,16 @@ define('Common',
             hash: function() {
                 return _getHash();
             }(),
+            getParam: function(){
+            	return this.hash.substring(this.hash.lastIndexOf('!')+1);
+            },
+            getQueryString: function(){
+				var temp;
+				if(this.hash != ""){
+					temp = this.hash.split("!");
+				}
+				return temp.length == 2 ? temp[1] : "";
+            },
             pub: {
                 navPrimaryItems: PubMenu.navPrimaryItems,
                 sideBarDataMap: PubMenu.sideBarDataMap,
@@ -145,7 +155,6 @@ define('Common',
                 var that = this;
                 if(this.$pageMain && this.$pageContent) {
                     this.$pageMain.css({minHeight: 0});
-                    debugger;
                     //dom
                     var $aside = $("aside");
                     //height
@@ -288,10 +297,15 @@ define('Common',
                     //获取默认的路由入口文件路径
                     this.getDefaultCtrl = function(hash) {
                         hash = hash || that.hash;
-                        if(hash && hash.lastIndexOf('/') < 0) {
-                            hash += '/';
-                        } else if(!hash) {
-                            hash = '#';
+                        if(hash){
+                        	if(hash.lastIndexOf('/') < 0){
+                        		hash += '/';
+                        	}
+                        	if(hash.lastIndexOf('!') != -1){
+                        		hash = hash.substring(0,hash.lastIndexOf('!'));
+                        	}
+                        }else{
+                        	hash = '#';
                         }
                         var ctrl = hash.replace(/^#/, this.ctrlPrefix);
                         if(ctrl.lastIndexOf('/') == ctrl.length - 1) {

@@ -33,7 +33,7 @@
 				{{each list as item i}}
 					<tr data-id="{{item.id}}">
 						<td><label><input type="checkbox"></label></td>
-						<td><a class="volume_name" href="javascript:void(0);">{{item.name}}</a></td>
+						<td><a class="volume_name" href="#ccenter/block/detail!{{item.id}}">{{item.name}}</a></td>
 						<td>{{item.size}}</td>
 						<td>
 			 			{{if item.status == 'in-use'}}
@@ -60,7 +60,7 @@
 						<a class="btn-opt" data-toggle="tooltip" title="创建快照"  style="margin: 0;"><i class="fa fa-camera"></i></a>
 						<a class="btn-opt" data-toggle="tooltip" title="备份"  style="margin: 0;"><i class="fa fa-files-o"></i></a>
 						
-						<div class="dropup">
+						<div class="dropdown">
 							<!-- <span class="btn btn-more dropdown-toggle" data-toggle="dropdown" aria-expanded="false">更 多 <i class="fa fa-angle-down fa-fw"></i></span> -->
 							<a class="btn-opt dropdown-toggle" data-toggle="dropdown" title="更多"  aria-expanded="false" ><i class="fa fa-angle-double-right"></i></a>
 							<ul class="dropdown-menu" style="right: 0;left: initial;">
