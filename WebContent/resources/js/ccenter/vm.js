@@ -155,7 +155,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 				vdc_id = vdc_id || currentChosenObj.vdc || $('select.tenant_id').find('option:selected').val();
 				if(vdc_id){
 					//获取vdc的配额
-					Common.xhr.ajax('/v2.0/'+current_vdc_id+'/os-quota-sets/'+vdc_id,function(quotas){
+					Common.xhr.ajax('/v2.0/'+vdc_id+'/os-quota-sets/'+vdc_id,function(quotas){
 						quotas = quotas.quota_set
 						//获取vdc的配额使用情况
 						Common.xhr.ajax('/v2.0/'+vdc_id+'/limits',function(quotaUsages){
@@ -289,7 +289,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 			},
 			//载入安全组
 			initSecurityGroup : function(){
-				Common.xhr.get('/v2.0/security-groups',{"vdcId":current_vdc_id},function(data){
+				Common.xhr.get('/v2.0/security-groups',{"vdcId":currentChosenObj.vdc},function(data){
 			    	var dataArr = [];
 					if(data && data.security_groups){
 						for(var i=0,l=data.security_groups.length;i<l;i++){
@@ -322,7 +322,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 			},
 			//外部网络
 			initExtNetwork: function(serverId){
-				Common.xhr.getSync('/'+current_vdc_id+'/servers/'+serverId+'/list-floating-pools',function(data){
+				Common.xhr.getSync('/'+currentChosenObj.vdc+'/servers/'+serverId+'/list-floating-pools',function(data){
             		var poolList = []; 
 					if(data){
 						for (var i=0;i<data.length;i++) {
@@ -337,7 +337,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 			//浮动IP
 			initFloatingIp: function(serverId){
 				var poolId = $('select.ip-pools').val();
-        		Common.xhr.ajax('/'+current_vdc_id+'/servers/'+serverId+'/list-unallocated-floating-ips?network_id='+poolId,function(data){
+        		Common.xhr.ajax('/'+currentChosenObj.vdc+'/servers/'+serverId+'/list-unallocated-floating-ips?network_id='+poolId,function(data){
             		var ipList = []; 
 					if(data){
 						for (var i=0;i<data.length;i++) {
@@ -351,7 +351,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 			},
 			//网卡
 			initNetworkInterface:function(serverId){
-				Common.xhr.ajax('/'+current_vdc_id+'/servers/'+serverId+'/list-network-interfaces',function(data){
+				Common.xhr.ajax('/'+currentChosenObj.vdc+'/servers/'+serverId+'/list-network-interfaces',function(data){
 					var ncList = []; 
 					if(data){
 						for (var i=0;i<data.length;i++) {
@@ -676,7 +676,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
     				
     				serverData.server["networks"]=networkData;
     				serverData.server["security_groups"]=getSecruityGroup();
-    				Common.xhr.postJSON('/'+current_vdc_id+'/servers',serverData,function(data){
+    				Common.xhr.postJSON('/'+currentChosenObj.vdc+'/servers',serverData,function(data){
     					if(data.error){
     						Modal.error(data.message)
     					}
