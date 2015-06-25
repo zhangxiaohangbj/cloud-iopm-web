@@ -3,9 +3,6 @@ define(['Common','bs/modal','jq/form/wizard','jq/form/validator-bs3','bs/tooltip
 
     var init = function(){
         Common.$pageContent.addClass("loading");
-        //Common.render(true, 'tpls/cresource/virtualEnv.html','/resources/data/env.txt', function() {
-        //    bindEvent();
-        //});
 
         //真实请求的数据
         Common.xhr.ajax('/v2/virtual-env',function(data){
@@ -52,11 +49,11 @@ define(['Common','bs/modal','jq/form/wizard','jq/form/validator-bs3','bs/tooltip
             type: null,	//虚拟环境类型
             regionId: null, //地区
             refreshCycle:null,
-            version:"1.0", //default
+            version:"v2.0", //default
             vendor:"default"//default
         };
         var currentChosenConnector={
-            version:'2.0',
+            version:'v2.0',
             type:null,
             ip:null,
             port:null,
@@ -77,13 +74,8 @@ define(['Common','bs/modal','jq/form/wizard','jq/form/validator-bs3','bs/tooltip
             },
             //获取地区
             getZone:function(){
-                //var vdcId = currentChosenObj.vdc.val() || $('select.select-vdc').children('option:selected').val();
-                //if(vdcId) {
-                //     Common.xhr.ajax("/v2/"+vdcId+"/os-availability-zone",function(zoneInfo){
-                //         alert(zoneInfo);
-                //     });
-                //}
-                Common.xhr.ajax("/resources/data/region.txt",function(region){
+                Common.xhr.ajax("/v2/tenant_id/region",function(region){
+                    debugger
                     renderData.region = region;
                 });
             },
@@ -175,12 +167,6 @@ define(['Common','bs/modal','jq/form/wizard','jq/form/validator-bs3','bs/tooltip
             var selectData= {"data":renderData};
             Common.render('tpls/cresource/env/add.html',selectData,function(html){
                 $('body').append(html);
-                //
-                //currentChosenEnv.type = $('select.select-env-type option:selected').val();
-                //currentChosenEnv.regionId = $('select.select-region option:selected').val();
-                //currentChosenConnector.type = $('select.select-env-type option:selected').val();
-                //currentChosenConnector.protocol = $('select.select-protocol option:selected').val();
-                //currentChosenEnv.refreshCycle = $('select.select-period option:selected').val();
 
                 $.fn.wizard.logging = true;
                 wizard = $('#create-virtualEnv-wizard').wizard({
@@ -221,7 +207,7 @@ define(['Common','bs/modal','jq/form/wizard','jq/form/validator-bs3','bs/tooltip
                                 },
                                 'env-vendor': {
                                     required: true,
-                                    minlength: 4,
+                                    minlength: 1,
                                     maxlength:15
                                 },
                                 'connector-port':{
@@ -342,13 +328,10 @@ define(['Common','bs/modal','jq/form/wizard','jq/form/validator-bs3','bs/tooltip
                                 var envData ={
                                     "id":env.id,
                                     "name": $("#edit-env-name").val(),
-                                    "type": $('#edit-env-type option:selected').val(),
-                                    "version":  $('#edit-env-version').val(),
                                     "regionId":  $('#edit-env-region option:selected').val(),
                                     "refreshCycle":  $('#edit-env-period option:selected').val(),
                                     "vendor": $("#edit-env-vendor").val()
                                 }
-                                debugger;
                                 Common.xhr.putJSON('/v2/virtual-env',envData,function(data){
                                     if(data){
                                         Modal.success('保存成功');

@@ -17,7 +17,7 @@ define(['Common','bs/modal','jq/form/wizard','jq/form/validator-bs3','bs/tooltip
         Common.$pageContent.addClass("loading");
 
         //真实请求的数据
-        Common.xhr.ajax('/v2/tenant_id/os-availability-zone/detail',function(data){
+        Common.xhr.ajax('/v2/tenant_id/os-availability-zone/list',function(data){
             var indexData = {"zone":data,"data":renderData};
             Common.render(true,'tpls/cresource/zone/index.html',indexData,function(){
                 bindEvent();
