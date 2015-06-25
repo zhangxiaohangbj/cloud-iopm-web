@@ -9,3 +9,9 @@
 	text-align:right;
 	font-weight:normal;
 }
+.detail-info-content .tab-pane{
+	display:none;
+}
+.detail-info-content .tab-pane.active{
+	display:block;
+}
