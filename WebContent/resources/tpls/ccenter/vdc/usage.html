@@ -3,26 +3,24 @@
 		<li><a href="javascript:void(0);" class="reload">虚拟数据中心</a></li>
 		<li class="active">{{vdc_name}}</li>
 	</ol>
-	<form class="form-horizontal">
-		<fieldset>
-			<div class="control-group">
-				<div class="controls">
-					<div class="input-prepend input-group">
-						<span class="add-on input-group-addon"><i
-							class="glyphicon glyphicon-calendar fa fa-calendar"></i></span><input
-							type="text" style="width: 200px" name="reservation"
-							id="reservation" class="form-control"
-							value="" />
-					</div>
-				</div>
+	<div class="control-group">
+		<div class="controls">
+			<div class="input-prepend input-group" style="width: 500px">
+				<span class="add-on input-group-addon"><i
+					class="glyphicon glyphicon-calendar fa fa-calendar"></i></span><input
+					type="text" style="width: 200px" name="reservation"
+					id="time_text" class="form-control"
+					value="" />
+					<!-- <input type="submit" class="btn btn-primary"> -->
+					<button id="submit_usage" class="btn btn-primary" style="margin-left:10px;">提交</button>
 			</div>
-		</fieldset>
-	</form>
+		</div>
+	</div>
 </div>
 <div class="page-body">
 	<div class="pane">
 		<div class="pane-content">
-			<table class="table table-primary table-striped" id="VdcTable">
+			<table class="table table-primary table-striped">
 				<thead>
 					<tr>
 						<th class="c4">云主机名称</th>
@@ -32,7 +30,7 @@
 						<th class="c6 sorting_disabled">使用时间</th>
 					</tr>
 				</thead>
-				<tbody>
+				<tbody id="usageList">
 				{{each usageList as item i}}
 					<tr>
 						<td>{{item.name}}</td>
