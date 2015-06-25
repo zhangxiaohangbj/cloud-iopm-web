@@ -1122,6 +1122,34 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 	    	}
 	    	
 	    });
+
+        $("a.vncConsole").on("click",function(){
+            Common.render('tpls/ccenter/vm/vncconsole.html', '', function (html) {
+                Modal.show({
+                    size: 'size-_console',
+                    title: '控制台',
+                    message: html,
+                    nl2br: false,
+                    onshown: function () {
+
+                    }
+                });
+            });
+        });
+
+        $("a.consoleOutput").on("click",function(){
+            Common.render('tpls/ccenter/vm/consoleoutput.html', '', function (html) {
+                Modal.show({
+                    size: 'size-_console',
+                    title: '日志',
+                    message: html,
+                    nl2br: false,
+                    onshown: function () {
+
+                    }
+                });
+            });
+        });
 	}	
 	return {
 		init : init

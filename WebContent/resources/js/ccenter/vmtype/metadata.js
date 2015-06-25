@@ -257,6 +257,8 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
             more.deleteMetadata($(this).attr("data"));
         });
 
+
+
         var more = {
             //更新元数据
             updateMetadata: function (data) {
@@ -313,7 +315,9 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
                     }
                 });
 
-            }
+            },
+
+
 
 
         }
