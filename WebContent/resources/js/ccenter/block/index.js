@@ -245,10 +245,6 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 	            		}
     	            }
     			});
-    			/*//配额超出后禁用下一步
-    			wizard.cards.basic.on('selected',function(card){
-    				EventsHandler.checkNextWizard();
-    			});*/
     			//加载时载入validate
     			wizard.on('show',function(){
     				wizard.form.each(function(){
@@ -354,13 +350,6 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 			});
 	    });
 	    var moreAction = {
-	    		/*detail: function(){
-    			 //页面列表相关  （编辑、明细）
-	    		    $("#VolumeTable_wrapper a.volume_name").on("click",function(){
-	    		    	var id = $(this).parent('tr:first').attr("data-id");
-	    		    	
-	    		    })
-    		},*/
     		editMount: function(){
     			$('.dropdown-menu a.edit_mount').on('click',function(){
     				var tr = $(this).parent('tr:first'),

@@ -12,18 +12,22 @@
 </head>
 <body>
 <%
+//当前用户entity
 User user = SessionUtil.user.get();
 out.print(user);
 out.print("<hr>");
 
+//当前tokenId
 String tokenId = SessionUtil.tokenId.get();
 out.print(tokenId);
 out.print("<hr>");
 
+//当前token entity
 Token token = SessionUtil.token.get();
 out.print(token);
 out.print("<hr>");
 
+//当前 vdc entity
 Vdc vdc = SessionUtil.vdc.get();
 out.print(vdc);
 out.print("<hr>");

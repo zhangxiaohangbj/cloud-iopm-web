@@ -28,13 +28,13 @@
 				<span class="signin-icons signin-icon-input signin-icon-user">
 					<i class="signin-icons signin-icon-br"></i>
 				</span>
-				<input id="loginName" class="form-control" name="loginName" type="text" />
+				<input id="loginName" class="form-control" name="loginName" type="text" value="admin"/>
 			</div>
 			<div class="input-group">
 				<span class="signin-icons signin-icon-input signin-icon-pwd">
 					<i class="signin-icons signin-icon-br"></i>
 				</span>
-				<input id="password" class="form-control" name="password" type="password" />
+				<input id="password" class="form-control" name="password" type="password" value="123456a?"/>
 			</div>
 			<div class="checkbox">
 				<label>

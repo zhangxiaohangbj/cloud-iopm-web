@@ -2,6 +2,9 @@
     <ol class="breadcrumb">
         <li class="active">可用分区列表</li>
     </ol>
+    <p class="description">
+        可用分区的划分可以方便资源的分配和管理，对于最终用户是可见的，一个虚拟化环境可以划分出多个可用分区。
+    </p>
 </div>
 <div class="page-body">
     <div class="pane">
@@ -18,13 +21,13 @@
                 </tr>
                 </thead>
                 <tbody>
-                {{each zone.availabilityZoneInfo as item i}}
+                {{each zone as item i}}
                 <tr>
                     <td><label><input type="radio"></label></td>
-                    <td>{{item.zoneName}}</td>
-                    <td>{{item.virtualEnvId}}</td>
-                    <td>{{item.regionId}}</td>
-                    <td>{{item.zoneName}}</td>
+                    <td>{{item.name}}</td>
+                    <td>{{item.virtualEnvName}}</td>
+                    <td>{{item.regionName}}</td>
+                    <td>{{item.hosts.length}}个服务器</td>
                     <td>
                         <a class="btn-opt pull-left add-resource" data-toggle="tooltip" data-act="log" style="margin: 0 5px;" data="{{item.id}}">增加资源</a>
                         <a class="btn-opt pull-left edit" data-toggle="tooltip" data-act="edit" style="margin: 0 5px;" data="{{item.id}}">编辑</a>
