@@ -53,13 +53,13 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 		var DataGetter = {
 				//镜像列表,type:类型
 				getImage: function(type){
-					Common.xhr.get('/v2/images',{'imageType':'image'},function(imageList){
+					Common.xhr.get('/v2/'+current_vdc_id+'/images',{'imageType':'image'},function(imageList){
 						renderData.imageList = imageList;
 					});
 				},
 				//快照列表,
 				getSnapshot :  function(uid){
-					Common.xhr.get('/v2/images',{'imageType':'snapshot'},function(snapShotList){
+					Common.xhr.get('/v2/'+current_vdc_id+'/images',{'imageType':'snapshot'},function(snapShotList){
 						renderData.snapshotList = snapShotList;
 					});
 				},
@@ -120,8 +120,14 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 				if(vdc_id){
 					Common.xhr.ajax('/v2/'+vdc_id+'/os-availability-zone',function(data){
 						var selectData = [];
-						for(var i=0;i<data["availabilityZoneInfo"].length;i++){
-							selectData[i] = {"name":data["availabilityZoneInfo"][i]["zoneName"]};
+						if(!data) {
+							data = {};
+						}
+						data = data["availabilityZoneInfo"]||{};
+						for(var i=0;i<data.length;i++){
+							if(data[i]["zoneState"]["available"]){
+								selectData.push({"name":data[i]["zoneName"],"id":data[i]["id"]});
+							}
 						}
 						var html = Common.uiSelect(selectData);
 				    	$('select.availability_zone').html(html);
@@ -162,8 +168,11 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 				}
 				if(vdc_id){
 					//获取vdc的配额
-					Common.xhr.ajax('/v2.0/'+vdc_id+'/os-quota-sets/'+vdc_id,function(quotas){
-						quotas = quotas.quota_set
+					Common.xhr.ajax('/v2.0/'+current_vdc_id+'/os-quota-sets/'+vdc_id,function(quotas){
+						if(!quotas) {
+							quotas = {};
+						}
+						quotas = quotas.quota_set||{};
 						//获取vdc的配额使用情况
 						Common.xhr.ajax('/v2.0/'+vdc_id+'/limits',function(quotaUsages){
 							//当前配额 等于 当前vdc下总配额 减去  当前选中规格的额度
@@ -372,6 +381,16 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 			}
 			
 		};
+		
+		//server name校验
+	    $.validator.addMethod("serverName", function(value, element) {
+	    	var optionalValue = this.optional(element);
+	    	if(/[^\d]{1}[\u4e00-\u9fa5a-zA-Z0-9-]{3,}$/.test(value)&&value.indexOf("_")==-1){
+	    		return true;
+	    	}
+	    	return false;
+	    }, "名称至少包含4个字符，首字母不能是数字，不能包含下划线'_'");
+		
 		//载入后的事件
 		var EventsHandler = {
 				//基本信息所需事件
@@ -490,26 +509,6 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 				        radioClass: "iradio-info"
 				    })
 				},
-				//表单校验
-				formValidator: function(){
-					return $(".form-horizontal").validate({
-			            rules: {
-			            	'name': {
-			            		required: true,
-			                    minlength: 4,
-			                    maxlength:255
-			                },
-			                'imageRef':{
-			                	required: true,
-			                    minlength: 1,
-			                    ignore: ""
-			                },
-			                'public_key':{
-			                	required: true
-			                }
-			            }
-			        });
-				},
 				checkNextWizard: function(){
 					$('.form-group .progress-bar').each(function(){
 						var info = $(this).parent().prev(),
@@ -573,7 +572,8 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
     			            	'name': {
     			                    required: true,
     			                    minlength: 4,
-    			                    maxlength:15
+    			                    maxlength:15,
+    			                    serverName: true
     			                },
     			                'imageRef': {
     			                    required: true,

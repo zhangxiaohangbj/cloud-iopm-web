@@ -4,7 +4,7 @@
 define('Common',
     [
         'commons/pub_menu', 'PubView', 'bs/modal', 'json', 'template',
-        'jq/dataTables-bs3', 'bs/popover'
+        'jq/dataTables-bs3', 'bs/popover', 'jq/cookie'
     ],
     function(PubMenu, PubView, Modal, JSON, template) {
 
@@ -47,16 +47,6 @@ define('Common',
             hash: function() {
                 return _getHash();
             }(),
-            getParam: function(){
-            	return this.hash.substring(this.hash.lastIndexOf('!')+1);
-            },
-            getQueryString: function(){
-				var temp;
-				if(this.hash != ""){
-					temp = this.hash.split("!");
-				}
-				return temp.length == 2 ? temp[1] : "";
-            },
             showLocalLoading: function($wrapper){
             	$wrapper.append('<p class="loading" style="width:100%;text-align:center;line-height:100px;">加载中...</p>');
             },
@@ -860,6 +850,129 @@ define('Common',
                     }
                 } catch (e) { }
                 return inHtml;
+            },
+            /**
+             * 取得当前项目下的cookie，目前已知cookie有：
+             * uid
+             * user
+             * token
+             * vdc
+             * @returns 同 $.cookie，参看jquery.cookie相关文档说明
+             */
+            cookies: function() {
+                $.cookie.json = true;
+                return $.cookie.apply(this, arguments);
+            },
+            login: function(message, callback) {
+                var that = this;
+                Modal.show({
+                    size: 'size-_login',
+                    title: '请登录',
+                    closable: false,
+                    message: function() {
+                       return [
+                        '<div class="signin-header">',
+                            '<div class="signin-title">',
+                                '<img class="signin-logo" alt="IOP Manager" src="',PubView.root,'/resources/css/login/img/header-logo.png"/>',
+                            '</div>',
+                        '</div>',
+                        '<form class="form-horizontal form-signin" onsubmit="return false;" role="form" autocomplete="off">',
+                            '<div class="input-group">',
+                                '<span class="signin-icons signin-icon-input signin-icon-user">',
+                                    '<i class="signin-icons signin-icon-br"></i>',
+                                '</span>',
+                                '<input id="loginName" class="form-control" name="loginName" type="text" />',
+                            '</div>',
+                            '<div class="input-group">',
+                                '<span class="signin-icons signin-icon-input signin-icon-pwd">',
+                                    '<i class="signin-icons signin-icon-br"></i>',
+                                '</span>',
+                                '<input id="password" class="form-control" name="password" type="password" />',
+                            '</div>',
+                        '</form>'
+                       ].join('')
+                    }(),
+                    buttons: [
+                        {
+                            icon: 'fa fa-sign-in',
+                            label: '登&ensp;录',
+                            id: "btn-signin",
+                            cssClass: 'btn-primary',
+                            autospin: true,
+                            action: function(dialog){
+                                dialog.enableButtons(false);
+                                var $form = dialog.getModalBody().find('.form-signin:first');
+                                var formValid = true, errorTip = function($tar, msg) {
+                                    if(PubView.utils.is$($tar)) {
+                                        $tar.popover({
+                                            container: $form,
+                                            className: "popover-danger",
+                                            placement: "left top",
+                                            content: '<i class="glyphicon glyphicon-exclamation-sign"></i> '+(msg||''),
+                                            trigger: 'manual',
+                                            html: true
+                                        }).popover("show");
+                                    }
+                                };
+                                if(!$('#loginName').val()) {
+                                    errorTip($('#loginName'), "用户名不能为空！");
+                                    formValid = false;
+                                } else if(!$('#password').val()) {
+                                    errorTip($('#password'), "密码不能为空！");
+                                    formValid = false;
+                                }
+                                if(!formValid) {
+                                    dialog.enableButtons(true);
+                                    dialog.getButton('btn-signin').stopSpin();
+                                    return false;
+                                }
+                                var data = {
+                                    'auth': {
+                                        'tenantId': "",
+                                        'passwordCredentials': {
+                                            'username': $('#loginName').val(),
+                                            'password':  $('#password').val()
+                                        }
+                                    }
+                                };
+                                that.xhr.ajax({
+                                    type: "POST",
+                                    url: '/v2.0/tokens',
+                                    data: JSON.stringify(data),
+                                    contentType: "application/json",
+                                    success: function(res) {
+                                        if(!res || res.error_code){
+                                            alert("错误代码："+res.error_code+"\n错误描述: "+res.error_desc);
+                                        }else{
+                                            dialog.close();
+                                            dialog.enableButtons(true);
+                                            dialog.getButton('btn-signin').stopSpin();
+                                        }
+                                    },
+                                    error: function(xhr, errorText) {
+                                        debugger;
+                                    }
+                                });
+                            }
+                        },
+                        {
+                            label: 'Close',
+                            cssClass: 'btn-primary',
+                            action: function(dialog){
+                                dialog.close();
+                            }
+                        }
+                    ],
+                    onshow: function(dialog) {
+                        var $body = dialog.getModalBody();
+                        $body.find('input[type="checkbox"]').iCheck({
+                            checkboxClass: "icheckbox-primary"
+                        });
+                    },
+                    onhidden: function(dialog) {
+
+                    }
+                });
             }
         };
     });

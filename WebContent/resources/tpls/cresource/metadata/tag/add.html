@@ -3,8 +3,9 @@
         <label for="namespace" class="control-label col-sm-3">命名空间：</label>
         <div class="col-sm-7 col-sm">
             <select name="namespace" id="namespace"  class="form-control select select-env">
-                <option value="direct" selected>a</option>
-                <option value="direct">b</option>
+                {{each data.namespace as item i}}
+                    <option value="{{item.namespace}}" >{{item.display_name}}</option>
+                {{/each}}
             </select>
         </div>
     </div>

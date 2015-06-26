@@ -133,16 +133,6 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 											        	name: 'diskNums',title: '磁盘数量',total: quotas.disks, used: quotaUsages.disks, rate: rateDiskNums, style: styleDiskNums
 											        }
 											 ];
-								/*var check = function(){
-									var flag = true;
-									$.each(renderData,function(i,item){
-										if(item.rate >100){
-											Modal.error(item.title+"超出配额");
-											flag = false;
-										}
-									});
-									return flag;
-								}*/
 								//生成html数据
 								Common.render('tpls/common/quota.html',renderData,function(html){
 									$('div.quotas').html(html);
@@ -252,10 +242,10 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
                             errorContainer: '_form',
                             /*errorPlacement: function(error, element) {
                             	debugger
-                                if ( element.is(":radio") )
-                                    error.appendTo( element.parent().next().next() );
-                                else if ( element.is(":checkbox") )
-                                    error.appendTo ( element.next() );
+                                if ( $(element).is(":radio") )
+                                	$(element).appendTo( $(element).parent().next().next() );
+                                else if ( $(element).is(":checkbox") )
+                                	$(element).appendTo ( $(element).next() );
                                 else
                             	alert($(error).html());
                             	//alert($(element).parent().html());

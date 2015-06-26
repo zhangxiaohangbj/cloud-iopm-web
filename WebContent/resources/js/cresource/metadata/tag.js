@@ -3,11 +3,21 @@ define(['Common','bs/modal','jq/form/wizard','jq/form/validator-bs3','bs/tooltip
 
     var renderData ={}
 
+
+    var dataGetter = {
+        getNamespace:function(){
+            Common.xhr.ajax("/v2/metadefs/namespaces",function(data){
+                renderData.namespace = data;
+            });
+        }
+    }
+
+    dataGetter.getNamespace();
     var init= function(){
         Common.$pageContent.addClass("loading");
 
         //真实请求的数据
-        Common.xhr.ajax('/resource-manager/v2/tag',function(data){
+        Common.xhr.ajax("/resource-manager/v2/tag",function(data){
             var indexData = {"tag":data};
             Common.render(true,'tpls/cresource/metadata/tag/index.html',indexData,function(){
                 bindEvent();
@@ -74,7 +84,7 @@ define(['Common','bs/modal','jq/form/wizard','jq/form/validator-bs3','bs/tooltip
                                 }
                                 Common.xhr.postJSON("/resource-manager/v2/tag", tag, function (data) {
                                     debugger
-                                    if (data) {
+                                    if (data && data.error !=false) {
                                         Modal.success('保存成功');
                                         setTimeout(function () {
                                             Modal.closeAll()
