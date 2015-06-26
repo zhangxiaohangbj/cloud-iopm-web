@@ -7,9 +7,11 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 		Common.render(true,{
 			tpl:'tpls/ccenter/block/volume/list.html',
 			//data:'/v2.0/tenants/page/10/1',
-			data:'/resources/data/volume.txt',
+			//data:'/resources/data/volume.txt',
+			data: '/v2/' + current_vdc_id + '/volumes/1/20',
 			beforeRender: function(data){
-				return data;//.result;
+				return data.result;
+				//return data;//.result;
 			},
 			callback: bindEvent
 		});
@@ -18,7 +20,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 		//dataTables
 		Common.initDataTable($('#VolumeTable'),function($tar){
 			$tar.prev().find('.left-col:first').append(
-					'<span class="btn btn-add">创建磁盘</span>'
+					'<span class="btn btn-add">新建</span>'
 				);
 			Common.$pageContent.removeClass("loading");
 		});
@@ -60,10 +62,16 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 					var dtd = $.Deferred();
 					var vdc_id = currentChosenObj.vdc || $('select.tenant_id').children('option:selected').val();
 					if(vdc_id){
-						Common.xhr.ajax('/v2/'+vdc_id+'/os-availability-zone',function(data){
+						Common.xhr.ajax('/v2/' + vdc_id +'/os-availability-zone',function(result){
 							var selectData = [];
-							for(var i=0;i<data["availabilityZoneInfo"].length;i++){
-								selectData[i] = {"name":data["availabilityZoneInfo"][i]["zoneName"]};
+							var data = result["availabilityZoneInfo"]
+							selectData.push({name:"", id:""})
+							for(var i=0;i<data.length;i++){
+								
+								if(data[i]["zoneState"]["available"]){
+									selectData.push({"name":data[i]["zoneName"]});
+								}
+
 							}
 							var html = Common.uiSelect(selectData);
 					    	$('select.availability_zone').html(html);
@@ -96,8 +104,9 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 				initVolumeType: function(){
 					var envir_id = $('.virtual_envir').attr('data-id');
 					if(envir_id){
-						Common.xhr.ajax('/resources/data/select.txt',function(data){
-							var  html = Common.uiSelect(data);
+						///resources/data/select.txt
+						Common.xhr.ajax('/v2/' + current_vdc_id + '/types', function(data){
+							var  html = Common.uiSelect(data.volume_types);
 							$('select.volume_type').html(html);
 						});
 					}
@@ -119,18 +128,18 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 								var getClass = function(rate){
 									return rate <= 30 ? 'progress-bar-success' : rate >= 80 ? 'progress-bar-danger' : 'progress-bar-info';
 								}
-								if($('#volume_size').val()){
-									quotaUsages.diskTotalSizes = parseInt(quotaUsages.diskTotalSizes) + parseInt($('#volume_size').val());
+								if($('#size').val()){
+									quotaUsages.gigabytes = parseInt(quotaUsages.gigabytes) + parseInt($('#size').val());
 								}
-								var rateDiskNums = getMathRound(quotaUsages.disks,quotas.disks || 0),
-								rateDiskTotalSizes = getMathRound(quotaUsages.diskTotalSizes,quotas.diskTotalSizes || 0),
+								var rateDiskNums = getMathRound(quotaUsages.volumes, quotas.volumes || 0),
+								rateDiskTotalSizes = getMathRound(quotaUsages.gigabytes, quotas.gigabytes || 0),
 								styleDiskNums = getClass(rateDiskNums),styleDiskTotalSizes = getClass(rateDiskTotalSizes);
 								var renderData = [
 											        {
-											        	name: 'DiskTotalSizes',title: '容量',total: quotas.diskTotalSizes, used: quotaUsages.diskTotalSizes, rate: rateDiskTotalSizes, style: styleDiskTotalSizes
+											        	name: 'DiskTotalSizes',title: '容量',total: quotas.gigabytes, used: quotaUsages.gigabytes, rate: rateDiskTotalSizes, style: styleDiskTotalSizes
 											        },
 											        {
-											        	name: 'diskNums',title: '磁盘数量',total: quotas.disks, used: quotaUsages.disks, rate: rateDiskNums, style: styleDiskNums
+											        	name: 'diskNums',title: '磁盘数量',total: quotas.volumes, used: quotaUsages.volumes, rate: rateDiskNums, style: styleDiskNums
 											        }
 											 ];
 								/*var check = function(){
@@ -186,8 +195,8 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 				},
 				//input propertychange
 				inputListener: function(){
-					$('#volume_size').on('blur',function(){
-						if($(this).parents('form:first').validate().element('#volume_size')){
+					$('#size').on('blur',function(){
+						if($(this).parents('form:first').validate().element('#size')){
 							DataIniter.initQuato();//重新加载配额数据
 						}
 					})
@@ -266,12 +275,12 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
                             	$(error).appendTo( $(element).parents('.form-group:first') );
                             },*/
                             rules: {
-    			            	'volume_name': {
+    			            	'name': {
     			                    required: true,
     			                    minlength: 4,
     			                    maxlength:15
     			                },
-    			                'volume_size': {
+    			                'size': {
     			                    required: true,
     			                    number:true,
     			                    max:1024
@@ -294,7 +303,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
     			}
     			wizard.cards.mount.on('selected',function(card){
 					//获取磁盘名字的值
-					$('.mount_volume_name').text($('input[name="volume_name"]').val())
+					$('.mount_volume_name').text($('input[name="name"]').val())
     			});
     			//确认信息卡片被选中的监听
     			wizard.cards.confirm.on('selected',function(card){
@@ -302,13 +311,16 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
     				//获取上几步中填写的值
     				var serverData = wizard.serializeObject();
     				console.log(serverData);
-    				$('.query-volume-name').text(serverData.volume_name);
-    				$('.query-volume-size').text(serverData.volume_size+"GB");
+    				if(serverData.availability_zone == "") {
+    					serverData.availability_zone = null;
+    				}
+    				$('.query-volume-name').text(serverData.name);
+    				$('.query-volume-size').text(serverData.size+"GB");
     				$('.query-volume-type').text($('select.volume_type').children('option:selected').text());
     				$('.query-volume-vdc').text($('select.tenant_id').children('option:selected').text());
-    				$('.query-volume-az').text(serverData.availability_zone);
+    				$('.query-volume-az').text(serverData.availability_zone || "");
     				$('.query-volume-ve').text($('.virtual_envir').html());
-    				$('.query-volume-desc').text(serverData.server_desc);
+    				$('.query-volume-desc').text(serverData.description);
     				//挂载磁盘
     				var vmList = getMountVm();
     				if(vmList.length){
@@ -326,8 +338,12 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
     			wizard.show();
     			
     			wizard.on("submit", function(wizard) {
-    				var serverData = {server:wizard.serializeObject()};
-    				Common.xhr.postJSON('/',serverData,function(data){
+    				var volume = wizard.serializeObject();
+    				if(volume.availability_zone == "") {
+    					volume.availability_zone = null;
+    				}
+    				var serverData = {volume:volume};
+    				Common.xhr.postJSON('/v2/' + current_vdc_id + '/volumes',serverData,function(data){
     					wizard._submitting = false;
     					wizard.updateProgressBar(100);
     					closeWizard();
