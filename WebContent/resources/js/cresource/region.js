@@ -100,7 +100,7 @@ define(['Common','bs/modal','jq/form/wizard','jq/form/validator-bs3','bs/tooltip
         //创建按钮
         $("#regionTable_wrapper span.btn-add").on("click",function(){
             var selectData = {"data":renderData};
-            Common.render('tpls/cresource/region/add2.html',selectData,function(html){
+            Common.render('tpls/cresource/region/add.html',selectData,function(html){
 
                 Modal.show({
                     title: '新增资源区域',
