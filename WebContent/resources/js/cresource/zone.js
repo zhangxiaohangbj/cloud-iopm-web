@@ -17,7 +17,7 @@ define(['Common','bs/modal','jq/form/wizard','jq/form/validator-bs3','bs/tooltip
         Common.$pageContent.addClass("loading");
 
         //真实请求的数据
-        Common.xhr.ajax('/v2/tenant_id/os-availability-zone/detail',function(data){
+        Common.xhr.ajax('/v2/tenant_id/os-availability-zone/list',function(data){
             var indexData = {"zone":data,"data":renderData};
             Common.render(true,'tpls/cresource/zone/index.html',indexData,function(){
                 bindEvent();
@@ -51,7 +51,7 @@ define(['Common','bs/modal','jq/form/wizard','jq/form/validator-bs3','bs/tooltip
             },
             //获取地区
             getZone:function(){
-                Common.xhr.ajax("/resources/data/region.txt",function(region){
+                Common.xhr.ajax("/v2/tenant_id/region",function(region){
                     renderData.region = region;
                 });
             },
@@ -170,9 +170,6 @@ define(['Common','bs/modal','jq/form/wizard','jq/form/validator-bs3','bs/tooltip
             Common.render('tpls/cresource/zone/add.html',selectData,function(html){
                 $('body').append(html);
 
-                //
-                //currentZone.virtualEnvId = $("#select-env option:selected").val();
-                //currentZone.regionId = $("#select-region option:selected").val();
                 $.fn.wizard.logging = true;
                 wizard = $('#create-zone-wizard').wizard({
                     keyboard : false,
@@ -291,7 +288,7 @@ define(['Common','bs/modal','jq/form/wizard','jq/form/validator-bs3','bs/tooltip
                                     }
                                     debugger;
                                     Common.xhr.putJSON('/v2/tenant_id/os-availability-zone',azone,function(data){
-                                        if(data){
+                                        if(data &&data.error!=true){
                                             Modal.success('保存成功');
                                             setTimeout(function(){Modal.closeAll()},2000);
                                             Common.router.route();
@@ -359,12 +356,12 @@ define(['Common','bs/modal','jq/form/wizard','jq/form/validator-bs3','bs/tooltip
         });
         //删除按钮
         $("a.delete").on("click",function(){
-            var data = $(this).attr("data");
+            var id = $(this).attr("data");
             Modal.confirm('确定要删除该可用分区吗?',function(result){
                 if(result) {
-                    Common.xhr.del("/v2/tenant_id/os-availability-zone/"+data,
+                    Common.xhr.del("/v2/tenant_id/os-availability-zone/"+id,
                         function(data){
-                            if(data){
+                            if(data && data.error!=true){
                                 Modal.success('删除成功')
                                 setTimeout(function(){Dialog.closeAll()},2000);
                                 Common.router.route();//重新载入

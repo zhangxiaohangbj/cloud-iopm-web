@@ -758,6 +758,8 @@ i.image-icon-default.centos {
 }
 .modal-body {
 	background-color: #fff;
+    word-wrap: break-word;
+    word-break: break-all;
 }
 .modal-footer{
 	padding-top: 0;

@@ -142,16 +142,6 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 											        	name: 'diskNums',title: '磁盘数量',total: quotas.volumes, used: quotaUsages.volumes, rate: rateDiskNums, style: styleDiskNums
 											        }
 											 ];
-								/*var check = function(){
-									var flag = true;
-									$.each(renderData,function(i,item){
-										if(item.rate >100){
-											Modal.error(item.title+"超出配额");
-											flag = false;
-										}
-									});
-									return flag;
-								}*/
 								//生成html数据
 								Common.render('tpls/common/quota.html',renderData,function(html){
 									$('div.quotas').html(html);
@@ -254,10 +244,6 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 	            		}
     	            }
     			});
-    			/*//配额超出后禁用下一步
-    			wizard.cards.basic.on('selected',function(card){
-    				EventsHandler.checkNextWizard();
-    			});*/
     			//加载时载入validate
     			wizard.on('show',function(){
     				wizard.form.each(function(){
@@ -265,10 +251,10 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
                             errorContainer: '_form',
                             /*errorPlacement: function(error, element) {
                             	debugger
-                                if ( element.is(":radio") )
-                                    error.appendTo( element.parent().next().next() );
-                                else if ( element.is(":checkbox") )
-                                    error.appendTo ( element.next() );
+                                if ( $(element).is(":radio") )
+                                	$(element).appendTo( $(element).parent().next().next() );
+                                else if ( $(element).is(":checkbox") )
+                                	$(element).appendTo ( $(element).next() );
                                 else
                             	alert($(error).html());
                             	//alert($(element).parent().html());
@@ -370,13 +356,6 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 			});
 	    });
 	    var moreAction = {
-	    		/*detail: function(){
-    			 //页面列表相关  （编辑、明细）
-	    		    $("#VolumeTable_wrapper a.volume_name").on("click",function(){
-	    		    	var id = $(this).parent('tr:first').attr("data-id");
-	    		    	
-	    		    })
-    		},*/
     		editMount: function(){
     			$('.dropdown-menu a.edit_mount').on('click',function(){
     				var tr = $(this).parent('tr:first'),

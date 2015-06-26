@@ -15,8 +15,6 @@ define(['Common','bs/modal'],function(Common,Modal){
 		};
 		var renderOptions = $.extend({},defaults,options);
 		Common.render('tpls/common/choose.html',renderOptions,function(html){
-            debugger
-
 			//off click事件,防止多次bind
 			$(document).off("click",renderOptions.selector+" .list-group-all .list-group-item");
 			$(document).on("click",renderOptions.selector+" .list-group-all .list-group-item", function(event){

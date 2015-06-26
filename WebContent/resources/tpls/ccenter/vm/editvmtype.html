@@ -1,16 +1,16 @@
 <div class="form-horizontal" id="editVmDetail">
 	<div class="form-group">
-		<label for="server-name" class="control-label col-sm-3">当前云主机规格：</label>
+		<label class="control-label col-sm-3">当前云主机规格：</label>
 		<div class="col-sm-7 col-sm" style="padding-top: 7px;">
-			standard-1G-20G
+            {{flavor.name}}
 		</div>
 	</div>
 
 	<div class="form-group">
-		<label for="server-name" class="control-label col-sm-3"><span>* </span>选择云主机规格：</label>
+		<label  class="control-label col-sm-3"><span>* </span>选择云主机规格：</label>
 		<div class="col-sm-5 col-sm">
-                   <select name="select-specs"  class="form-control select select-specs" tabindex="5">
-                   	{{each specsList as item i}}
+                   <select name="select-specs"  class="form-control select select-specs" tabindex="5" id="new_flavor_select">
+                   	{{each flavor_list as item i}}
 						<option data-root-disk="{{item.root_disk}}" data-tmp-disk="{{item.tmp_disk}}" data-memory="{{item.memory}}" data-core="{{item.core_num}}"  value="{{item.id}}">{{item.name}}</option>
 				  	{{/each}}
                    </select>
@@ -22,7 +22,7 @@
 	
 	<div class="wizard-input-section">
 		<div class="form-group">
-			<label for="server-name" class="control-label col-sm-3">配额：</label>
+			<label  class="control-label col-sm-3">配额：</label>
 			<div class="col-sm-8 col-sm quotas">
 			</div>
 		</div>
