@@ -692,7 +692,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 	  //更多按钮
 	    var EditData = {
 	    		//编辑云主机名称弹框
-	    	EditVmName : function(name){
+	    	EditVmName : function(id){
 	    		Common.render('tpls/ccenter/vm/editvmname.html','',function(html){
 	    			Modal.show({
 	    	            title: '编辑云主机',
@@ -701,7 +701,12 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 	    	            buttons: [{
 	    	                label: '保存',
 	    	                action: function(dialog) {
-	    	                	Common.xhr.ajax('/resources/data/arrays.txt',function(data){
+                                var serverData = {
+                                    "server": {
+                                        "name": $("#editVmName [name='server-name']").val()
+                                    }
+                                };
+	    	                	Common.xhr.putJSON('/'+current_vdc_id+'/servers/'+id+'/',serverData, function(data){
 	    	                		if(data){
 	    	                			alert("保存成功");
 	    	                			dialog.close();
@@ -785,35 +790,52 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 				
 	    	},
 	    	//编辑虚拟机大小弹框
-	    	EditVmType : function(id,cb){
-	    		Common.render('tpls/ccenter/vm/editvmtype.html',renderData,function(html){
-		    		Modal.show({
-	    	            title: '编辑虚拟机大小',
-	    	            message: html,
-	    	            nl2br: false,
-	    	            buttons: [{
-	    	                label: '保存',
-	    	                action: function(dialog) {
-	    	                	Common.xhr.ajax('/resources/data/arrays.txt',function(data){
-	    	                		if(data){
-	    	                			alert("保存成功");
-	    	                			resetCurrentChosenObj();
-							    		dialog.close();
-									}else{
-										alert("保存失败");
-									}
-	    	                	});
-	    	                }
-	    	            }, {
-	    	                label: '取消',
-	    	                action: function(dialog) {
-	    	                	resetCurrentChosenObj();
-	    	                    dialog.close();
-	    	                }
-	    	            }],
-	    	            onshown : cb  //Modal show后回调
-	    	        });
-	    		});
+	    	EditVmType : function(id){
+                Common.xhr.ajax('/'+current_vdc_id+'/servers/'+id, function(data){
+                    alert(data)
+                    var rData = {}
+                    rData['flavor'] = data['server']['flavor']
+                    rData['flavor_list'] = renderData['specsList']
+                    debugger
+                    Common.render('tpls/ccenter/vm/editvmtype.html',rData,function(html){
+                        Modal.show({
+                            title: '编辑安全组',
+                            message: html,
+                            nl2br: false,
+                            buttons:
+                                [{
+                                    label: '保存',
+                                    action: function(dialog) {
+                                        var flavor_data = {
+                                            "resize": {
+                                                "flavorRef": $('#new_flavor_select option:selected').val()
+                                            }
+                                        }
+                                        debugger
+                                        Common.xhr.postJSON('/'+current_vdc_id+'/servers/'+id+'/action', flavor_data, function(data){
+                                            if(data){
+                                                alert("保存成功");
+
+                                                dialog.close();
+                                            }else{
+                                                alert("保存失败");
+                                            }
+                                        });
+
+                                    }
+                                },
+                                {
+                                    label: '取消',
+                                    action: function(dialog) {
+                                        dialog.close();
+                                    }
+                            }]
+
+                        });
+                    });
+                });
+
+
 	    	},
 	    	
 	    	DoAction:function(id,name,rq,dc){
@@ -852,20 +874,9 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 	    //修改虚拟机大小
 	    $("ul.dropdown-menu a.editVmType").on("click",function(){
 	    	//获取云主机个数,规格等信息
-	    	Common.xhr.ajax('/resources/data/arrays.txt',function(data){
-	    		data.nums = 1;
-	    		data.vcd_id = "58c41046-408e-b959-d63147471w";
-	    		data.vcd_name = "micro-2 (1vCPU / 1G)";
-	    		currentChosenObj.nums = data.nums;  //data:云主机个数
-	    		EditData.EditVmType($(this).attr("data"),function(){
-	    			$("#editVmDetail div.col-sm:first").html(data.vcd_name);
-	    			$("[name='flavorRef']").val(data.vcd_id);
-	    			
-		    		DataIniter.initPopver();
-		    		DataIniter.initQuatos(data.vcd_id);  //data:vcd_id
-		    		EventsHandler.specsChange();
-		    	});
-	    	})
+            var data = $(this).attr("data")
+	    	EditData.EditVmType($(this).attr("data"));
+
 	    });
 	    
 	    //删除云主机
@@ -1132,32 +1143,51 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 	    	
 	    });
 
+        //获取控制台
         $("a.vncConsole").on("click",function(){
-            Common.render('tpls/ccenter/vm/vncconsole.html', '', function (html) {
-                Modal.show({
-                    size: 'size-_console',
-                    title: '控制台',
-                    message: html,
-                    nl2br: false,
-                    onshown: function () {
+            var serverId = $(this).attr("data");
+            var info = {
+                "os-getVNCConsole": {
+                    "type": "novnc"
+                }
+            }
+            Common.xhr.postJSON('/'+current_vdc_id+'/servers/'+serverId+'/action',info,function(data){
+                var url = data['console']['url'];
+                Common.render('tpls/ccenter/vm/vncconsole.html', {url: url}, function (html) {
+                    Modal.show({
+                        size: 'size-_console',
+                        title: '控制台',
+                        message: html,
+                        nl2br: false,
+                        onshown: function () {
 
-                    }
+                        }
+                    });
                 });
             });
+
         });
 
+        //显示日志输出
         $("a.consoleOutput").on("click",function(){
-            Common.render('tpls/ccenter/vm/consoleoutput.html', '', function (html) {
+            var serverId = $(this).attr("data");
+            var info = {
+                "os-getConsoleOutput": {
+                    "length": 30
+                }
+            }
+            Common.xhr.postJSON('/'+current_vdc_id+'/servers/'+serverId+'/action',info,function(data){
+                var output = data['output'];
                 Modal.show({
                     size: 'size-_console',
                     title: '日志',
-                    message: html,
-                    nl2br: false,
-                    onshown: function () {
+                    message: output,
+                    nl2br: true
 
-                    }
                 });
+
             });
+
         });
 	}	
 	return {

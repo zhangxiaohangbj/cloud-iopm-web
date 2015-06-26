@@ -11,13 +11,12 @@
 
 			  <!-- Nav tabs -->
 			  <ul class="nav nav-tabs" role="tablist">
-			    <li class="active"><a href="javascript:void(0)">Home</a></li>
-			    <li><a href="javascript:void(0)">Profile</a></li>
-			    <li><a href="javascript:void(0)">Messages</a></li>
-			    <li><a href="javascript:void(0)">Settings</a></li>
+			    <li class="active"  data-for="basic"><a href="javascript:void(0)">基本信息</a></li>
+			    <li data-for="snapshot"><a href="javascript:void(0)">快照列表</a></li>
+			    <li data-for="monitor"><a href="javascript:void(0)">监控详情</a></li>
 			  </ul>
 			  <div class="detail-info-content">
-			    <div  class="tab-pane active">
+			    <div  class="tab-pane basic active">
 			    	<div class="clearfix">
 						<div class="row">
 							<label  class="control-label col-sm-3">名称：</label>
@@ -59,7 +58,7 @@
 							<label class="control-label col-sm-3">挂载的主机：</label>
 							<div class="col-sm-7 col-sm query-info">
 							{{each mount_list as opt i}}
-								{{opt.name}},
+								{{opt.name}}{{if i != mount_list.length-1}},{{/if}}
 							{{/each}}
 							</div>
 						</div>
@@ -88,9 +87,17 @@
 							</div>
 						</div>
 					</div>
-					</div>
+			    </div>
+			    <div class="tab-pane snapshot">
+			    </div>
+			    <div class="tab-pane monitor">
+			    	<div class="monitor-request-read" style="height:250px;"></div>
+			    	<div class="monitor-request-write"></div>
+			    	<div class="monitor-rate-read"></div>
+			    	<div class="monitor-rate-write"></div>
 			    </div>
 			  </div>
 			</div>
 		</div>
+	</div>
 </div>

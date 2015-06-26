@@ -12,10 +12,10 @@
         <div class="col-sm-7 col-sm">
             <select class="form-control select" id="edit-region">
                 {{each data.region as item i}}
-                    {{if item.name == availableZone.regionId}}
-                        <option value="{{item.name}}" selected>{{item.name}}</option>
+                    {{if item.regionId == availableZone.regionId}}
+                        <option value="{{item.regionId}}" selected>{{item.regionName}}</option>
                     {{else}}
-                         <option value="{{item.name}}">{{item.name}}</option>
+                         <option value="{{item.regionId}}">{{item.regionName}}</option>
                     {{/if}}
                 {{/each}}
             </select>
