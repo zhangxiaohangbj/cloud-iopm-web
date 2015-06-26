@@ -790,36 +790,52 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 				
 	    	},
 	    	//编辑虚拟机大小弹框
-	    	EditVmType : function(data){
-                alert(data);
-	    		Common.render('tpls/ccenter/vm/editvmtype.html',renderData,function(html){
-		    		Modal.show({
-	    	            title: '编辑虚拟机大小',
-	    	            message: html,
-	    	            nl2br: false,
-	    	            buttons: [{
-	    	                label: '保存',
-	    	                action: function(dialog) {
-	    	                	Common.xhr.ajax('/resources/data/arrays.txt',function(data){
-	    	                		if(data){
-	    	                			alert("保存成功");
-	    	                			resetCurrentChosenObj();
-							    		dialog.close();
-									}else{
-										alert("保存失败");
-									}
-	    	                	});
-	    	                }
-	    	            }, {
-	    	                label: '取消',
-	    	                action: function(dialog) {
-	    	                	resetCurrentChosenObj();
-	    	                    dialog.close();
-	    	                }
-	    	            }],
+	    	EditVmType : function(id){
+                Common.xhr.ajax('/'+current_vdc_id+'/servers/'+id, function(data){
+                    alert(data)
+                    var rData = {}
+                    rData['flavor'] = data['server']['flavor']
+                    rData['flavor_list'] = renderData['specsList']
+                    debugger
+                    Common.render('tpls/ccenter/vm/editvmtype.html',rData,function(html){
+                        Modal.show({
+                            title: '编辑安全组',
+                            message: html,
+                            nl2br: false,
+                            buttons:
+                                [{
+                                    label: '保存',
+                                    action: function(dialog) {
+                                        var flavor_data = {
+                                            "resize": {
+                                                "flavorRef": $('#new_flavor_select option:selected').val()
+                                            }
+                                        }
+                                        debugger
+                                        Common.xhr.postJSON('/'+current_vdc_id+'/servers/'+id+'/action', flavor_data, function(data){
+                                            if(data){
+                                                alert("保存成功");
 
-	    	        });
-	    		});
+                                                dialog.close();
+                                            }else{
+                                                alert("保存失败");
+                                            }
+                                        });
+
+                                    }
+                                },
+                                {
+                                    label: '取消',
+                                    action: function(dialog) {
+                                        dialog.close();
+                                    }
+                            }]
+
+                        });
+                    });
+                });
+
+
 	    	},
 	    	
 	    	DoAction:function(id,name,rq,dc){
@@ -1157,24 +1173,19 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
             var serverId = $(this).attr("data");
             var info = {
                 "os-getConsoleOutput": {
-                    "length": 50
+                    "length": 30
                 }
             }
             Common.xhr.postJSON('/'+current_vdc_id+'/servers/'+serverId+'/action',info,function(data){
                 var output = data['output'];
-                debugger
-                //alert(output)
-                Common.render('tpls/ccenter/vm/consoleoutput.html', output, function (html) {
-                    Modal.show({
-                        size: 'size-_console',
-                        title: '控制台',
-                        message: html,
-                        nl2br: false,
-                        onshown: function () {
+                Modal.show({
+                    size: 'size-_console',
+                    title: '日志',
+                    message: output,
+                    nl2br: true
 
-                        }
-                    });
                 });
+
             });
 
         });
