@@ -676,7 +676,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
     				
     				serverData.server["networks"]=networkData;
     				serverData.server["security_groups"]=getSecruityGroup();
-    				Common.xhr.postJSON('/'+currentChosenObj.vdc+'/servers',serverData,function(data){
+    				Common.xhr.postJSON('/'+current_vdc_id+'/servers/'+currentChosenObj.vdc,serverData,function(data){
     					if(data.error){
     						Modal.error(data.message)
     					}
