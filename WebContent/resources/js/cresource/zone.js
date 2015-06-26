@@ -260,25 +260,6 @@ define(['Common','bs/modal','jq/form/wizard','jq/form/validator-bs3','bs/tooltip
             });
         });
 
-        //手动同步数据
-        $("#ZoneTable_wrapper span.add").on("click",function(){
-            Modal.confirm('您确定要同步所有的可用分区信息吗？',function(result){
-                if(result) {
-                    Common.xhr.del("/v2/tenant_id/os-availability-zone/"+data,
-                        function(data){
-                            if(data && data.error!=true){
-                                Modal.success('同步成功')
-                                setTimeout(function(){Dialog.closeAll()},2000);
-                                Common.router.route();//重新载入
-                            }else{
-                                Modal.warning ('同步失败')
-                            }
-                        });
-                }else {
-                    Modal.closeAll();
-                }
-            });
-        });
         //编辑按钮
         $("a.edit").on("click",function(){
             var data = $(this).attr("data");

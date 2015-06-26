@@ -6,5 +6,6 @@ define({
     '^#monitor(!.*)?$': "js/monitor/task/strategyGroup",
     '^#cresource(!.*)?$': "js/cresource/env",
     '^#sysmanagement(!.*)?$': "js/sysmanagement/user",
-    '^#ccenter/vmtype/metadataList/(.*)$' :"js/ccenter/vmtype/metadata"
+    '^#ccenter/vmtype/metadataList/(.*)$' :"js/ccenter/vmtype/metadata",
+    '^#ccenter/block/detail/(.*)$' :"js/ccenter/block/detail"
 });
