@@ -78,8 +78,18 @@ define(['jq/cookie'], function() {
                     link: '#zone'
                 },
                 {
-                    text: '<i class="fa fa-cloud"></i>资源标签',
-                    link: '#tag'
+                    text: '<i class="fa fa-th-large"></i>元数据<i class="fa icon-arrow"></i>',
+                    link: '',
+                    items:[
+                        {
+                            text: '<i class="fa fa-cloud"></i>命名空间',
+                            link: '#metadata/namespace'
+                        },
+                        {
+                            text: '<i class="fa fa-cloud"></i>标签',
+                            link: '#metadata/tag'
+                        }
+                    ]
                 }
             ]
         },

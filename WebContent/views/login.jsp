@@ -23,18 +23,18 @@
 		</div>
 	</div>
 	<div class="signin-body">
-		<form id="login_form" class="form-signin" action="/v2.0/tokens" method="post">
+		<form id="login_form" class="form-signin" action="/identity/v2.0/tokens" method="post">
 			<div class="input-group">
 				<span class="signin-icons signin-icon-input signin-icon-user">
 					<i class="signin-icons signin-icon-br"></i>
 				</span>
-				<input id="loginName" class="form-control" name="loginName" type="text" />
+				<input id="loginName" class="form-control" name="loginName" type="text" value="admin"/>
 			</div>
 			<div class="input-group">
 				<span class="signin-icons signin-icon-input signin-icon-pwd">
 					<i class="signin-icons signin-icon-br"></i>
 				</span>
-				<input id="password" class="form-control" name="password" type="password" />
+				<input id="password" class="form-control" name="password" type="password" value="123456a?"/>
 			</div>
 			<div class="checkbox">
 				<label>
@@ -73,7 +73,7 @@
 			submitForm();
 		});
 		function submitForm() {
-			var url = "${pageContext.request.contextPath}/v2.0/tokens";
+			var url = "${pageContext.request.contextPath}/identity/v2.0/tokens";
 			var data = {
 					 'auth': {
 					        'tenantId': "",

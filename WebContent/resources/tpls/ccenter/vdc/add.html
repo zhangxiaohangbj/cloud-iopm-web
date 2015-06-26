@@ -21,7 +21,7 @@
 				
 				<div class="wizard-input-section">
 					<div class="form-group">
-						<label for="description" class="control-label col-sm-2"><span>* </span>描述：</label>
+						<label for="description" class="control-label col-sm-2">描述：</label>
 						<div class="col-sm-9 col-sm">
 							<textarea class="form-control" rows="10" name="description"></textarea>
 						</div>
@@ -41,9 +41,7 @@
 				</div>
 		</div>
 		<div class="wizard-card-desc col-sm-4">
-			<p>一个虚拟数据中心对于一个租户：选择创建你的云主机所用的镜像。其中，从镜像创建是指从不同类型操作系统的镜像文件创建，另外可选择是否创建一个新磁盘；
-				从快照创建是指从云主机的快照创建；
-				从云硬盘创建是指从一个通过云主机创建的云硬盘来创建云主机，云硬盘会被挂载到云主机上；</p>
+			<p>一个虚拟数据中心对应一个租户。</p>
 		</div>
 	</div>
 	
@@ -69,9 +67,7 @@
 			
 		</div>
 		<div class="wizard-card-desc col-sm-4">
-			<p>一个虚拟数据中心对于一个租户：选择创建你的云主机所用的镜像。其中，从镜像创建是指从不同类型操作系统的镜像文件创建，另外可选择是否创建一个新磁盘；
-				从快照创建是指从云主机的快照创建；
-				从云硬盘创建是指从一个通过云主机创建的云硬盘来创建云主机，云硬盘会被挂载到云主机上；</p>
+			<p>选择在那个虚拟化环境中创建虚拟数据中心<br>选择某个虚拟化环境的可用分区</p>
 		</div>
 		
 	</div>
@@ -121,25 +117,25 @@
 				</div>
 				<div class="wizard-input-section">
 					<div class="form-group">
-						<label for="disks" class="control-label col-sm-2"><span>* </span>云硬盘：</label>
+						<label for="volumes" class="control-label col-sm-2"><span>* </span>云硬盘：</label>
 						<div class="col-sm-7 col-sm">
-							<input type="text" value="10" class="form-control" name="disks" placeholder="云硬盘">
+							<input type="text" value="10" class="form-control" name="volumes" placeholder="云硬盘">
 						</div>
 					</div>
 				</div>
 				<div class="wizard-input-section">
 					<div class="form-group">
-						<label for="diskSnapshots" class="control-label col-sm-2"><span>* </span>云硬盘快照：</label>
+						<label for="snapshots" class="control-label col-sm-2"><span>* </span>云硬盘快照：</label>
 						<div class="col-sm-7 col-sm">
-							<input type="text" value="10" class="form-control" name="diskSnapshots" placeholder="云硬盘快照">
+							<input type="text" value="10" class="form-control" name="snapshots" placeholder="云硬盘快照">
 						</div>
 					</div>
 				</div>
 				<div class="wizard-input-section">
 					<div class="form-group">
-						<label for="diskTotalSizes" class="control-label col-sm-2"><span>* </span>云硬盘和快照的总大小（GB）：</label>
+						<label for="gigabytes" class="control-label col-sm-2"><span>* </span>云硬盘和快照的总大小（GB）：</label>
 						<div class="col-sm-7 col-sm">
-							<input type="text" value="1000" class="form-control" name="diskTotalSizes" placeholder="云硬盘和快照的总大小（GB）">
+							<input type="text" value="1000" class="form-control" name="gigabytes" placeholder="云硬盘和快照的总大小（GB）">
 						</div>
 					</div>
 				</div>
@@ -153,17 +149,17 @@
 				</div>
 				<div class="wizard-input-section">
 					<div class="form-group">
-						<label for="security_groups" class="control-label col-sm-2"><span>* </span>安全组：</label>
+						<label for="security_group" class="control-label col-sm-2"><span>* </span>安全组：</label>
 						<div class="col-sm-7 col-sm">
-							<input type="text" value="10" class="form-control" name="security_groups" placeholder="安全组">
+							<input type="text" value="10" class="form-control" name="security_group" placeholder="安全组">
 						</div>
 					</div>
 				</div>
 				<div class="wizard-input-section">
 					<div class="form-group">
-						<label for="security_group_rules" class="control-label col-sm-2"><span>* </span>安全组规则：</label>
+						<label for="security_group_rule" class="control-label col-sm-2"><span>* </span>安全组规则：</label>
 						<div class="col-sm-7 col-sm">
-							<input type="text" value="100" class="form-control" name="security_group_rules" placeholder="安全组规则">
+							<input type="text" value="100" class="form-control" name="security_group_rule" placeholder="安全组规则">
 						</div>
 					</div>
 				</div>
@@ -210,10 +206,7 @@
 		</div>
 		
 		<div class="wizard-card-desc col-sm-4">
-			<p>网卡：
-				通过按按钮或者拖拽释放来在选择可用网络中选择网络,当然也可以通过拖拽释放来改变nic的顺序.
-				选择网卡后，可指定子网和IP。
-				默认情况下，自动选择子网和DHCP方式</p>
+			<p>配额管理包括计算资源配额、网络资源配额、存储资源配额。限定在该虚拟数据中心创建的云主机使用的资源总和的最大值</p>
 		</div>
 	</div>
 	<!-- 成员 -->

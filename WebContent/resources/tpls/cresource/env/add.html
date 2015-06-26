@@ -7,7 +7,7 @@
                 <div class="form-group">
                     <label for="env-name" class="control-label col-sm-3"><span>* </span>名称：</label>
                     <div class="col-sm-5 col-sm">
-                        <input type="text" class="form-control" id="env-name" name="env-name"  placeholder="虚拟化环境名称1"/>
+                        <input type="text" class="form-control" id="env-name" name="env-name"  placeholder="虚拟化环境名称"/>
                     </div>
                 </div>
             </div>
@@ -29,7 +29,7 @@
                 <div class="form-group">
                     <label for="env-version" class="control-label col-sm-3"><span>* </span>版本：</label>
                     <div class="col-sm-5 col-sm">
-                        <input type="text" class="form-control" id="env-version" name="env-version" placeholder="1.0"/>
+                        <input type="text" class="form-control" id="env-version" name="env-version" placeholder="v2.0"/>
                     </div>
                 </div>
             </div>
@@ -49,7 +49,7 @@
                     <div class="col-sm-5 col-sm">
                         <select name="select-region" id="select-region"  class="form-control select select-region">
                             {{each data.region as item i}}
-                                <option value="{{item.name}}">{{item.name}}</option>
+                                <option value="{{item.regionId}}">{{item.regionName}}</option>
                             {{/each}}
                         </select>
                     </div>
@@ -116,7 +116,7 @@
                 <div class="form-group">
                     <label for="connector-username" class="control-label col-sm-3"><span>* </span>用户名：</label>
                     <div class="col-sm-5 col-sm">
-                        <input type="text" class="form-control" id="connector-username" name="connector-username" placeholder="用户名"/>
+                        <input type="text" class="form-control" id="connector-username" name="connector-username" placeholder="admin"/>
                     </div>
                 </div>
             </div>
@@ -143,7 +143,7 @@
 
         </div>
         <div class="wizard-card-desc col-sm-4">
-            <p>如果要使用默认关联的openstack；</p>
+            <p>如果要使用默认关联的openstack:
             ip:10.68.25.140<br>
             端口:5000<br>
             用户名：admin<br>

@@ -47,15 +47,11 @@ define('Common',
             hash: function() {
                 return _getHash();
             }(),
-            getParam: function(){
-            	return this.hash.substring(this.hash.lastIndexOf('!')+1);
+            showLocalLoading: function($wrapper){
+            	$wrapper.append('<p class="loading" style="width:100%;text-align:center;line-height:100px;">加载中...</p>');
             },
-            getQueryString: function(){
-				var temp;
-				if(this.hash != ""){
-					temp = this.hash.split("!");
-				}
-				return temp.length == 2 ? temp[1] : "";
+            hideLoclLoading: function($wrapper){
+            	$wrapper.find('.loading').remove();
             },
             pub: {
                 navPrimaryItems: PubMenu.navPrimaryItems,

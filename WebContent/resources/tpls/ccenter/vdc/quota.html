@@ -66,10 +66,10 @@
 		<label class="control-label col-sm-3">
 	 	<span style="color: red;">* </span>云硬盘：</label>
 	 	<div class="col-sm-7 col-sm">
-	 	    {{if disks}}
-			<input type="text" class="form-control" name="disks" value="{{disks}}">
+	 	    {{if volumes}}
+			<input type="text" class="form-control" name="volumes" value="{{volumes}}">
 			{{else}}
-			<input type="text" class="form-control" name="disks" value="10">
+			<input type="text" class="form-control" name="volumes" value="10">
 			{{/if}}
 		</div>
 	</div>
@@ -77,10 +77,10 @@
 		<label class="control-label col-sm-3">
 	 	<span style="color: red;">* </span>云硬盘快照：</label>
 	 	<div class="col-sm-7 col-sm">
-	 	 	{{if diskSnapshots}}
-			<input type="text" class="form-control" name="diskSnapshots" value="{{diskSnapshots}}">
+	 	 	{{if snapshots}}
+			<input type="text" class="form-control" name="snapshots" value="{{snapshots}}">
 			{{else}}
-			<input type="text" class="form-control" name="diskSnapshots" value="10">
+			<input type="text" class="form-control" name="snapshots" value="10">
 			{{/if}}
 		</div>
 	</div>
@@ -89,9 +89,9 @@
 	 	<span style="color: red;">* </span>云硬盘和快照的总大小（GB）：</label>
 	 	<div class="col-sm-7 col-sm">
 	 	   {{if diskTotalSizes}}
-			<input type="text" class="form-control" name="diskTotalSizes" value="{{diskTotalSizes}}">
+			<input type="text" class="form-control" name="gigabytes" value="{{gigabytes}}">
 			{{else}}
-			<input type="text" class="form-control" name="diskTotalSizes" value="1000">
+			<input type="text" class="form-control" name="gigabytes" value="1000">
 			{{/if}}
 			
 		</div>
@@ -112,10 +112,10 @@
 		<label class="control-label col-sm-3">
 	 	<span style="color: red;">* </span>安全组：</label>
 	 	<div class="col-sm-7 col-sm">
-	 		{{if security_groups}}
-			<input type="text" class="form-control" name="security_groups" value="{{security_groups}}">
+	 		{{if security_group}}
+			<input type="text" class="form-control" name="security_group" value="{{security_group}}">
 			{{else}}
-			<input type="text" class="form-control" name="security_groups" value="10">
+			<input type="text" class="form-control" name="security_group" value="10">
 			{{/if}}
 			
 		</div>
@@ -124,10 +124,10 @@
 		<label class="control-label col-sm-3">
 	 	<span style="color: red;">* </span>安全组规则：</label>
 	 	<div class="col-sm-7 col-sm">
-	 		{{if security_group_rules}}
-			<input type="text" class="form-control" name="security_group_rules" value="{{security_group_rules}}">
+	 		{{if security_group_rule}}
+			<input type="text" class="form-control" name="security_group_rule" value="{{security_group_rule}}">
 			{{else}}
-			<input type="text" class="form-control" name="security_group_rules" value="100">
+			<input type="text" class="form-control" name="security_group_rule" value="100">
 			{{/if}}
 			
 		</div>
