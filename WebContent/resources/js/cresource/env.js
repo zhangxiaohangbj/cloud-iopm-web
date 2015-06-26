@@ -365,7 +365,7 @@ define(['Common','bs/modal','jq/form/wizard','jq/form/validator-bs3','bs/tooltip
             }
             Modal.confirm('执行同步操作！',function(result){
                 if(result) {
-                    Common.xhr.postJSON("/cloud/v2.0/connector/synchronize",connector,function(data){
+                    Common.xhr.putJSON("/cloud/v2.0/connector/synchronize",connector,function(data){
                             if(data && data.error!=true){
                                 Modal.success('同步成功')
                                 setTimeout(function(){Dialog.closeAll()},2000);
