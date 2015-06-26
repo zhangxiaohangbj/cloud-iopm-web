@@ -113,7 +113,7 @@ define('Common',
                 // 初始化页面结构
                 $(document.body).removeClass("loading").append(
                     '<div id="page-main" class="clearfix">'+
-                    '<div class="page-content clearfix"></div>'+
+                        '<div class="page-content clearfix"></div>'+
                     '</div>'
                 );
                 this.$pageMain = $("#page-main");
@@ -127,6 +127,8 @@ define('Common',
                 this._router();
                 // 注册hash监听
                 this._registerHashEvent();
+                // 初始化cookie工具
+                this._cookies();
                 // 取消加载中效果
                 $("#loader").loader('destroy');
                 return this;
@@ -852,19 +854,137 @@ define('Common',
                 return inHtml;
             },
             /**
-             * 取得当前项目下的cookie，目前已知cookie有：
-             * uid
-             * user
-             * token
-             * vdc
-             * @returns 同 $.cookie，参看jquery.cookie相关文档说明
+             * cookie操作工具
              */
-            cookies: function() {
-                $.cookie.json = true;
-                return $.cookie.apply(this, arguments);
+            cookies: null,
+            _cookies: function() {
+                var that = this;
+                var Cookies = function() {
+                    /**
+                     * 获取所有的cookie（键=>值）
+                     * @returns object
+                     */
+                    this.getAll = function() {
+                        $.cookie.json = true;
+                        return $.cookie();
+                    };
+                    /**
+                     * 获取某个cookie的值
+                     * @param key {string} 键
+                     * @param converters {object|function} 定义转换类型，如：
+                     *                  $.cookie('foo', '42');
+                     *                  $.cookie('foo', Number); // => 42
+                     *                  或自定义规则：
+                     *                  $.cookie.raw = true;
+                     *                  $.cookie('foo', unescape);
+                     * @returns {string|object}
+                     */
+                    this.get = function (key, converters) {
+                        $.cookie.json = true;
+                        return $.cookie.apply(that, arguments);
+                    };
+                    /**
+                     * 设置cookie
+                     * @param key {string} 键
+                     * @param value 任意类型 值
+                     * @param options 额外参数，也可通过$.cookie.defaults进行初始化
+                     *                {
+                     *                  expires: {number|Date对象} 有效时间
+                     *                  path: {string} 有效路径
+                     *                  domain: {string} 有效域（二级域）
+                     *                  secure: {boolean} 设为true，则获取cookie时需要https协议，默认为false
+                     *                }
+                     */
+                    this.set = function (key, value, options) {
+                        $.cookie.json = true;
+                        $.cookie.apply(that, arguments);
+                    };
+                    /**
+                     * 删除cookie
+                     * @param key {string} 键
+                     * @param options 额外参数，也可通过$.cookie.defaults进行初始化
+                     *                {
+                     *                  expires: {number|Date对象} 有效时间
+                     *                  path: {string} 有效路径
+                     *                  domain: {string} 有效域（二级域）
+                     *                  secure: {boolean} 设为true，则获取cookie时需要https协议，默认为false
+                     *                }
+                     * @returns true|false
+                     */
+                    this.remove = function (key, options) {
+                        return $.removeCookie.apply(that, arguments);
+                    };
+                    /**
+                     * 获取登录用户uid
+                     * @returns {string}
+                     */
+                    this.getUid = function() {
+                        var uid = this.get('uid');
+                        if(!uid) {
+                            var user = this.getUser();
+                            user && (uid = user.id);
+                        }
+                        return uid;
+                    };
+                    /**
+                     * 获取登录用户名
+                     * @returns {string}
+                     */
+                    this.getUname = function() {
+                        var userName = this.get('login_name');
+                        if(!userName) {
+                            var user = this.getUser();
+                            user && (userName = user.name);
+                        }
+                        return userName;
+                    };
+                    /**
+                     * 获取登录用户信息
+                     * @returns {object}
+                     */
+                    this.getUser = function() {
+                        return this.get('user');
+                    };
+                    /**
+                     * 获取vdcId
+                     * @returns {string}
+                     */
+                    this.getVdcId = function() {
+                        var vdcId = this.get('vdc_id');
+                        if(!vdcId) {
+                            var vdc = this.getVdc();
+                            vdc && (vdcId = vdc.id);
+                        }
+                        return vdcId;
+                    };
+                    /**
+                     * 获取vdcName
+                     * @returns {string}
+                     */
+                    this.getVdcName = function() {
+                        var vdcName;
+                        var vdc = this.getVdc();
+                        vdc && (vdcName = vdc.name);
+                        return vdcName;
+                    };
+                    /**
+                     * 获取vdc信息
+                     * @returns {object}
+                     */
+                    this.getVdc = function() {
+                        return this.get('vdc');
+                    };
+                };
+                !that.cookies && (that.cookies = new Cookies());
             },
+            /**
+             * 登录弹出框
+             * @param message
+             * @param callback
+             */
             login: function(message, callback) {
                 var that = this;
+                debugger;
                 Modal.show({
                     size: 'size-_login',
                     title: '请登录',
