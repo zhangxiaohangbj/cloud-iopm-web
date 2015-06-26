@@ -67,14 +67,14 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
     					"snapshots": $(obj +" [name='snapshots']").val(),
     					"gigabytes": $(obj +" [name='gigabytes']").val(),
     					"ram": $(obj +" [name='ram']").val(),
-    					"security_group_rules": $(obj +" [name='security_group_rules']").val(),
+    					"security_group_rule": $(obj +" [name='security_group_rule']").val(),
     					"floating_ips": $(obj +" [name='floating_ips']").val(),
     					"network": $(obj +" [name='network']").val(),
     					"port": $(obj +" [name='port']").val(),
     					"route": $(obj +" [name='route']").val(),
     					"subnet": $(obj +" [name='subnet']").val(),
     					"injected_files": $(obj +" [name='injected_files']").val(),
-    					"security_groups": $(obj +" [name='security_groups']").val(),
+    					"security_group": $(obj +" [name='security_group']").val(),
         				}
 				},
 				userJson:function(obj){
@@ -203,11 +203,11 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 			                    required: true,
 			                    digits:true
 			                },
-			                'security_groups': {
+			                'security_group': {
 			                    required: true,
 			                    digits:true
 			                },
-			                'security_group_rules': {
+			                'security_group_rule': {
 			                    required: true,
 			                    digits:true
 			                },
