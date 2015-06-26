@@ -812,11 +812,12 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
                                  }
                                  Common.xhr.postJSON('/'+current_vdc_id+'/servers/'+id+'/action', flavor_data, function(data){
                                      if(!data.error){
-                                         alert("保存成功");
-
                                          dialog.close();
+                                         Modal.success("云主机配置已更改!");
+     	    	                		 setTimeout(function(){Modal.closeAll()},3000);
+         	                			 Common.router.route();
                                      }else{
-                                         alert("保存失败");
+                                    	 Modal.error("云主机变更配置失败!");
                                      }
                                  });
 	    	                }
