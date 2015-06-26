@@ -44,6 +44,9 @@ define(['Common'],function(Common){
 						}
 					]
 				});
+				$('#btn-login').on('click', function() {
+					Common.login();
+				});
 			}
 		});
 	};
