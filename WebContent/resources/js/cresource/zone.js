@@ -17,7 +17,7 @@ define(['Common','bs/modal','jq/form/wizard','jq/form/validator-bs3','bs/tooltip
         Common.$pageContent.addClass("loading");
 
         //真实请求的数据
-        Common.xhr.ajax('/v2/tenant_id/os-availability-zone/detail',function(data){
+        Common.xhr.ajax('/v2/tenant_id/os-availability-zone/list',function(data){
             var indexData = {"zone":data,"data":renderData};
             Common.render(true,'tpls/cresource/zone/index.html',indexData,function(){
                 bindEvent();
@@ -170,9 +170,6 @@ define(['Common','bs/modal','jq/form/wizard','jq/form/validator-bs3','bs/tooltip
             Common.render('tpls/cresource/zone/add.html',selectData,function(html){
                 $('body').append(html);
 
-                //
-                //currentZone.virtualEnvId = $("#select-env option:selected").val();
-                //currentZone.regionId = $("#select-region option:selected").val();
                 $.fn.wizard.logging = true;
                 wizard = $('#create-zone-wizard').wizard({
                     keyboard : false,

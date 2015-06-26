@@ -57,6 +57,12 @@ define('Common',
 				}
 				return temp.length == 2 ? temp[1] : "";
             },
+            showLocalLoading: function($wrapper){
+            	$wrapper.append('<p class="loading" style="width:100%;text-align:center;line-height:100px;">加载中...</p>');
+            },
+            hideLoclLoading: function($wrapper){
+            	$wrapper.find('.loading').remove();
+            },
             pub: {
                 navPrimaryItems: PubMenu.navPrimaryItems,
                 sideBarDataMap: PubMenu.sideBarDataMap,
