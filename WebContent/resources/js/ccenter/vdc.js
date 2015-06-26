@@ -577,11 +577,9 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 		    	//配额管理
 		    	QuotaSets : function(id){
 		    		//先获取QuotaSets后，再render
-		    		Common.xhr.ajax('/v2.0/9cc717d8047e46e5bf23804fc4400247/os-quota-sets/' + id,function(data){
-		    			/*var quotaData = data.quota_set;
-		    			if(quotaData == null){
-		    				quotaData = [];
-		    			}*/
+		    		var cookie = Common.cookies();
+		    		var admin_vdc_id = cookie.vdc.id
+		    		Common.xhr.ajax('/v2.0/'+admin_vdc_id + '/os-quota-sets/' + id,function(data){
 		    			Common.render('tpls/ccenter/vdc/quota.html',data.quota_set,function(html){
 		    				Modal.show({
 			    	            title: '配额',
@@ -595,7 +593,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 			    	                	var serverData = {
 				    	            			"quota_set":jsonData.quotaSetsJson("#vdcQuota")
 			    	        				};
-			    	                	Common.xhr.putJSON('/v2.0/9cc717d8047e46e5bf23804fc4400247/os-quota-sets/'+id,serverData,function(data){
+			    	                	Common.xhr.putJSON('/v2.0/'+admin_vdc_id+'/os-quota-sets/'+id,serverData,function(data){
 			    	                		if(data){
 					                    		 Modal.success('保存成功')
 				 	                			 setTimeout(function(){Modal.closeAll()},2000);
