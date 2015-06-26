@@ -47,6 +47,22 @@ define('Common',
             hash: function() {
                 return _getHash();
             }(),
+            getParam: function(){
+            	return this.hash.substring(this.hash.lastIndexOf('!')+1);
+            },
+            getQueryString: function(){
+				var temp;
+				if(this.hash != ""){
+					temp = this.hash.split("!");
+				}
+				return temp.length == 2 ? temp[1] : "";
+            },
+            showLocalLoading: function($wrapper){
+            	$wrapper.append('<p class="loading" style="width:100%;text-align:center;line-height:100px;">加载中...</p>');
+            },
+            hideLoclLoading: function($wrapper){
+            	$wrapper.find('.loading').remove();
+            },
             pub: {
                 navPrimaryItems: PubMenu.navPrimaryItems,
                 sideBarDataMap: PubMenu.sideBarDataMap,
@@ -142,6 +158,7 @@ define('Common',
                 }
             },
             resize: function() {
+                var that = this;
                 if(this.$pageMain && this.$pageContent) {
                     this.$pageMain.css({minHeight: 0});
                     //dom
@@ -286,10 +303,15 @@ define('Common',
                     //获取默认的路由入口文件路径
                     this.getDefaultCtrl = function(hash) {
                         hash = hash || that.hash;
-                        if(hash && hash.lastIndexOf('/') < 0) {
-                            hash += '/';
-                        } else if(!hash) {
-                            hash = '#';
+                        if(hash){
+                        	if(hash.lastIndexOf('/') < 0){
+                        		hash += '/';
+                        	}
+                        	if(hash.lastIndexOf('!') != -1){
+                        		hash = hash.substring(0,hash.lastIndexOf('!'));
+                        	}
+                        }else{
+                        	hash = '#';
                         }
                         var ctrl = hash.replace(/^#/, this.ctrlPrefix);
                         if(ctrl.lastIndexOf('/') == ctrl.length - 1) {
@@ -923,6 +945,11 @@ require(['PubView', 'Common', 'commons/router_table'], function(PubView, Common,
                     navItemCur = $navWrapper.find('li[index="'+index+'"]');
                     navCurIndex = index;
                     PubView.activeHeader(index, 1);
+                    // click to reload
+                    var tlink = $(this).children("a:first").attr("href"), pos;
+                    if(tlink && (pos = tlink.indexOf(Common.hash)) > -1 && pos == tlink.length - Common.hash.length) {
+                        Common.router.reload();
+                    }
                 });
                 //初始化nav宽度数组和选中位置
                 $navItems.each(function(i) {
@@ -964,7 +991,18 @@ require(['PubView', 'Common', 'commons/router_table'], function(PubView, Common,
             return Common.pub.sideBarDataMap[Common.pub.headerNavIndex] ?
                 $.extend(
                     {
-                        data: Common.pub.sideBarDataMap[Common.pub.headerNavIndex]
+                        data: Common.pub.sideBarDataMap[Common.pub.headerNavIndex],
+                        rendered: function($sideBar) {
+                            if($sideBar) {
+                                // click to reload
+                                $(document).on("click", "#side-bar li > a:not(.nav-first-level)", function() {
+                                    var tlink = $(this).attr("href"), pos;
+                                    if(tlink && (pos = tlink.indexOf(Common.hash)) > -1 && pos == tlink.length - Common.hash.length) {
+                                        Common.router.reload();
+                                    }
+                                });
+                            }
+                        }
                     },
                     Common.pub.sideBarNavIndex ? {current: Common.pub.sideBarNavIndex} : null
                 ) : null;
@@ -972,4 +1010,6 @@ require(['PubView', 'Common', 'commons/router_table'], function(PubView, Common,
     });
 
     Common.resize();
+
+    $(window).off("resize.content").on("resize.content", Common.resize);
 });

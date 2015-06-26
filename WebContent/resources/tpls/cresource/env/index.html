@@ -2,6 +2,9 @@
     <ol class="breadcrumb">
         <li class="active">虚拟化环境列表</li>
     </ol>
+    <p class="description">
+        虚拟化环境就是一个独立的OpenStack或者vmware环境，能够独立提供底层的计算、存储、网络等基础资源服务。这里主要是进行虚拟化环境的接入，接入后，可以进行统一的资源管理和分配。
+    </p>
 </div>
 <div class="page-body">
     <div class="pane">
@@ -12,7 +15,7 @@
                     <th class="c1">
                         <label><input type="checkbox" class="selectAll"></label>
                     </th>
-                    <th class="c2">名称</th>
+                    <th class="c3">名称</th>
                     <th class="c2">虚拟化类型</th>
                     <th class="c2">版本</th>
                     <th class="c2">区域</th>
@@ -29,7 +32,7 @@
                     <td>{{item.name}}</td>
                     <td>{{item.type}}</td>
                     <td>{{item.version}}</td>
-                    <td>{{item.regionId}}</td>
+                    <td>{{item.regionName}}</td>
                     <td>
                         {{if item.connectStatus != 'false'}}
                         <span class="text-success">连接成功</span>

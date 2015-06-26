@@ -10,112 +10,185 @@
 		<label class="control-label col-sm-3">
 	 	<span style="color: red;">* </span>元数据条目：</label>
 	 	<div class="col-sm-7 col-sm">
+	 		{{if metadata_items}}
 			<input type="text" class="form-control" name="metadata_items" value="{{metadata_items}}">
+			{{else}}
+			<input type="text" class="form-control" name="metadata_items" value="128">
+			{{/if}}
 		</div>
 	</div>
 	<div class="form-group">
 		<label class="control-label col-sm-3">
 	 	<span style="color: red;">* </span>虚拟内核：</label>
 	 	<div class="col-sm-7 col-sm">
+	 	    {{if cores}}
 			<input type="text" class="form-control" name="cores" value="{{cores}}">
+			{{else}}
+			<input type="text" class="form-control" name="cores" value="20">
+			{{/if}}
 		</div>
 	</div>
 	<div class="form-group">
 		<label class="control-label col-sm-3">
 	 	<span style="color: red;">* </span>实例：</label>
 	 	<div class="col-sm-7 col-sm">
+	 	    {{if instances}}
 			<input type="text" class="form-control" name="instances" value="{{instances}}">
+			{{else}}
+			<input type="text" class="form-control" name="instances" value="10">
+			{{/if}}
 		</div>
 	</div>
 	<div class="form-group">
 		<label class="control-label col-sm-3">
 	 	<span style="color: red;">* </span>注入的文件：</label>
 	 	<div class="col-sm-7 col-sm">
+	 		{{if injected_files}}
 			<input type="text" class="form-control" name="injected_files" value="{{injected_files}}">
+			{{else}}
+			<input type="text" class="form-control" name="injected_files" value="5">
+			{{/if}}
 		</div>
 	</div>
 	<div class="form-group">
 		<label class="control-label col-sm-3">
 	 	<span style="color: red;">* </span>已注入的文件内容（Bytes）：</label>
 	 	<div class="col-sm-7 col-sm">
+	 	    {{if injected_file_content_bytes}}
 			<input type="text" class="form-control" name="injected_file_content_bytes" value="{{injected_file_content_bytes}}">
+			{{else}}
+			<input type="text" class="form-control" name="injected_file_content_bytes" value="10240">
+			{{/if}}
+			
 		</div>
 	</div>
 	<div class="form-group">
 		<label class="control-label col-sm-3">
 	 	<span style="color: red;">* </span>云硬盘：</label>
 	 	<div class="col-sm-7 col-sm">
-			<input type="text" class="form-control" name="disks" value="{{disks}}">
+	 	    {{if volumes}}
+			<input type="text" class="form-control" name="volumes" value="{{volumes}}">
+			{{else}}
+			<input type="text" class="form-control" name="volumes" value="10">
+			{{/if}}
 		</div>
 	</div>
 	<div class="form-group">
 		<label class="control-label col-sm-3">
 	 	<span style="color: red;">* </span>云硬盘快照：</label>
 	 	<div class="col-sm-7 col-sm">
-			<input type="text" class="form-control" name="diskSnapshots" value="{{diskSnapshots}}">
+	 	 	{{if snapshots}}
+			<input type="text" class="form-control" name="snapshots" value="{{snapshots}}">
+			{{else}}
+			<input type="text" class="form-control" name="snapshots" value="10">
+			{{/if}}
 		</div>
 	</div>
 	<div class="form-group">
 		<label class="control-label col-sm-3">
 	 	<span style="color: red;">* </span>云硬盘和快照的总大小（GB）：</label>
 	 	<div class="col-sm-7 col-sm">
-			<input type="text" class="form-control" name="diskTotalSizes" value="{{diskTotalSizes}}">
+	 	   {{if diskTotalSizes}}
+			<input type="text" class="form-control" name="gigabytes" value="{{gigabytes}}">
+			{{else}}
+			<input type="text" class="form-control" name="gigabytes" value="1000">
+			{{/if}}
+			
 		</div>
 	</div>
 	<div class="form-group">
 		<label class="control-label col-sm-3">
 	 	<span style="color: red;">* </span>内存：</label>
 	 	<div class="col-sm-7 col-sm">
+	 		{{if ram}}
 			<input type="text" class="form-control" name="ram" value="{{ram}}">
+			{{else}}
+			<input type="text" class="form-control" name="ram" value="51200">
+			{{/if}}
+			
 		</div>
 	</div>
 	<div class="form-group">
 		<label class="control-label col-sm-3">
 	 	<span style="color: red;">* </span>安全组：</label>
 	 	<div class="col-sm-7 col-sm">
+	 		{{if security_groups}}
 			<input type="text" class="form-control" name="security_groups" value="{{security_groups}}">
+			{{else}}
+			<input type="text" class="form-control" name="security_groups" value="10">
+			{{/if}}
+			
 		</div>
 	</div>
 	<div class="form-group">
 		<label class="control-label col-sm-3">
 	 	<span style="color: red;">* </span>安全组规则：</label>
 	 	<div class="col-sm-7 col-sm">
+	 		{{if security_group_rules}}
 			<input type="text" class="form-control" name="security_group_rules" value="{{security_group_rules}}">
+			{{else}}
+			<input type="text" class="form-control" name="security_group_rules" value="100">
+			{{/if}}
+			
 		</div>
 	</div>
 	<div class="form-group">
 		<label class="control-label col-sm-3">
 	 	<span style="color: red;">* </span>浮动IP：</label>
 	 	<div class="col-sm-7 col-sm">
+	 		{{if floating_ips}}
 			<input type="text" class="form-control" name="floating_ips" value="{{floating_ips}}">
+			{{else}}
+			<input type="text" class="form-control" name="floating_ips" value="50">
+			{{/if}}
+			
 		</div>
 	</div>
 	<div class="form-group">
 		<label class="control-label col-sm-3">
 	 	<span style="color: red;">* </span>网络：</label>
 	 	<div class="col-sm-7 col-sm">
+	 		{{if network}}
 			<input type="text" class="form-control" name="network" value="{{network}}">
+			{{else}}
+			<input type="text" class="form-control" name="network" value="80">
+			{{/if}}
+			
 		</div>
 	</div>
 	<div class="form-group">
 		<label class="control-label col-sm-3">
 	 	<span style="color: red;">* </span>端口：</label>
 	 	<div class="col-sm-7 col-sm">
+	 	    {{if port}}
 			<input type="text" class="form-control" name="port" value="{{port}}">
+			{{else}}
+			<input type="text" class="form-control" name="port" value="52">
+			{{/if}}
+			
 		</div>
 	</div>
 	<div class="form-group">
 		<label class="control-label col-sm-3">
 	 	<span style="color: red;">* </span>路由：</label>
 	 	<div class="col-sm-7 col-sm">
+	 	   {{if route}}
 			<input type="text" class="form-control" name="route" value="{{route}}">
+			{{else}}
+			<input type="text" class="form-control" name="route" value="20">
+			{{/if}}
+			
 		</div>
 	</div>
 	<div class="form-group">
 		<label class="control-label col-sm-3">
 	 	<span style="color: red;">* </span>子网：</label>
 	 	<div class="col-sm-7 col-sm">
+	 		{{if subnet}}
 			<input type="text" class="form-control" name="subnet" value="{{subnet}}">
+			{{else}}
+			<input type="text" class="form-control" name="subnet" value="55">
+			{{/if}}
 		</div>
 	</div>
 </form>

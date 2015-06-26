@@ -18,23 +18,25 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 	};
 	
 	var commonEvent = {
+		//页面工具栏中统一放置的按钮
 		timeButtons: function($tar){
 			$tar.prev().find('.left-col:first').append(
-					'<span class="btn btn-add" name="day">一天</span>'
+					'<span class="btn btn-add btn-time" name="day">一天</span>'
 			);
 			$tar.prev().find('.left-col:first').append(
-					'<span class="btn btn-add" name="week">一周</span>'
+					'<span class="btn btn-add btn-time" name="week">一周</span>'
 			);
 			$tar.prev().find('.left-col:first').append(
-					'<span class="btn btn-add" name="month">一月</span>'
+					'<span class="btn btn-add btn-time" name="month">一月</span>'
 			);
 		}
 	}
 	
+	//任务列表页面相关的事件处理
 	var bindTaskEvent = function(){
-		debugger
 		//dataTables
-		Common.initDataTable($('#taskTable'),function($tar){debugger
+		Common.initDataTable($('#taskTable'),function($tar){
+			//统一按钮：一天、一周、一月
 			commonEvent.timeButtons($tar);
 			
 			//这个必须添加，不然就是隐藏的效果，看不到页面
@@ -42,7 +44,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 		});
 		$("[data-toggle='tooltip']").tooltip();
 		
-		//默认显示当天的日志
+		//将选中的按钮颜色变灰 默认显示当天的日志
 		if(timeBucket == "day"){
 			$("[name=day]").css({"background-color":"#8F8F8F"});
 		}else if(timeBucket == "week"){
@@ -52,30 +54,8 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 		}
 		
 		//绑定一天、一周、一月按钮的点击事件
-		$("[name=day]").on("click",function(){
-			timeBucket = "day";
-			Common.render(true,{
-				tpl:'tpls/monitor/task/monitor/taskList.html',
-				data:'/cloud/task/instance/task_instance_count?timeBucket='+timeBucket,
-				beforeRender: function(data){
-					return data;
-				},
-				callback: bindTaskEvent
-			});
-		})
-		$("[name=week]").on("click",function(){
-			timeBucket = "week";
-			Common.render(true,{
-				tpl:'tpls/monitor/task/monitor/taskList.html',
-				data:'/cloud/task/instance/task_instance_count?timeBucket='+timeBucket,
-				beforeRender: function(data){
-					return data;
-				},
-				callback: bindTaskEvent
-			});
-		})
-		$("[name=month]").on("click",function(){
-			timeBucket = "month";
+		$(".btn-time").on("click",function(){
+			timeBucket = $(this).attr('name');
 			Common.render(true,{
 				tpl:'tpls/monitor/task/monitor/taskList.html',
 				data:'/cloud/task/instance/task_instance_count?timeBucket='+timeBucket,
@@ -88,7 +68,6 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 		
 		//running  failed  success
 	    $("#taskTable_wrapper a.instanceList").on("click",function(){
-	    	debugger;
 	    	var id = $(this).attr("data");
 	    	var name = $(this).attr("name");
 	    	task_id = id;
@@ -104,14 +83,10 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 	    })
 	}
 	
-<<<<<<< HEAD
+	//实例列表页面相关的事件处理
 	var bindInstanceEvent = function(){
-		debugger
-=======
-	var bindEvent = function(){
->>>>>>> branch 'master' of http://gitserver/iop/cloud-iopm-web.git
 		//dataTables
-		Common.initDataTable($('#instanceTable'),function($tar){debugger
+		Common.initDataTable($('#instanceTable'),function($tar){
 			commonEvent.timeButtons($tar);
 		
 			$tar.prev().find('.left-col:first').append(
@@ -137,37 +112,15 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 		}
 		
 		//绑定一天、一周、一月按钮的点击事件
-		$("[name=day]").on("click",function(){
-			timeBucket = "day";
+		$(".btn-time").on("click",function(){
+			timeBucket = $(this).attr('name');
 			Common.render(true,{
-				tpl:'tpls/monitor/task/monitor/instanceList.html',
-				data:'/cloud/task/instance?task_id='+task_id+'&timeBucket='+timeBucket+'&status='+status+'&deleted=false',
+				tpl:'tpls/monitor/task/monitor/taskList.html',
+				data:'/cloud/task/instance/task_instance_count?timeBucket='+timeBucket,
 				beforeRender: function(data){
 					return data;
 				},
-				callback: bindInstanceEvent
-			});
-		})
-		$("[name=week]").on("click",function(){
-			timeBucket = "week";
-			Common.render(true,{
-				tpl:'tpls/monitor/task/monitor/instanceList.html',
-				data:'/cloud/task/instance?task_id='+task_id+'&timeBucket='+timeBucket+'&status='+status+'&deleted=false',
-				beforeRender: function(data){
-					return data;
-				},
-				callback: bindInstanceEvent
-			});
-		})
-		$("[name=month]").on("click",function(){
-			timeBucket = "month";
-			Common.render(true,{
-				tpl:'tpls/monitor/task/monitor/instanceList.html',
-				data:'/cloud/task/instance?task_id='+task_id+'&timeBucket='+timeBucket+'&status='+status+'&deleted=false',
-				beforeRender: function(data){
-					return data;
-				},
-				callback: bindInstanceEvent
+				callback: bindTaskEvent
 			});
 		})
 		
@@ -197,7 +150,6 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 		
 		//running  failed  success
 	    $("#instanceTable_wrapper a.instanceList").on("click",function(){
-	    	debugger;
 	    	var name = $(this).attr("name");
 	    	status = name;
 	    	Common.render(true,{
@@ -218,23 +170,12 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 			$("#successSpan").css({"background-color":"#EEEED1"});
 		}
 		
-		var renderData = {};
-        //初始化加载，不依赖其他模块
-		var DataGetter = {
-				
-		}
-		
-		//事件处理
-		var EventsHandler = {
-	    }
-		
 		//弹窗初始化
 	    var EditData = {
 	    	//详情弹框
 	    	Detail : function(instanceId,cb){
 	    		//需要修改为真实数据源
 				Common.render('tpls/monitor/task/monitor/monitorList.html','/cloud/task/monitor?instanceId='+instanceId+'&deleted=false',function(html){
-					debugger
 					Modal.show({
 	    	            title: '监控明细',
 	    	            message: html,
@@ -251,7 +192,6 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 	    	EditData.Detail($(this).attr("data"),function(){
 	    		var format = function(rowData) {
 				    // `rowData` is the original data object for the row
-	    			debugger;
 				    return '<table style="width:100%">'+
 				        '<tr>'+
 				            '<td style="width:100px">上下文:</td>'+

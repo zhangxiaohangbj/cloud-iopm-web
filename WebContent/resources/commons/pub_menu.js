@@ -78,8 +78,18 @@ define(function() {
                     link: '#zone'
                 },
                 {
-                    text: '<i class="fa fa-cloud"></i>资源标签',
-                    link: '#tag'
+                    text: '<i class="fa fa-th-large"></i>元数据<i class="fa icon-arrow"></i>',
+                    link: '',
+                    items:[
+                        {
+                            text: '<i class="fa fa-cloud"></i>命名空间',
+                            link: '#metadata/namespace'
+                        },
+                        {
+                            text: '<i class="fa fa-cloud"></i>标签',
+                            link: '#metadata/tag'
+                        }
+                    ]
                 }
             ]
         },
@@ -97,15 +107,15 @@ define(function() {
                 },
                 {
                     text: '<i class="fa fa-tachometer"></i>云主机类型管理',
-                    link: '#vmtype'
+                    link: '#vmtype/'
                 },
                 {
                     text: '<i class="fa fa-database"></i>磁盘管理',
-                    link: '#block'
+                    link: '#block/'
                 },
                 {
                     text: '<i class="fa fa-cube"></i>镜像管理',
-                    link: ''
+                    link: '#image'
                 },
                 {
                     text: '<i class="fa fa-vimeo-square"></i>VPC管理<i class="fa icon-arrow"></i>',
@@ -256,7 +266,7 @@ define(function() {
                          link: '#task/taskGroup'
                          },*/
                         {
-                            text: '分组管理',
+                            text: '策略分组',
                             link: '#task/strategyGroup'
                         }
                     ]
@@ -285,7 +295,7 @@ define(function() {
                 },
                 {
                     text: '<i class="fa fa-sitemap"></i>组织机构管理',
-                    link: '#organization'
+                    link: '#organ'
                 }
             ]
 
@@ -299,6 +309,10 @@ define(function() {
             if(item.items) {
                 level ++;
                 $.each(item.items, function(i) {
+                    if(item.link) {
+                        var link = item.link.substring(item.link.lastIndexOf("#") + 1);
+                        prefix = prefix + (prefix.length > 1 ? '/' : '') + link;
+                    }
                     initItemsLink(prefix, item.items[i], level);
                 });
             } else if(item.link) {
