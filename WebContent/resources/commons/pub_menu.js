@@ -1,7 +1,7 @@
 /*!
  * 公共header和侧边栏的维护
  */
-define(['jq/cookie'], function() {
+define(function() {
     // init nav & sideBar
     var navPrimaryItems = [
         {
@@ -341,18 +341,6 @@ define(['jq/cookie'], function() {
         }
         return dataMap;
     }();
-
-    var globalCookie = {
-        'uid': null,
-        'login_name': null,
-        'user': null,
-        'tenant_id': null,
-        'tenant_name': null,
-        'token': null,
-        'token_id': null,
-        'vdc': null,
-        'vdc_id': null
-    };
 
     return {
         navPrimaryItems: navPrimaryItems,

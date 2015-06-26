@@ -4,7 +4,7 @@
 define('Common',
     [
         'commons/pub_menu', 'PubView', 'bs/modal', 'json', 'template',
-        'jq/dataTables-bs3', 'bs/popover'
+        'jq/dataTables-bs3', 'bs/popover', 'jq/cookie'
     ],
     function(PubMenu, PubView, Modal, JSON, template) {
 
@@ -850,6 +850,18 @@ define('Common',
                     }
                 } catch (e) { }
                 return inHtml;
+            },
+            /**
+             * 取得当前项目下的cookie，目前已知cookie有：
+             * uid
+             * user
+             * token
+             * vdc
+             * @returns 同 $.cookie，参看jquery.cookie相关文档说明
+             */
+            cookies: function() {
+                $.cookie.json = true;
+                return $.cookie.apply(this, arguments);
             },
             login: function(message, callback) {
                 var that = this;
