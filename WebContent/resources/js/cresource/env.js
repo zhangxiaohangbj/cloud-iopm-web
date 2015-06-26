@@ -60,6 +60,7 @@ define(['Common','bs/modal','jq/form/wizard','jq/form/validator-bs3','bs/tooltip
             username:null,
             password:null,
             protocol: null,	//协议
+            tenantName:"admin"
         }
         var dataGetter={
             //获取类型数据
@@ -75,7 +76,6 @@ define(['Common','bs/modal','jq/form/wizard','jq/form/validator-bs3','bs/tooltip
             //获取地区
             getZone:function(){
                 Common.xhr.ajax("/v2/tenant_id/region",function(region){
-                    debugger
                     renderData.region = region;
                 });
             },
@@ -276,10 +276,15 @@ define(['Common','bs/modal','jq/form/wizard','jq/form/validator-bs3','bs/tooltip
                     //合并数据
                     currentChosenEnv["connector"] = currentChosenConnector;
                     Common.xhr.postJSON('/v2/virtual-env',currentChosenEnv,function(data){
-                        wizard._submitting = false;
-                        wizard.updateProgressBar(100);
-                        closeWizard();
-                        Common.router.route();
+
+                        if(data && data.error!=true){
+                            Modal.success('保存成功');
+                            setTimeout(function(){Modal.closeAll()},2000);
+                            Common.router.route();
+                        }else{
+                            Modal.warning ('保存失败')
+                        }
+
                     });
                 });
             });
@@ -333,7 +338,7 @@ define(['Common','bs/modal','jq/form/wizard','jq/form/validator-bs3','bs/tooltip
                                     "vendor": $("#edit-env-vendor").val()
                                 }
                                 Common.xhr.putJSON('/v2/virtual-env',envData,function(data){
-                                    if(data){
+                                    if(data && data.error !=true){
                                         Modal.success('保存成功');
                                         setTimeout(function(){Modal.closeAll()},2000);
                                         Common.router.route();
@@ -343,22 +348,45 @@ define(['Common','bs/modal','jq/form/wizard','jq/form/validator-bs3','bs/tooltip
                                 })
                             }
                         }],
-                        onshown : ""
+                        onshown : function(){
+                            formValidator($("#editRegion"));
+                        }
                     });
 
                 });
             });
 
         });
-        //删除按钮
 
+        //同步按钮
+        $("a.synchronize").on("click",function(){
+            var connector = {
+                "connector_id": $(this).attr("data")
+            }
+            Modal.confirm('执行同步操作！',function(result){
+                if(result) {
+                    Common.xhr.putJSON("/cloud/v2.0/connector/synchronize",connector,function(data){
+                            if(data && data.error!=true){
+                                Modal.success('同步成功')
+                                setTimeout(function(){Dialog.closeAll()},2000);
+                                Common.router.route();//重新载入
+                            }else{
+                                Modal.warning ('同步失败')
+                            }
+                        });
+                }else {
+                    Modal.closeAll();
+                }
+            });
+
+        });
         $("a.delete").on("click",function(){
-            var data = $(this).attr("data");
+            var id = $(this).attr("data");
             Modal.confirm('确定要删除该虚拟环境吗?',function(result){
                 if(result) {
-                    Common.xhr.del("v2/virtual-env/"+data,
+                    Common.xhr.del("v2/virtual-env/"+id,
                         function(data){
-                            if(data){
+                            if(data && data.error!=true){
                                 Modal.success('删除成功')
                                 setTimeout(function(){Dialog.closeAll()},2000);
                                 Common.router.route();//重新载入
