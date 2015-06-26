@@ -125,10 +125,9 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 						}
 						data = data["availabilityZoneInfo"]||{};
 						for(var i=0;i<data.length;i++){
-//							if(!data[i]["zoneState"]["available"]){
-//							if(true){
-								selectData[i] = {"name":data[i]["zoneName"],"id":data[i]["id"]};
-//							}
+							if(data[i]["zoneState"]["available"]){
+								selectData.push({"name":data[i]["zoneName"],"id":data[i]["id"]});
+							}
 						}
 						var html = Common.uiSelect(selectData);
 				    	$('select.availability_zone').html(html);
@@ -162,7 +161,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 				vdc_id = vdc_id || currentChosenObj.vdc || $('select.tenant_id').find('option:selected').val();
 				if(vdc_id){
 					//获取vdc的配额
-					Common.xhr.ajax('/v2.0/'+vdc_id+'/os-quota-sets/'+vdc_id,function(quotas){
+					Common.xhr.ajax('/v2.0/'+current_vdc_id+'/os-quota-sets/'+vdc_id,function(quotas){
 						if(!quotas) {
 							quotas = {};
 						}
