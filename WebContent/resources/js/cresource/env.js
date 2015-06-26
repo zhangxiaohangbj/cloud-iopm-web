@@ -332,7 +332,7 @@ define(['Common','bs/modal','jq/form/wizard','jq/form/validator-bs3','bs/tooltip
                                     "vendor": $("#edit-env-vendor").val()
                                 }
                                 Common.xhr.putJSON('/v2/virtual-env',envData,function(data){
-                                    if(data){
+                                    if(data && data.error !=true){
                                         Modal.success('保存成功');
                                         setTimeout(function(){Modal.closeAll()},2000);
                                         Common.router.route();
@@ -342,7 +342,9 @@ define(['Common','bs/modal','jq/form/wizard','jq/form/validator-bs3','bs/tooltip
                                 })
                             }
                         }],
-                        onshown : ""
+                        onshown : function(){
+                            formValidator($("#editRegion"));
+                        }
                     });
 
                 });
@@ -352,12 +354,12 @@ define(['Common','bs/modal','jq/form/wizard','jq/form/validator-bs3','bs/tooltip
         //删除按钮
 
         $("a.delete").on("click",function(){
-            var data = $(this).attr("data");
+            var id = $(this).attr("data");
             Modal.confirm('确定要删除该虚拟环境吗?',function(result){
                 if(result) {
-                    Common.xhr.del("v2/virtual-env/"+data,
+                    Common.xhr.del("v2/virtual-env/"+id,
                         function(data){
-                            if(data){
+                            if(data && data.error!=true){
                                 Modal.success('删除成功')
                                 setTimeout(function(){Dialog.closeAll()},2000);
                                 Common.router.route();//重新载入
