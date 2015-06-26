@@ -16,7 +16,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 		      "processing": true,  //加载效果，默认false
 		      "serverSide": true,  //页面在加载时就请求后台，以及每次对 datatable 进行操作时也是请求后台
 		      "ordering": false,   //禁用所有排序
-		      "sAjaxSource":"identity/v2.0/users/page/", //ajax源，后端提供的分页接口
+		      "sAjaxSource":"v2.0/users/page/", //ajax源，后端提供的分页接口
 		      /*fnServerData是与服务器端交换数据时被调用的函数
 		       * sSource： 就是sAjaxSource中指定的地址，接收数据的url需要拼装成 v2.0/users/page/10/1 格式
 		       *      aoData[4].value为每页显示条数，aoData[3].value/aoData[4].value+1为请求的页码数
@@ -169,7 +169,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 				$(document).off("click","span.chooseRole");
 				$(document).on("click","span.chooseRole",function(){
 					var obj = $(this);
-					Common.render('tpls/sysmanagement/user/rolelist.html','/identity/v2.0/roles/page/10/1',function(html){
+					Common.render('tpls/sysmanagement/user/rolelist.html','/v2.0/roles/page/10/1',function(html){
 						Modal.show({
 		    	            title: '选择角色',
 		    	            message: html,
@@ -383,7 +383,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
         					"organId": $( " [name='organId']").val()
             				};
     				postData.userRoleList = jsonData.authorityJson("#authorityInfo");
-    				Common.xhr.postJSON('/identity/v2.0/users',postData,function(data){
+    				Common.xhr.postJSON('/v2.0/users',postData,function(data){
     					wizard._submitting = false;
     					wizard.updateProgressBar(100);
     					closeWizard();
@@ -396,7 +396,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 		$(document).off("click","#UserTable_wrapper a.btn-edit");
 		$(document).on("click","#UserTable_wrapper a.btn-edit",function(){
 			var id= $(this).attr("data");
-	    	Common.xhr.ajax('/identity/v2.0/users/'+id,function(data){  //需修改接口
+	    	Common.xhr.ajax('/v2.0/users/'+id,function(data){  //需修改接口
 	    		Common.render('tpls/sysmanagement/user/edit.html',data,function(html){
 	    			Modal.show({
 	    	            title: '用户信息编辑',
@@ -416,7 +416,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 	    	        					"trueName": $( " [name='trueName']").val(),
 	    	        					"organId": $( " [name='organId']").val()
 	    	            				};
-	    	                	Common.xhr.putJSON('/identity/v2.0/users/'+id,serverData,function(data){
+	    	                	Common.xhr.putJSON('/v2.0/users/'+id,serverData,function(data){
 	    	                		if(data){
 	    	                			Modal.success('保存成功')
 	    	                			setTimeout(function(){Modal.closeAll()},2000);
@@ -446,7 +446,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 				 var id = $(this).attr("data");
 		    	 Modal.confirm('确定要删除该用户吗?', function(result){
 		             if(result) {
-		            	 Common.xhr.del('/identity/v2.0/users/'+id,
+		            	 Common.xhr.del('/v2.0/users/'+id,
 		                     function(data){
 		                    	 if(data){
 		                    		 Modal.success('删除成功')
@@ -465,7 +465,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 			$(document).off("click","a.btn-edit-role");
 			$(document).on("click","a.btn-edit-role",function(){
 				var id= $(this).attr("data");
-		    	Common.xhr.ajax('/identity/v2.0/users/tenants/'+id,function(data){  //需修改接口
+		    	Common.xhr.ajax('/v2.0/users/tenants/'+id,function(data){  //需修改接口
 		    		Common.render('tpls/sysmanagement/user/editrole.html',data,function(html){
 		    			Modal.show({
 		    	            title: '用户权限设置',
@@ -475,7 +475,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 		    	                label: '保存',
 		    	                action: function(dialog) {
 		    	                	var serverData = jsonData.roleJson("#authorityInfo");
-		    	                	Common.xhr.postJSON('/identity/v2.0/users/tenants/'+id,serverData,function(data){
+		    	                	Common.xhr.postJSON('/v2.0/users/tenants/'+id,serverData,function(data){
 		    	                		if(data){
 		    	                			Modal.success('保存成功')
 		    	                			setTimeout(function(){Modal.closeAll()},2000);
