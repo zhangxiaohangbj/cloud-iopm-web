@@ -22,7 +22,7 @@
                     <th class="c2">连接状态</th>
                     <th class="c2">更新状态</th>
                     <th class="c2">同步周期</th>
-                    <th class="c4 sorting_disabled" >操作</th>
+                    <th class="c5 sorting_disabled" >操作</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -34,14 +34,14 @@
                     <td>{{item.version}}</td>
                     <td>{{item.regionName}}</td>
                     <td>
-                        {{if item.connectStatus != 'false'}}
+                        {{if item.connectStatus == 1}}
                         <span class="text-success">连接成功</span>
                         {{else}}
                         <span class="text-danger">连接失败</span>
                         {{/if}}
                     </td>
                     <td>
-                        {{if item.updateStatus != 'false' }}
+                        {{if item.updateStatus ==1 }}
                         <span class="text-success">更新成功</span>
                         {{else}}
                         <span class="text-danger">更新失败</span>
@@ -52,6 +52,7 @@
                         <a class="btn-opt pull-left log-info" data-toggle="tooltip" data-act="log" style="margin: 0 5px;" data="{{item.id}}">日志信息</a>
                         <a class="btn-opt pull-left edit" data-toggle="tooltip" data-act="edit" style="margin: 0 5px;" data="{{item.id}}">编辑</a>
                         <a class="btn-opt pull-left delete" data-toggle="tooltip" data-act="delete" style="margin: 0 5px;" data="{{item.id}}">删除</a>
+                        <a class="btn-opt pull-left synchronize" data-toggle="tooltip" data-act="synchronize" style="margin: 0 5px;" data="{{item.connectorId}}">同步</a>
                     </td>
                 </tr>
                 {{/each}}

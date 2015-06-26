@@ -45,7 +45,7 @@ define(['Common','bs/modal','jq/form/wizard','jq/form/validator-bs3','bs/tooltip
                 },
                 'username':{
                     required:true,
-                    minlength:4,
+                    minlength:1,
                     maxlength:15
                 },
                 'version':{
@@ -65,7 +65,7 @@ define(['Common','bs/modal','jq/form/wizard','jq/form/validator-bs3','bs/tooltip
                     equalTo:"#password"
                 },
                 'description':{
-                    required:true,
+                    required:false,
                     maxlength:254
                 }
             }
@@ -100,7 +100,7 @@ define(['Common','bs/modal','jq/form/wizard','jq/form/validator-bs3','bs/tooltip
         //创建按钮
         $("#regionTable_wrapper span.btn-add").on("click",function(){
             var selectData = {"data":renderData};
-            Common.render('tpls/cresource/region/add2.html',selectData,function(html){
+            Common.render('tpls/cresource/region/add.html',selectData,function(html){
 
                 Modal.show({
                     title: '新增资源区域',
@@ -124,9 +124,14 @@ define(['Common','bs/modal','jq/form/wizard','jq/form/validator-bs3','bs/tooltip
                                     "version":"v2.0",
                                 }
                                 Common.xhr.putJSON("/cloud/connector/test",connector,function(data){
-                                    alert(data)
+                                    if(data && data.error!=true){
+                                        Modal.success('连接成功')
+                                        setTimeout(function(){Dialog.closeAll()},2000);
+                                        Common.router.route();//重新载入
+                                    }else{
+                                        Modal.warning ('连接失败')
+                                    }
                                 });
-                                //Modal.success('连接成功');
                             }
                         }
                     },
@@ -159,7 +164,7 @@ define(['Common','bs/modal','jq/form/wizard','jq/form/validator-bs3','bs/tooltip
                                 cloudService.connector = connector;
 
                                 Common.xhr.postJSON('/resource-manager/v2/region',cloudService,function(data){
-                                    if(data){
+                                    if(data && data.error!= true){
                                         Modal.success('保存成功');
                                         setTimeout(function(){Modal.closeAll()},2000);
                                         Common.router.route();
@@ -187,27 +192,9 @@ define(['Common','bs/modal','jq/form/wizard','jq/form/validator-bs3','bs/tooltip
                         message: html,
                         nl2br: false,
                         buttons: [{
-                            label:'测试连接',
-                            action:function(Modal){
-                                if(!$(".form-horizontal").valid()){
-                                    //校验不通过，什么都不做
-                                    alert(1)
-                                }else{
-                                    //校验通过，提示可行
-                                    var connector = {
-                                        "name": $("#service-name").val(),
-                                        "type":"CLOUDSERVICE",
-                                        "ip":$("#ip").val(),
-                                        "port":$("#port").val(),
-                                        "username":$("#username").val(),
-                                        "password":$("#password").val(),
-                                        "version":"v2.0",
-                                    }
-                                    Common.xhr.putJSON("/cloud/connector/test",connector,function(data){
-                                        alert(data)
-                                    });
-                                    //Modal.success('连接成功');
-                                }
+                            label:'取消',
+                            action:function(dialog){
+                                dialog.closeAll()
                             }
                         },
                             {
@@ -225,12 +212,6 @@ define(['Common','bs/modal','jq/form/wizard','jq/form/validator-bs3','bs/tooltip
                                     }
                                     var connector = {
                                         "name": $("#service-name").val(),
-                                        "type":"CLOUDSERVICE",
-                                        "ip":$("#ip").val(),
-                                        "port":$("#port").val(),
-                                        "username":$("#username").val(),
-                                        "password":$("#password").val(),
-                                        "version":$("#version").val(),
                                     }
                                     var description = $("#description").val();
                                     if(description && description != ""){
@@ -239,7 +220,7 @@ define(['Common','bs/modal','jq/form/wizard','jq/form/validator-bs3','bs/tooltip
                                     cloudService.connector = connector;
 
                                     Common.xhr.putJSON('/resource-manager/v2/region',cloudService,function(data){
-                                        if(data){
+                                        if(data && data.error!=true){
                                             Modal.success('保存成功');
                                             setTimeout(function(){Modal.closeAll()},2000);
                                             Common.router.route();
@@ -267,7 +248,7 @@ define(['Common','bs/modal','jq/form/wizard','jq/form/validator-bs3','bs/tooltip
                 if(result) {
                     Common.xhr.putJSON("/resource-manager/v2/region/status/"+data+"/"+status,
                         function(data){
-                            if(data){
+                            if(data && data.error!=true){
                                 Modal.success('执行成功')
                                 Common.router.route();//重新载入
                             }else{
@@ -281,12 +262,12 @@ define(['Common','bs/modal','jq/form/wizard','jq/form/validator-bs3','bs/tooltip
         });
         //删除按钮
         $("a.delete").on("click",function(){
-            var data = $(this).attr("data");
+            var id = $(this).attr("data");
             Modal.confirm('确定要删除该可用分区吗?',function(result){
                 if(result) {
-                    Common.xhr.del("/resource-manager/v2/region/"+data,
+                    Common.xhr.del("/resource-manager/v2/region/"+id,
                         function(data){
-                            if(data){
+                            if(data && data.error!=true){
                                 Modal.success('删除成功')
                                 Common.router.route();//重新载入
                             }else{

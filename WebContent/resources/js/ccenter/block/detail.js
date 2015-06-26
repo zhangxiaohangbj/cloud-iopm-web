@@ -2,7 +2,8 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 	Common.requestCSS('css/detail.css');
 	var init = function(){
 		Common.$pageContent.addClass("loading");
-		var volume_id = Common.getParam();
+		var hashArr = Common.hash.split('/');
+	    var volume_id = hashArr[hashArr.length-1];
 		var tmpDetailData = {
 	            name : "Tiger Nixon",
 	            id: "di91jd9d29f9f29",
@@ -126,6 +127,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 	                }
 		        );
 			}
+			Common.hideLoclLoading($tab);
 		}
 		
 	}
