@@ -68,7 +68,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
     					"gigabytes": $(obj +" [name='gigabytes']").val(),
     					"ram": $(obj +" [name='ram']").val(),
     					"security_group_rule": $(obj +" [name='security_group_rule']").val(),
-    					"floating_ips": $(obj +" [name='floating_ips']").val(),
+    					"floatingip": $(obj +" [name='floatingip']").val(),
     					"network": $(obj +" [name='network']").val(),
     					"port": $(obj +" [name='port']").val(),
     					"route": $(obj +" [name='route']").val(),
@@ -114,7 +114,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 				//获取成员信息
 				getUsers : function(index,size){
 					///'cloud/am/user/page/'+index + '/'+size,resources/data/arrays.txt'
-					Common.xhr.ajax('/v2.0/users/page/'+size + '/'+index,function(userList){
+					Common.xhr.ajax('/identity/v2.0/users/page/'+size + '/'+index,function(userList){
 						renderData.userList = userList.result;
 						cacheData.userList = userList.result;
 						userTotalSize = userList.totalCount;
@@ -123,7 +123,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 				//获取及对应的角色
 				getRoles : function(){
 					//"//v2.0/OS-KSADM/roles",'resources/data/select.txt'
-					Common.xhr.ajax("/v2.0/OS-KSADM/roles/",function(roleList){
+					Common.xhr.ajax("/identity/v2.0/OS-KSADM/roles/",function(roleList){
 						renderData.roleList = roleList.roles;
 						cacheData.roleList = roleList.roles;
 					});
@@ -211,7 +211,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 			                    required: true,
 			                    digits:true
 			                },
-			                'floating_ips': {
+			                'floatingip': {
 			                    required: true,
 			                    digits:true
 			                },
@@ -251,7 +251,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 					});
 					$(document).off("click",".list-group .loadmore");
 					$(document).on("click",".list-group .loadmore",function(event){
-						Common.xhr.ajax('/v2.0/users/page/'+ userSize + '/'+(userIndex + 1),function(userList){
+						Common.xhr.ajax('/identity/v2.0/users/page/'+ userSize + '/'+(userIndex + 1),function(userList){
 							var data = {};
 							data.userList = userList.result;
 							//data.roleList = cacheData.roleList;
