@@ -23,7 +23,7 @@
 		</div>
 	</div>
 	<div class="signin-body">
-		<form id="login_form" class="form-signin" action="/v2.0/tokens" method="post">
+		<form id="login_form" class="form-signin" action="/identity/v2.0/tokens" method="post">
 			<div class="input-group">
 				<span class="signin-icons signin-icon-input signin-icon-user">
 					<i class="signin-icons signin-icon-br"></i>
@@ -73,7 +73,7 @@
 			submitForm();
 		});
 		function submitForm() {
-			var url = "${pageContext.request.contextPath}/v2.0/tokens";
+			var url = "${pageContext.request.contextPath}/identity/v2.0/tokens";
 			var data = {
 					 'auth': {
 					        'tenantId': "",
