@@ -75,7 +75,6 @@ define(['Common','bs/modal','jq/form/wizard','jq/form/validator-bs3','bs/tooltip
             //获取地区
             getZone:function(){
                 Common.xhr.ajax("/v2/tenant_id/region",function(region){
-                    debugger
                     renderData.region = region;
                 });
             },
