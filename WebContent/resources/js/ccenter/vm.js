@@ -169,15 +169,9 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 							//当前配额 等于 当前vdc下总配额 减去  当前选中规格的额度
 							var current = currentChosenObj.specs;
 							if(current && current.length){
-<<<<<<< HEAD
 								quotaUsages.cores = parseInt(quotaUsages.cores) + parseInt(current.attr('data-core')) - curSpecs.core;
 								quotaUsages.ram = parseInt(quotaUsages.ram) + parseInt(current.attr('data-memory')) - curSpecs.memory;
 								quotaUsages.instances = parseInt(quotaUsages.instances) + parseInt(currentChosenObj.nums) - curSpecs.nums;
-=======
-								quotaUsages.cores = parseInt(quotaUsages.cores) + parseInt(current.attr('data-core'))*parseInt(currentChosenObj.nums);
-								quotaUsages.ram = parseInt(quotaUsages.ram) + parseInt(current.attr('data-memory'))*parseInt(currentChosenObj.nums);
-								quotaUsages.instances = parseInt(quotaUsages.instances) + parseInt(currentChosenObj.nums);
->>>>>>> branch 'master' of git@gitserver:iop/cloud-iopm-web.git
 							};
 							var getMathRound = function(used,total){
 								if(total==0||total==null||total==""){
@@ -705,11 +699,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 	  //更多按钮
 	    var EditData = {
 	    		//编辑云主机名称弹框
-<<<<<<< HEAD
 	    	EditVmName : function(id,vdcId,name){
-=======
-	    	EditVmName : function(id){
->>>>>>> branch 'master' of git@gitserver:iop/cloud-iopm-web.git
 	    		Common.render('tpls/ccenter/vm/editvmname.html','',function(html){
 	    			Modal.show({
 	    	            title: '修改云主机名称',
@@ -718,7 +708,6 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 	    	            buttons: [{
 	    	                label: '保存',
 	    	                action: function(dialog) {
-<<<<<<< HEAD
 	    	                	var modiName = $("#editVmName input").val();
 	    	                	var postData = {"server":{"name":modiName}};
     	    					Common.xhr.putJSON('/'+vdcId+'/servers/'+id,postData,function(data){
@@ -731,21 +720,6 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
     	    	                		Modal.error("云主机变更名称失败!");
     	    	                	}
     	    					});
-=======
-                                var serverData = {
-                                    "server": {
-                                        "name": $("#editVmName [name='server-name']").val()
-                                    }
-                                };
-	    	                	Common.xhr.putJSON('/'+current_vdc_id+'/servers/'+id+'/',serverData, function(data){
-	    	                		if(data){
-	    	                			alert("保存成功");
-	    	                			dialog.close();
-									}else{
-										alert("保存失败");
-									}
-								})
->>>>>>> branch 'master' of git@gitserver:iop/cloud-iopm-web.git
 	    	                }
 	    	            }, {
 	    	                label: '取消',
@@ -822,7 +796,6 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 				
 	    	},
 	    	//编辑虚拟机大小弹框
-<<<<<<< HEAD
 	    	EditVmType : function(id,vdcId,cb){
 	    		Common.render('tpls/ccenter/vm/editvmtype.html',renderData,function(html){
 		    		Modal.show({
@@ -832,15 +805,20 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 	    	            buttons: [{
 	    	                label: '保存',
 	    	                action: function(dialog) {
-	    	                	Common.xhr.ajax('/resources/data/arrays.txt',function(data){
-	    	                		if(data){
-	    	                			alert("保存成功");
-	    	                			resetCurrentChosenObj();
-							    		dialog.close();
-									}else{
-										alert("保存失败");
-									}
-	    	                	});
+	    	                	 var flavor_data = {
+                                     "resize": {
+                                         "flavorRef": $('#flavorRef option:selected').val()
+                                     }
+                                 }
+                                 Common.xhr.postJSON('/'+current_vdc_id+'/servers/'+id+'/action', flavor_data, function(data){
+                                     if(!data.error){
+                                         alert("保存成功");
+
+                                         dialog.close();
+                                     }else{
+                                         alert("保存失败");
+                                     }
+                                 });
 	    	                }
 	    	            }, {
 	    	                label: '取消',
@@ -852,62 +830,9 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 	    	            onshown : cb  //Modal show后回调
 	    	        });
 	    		});
-=======
-	    	EditVmType : function(id){
-                Common.xhr.ajax('/'+current_vdc_id+'/servers/'+id, function(data){
-                    alert(data)
-                    var rData = {}
-                    rData['flavor'] = data['server']['flavor']
-                    rData['flavor_list'] = renderData['specsList']
-                    debugger
-                    Common.render('tpls/ccenter/vm/editvmtype.html',rData,function(html){
-                        Modal.show({
-                            title: '编辑安全组',
-                            message: html,
-                            nl2br: false,
-                            buttons:
-                                [{
-                                    label: '保存',
-                                    action: function(dialog) {
-                                        var flavor_data = {
-                                            "resize": {
-                                                "flavorRef": $('#new_flavor_select option:selected').val()
-                                            }
-                                        }
-                                        debugger
-                                        Common.xhr.postJSON('/'+current_vdc_id+'/servers/'+id+'/action', flavor_data, function(data){
-                                            if(data){
-                                                alert("保存成功");
-
-                                                dialog.close();
-                                            }else{
-                                                alert("保存失败");
-                                            }
-                                        });
-
-                                    }
-                                },
-                                {
-                                    label: '取消',
-                                    action: function(dialog) {
-                                        dialog.close();
-                                    }
-                            }]
-
-                        });
-                    });
-                });
-
-
->>>>>>> branch 'master' of git@gitserver:iop/cloud-iopm-web.git
 	    	},
 	    	
-<<<<<<< HEAD
 	    	DoAction:function(id,name,vdcId,rq,dc){
-	    		debugger
-=======
-	    	DoAction:function(id,name,rq,dc){
->>>>>>> branch 'master' of git@gitserver:iop/cloud-iopm-web.git
 	    		Common.$pageContent.addClass("loading");
                 Common.xhr.postJSON('/'+vdcId+'/servers/'+id+'/action',rq,function(data){
                 	if(data.success){
@@ -949,22 +874,17 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 	    	var specs={nums:1};
 	    	specs.core = $(this).parents('tr:first').find('td.vm_type').attr("data_cores");
 	    	specs.memory = $(this).parents('tr:first').find('td.vm_type').attr("data_memory");
+	    	flavorName = $(this).parents('tr:first').find('td.vm_type').attr("data_name");
 	    	//获取云主机个数,规格等信息
-<<<<<<< HEAD
 //    		currentChosenObj.nums = 0;  //data:云主机个数
     		EditData.EditVmType($(this).attr("data"),vdcId,function(){
-    			$("#editVmType div.col-sm:first").html("xxx");
+    			$("#editVmType div.col-sm:first").html(flavorName);
     			$("[name='flavorRef']").val(vdcId);
-    			
+		    	currentChosenObj.specs = $('select.flavorRef').find('option:selected');
 	    		DataIniter.initPopver();
 	    		DataIniter.initQuatos(vdcId,specs);  //data:vcd_id
 	    		EventsHandler.specsChange();
 	    	});
-=======
-            var data = $(this).attr("data")
-	    	EditData.EditVmType($(this).attr("data"));
-
->>>>>>> branch 'master' of git@gitserver:iop/cloud-iopm-web.git
 	    });
 	    
 	    //删除云主机
