@@ -112,10 +112,10 @@
 		<label class="control-label col-sm-3">
 	 	<span style="color: red;">* </span>安全组：</label>
 	 	<div class="col-sm-7 col-sm">
-	 		{{if security_groups}}
-			<input type="text" class="form-control" name="security_groups" value="{{security_groups}}">
+	 		{{if security_group}}
+			<input type="text" class="form-control" name="security_group" value="{{security_group}}">
 			{{else}}
-			<input type="text" class="form-control" name="security_groups" value="10">
+			<input type="text" class="form-control" name="security_group" value="10">
 			{{/if}}
 			
 		</div>
@@ -124,10 +124,10 @@
 		<label class="control-label col-sm-3">
 	 	<span style="color: red;">* </span>安全组规则：</label>
 	 	<div class="col-sm-7 col-sm">
-	 		{{if security_group_rules}}
-			<input type="text" class="form-control" name="security_group_rules" value="{{security_group_rules}}">
+	 		{{if security_group_rule}}
+			<input type="text" class="form-control" name="security_group_rule" value="{{security_group_rule}}">
 			{{else}}
-			<input type="text" class="form-control" name="security_group_rules" value="100">
+			<input type="text" class="form-control" name="security_group_rule" value="100">
 			{{/if}}
 			
 		</div>
