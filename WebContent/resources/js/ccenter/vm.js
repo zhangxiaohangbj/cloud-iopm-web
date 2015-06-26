@@ -157,8 +157,15 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 				$('[data-toggle="popover"]').popover(popoverOptions);
 			},
 			//vdc的可用配额
-			initQuatos : function(vdc_id){
+			initQuatos : function(vdc_id,specs){
 				vdc_id = vdc_id || currentChosenObj.vdc || $('select.tenant_id').find('option:selected').val();
+				var curSpecs = {core:0,memory:0,nums:0};
+				if(specs){
+					//用于支持变更规格的情况，如果不输入，则认为是新建实例，否则认为是变更，在统计配额时应当减去当前配置
+					curSpecs.core=specs.core;
+					curSpecs.memory=specs.memory;
+					curSpecs.nums=specs.nums;
+				}
 				if(vdc_id){
 					//获取vdc的配额
 					Common.xhr.ajax('/v2.0/'+current_vdc_id+'/os-quota-sets/'+vdc_id,function(quotas){
@@ -171,9 +178,9 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 							//当前配额 等于 当前vdc下总配额 减去  当前选中规格的额度
 							var current = currentChosenObj.specs;
 							if(current && current.length){
-								quotaUsages.cores = parseInt(quotaUsages.cores) + parseInt(current.attr('data-core'))*parseInt(currentChosenObj.nums);
-								quotaUsages.ram = parseInt(quotaUsages.ram) + parseInt(current.attr('data-memory'))*parseInt(currentChosenObj.nums);
-								quotaUsages.instances = parseInt(quotaUsages.instances) + parseInt(currentChosenObj.nums);
+								quotaUsages.cores = parseInt(quotaUsages.cores) + parseInt(current.attr('data-core')) - curSpecs.core;
+								quotaUsages.ram = parseInt(quotaUsages.ram) + parseInt(current.attr('data-memory')) - curSpecs.memory;
+								quotaUsages.instances = parseInt(quotaUsages.instances) + parseInt(currentChosenObj.nums) - curSpecs.nums;
 							};
 							var getMathRound = function(used,total){
 								if(total==0||total==null||total==""){
@@ -676,7 +683,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
     				
     				serverData.server["networks"]=networkData;
     				serverData.server["security_groups"]=getSecruityGroup();
-    				Common.xhr.postJSON('/'+currentChosenObj.vdc+'/servers',serverData,function(data){
+    				Common.xhr.postJSON('/'+current_vdc_id+'/servers/'+currentChosenObj.vdc,serverData,function(data){
     					if(data.error){
     						Modal.error(data.message)
     					}
@@ -692,28 +699,27 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 	  //更多按钮
 	    var EditData = {
 	    		//编辑云主机名称弹框
-	    	EditVmName : function(id){
+	    	EditVmName : function(id,vdcId,name){
 	    		Common.render('tpls/ccenter/vm/editvmname.html','',function(html){
 	    			Modal.show({
-	    	            title: '编辑云主机',
+	    	            title: '修改云主机名称',
 	    	            message: html,
 	    	            nl2br: false,
 	    	            buttons: [{
 	    	                label: '保存',
 	    	                action: function(dialog) {
-                                var serverData = {
-                                    "server": {
-                                        "name": $("#editVmName [name='server-name']").val()
-                                    }
-                                };
-	    	                	Common.xhr.putJSON('/'+current_vdc_id+'/servers/'+id+'/',serverData, function(data){
-	    	                		if(data){
-	    	                			alert("保存成功");
-	    	                			dialog.close();
-									}else{
-										alert("保存失败");
-									}
-								})
+	    	                	var modiName = $("#editVmName input").val();
+	    	                	var postData = {"server":{"name":modiName}};
+    	    					Common.xhr.putJSON('/'+vdcId+'/servers/'+id,postData,function(data){
+    	    						if(data){
+    	    							dialog.close();
+    	    	                		Modal.success("云主机名称已更改为["+data.server.name+"]!");
+    	    	                		setTimeout(function(){Modal.closeAll()},3000);
+        	                			Common.router.route();
+    	    	                	}else{
+    	    	                		Modal.error("云主机变更名称失败!");
+    	    	                	}
+    	    					});
 	    	                }
 	    	            }, {
 	    	                label: '取消',
@@ -729,13 +735,13 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 	    		
 	    	},
 	    	//编辑安全组弹框
-	    	EditVmSecurity : function(id,cb){
+	    	EditVmSecurity : function(id,vdcId,cb){
 	    		Common.$pageContent.addClass("loading");
 	    		var pageData={};
 				//取云主机列表
-				Common.xhr.getSync('/'+current_vdc_id+'/servers/'+id+'/list-unattched-security-groups',function(data){
+				Common.xhr.getSync('/'+vdcId+'/servers/'+id+'/list-unattched-security-groups',function(data){
 					pageData.unattched=data;});
-				Common.xhr.getSync('/'+current_vdc_id+'/servers/'+id+'/list-attched-security-groups',function(data){
+				Common.xhr.getSync('/'+vdcId+'/servers/'+id+'/list-attched-security-groups',function(data){
 					pageData.attched=data;});
 				
 		    	//生成html数据
@@ -753,7 +759,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
     	    						var id = $(element).attr("data-id");
     	    						selectedList.push(id);
     	    					});
-    	    					Common.xhr.postJSON('/'+current_vdc_id+'/servers/'+id+'/change-security-group',selectedList,function(data){
+    	    					Common.xhr.postJSON('/'+vdcId+'/servers/'+id+'/change-security-group',selectedList,function(data){
     	    						if(data.success){
     	    							dialog.close();
     	    	                		Modal.success("云主机安全组已更改!");
@@ -777,7 +783,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 	    						var options = {
 	    								selector: '#edit-security-group',
 	    								allData: pageData.unattched,
-	    								chosenData: pageData.attched
+	    								selectData: pageData.attched
 	    						};
 	    						choose.initChoose(options);
 	    					})
@@ -790,57 +796,45 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 				
 	    	},
 	    	//编辑虚拟机大小弹框
-	    	EditVmType : function(id){
-                Common.xhr.ajax('/'+current_vdc_id+'/servers/'+id, function(data){
-                    alert(data)
-                    var rData = {}
-                    rData['flavor'] = data['server']['flavor']
-                    rData['flavor_list'] = renderData['specsList']
-                    debugger
-                    Common.render('tpls/ccenter/vm/editvmtype.html',rData,function(html){
-                        Modal.show({
-                            title: '编辑安全组',
-                            message: html,
-                            nl2br: false,
-                            buttons:
-                                [{
-                                    label: '保存',
-                                    action: function(dialog) {
-                                        var flavor_data = {
-                                            "resize": {
-                                                "flavorRef": $('#new_flavor_select option:selected').val()
-                                            }
-                                        }
-                                        debugger
-                                        Common.xhr.postJSON('/'+current_vdc_id+'/servers/'+id+'/action', flavor_data, function(data){
-                                            if(data){
-                                                alert("保存成功");
+	    	EditVmType : function(id,vdcId,cb){
+	    		Common.render('tpls/ccenter/vm/editvmtype.html',renderData,function(html){
+		    		Modal.show({
+	    	            title: '编辑虚拟机大小',
+	    	            message: html,
+	    	            nl2br: false,
+	    	            buttons: [{
+	    	                label: '保存',
+	    	                action: function(dialog) {
+	    	                	 var flavor_data = {
+                                     "resize": {
+                                         "flavorRef": $('#flavorRef option:selected').val()
+                                     }
+                                 }
+                                 Common.xhr.postJSON('/'+current_vdc_id+'/servers/'+id+'/action', flavor_data, function(data){
+                                     if(!data.error){
+                                         alert("保存成功");
 
-                                                dialog.close();
-                                            }else{
-                                                alert("保存失败");
-                                            }
-                                        });
-
-                                    }
-                                },
-                                {
-                                    label: '取消',
-                                    action: function(dialog) {
-                                        dialog.close();
-                                    }
-                            }]
-
-                        });
-                    });
-                });
-
-
+                                         dialog.close();
+                                     }else{
+                                         alert("保存失败");
+                                     }
+                                 });
+	    	                }
+	    	            }, {
+	    	                label: '取消',
+	    	                action: function(dialog) {
+	    	                	resetCurrentChosenObj();
+	    	                    dialog.close();
+	    	                }
+	    	            }],
+	    	            onshown : cb  //Modal show后回调
+	    	        });
+	    		});
 	    	},
 	    	
-	    	DoAction:function(id,name,rq,dc){
+	    	DoAction:function(id,name,vdcId,rq,dc){
 	    		Common.$pageContent.addClass("loading");
-                Common.xhr.postJSON('/'+current_vdc_id+'/servers/'+id+'/action',rq,function(data){
+                Common.xhr.postJSON('/'+vdcId+'/servers/'+id+'/action',rq,function(data){
                 	if(data.success){
                 		Modal.success("云主机["+name+"]已"+dc+"!");
                 		setTimeout(function(){Modal.closeAll()},3000);
@@ -863,33 +857,48 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 	    })
 	    //修改云主机名称
 	    $("ul.dropdown-menu a.editName").on("click",function(){
-	    	EditData.EditVmName($(this).attr("data"));
+	    	var vdcId = $(this).parents('tr:first').find('td.vdc_name').attr("data");
+	    	var serverName = $(this).parents('tr:first').find('a.vm_name').html();
+	    	EditData.EditVmName($(this).attr("data"),vdcId,serverName);
 	    });
 	    //编辑安全组
 	    $("ul.dropdown-menu a.editSecurity").on("click",function(){
-	    	EditData.EditVmSecurity($(this).attr("data"),function(){
+	    	var vdcId = $(this).parents('tr:first').find('td.vdc_name').attr("data");
+	    	EditData.EditVmSecurity($(this).attr("data"),vdcId,function(){
 	    		
 	    	});
 	    });
 	    //修改虚拟机大小
 	    $("ul.dropdown-menu a.editVmType").on("click",function(){
+	    	var vdcId = $(this).parents('tr:first').find('td.vdc_name').attr("data");
+	    	var specs={nums:1};
+	    	specs.core = $(this).parents('tr:first').find('td.vm_type').attr("data_cores");
+	    	specs.memory = $(this).parents('tr:first').find('td.vm_type').attr("data_memory");
+	    	flavorName = $(this).parents('tr:first').find('td.vm_type').attr("data_name");
 	    	//获取云主机个数,规格等信息
-            var data = $(this).attr("data")
-	    	EditData.EditVmType($(this).attr("data"));
-
+//    		currentChosenObj.nums = 0;  //data:云主机个数
+    		EditData.EditVmType($(this).attr("data"),vdcId,function(){
+    			$("#editVmType div.col-sm:first").html(flavorName);
+    			$("[name='flavorRef']").val(vdcId);
+		    	currentChosenObj.specs = $('select.flavorRef').find('option:selected');
+	    		DataIniter.initPopver();
+	    		DataIniter.initQuatos(vdcId,specs);  //data:vcd_id
+	    		EventsHandler.specsChange();
+	    	});
 	    });
 	    
 	    //删除云主机
 	    $("ul.dropdown-menu a.delete").on("click",function(){
 	    	var serverName = $(this).parents('tr:first').find('a.vm_name').html();
+	    	var vdcId = $(this).parents('tr:first').find('td.vdc_name').attr("data");
 	    	var serverId = $(this).attr("data");
-	    	Modal.confirm("你已经选择了 【"+serverName+"】 。 请确认您的选择。终止的云主机均无法恢复。",function(result){
+	    	Modal.confirm("你已经选择了 ["+serverName+"] 。 请确认您的选择。终止的云主机均无法恢复。",function(result){
 	            if(result) {
-	                Common.xhr.del('/'+current_vdc_id+'/servers/'+serverId,function(data){
+	                Common.xhr.del('/'+vdcId+'/servers/'+serverId,function(data){
 	                	if(data.success||data.code==404){
-	                		Modal.success("云主机【"+serverName+"】已终止！");
+	                		Modal.success("云主机["+serverName+"]已终止！");
 	                	}else{
-	                		Modal.error("云主机【"+serverName+"】终止失败！");
+	                		Modal.error("云主机["+serverName+"]终止失败！");
 	                	}
 	                	Common.router.reload();
 	                });	    		
@@ -901,11 +910,12 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 	    $("ul.dropdown-menu a.rebootSoft").on("click",function(){
 	    	var serverName = $(this).parents('tr:first').find('a.vm_name').html();
 	    	var serverId = $(this).attr("data");
+	    	var vdcId = $(this).parents('tr:first').find('td.vdc_name').attr("data");
 	    	Modal.confirm({title:"确认：软重启云主机",
 	    		message:"你已经选择了 ["+serverName+"] 。  请确认您的选择。重启云主机会丢失所以没有存放在永久存储设备上的数据。 ",
 	    		callback:function(result){
 	            if(result) {
-	            	EditData.DoAction(serverId,serverName,{"reboot": {"type": "SOFT"}},"软重启");
+	            	EditData.DoAction(serverId,serverName,vdcId,{"reboot": {"type": "SOFT"}},"软重启");
 	            }
 	    	}});
 	    });
@@ -913,11 +923,12 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 	    $("ul.dropdown-menu a.rebootHard").on("click",function(){
 	    	var serverName = $(this).parents('tr:first').find('a.vm_name').html();
 	    	var serverId = $(this).attr("data");
+	    	var vdcId = $(this).parents('tr:first').find('td.vdc_name').attr("data");
 	    	Modal.confirm({title:"确认：硬重启云主机",
 	    		message:"你已经选择了 ["+serverName+"] 。  请确认您的选择。重启云主机会丢失所以没有存放在永久存储设备上的数据。 ",
 	    		callback:function(result){
 	            if(result) {
-	            	EditData.DoAction(serverId,serverName,{"reboot": {"type": "HARD"}},"硬重启");
+	            	EditData.DoAction(serverId,serverName,vdcId,{"reboot": {"type": "HARD"}},"硬重启");
 	            }
 	    	}});
 	    });
@@ -926,11 +937,12 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 	    $("ul.dropdown-menu a.osStop").on("click",function(){
 	    	var serverName = $(this).parents('tr:first').find('a.vm_name').html();
 	    	var serverId = $(this).attr("data");
+	    	var vdcId = $(this).parents('tr:first').find('td.vdc_name').attr("data");
 	    	Modal.confirm({title:"确认：关闭云主机",
 	    		message:"你已经选择了 ["+serverName+"] 。  请确认您的选择。关闭该云主机。 ",
 	    		callback:function(result){
 	            if(result) {
-	            	EditData.DoAction(serverId,serverName,{"os-stop": null},"关闭");
+	            	EditData.DoAction(serverId,serverName,vdcId,{"os-stop": null},"关闭");
 	            }
 	    	}});
 	    });
@@ -939,11 +951,12 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 	    $("ul.dropdown-menu a.pause").on("click",function(){
 	    	var serverName = $(this).parents('tr:first').find('a.vm_name').html();
 	    	var serverId = $(this).attr("data");
+	    	var vdcId = $(this).parents('tr:first').find('td.vdc_name').attr("data");
 	    	Modal.confirm({title:"确认：暂停云主机",
 	    		message:"你已经选择了 ["+serverName+"] 。  请确认您的选择。暂停该云主机。 ",
 	    		callback:function(result){
 	            if(result) {
-	            	EditData.DoAction(serverId,serverName,{"pause": null},"暂停");
+	            	EditData.DoAction(serverId,serverName,vdcId,{"pause": null},"暂停");
 	            }
 	    	}});
 	    });
@@ -952,11 +965,12 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 	    $("ul.dropdown-menu a.suspend").on("click",function(){
 	    	var serverName = $(this).parents('tr:first').find('a.vm_name').html();
 	    	var serverId = $(this).attr("data");
+	    	var vdcId = $(this).parents('tr:first').find('td.vdc_name').attr("data");
 	    	Modal.confirm({title:"确认：挂起云主机",
 	    		message:"你已经选择了 ["+serverName+"] 。  请确认您的选择。挂起该云主机。 ",
 	    		callback:function(result){
 	            if(result) {
-	            	EditData.DoAction(serverId,serverName,{"suspend": null},"挂起");
+	            	EditData.DoAction(serverId,serverName,vdcId,{"suspend": null},"挂起");
 	            }
 	    	}});
 	    });
@@ -965,6 +979,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 	    $("ul.dropdown-menu a.rebuild").on("click",function(){
 	    	var serverName = $(this).parents('tr:first').find('a.vm_name').html();
 	    	var serverId = $(this).attr("data");
+	    	var vdcId = $(this).parents('tr:first').find('td.vdc_name').attr("data");
 	    	var imageList;
 	    	Common.xhr.getSync('/v2/images/?owner='+current_vdc_id,function(data){
     			imageList=data;
@@ -982,7 +997,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
     	                	postData.rebuild["imageRef"]=$('select.image-list').val();
     	                	postData.rebuild["OS-DCF:diskConfig"]=$('select.config-list').val();
 //    	                 	alert("Value: " + JSON.stringify(postData));
-    	                 	EditData.DoAction(serverId,serverName,postData,"重建");
+    	                 	EditData.DoAction(serverId,serverName,vdcId,postData,"重建");
     	                 	dialog.close();
     	                }
     	            }, {
@@ -1001,6 +1016,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 	    //绑定floatingIp
 	    $("ul.dropdown-menu a.attachIp").on("click",function(){
 	    	var serverId = $(this).attr("data");
+	    	var vdcId = $(this).parents('tr:first').find('td.vdc_name').attr("data");
 	    	Common.render('tpls/ccenter/vm/attachip.html','',function(html){	
 	    		Modal.show({
     	            title: '绑定浮动IP',
@@ -1013,7 +1029,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
     	                	var ipId = $('select.floating-ips').val();
     	                	var portId = $('select.network-interface').val();
     	                	
-    	                	Common.xhr.postJSON('/'+current_vdc_id+'/servers/'+serverId+'/add-floating-ip?floating_ip_id='+ipId+'&port_id='+portId,null,function(data){
+    	                	Common.xhr.postJSON('/'+vdcId+'/servers/'+serverId+'/add-floating-ip?floating_ip_id='+ipId+'&port_id='+portId,null,function(data){
     	                    	debugger
     	                		if(data.success){
     	                    		dialog.close();
@@ -1047,6 +1063,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 	  //解绑floatingIp
 	    $("ul.dropdown-menu a.dettachIp").on("click",function(){
 	    	var serverName = $(this).parents('tr:first').find('a.vm_name').html();
+	    	var vdcId = $(this).parents('tr:first').find('td.vdc_name').attr("data");
 	    	var floatingIpStr = $(this).parents('tr:first').find('td.vm_floating_ips').html();
 	    	var ipStrList = floatingIpStr.split('<br>');
 	    	var floatingIpList = [];
@@ -1067,7 +1084,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
     	                action: function(dialog) {
     	                	var ip = $('select.floating-ips').val();
     	                	
-    	                	Common.xhr.postJSON('/'+current_vdc_id+'/servers/'+serverId+'/remove-floating-ip?floating_ip='+ip,null,function(data){
+    	                	Common.xhr.postJSON('/'+vdcId+'/servers/'+serverId+'/remove-floating-ip?floating_ip='+ip,null,function(data){
     	                    	debugger
     	                		if(data.success){
     	                    		dialog.close();
@@ -1099,6 +1116,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 	    $("a.createSnapshot").on("click",function(){
 	    	var serverName = $(this).parents('tr:first').find('a.vm_name').html();
 	    	var serverId = $(this).attr("data");
+	    	var vdcId = $(this).parents('tr:first').find('td.vdc_name').attr("data");
 	    	Common.render('tpls/ccenter/vm/snapshot.html','',function(html){	
 	    		Modal.show({
     	            title: '创建快照',
@@ -1112,7 +1130,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
     	            		if(!valid) return false;
     	                	var postData={"createSnapshot":{}};
     	                	postData.createSnapshot.name=$('#create-snapshot input.name').val();
-    	                	EditData.DoAction(serverId,serverName,postData,"创建快照");
+    	                	EditData.DoAction(serverId,serverName,vdcId,postData,"创建快照");
     	                 	dialog.close();
     	                }
     	            }, {
@@ -1132,13 +1150,14 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 	    $("a.resume").on("click",function(){
 	    	var serverName = $(this).parents('tr:first').find('a.vm_name').html();
 	    	var serverId = $(this).attr("data");
+	    	var vdcId = $(this).parents('tr:first').find('td.vdc_name').attr("data");
 	    	var vmState = $(this).attr("vm_state");
 	    	if(vmState == "SUSPENDED"){
-	    		EditData.DoAction(serverId,serverName,{ "resume" : null},"恢复");
+	    		EditData.DoAction(serverId,serverName,vdcId,{ "resume" : null},"恢复");
 	    	}else if(vmState == "PAUSED"){
-	    		EditData.DoAction(serverId,serverName,{ "unpause" : null},"恢复");
+	    		EditData.DoAction(serverId,serverName,vdcId,{ "unpause" : null},"恢复");
 	    	}else if(vmState == "SHUTOFF"){
-	    		EditData.DoAction(serverId,serverName,{ "os-start" : null},"恢复");
+	    		EditData.DoAction(serverId,serverName,vdcId,{ "os-start" : null},"恢复");
 	    	}
 	    	
 	    });
