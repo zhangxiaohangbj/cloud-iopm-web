@@ -27,7 +27,7 @@
 						<th class="c4">虚拟内核</th>
 						<th class="c6">磁盘</th>
 						<th class="c2">内存</th>
-						<th class="c6 sorting_disabled">使用时间</th>
+						<th class="c6 sorting_disabled">创建时间</th>
 					</tr>
 				</thead>
 				<tbody id="usageList">
@@ -35,9 +35,9 @@
 					<tr>
 						<td>{{item.name}}</td>
 						<td>{{item.vcpus}}</td>
-						<td>{{item.description}}</td>
-						<td>{{item.description}}</td>
-						<td>水水水水</td>
+						<td>{{item.local_gb}}GB</td>
+						<td>{{item.memory_mb}}GB</td>
+						<td>{{item.started_at}}</td>
 					</tr>
     			{{/each}}
 				</tbody>

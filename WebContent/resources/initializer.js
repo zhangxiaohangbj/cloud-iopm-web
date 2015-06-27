@@ -4,7 +4,7 @@
 define('Common',
     [
         'commons/pub_menu', 'PubView', 'bs/modal', 'json', 'template',
-        'jq/dataTables-bs3', 'bs/popover'
+        'jq/dataTables-bs3', 'bs/popover', 'jq/cookie'
     ],
     function(PubMenu, PubView, Modal, JSON, template) {
 
@@ -113,7 +113,7 @@ define('Common',
                 // 初始化页面结构
                 $(document.body).removeClass("loading").append(
                     '<div id="page-main" class="clearfix">'+
-                    '<div class="page-content clearfix"></div>'+
+                        '<div class="page-content clearfix"></div>'+
                     '</div>'
                 );
                 this.$pageMain = $("#page-main");
@@ -127,6 +127,8 @@ define('Common',
                 this._router();
                 // 注册hash监听
                 this._registerHashEvent();
+                // 初始化cookie工具
+                this._cookies();
                 // 取消加载中效果
                 $("#loader").loader('destroy');
                 return this;
@@ -850,6 +852,247 @@ define('Common',
                     }
                 } catch (e) { }
                 return inHtml;
+            },
+            /**
+             * cookie操作工具
+             */
+            cookies: null,
+            _cookies: function() {
+                var that = this;
+                var Cookies = function() {
+                    /**
+                     * 获取所有的cookie（键=>值）
+                     * @returns object
+                     */
+                    this.getAll = function() {
+                        $.cookie.json = true;
+                        return $.cookie();
+                    };
+                    /**
+                     * 获取某个cookie的值
+                     * @param key {string} 键
+                     * @param converters {object|function} 定义转换类型，如：
+                     *                  $.cookie('foo', '42');
+                     *                  $.cookie('foo', Number); // => 42
+                     *                  或自定义规则：
+                     *                  $.cookie.raw = true;
+                     *                  $.cookie('foo', unescape);
+                     * @returns {string|object}
+                     */
+                    this.get = function (key, converters) {
+                        $.cookie.json = true;
+                        return $.cookie.apply(that, arguments);
+                    };
+                    /**
+                     * 设置cookie
+                     * @param key {string} 键
+                     * @param value 任意类型 值
+                     * @param options 额外参数，也可通过$.cookie.defaults进行初始化
+                     *                {
+                     *                  expires: {number|Date对象} 有效时间
+                     *                  path: {string} 有效路径
+                     *                  domain: {string} 有效域（二级域）
+                     *                  secure: {boolean} 设为true，则获取cookie时需要https协议，默认为false
+                     *                }
+                     */
+                    this.set = function (key, value, options) {
+                        $.cookie.json = true;
+                        $.cookie.apply(that, arguments);
+                    };
+                    /**
+                     * 删除cookie
+                     * @param key {string} 键
+                     * @param options 额外参数，也可通过$.cookie.defaults进行初始化
+                     *                {
+                     *                  expires: {number|Date对象} 有效时间
+                     *                  path: {string} 有效路径
+                     *                  domain: {string} 有效域（二级域）
+                     *                  secure: {boolean} 设为true，则获取cookie时需要https协议，默认为false
+                     *                }
+                     * @returns true|false
+                     */
+                    this.remove = function (key, options) {
+                        return $.removeCookie.apply(that, arguments);
+                    };
+                    /**
+                     * 获取登录用户uid
+                     * @returns {string}
+                     */
+                    this.getUid = function() {
+                        var uid = this.get('uid');
+                        if(!uid) {
+                            var user = this.getUser();
+                            user && (uid = user.id);
+                        }
+                        return uid;
+                    };
+                    /**
+                     * 获取登录用户名
+                     * @returns {string}
+                     */
+                    this.getUname = function() {
+                        var userName = this.get('login_name');
+                        if(!userName) {
+                            var user = this.getUser();
+                            user && (userName = user.name);
+                        }
+                        return userName;
+                    };
+                    /**
+                     * 获取登录用户信息
+                     * @returns {object}
+                     */
+                    this.getUser = function() {
+                        return this.get('user');
+                    };
+                    /**
+                     * 获取vdcId
+                     * @returns {string}
+                     */
+                    this.getVdcId = function() {
+                        var vdcId = this.get('vdc_id');
+                        if(!vdcId) {
+                            var vdc = this.getVdc();
+                            vdc && (vdcId = vdc.id);
+                        }
+                        return vdcId;
+                    };
+                    /**
+                     * 获取vdcName
+                     * @returns {string}
+                     */
+                    this.getVdcName = function() {
+                        var vdcName;
+                        var vdc = this.getVdc();
+                        vdc && (vdcName = vdc.name);
+                        return vdcName;
+                    };
+                    /**
+                     * 获取vdc信息
+                     * @returns {object}
+                     */
+                    this.getVdc = function() {
+                        return this.get('vdc');
+                    };
+                };
+                !that.cookies && (that.cookies = new Cookies());
+            },
+            /**
+             * 登录弹出框
+             * @param message
+             * @param callback
+             */
+            login: function(message, callback) {
+                var that = this;
+                debugger;
+                Modal.show({
+                    size: 'size-_login',
+                    title: '请登录',
+                    closable: false,
+                    message: function() {
+                       return [
+                        '<div class="signin-header">',
+                            '<div class="signin-title">',
+                                '<img class="signin-logo" alt="IOP Manager" src="',PubView.root,'/resources/css/login/img/header-logo.png"/>',
+                            '</div>',
+                        '</div>',
+                        '<form class="form-horizontal form-signin" onsubmit="return false;" role="form" autocomplete="off">',
+                            '<div class="input-group">',
+                                '<span class="signin-icons signin-icon-input signin-icon-user">',
+                                    '<i class="signin-icons signin-icon-br"></i>',
+                                '</span>',
+                                '<input id="loginName" class="form-control" name="loginName" type="text" />',
+                            '</div>',
+                            '<div class="input-group">',
+                                '<span class="signin-icons signin-icon-input signin-icon-pwd">',
+                                    '<i class="signin-icons signin-icon-br"></i>',
+                                '</span>',
+                                '<input id="password" class="form-control" name="password" type="password" />',
+                            '</div>',
+                        '</form>'
+                       ].join('')
+                    }(),
+                    buttons: [
+                        {
+                            icon: 'fa fa-sign-in',
+                            label: '登&ensp;录',
+                            id: "btn-signin",
+                            cssClass: 'btn-primary',
+                            autospin: true,
+                            action: function(dialog){
+                                dialog.enableButtons(false);
+                                var $form = dialog.getModalBody().find('.form-signin:first');
+                                var formValid = true, errorTip = function($tar, msg) {
+                                    if(PubView.utils.is$($tar)) {
+                                        $tar.popover({
+                                            container: $form,
+                                            className: "popover-danger",
+                                            placement: "left top",
+                                            content: '<i class="glyphicon glyphicon-exclamation-sign"></i> '+(msg||''),
+                                            trigger: 'manual',
+                                            html: true
+                                        }).popover("show");
+                                    }
+                                };
+                                if(!$('#loginName').val()) {
+                                    errorTip($('#loginName'), "用户名不能为空！");
+                                    formValid = false;
+                                } else if(!$('#password').val()) {
+                                    errorTip($('#password'), "密码不能为空！");
+                                    formValid = false;
+                                }
+                                if(!formValid) {
+                                    dialog.enableButtons(true);
+                                    dialog.getButton('btn-signin').stopSpin();
+                                    return false;
+                                }
+                                var data = {
+                                    'auth': {
+                                        'tenantId': "",
+                                        'passwordCredentials': {
+                                            'username': $('#loginName').val(),
+                                            'password':  $('#password').val()
+                                        }
+                                    }
+                                };
+                                that.xhr.ajax({
+                                    type: "POST",
+                                    url: '/v2.0/tokens',
+                                    data: JSON.stringify(data),
+                                    contentType: "application/json",
+                                    success: function(res) {
+                                        if(!res || res.error_code){
+                                            alert("错误代码："+res.error_code+"\n错误描述: "+res.error_desc);
+                                        }else{
+                                            dialog.close();
+                                            dialog.enableButtons(true);
+                                            dialog.getButton('btn-signin').stopSpin();
+                                        }
+                                    },
+                                    error: function(xhr, errorText) {
+                                        debugger;
+                                    }
+                                });
+                            }
+                        },
+                        {
+                            label: 'Close',
+                            cssClass: 'btn-primary',
+                            action: function(dialog){
+                                dialog.close();
+                            }
+                        }
+                    ],
+                    onshow: function(dialog) {
+                        var $body = dialog.getModalBody();
+                        $body.find('input[type="checkbox"]').iCheck({
+                            checkboxClass: "icheckbox-primary"
+                        });
+                    },
+                    onhidden: function(dialog) {
+
+                    }
+                });
             }
         };
     });

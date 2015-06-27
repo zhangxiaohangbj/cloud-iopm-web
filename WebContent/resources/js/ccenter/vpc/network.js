@@ -3,7 +3,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 	var init = function(){
 		Common.$pageContent.addClass("loading");
 		//先获取数据，进行加工后再去render
-		Common.render(true,'tpls/ccenter/vpc/network/list.html','/v2.0/networks',function(){
+		Common.render(true,'tpls/ccenter/vpc/network/list.html','/networking/v2.0/networks',function(){
 			bindEvent();
 		});
 	};
@@ -85,7 +85,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
     	                	postData.network["admin_state_up"] =  postData.network["admin_state_up"] ==null?false:true;
     	                	postData.network["shared"] =  postData.network["shared"] ==null?false:true;
     	                	postData.network["router:external"] =  postData.network["router:external"] ==null?false:true;               			
-    	                	Common.xhr.postJSON('/v2.0/networks',postData,function(data){
+    	                	Common.xhr.postJSON('/networking/v2.0/networks',postData,function(data){
     	                		if(data){
     	                			dialog.close();
     	                			Dialog.success('保存成功')
@@ -119,7 +119,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 		//编辑网络
 		$("#networkTable_wrapper a.btn-edit").on("click",function(){
 			var id = $(this).attr("data");
-			Common.render(false,'tpls/ccenter/vpc/network/edit.html','/v2.0/networks/'+id,function(html){
+			Common.render(false,'tpls/ccenter/vpc/network/edit.html','/networking/v2.0/networks/'+id,function(html){
 				Dialog.show({
     	            title: '编辑网络',
     	            message: html,
@@ -138,7 +138,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
     	                	postData.network["admin_state_up"] =  postData.network["admin_state_up"] ==null?false:true;
     	                	postData.network["shared"] =  postData.network["shared"] ==null?false:true;
     	                	postData.network["router:external"] =  postData.network["router:external"] ==null?false:true;               			
-    	                	Common.xhr.putJSON('/v2.0/networks/'+id,postData,function(data){
+    	                	Common.xhr.putJSON('/networking/v2.0/networks/'+id,postData,function(data){
     	                		if(data){
     	                			dialog.close();
     	                			Dialog.success('修改成功')
@@ -168,7 +168,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 	    	 var id = $(this).attr("data")
 	    	 Dialog.confirm('确定要删除该网络吗?', function(result){
 	             if(result) {
-	            	 Common.xhr.del('/v2.0/networks/'+id,"",
+	            	 Common.xhr.del('/networking/v2.0/networks/'+id,"",
 	                     function(data){
 	                    	 if(data){
  	                			Dialog.success('删除成功')
@@ -187,8 +187,8 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 		//明细
 	    $("#networkTable_wrapper a.network-name").on("click",function(){
 	    	var id = $(this).attr("data");
-	    	Common.render(true,'tpls/ccenter/vpc/network/detail.html','/v2.0/networks/'+id,function(html){
-	    		Common.render(false,'tpls/ccenter/vpc/network/subnetlist.html','/v2.0/subnets?network_id='+id,function(html){
+	    	Common.render(true,'tpls/ccenter/vpc/network/detail.html','/networking/v2.0/networks/'+id,function(html){
+	    		Common.render(false,'tpls/ccenter/vpc/network/subnetlist.html','/networking/v2.0/subnets?network_id='+id,function(html){
 	    			EventsHandler.switcher();
 					$('#subnetTableDiv').html(html);
 					 $("a.reload").on("click",function(){

@@ -68,7 +68,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
     					"gigabytes": $(obj +" [name='gigabytes']").val(),
     					"ram": $(obj +" [name='ram']").val(),
     					"security_group_rule": $(obj +" [name='security_group_rule']").val(),
-    					"floating_ips": $(obj +" [name='floating_ips']").val(),
+    					"floatingip": $(obj +" [name='floatingip']").val(),
     					"network": $(obj +" [name='network']").val(),
     					"port": $(obj +" [name='port']").val(),
     					"route": $(obj +" [name='route']").val(),
@@ -114,7 +114,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 				//获取成员信息
 				getUsers : function(index,size){
 					///'cloud/am/user/page/'+index + '/'+size,resources/data/arrays.txt'
-					Common.xhr.ajax('/v2.0/users/page/'+size + '/'+index,function(userList){
+					Common.xhr.ajax('/identity/v2.0/users/page/'+size + '/'+index,function(userList){
 						renderData.userList = userList.result;
 						cacheData.userList = userList.result;
 						userTotalSize = userList.totalCount;
@@ -123,7 +123,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 				//获取及对应的角色
 				getRoles : function(){
 					//"//v2.0/OS-KSADM/roles",'resources/data/select.txt'
-					Common.xhr.ajax("/v2.0/OS-KSADM/roles/",function(roleList){
+					Common.xhr.ajax("/identity/v2.0/OS-KSADM/roles/",function(roleList){
 						renderData.roleList = roleList.roles;
 						cacheData.roleList = roleList.roles;
 					});
@@ -211,7 +211,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 			                    required: true,
 			                    digits:true
 			                },
-			                'floating_ips': {
+			                'floatingip': {
 			                    required: true,
 			                    digits:true
 			                },
@@ -251,7 +251,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 					});
 					$(document).off("click",".list-group .loadmore");
 					$(document).on("click",".list-group .loadmore",function(event){
-						Common.xhr.ajax('/v2.0/users/page/'+ userSize + '/'+(userIndex + 1),function(userList){
+						Common.xhr.ajax('/identity/v2.0/users/page/'+ userSize + '/'+(userIndex + 1),function(userList){
 							var data = {};
 							data.userList = userList.result;
 							//data.roleList = cacheData.roleList;
@@ -520,7 +520,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 	    	var vdc_name = $(this).attr("data-name");
 	    	Common.render(true,{
 				tpl:'tpls/ccenter/vdc/usage.html',
-				data:'resources/data/usage.txt',
+				data:'/v2.0/'+Common.cookies.getVdcId()+'/os-simple-tenant-usage/' + vdc_id,
 				beforeRender: function(data){
 					var usageData = {
 							vdc_name:vdc_name,
@@ -540,8 +540,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 					    	if(time == null || time == "")return;
 					    	var start =  $.trim(time.split("-")[0]);
 					    	var end = $.trim(time.split("-")[1]);
-					    	Common.xhr.get('resources/data/usage.txt',function(data){
-								//renderData.veList = veList;
+					    	Common.xhr.get('/v2.0/'+Common.cookies.getVdcId()+'/os-simple-tenant-usage/' + vdc_id,function(data){
 					    		var usageList = $("#usageList");
 					    		usageList.empty();
 					    		var list = data.tenant_usage.server_usages;
@@ -552,9 +551,9 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 					    				usageData.push("<tr>");
 					    				usageData.push("<td>",obj.name,"</td>");
 					    				usageData.push("<td>",obj.vcpus,"</td>");
-					    				usageData.push("<td>",obj.vcpus,"</td>");
-					    				usageData.push("<td>",obj.vcpus,"</td>");
-					    				usageData.push("<td>",obj.vcpus,"</td>");
+					    				usageData.push("<td>",obj.local_gb,"GB</td>");
+					    				usageData.push("<td>",obj.memory_mb,"GB</td>");
+					    				usageData.push("<td>",obj.started_at,"</td>");
 					    				usageData.push("</tr>");
 					    				usageList.html(usageData.join(""));
 					    			}
@@ -577,11 +576,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 		    	//配额管理
 		    	QuotaSets : function(id){
 		    		//先获取QuotaSets后，再render
-		    		Common.xhr.ajax('/v2.0/9cc717d8047e46e5bf23804fc4400247/os-quota-sets/' + id,function(data){
-		    			/*var quotaData = data.quota_set;
-		    			if(quotaData == null){
-		    				quotaData = [];
-		    			}*/
+		    		Common.xhr.ajax('/v2.0/'+Common.cookies.getVdcId()+ '/os-quota-sets/' + id,function(data){
 		    			Common.render('tpls/ccenter/vdc/quota.html',data.quota_set,function(html){
 		    				Modal.show({
 			    	            title: '配额',
@@ -595,7 +590,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 			    	                	var serverData = {
 				    	            			"quota_set":jsonData.quotaSetsJson("#vdcQuota")
 			    	        				};
-			    	                	Common.xhr.putJSON('/v2.0/9cc717d8047e46e5bf23804fc4400247/os-quota-sets/'+id,serverData,function(data){
+			    	                	Common.xhr.putJSON('/v2.0/'+Common.cookies.getVdcId()+'/os-quota-sets/'+id,serverData,function(data){
 			    	                		if(data){
 					                    		 Modal.success('保存成功')
 				 	                			 setTimeout(function(){Modal.closeAll()},2000);
