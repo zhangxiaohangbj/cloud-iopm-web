@@ -578,8 +578,7 @@ define('commons/main',
                         msg && Modal.error(msg);
                     };
                     if(url) {
-                        var requests = [],
-                            defaults = {
+                        var defaults = {
                                 type: 'GET',
                                 headers: this.headers,
                                 dataType: 'json'
@@ -607,7 +606,7 @@ define('commons/main',
                                 });
                             }
                         };
-                        initRequests(requests);
+                        var requests = this._getRequests(url);
                         if(requests.length <= 0) {
                             resolve("Ajax Error: 请确定请求内容url");
                             return false;
@@ -642,12 +641,12 @@ define('commons/main',
                         _data = data;
                         _success = success;
                     }
-                    return this.ajax({
-                        'type': 'GET',
-                        'url': url,
-                        'data': _data,
-                        'success': _success
+                    var defaults = { 'type': 'GET' },
+                        requests = this._getRequests(url);
+                    $.each(requests, function(i, req) {
+                        requests[i] = $.extend(req, defaults, {data: PubView.utils.isArray(_data) ? data[i] : data});
                     });
+                    return this.ajax(requests, _success);
                 };
                 this.getSync = function(url, data, success) {
                     var _data, _success;
@@ -658,13 +657,12 @@ define('commons/main',
                         _data = data;
                         _success = success;
                     }
-                    return this.ajax({
-                        'type': 'GET',
-                        'async': false,
-                        'url': url,
-                        'data': _data,
-                        'success': _success
+                    var defaults = { 'type': 'GET','async': false },
+                        requests = this._getRequests(url);
+                    $.each(requests, function(i, req) {
+                        requests[i] = $.extend(req, defaults, {data: PubView.utils.isArray(_data) ? data[i] : data});
                     });
+                    return this.ajax(requests, _success);
                 };
                 this.post = function(url, data, success) {
                     var _data, _success;
@@ -675,12 +673,12 @@ define('commons/main',
                         _data = data;
                         _success = success;
                     }
-                    return this.ajax({
-                        'type': 'POST',
-                        'url': url,
-                        'data': _data,
-                        'success': _success
+                    var defaults = { 'type': 'POST' },
+                        requests = this._getRequests(url);
+                    $.each(requests, function(i, req) {
+                        requests[i] = $.extend(req, defaults, {data: PubView.utils.isArray(_data) ? data[i] : data});
                     });
+                    return this.ajax(requests, _success);
                 };
                 this.postSync = function(url, data, success) {
                     var _data, _success;
@@ -691,13 +689,12 @@ define('commons/main',
                         _data = data;
                         _success = success;
                     }
-                    return this.ajax({
-                        'type': 'POST',
-                        'async': false,
-                        'url': url,
-                        'data': _data,
-                        'success': _success
+                    var defaults = { 'type': 'POST','async': false },
+                        requests = this._getRequests(url);
+                    $.each(requests, function(i, req) {
+                        requests[i] = $.extend(req, defaults, {data: PubView.utils.isArray(_data) ? data[i] : data});
                     });
+                    return this.ajax(requests, _success);
                 };
                 this.put = function(url, data, success) {
                     var _data, _success;
@@ -708,12 +705,12 @@ define('commons/main',
                         _data = data;
                         _success = success;
                     }
-                    return this.ajax({
-                        'type': 'PUT',
-                        'url': url,
-                        'data': _data,
-                        'success': _success
+                    var defaults = { 'type': 'PUT' },
+                        requests = this._getRequests(url);
+                    $.each(requests, function(i, req) {
+                        requests[i] = $.extend(req, defaults, {data: PubView.utils.isArray(_data) ? data[i] : data});
                     });
+                    return this.ajax(requests, _success);
                 };
                 this.putSync = function(url, data, success) {
                     var _data, _success;
@@ -724,13 +721,12 @@ define('commons/main',
                         _data = data;
                         _success = success;
                     }
-                    return this.ajax({
-                        'type': 'PUT',
-                        'async': false,
-                        'url': url,
-                        'data': _data,
-                        'success': _success
+                    var defaults = { 'type': 'PUT','async': false },
+                        requests = this._getRequests(url);
+                    $.each(requests, function(i, req) {
+                        requests[i] = $.extend(req, defaults, {data: PubView.utils.isArray(_data) ? data[i] : data});
                     });
+                    return this.ajax(requests, _success);
                 };
                 this.del = function(url, data, success) {
                     var _data, _success;
@@ -741,12 +737,12 @@ define('commons/main',
                         _data = data;
                         _success = success;
                     }
-                    return this.ajax({
-                        'type': 'DELETE',
-                        'url': url,
-                        'data': _data,
-                        'success': _success
+                    var defaults = { 'type': 'DELETE' },
+                        requests = this._getRequests(url);
+                    $.each(requests, function(i, req) {
+                        requests[i] = $.extend(req, defaults, {data: PubView.utils.isArray(_data) ? data[i] : data});
                     });
+                    return this.ajax(requests, _success);
                 };
                 this.delSync = function(url, data, success) {
                     var _data, _success;
@@ -757,13 +753,12 @@ define('commons/main',
                         _data = data;
                         _success = success;
                     }
-                    return this.ajax({
-                        'type': 'DELETE',
-                        'async': false,
-                        'url': url,
-                        'data': _data,
-                        'success': _success
+                    var defaults = { 'type': 'DELETE','async': false },
+                        requests = this._getRequests(url);
+                    $.each(requests, function(i, req) {
+                        requests[i] = $.extend(req, defaults, {data: PubView.utils.isArray(_data) ? data[i] : data});
                     });
+                    return this.ajax(requests, _success);
                 };
                 this.postJSON = function(url, data, success) {
                     var _data, _success;
@@ -775,13 +770,12 @@ define('commons/main',
                         _success = success;
                     }
                     try {
-                        return this.ajax({
-                            'type': 'POST',
-                            'url': url,
-                            'data': JSON.stringify(_data),
-                            'contentType': 'application/json',
-                            'success': _success
+                        var defaults = { 'type': 'POST','contentType': 'application/json' },
+                            requests = this._getRequests(url);
+                        $.each(requests, function(i, req) {
+                            requests[i] = $.extend(req, defaults, {data: PubView.utils.isArray(_data) ? JSON.stringify(_data[i]) : JSON.stringify(_data)});
                         });
+                        return this.ajax(requests, _success);
                     } catch (e) {
                         Modal.error("Ajax postJSON Error: data param parse error.");
                     }
@@ -796,14 +790,12 @@ define('commons/main',
                         _success = success;
                     }
                     try {
-                        return this.ajax({
-                            'type': 'POST',
-                            'async': false,
-                            'url': url,
-                            'data': JSON.stringify(_data),
-                            'contentType': 'application/json',
-                            'success': _success
+                        var defaults = { 'type': 'POST','contentType': 'application/json','async': false },
+                            requests = this._getRequests(url);
+                        $.each(requests, function(i, req) {
+                            requests[i] = $.extend(req, defaults, {data: PubView.utils.isArray(_data) ? JSON.stringify(_data[i]) : JSON.stringify(_data)});
                         });
+                        return this.ajax(requests, _success);
                     } catch (e) {
                         Modal.error("Ajax postJSONSync Error: data param parse error.");
                     }
@@ -818,13 +810,12 @@ define('commons/main',
                         _success = success;
                     }
                     try {
-                        return this.ajax({
-                            'type': 'PUT',
-                            'url': url,
-                            'data': JSON.stringify(_data),
-                            'contentType': 'application/json',
-                            'success': _success
+                        var defaults = { 'type': 'PUT','contentType': 'application/json' },
+                            requests = this._getRequests(url);
+                        $.each(requests, function(i, req) {
+                            requests[i] = $.extend(req, defaults, {data: PubView.utils.isArray(_data) ? JSON.stringify(_data[i]) : JSON.stringify(_data)});
                         });
+                        return this.ajax(requests, _success);
                     } catch (e) {
                         Modal.error("Ajax putJSON Error: data param parse error.");
                     }
@@ -839,13 +830,12 @@ define('commons/main',
                         _success = success;
                     }
                     try {
-                        return this.ajax({
-                            'type': 'PUT',
-                            'url': url,
-                            'data': JSON.stringify(_data),
-                            'contentType': 'application/json',
-                            'success': _success
+                        var defaults = { 'type': 'PUT','contentType': 'application/json','async': false },
+                            requests = this._getRequests(url);
+                        $.each(requests, function(i, req) {
+                            requests[i] = $.extend(req, defaults, {data: PubView.utils.isArray(_data) ? JSON.stringify(_data[i]) : JSON.stringify(_data)});
                         });
+                        return this.ajax(requests, _success);
                     } catch (e) {
                         Modal.error("Ajax putJSONSync Error: data param parse error.");
                     }
@@ -862,6 +852,24 @@ define('commons/main',
                     } else {
                         return PubView.root;
                     }
+                };
+                this._getRequests = function(request, requests) {
+                    if(!requests || !PubView.utils.isArray(requests)) {
+                        requests = [];
+                    }
+                    if(PubView.utils.isString(request)) {
+                        requests.push($.extend({}, {url: request}));
+                    } else if(PubView.utils.isPlainObject(request) && request.url) {
+                        requests.push(request);
+                    } else if(PubView.utils.isArray(request)) {
+                        for (var i=0; i<request.length; i++) {
+                            if(requests.length > 100) return requests;
+                            var req = request[i];
+                            requests = this._getRequests(req, requests);
+                            req = null;
+                        }
+                    }
+                    return requests;
                 };
             };
             !that.xhr && (that.xhr = new XHR());
