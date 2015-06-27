@@ -117,14 +117,15 @@ war {
 	}
 
 	exclude "resources/commons/"
+	exclude "resources/initializer.js"
 
-	from("${buildDir}/resourcesWeb/") {
+	from("${webAppDirName}/resources/initializer.js") {
 		into "resources/"
 	}
 }
 
 task initJS << {
-	def initJS = new File("${buildDir}/resourcesWeb/initializer.js");
+	def initJS = new File("${webAppDirName}/resources/initializer.js");
 	if(initJS.exists()) initJS.delete();
 	def parent = initJS.getParentFile();
 	if(!parent.exists()) parent.mkdir();
