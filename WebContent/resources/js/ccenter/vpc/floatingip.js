@@ -3,7 +3,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 	var init = function(){
 		Common.$pageContent.addClass("loading");
 		//先获取数据，进行加工后再去render
-		Common.render(true,'tpls/ccenter/vpc/floatingip/list.html','/v2.0/floatingips',function(){
+		Common.render(true,'tpls/ccenter/vpc/floatingip/list.html','/networking/v2.0/floatingips',function(){
 			bindEvent();
 		});
 	};
@@ -38,7 +38,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 				},
 				initNetworkList : function(){
 					var vdc_id = currentChosenObj.vdc || $('select.tenant_id').children('option:selected').val();
-					Common.xhr.get('/v2.0/networks',{"tenant_id":vdc_id,isExternalNetwork:true},function(data){
+					Common.xhr.get('/networking/v2.0/networks',{"tenant_id":vdc_id,isExternalNetwork:true},function(data){
 						var networks = data.networks;	
 						var html = Common.uiSelect(networks);
 				    	$('select.floating_network_id').html(html);
@@ -54,7 +54,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 				    	$('select.subnet_id').change();
 						return;
 					}
-					Common.xhr.get('/v2.0/subnets',{"network_id":network_id},function(data){
+					Common.xhr.get('/networking/v2.0/subnets',{"network_id":network_id},function(data){
 						var subnets = data.subnets;
 						var html = Common.uiSelect(subnets);
 				    	$('select.subnet_id').html(html);
@@ -69,7 +69,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 						$('select.floating_ip_address').html("");
 						return;
 					}
-					Common.xhr.get('/v2.0/floatingips/avaliable',{"network_id":network_id,"subnet_id":subnet_id,},function(data){	
+					Common.xhr.get('/networking/v2.0/floatingips/avaliable',{"network_id":network_id,"subnet_id":subnet_id,},function(data){	
 						var floatingips = data.floatingips;
 						var selectData = [];
 						for(var i=0;i<floatingips.length;i++){
@@ -132,7 +132,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 	    	 Dialog.confirm('确定要解除绑定吗?', function(result){
 	             if(result) {
 	            	 var data = {"floatingip":{"id":id}};
-	            	 Common.xhr.putJSON('/v2.0/floatingips/'+id,data,
+	            	 Common.xhr.putJSON('/networking/v2.0/floatingips/'+id,data,
 	                     function(data){
 	                    	 if(data){
  	                			Dialog.success('解除成功')
@@ -154,7 +154,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 	    	 Dialog.confirm('确定要删除浮动IP吗?', function(result){
 	             if(result) {
 	            	 var data = {"floatingip":{"id":id}};
-	            	 Common.xhr.del('/v2.0/floatingips/'+id,
+	            	 Common.xhr.del('/networking/v2.0/floatingips/'+id,
 	                     function(data){
 	                    	 if(data){
  	                			Dialog.success('删除成功')
@@ -190,7 +190,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
     	                		postData.floatingip[data[i]["name"]] = data[i]["value"];
     						}
     	                	delete postData.floatingip["subnet_id"];		
-    	                	Common.xhr.postJSON('/v2.0/floatingips',postData,function(data){
+    	                	Common.xhr.postJSON('/networking/v2.0/floatingips',postData,function(data){
     	                		if(data){
     	                			dialog.close();
     	                			Dialog.success('保存成功')

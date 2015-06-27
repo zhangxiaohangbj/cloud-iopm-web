@@ -516,12 +516,14 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 	    });
 	  //查看使用情况
 	    $("ul.dropdown-menu a.usage").on("click",function(){
+	    	Common.$pageContent.addClass("loading");
 	    	var vdc_id = $(this).attr("data");
 	    	var vdc_name = $(this).attr("data-name");
 	    	Common.render(true,{
 				tpl:'tpls/ccenter/vdc/usage.html',
-				data:'resources/data/usage.txt',
+				data:'/v2.0/'+Common.cookies.getVdcId()+'/os-simple-tenant-usage/' + vdc_id,
 				beforeRender: function(data){
+					
 					var usageData = {
 							vdc_name:vdc_name,
 							usageList:data.tenant_usage.server_usages
@@ -529,6 +531,10 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 					return usageData;
 				},
 				callback: function(){
+					Common.initDataTable($('#UsageTable'),function($tar){
+						$tar.prev().hide();
+						Common.$pageContent.removeClass("loading");
+					});
 					 $("#reload").on("click",function(){
 						 Common.router.reload();
 					 })
@@ -540,8 +546,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 					    	if(time == null || time == "")return;
 					    	var start =  $.trim(time.split("-")[0]);
 					    	var end = $.trim(time.split("-")[1]);
-					    	Common.xhr.get('resources/data/usage.txt',function(data){
-								//renderData.veList = veList;
+					    	Common.xhr.get('/v2.0/'+Common.cookies.getVdcId()+'/os-simple-tenant-usage/' + vdc_id,{'start':start,'end':end},function(data){
 					    		var usageList = $("#usageList");
 					    		usageList.empty();
 					    		var list = data.tenant_usage.server_usages;
@@ -552,13 +557,17 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 					    				usageData.push("<tr>");
 					    				usageData.push("<td>",obj.name,"</td>");
 					    				usageData.push("<td>",obj.vcpus,"</td>");
-					    				usageData.push("<td>",obj.vcpus,"</td>");
-					    				usageData.push("<td>",obj.vcpus,"</td>");
-					    				usageData.push("<td>",obj.vcpus,"</td>");
+					    				usageData.push("<td>",obj.local_gb,"GB</td>");
+					    				usageData.push("<td>",obj.memory_mb,"GB</td>");
+					    				usageData.push("<td>",obj.started_at,"</td>");
 					    				usageData.push("</tr>");
 					    				usageList.html(usageData.join(""));
 					    			}
 					    		}
+					    		Common.initDataTable($('#UsageTable'),function($tar){
+									$tar.prev().hide();
+									Common.$pageContent.removeClass("loading");
+								});
 							});
 					  });
 				}
@@ -577,9 +586,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 		    	//配额管理
 		    	QuotaSets : function(id){
 		    		//先获取QuotaSets后，再render
-		    		var cookie = Common.cookies();
-		    		var admin_vdc_id = cookie.vdc.id
-		    		Common.xhr.ajax('/v2.0/'+admin_vdc_id + '/os-quota-sets/' + id,function(data){
+		    		Common.xhr.ajax('/v2.0/'+Common.cookies.getVdcId()+ '/os-quota-sets/' + id,function(data){
 		    			Common.render('tpls/ccenter/vdc/quota.html',data.quota_set,function(html){
 		    				Modal.show({
 			    	            title: '配额',
@@ -593,7 +600,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 			    	                	var serverData = {
 				    	            			"quota_set":jsonData.quotaSetsJson("#vdcQuota")
 			    	        				};
-			    	                	Common.xhr.putJSON('/v2.0/'+admin_vdc_id+'/os-quota-sets/'+id,serverData,function(data){
+			    	                	Common.xhr.putJSON('/v2.0/'+Common.cookies.getVdcId()+'/os-quota-sets/'+id,serverData,function(data){
 			    	                		if(data){
 					                    		 Modal.success('保存成功')
 				 	                			 setTimeout(function(){Modal.closeAll()},2000);
