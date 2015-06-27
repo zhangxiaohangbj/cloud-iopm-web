@@ -1,6 +1,6 @@
 <div class="page-header clearfix">
 	<ol class="breadcrumb">
-		<li><a href="javascript:void(0);" class="reload" id="reload">虚拟数据中心</a></li>
+		<li><a href="#ccenter/vdc/" class="reload">虚拟数据中心</a></li>
 		<li class="active">{{vdc_name}}</li>
 	</ol>
 	<div class="control-group">
@@ -11,7 +11,7 @@
 					type="text" style="width: 200px" name="reservation"
 					id="time_text" class="form-control"
 					value="" />
-					<!-- <input type="submit" class="btn btn-primary"> -->
+					<!-- <input type="submit" class="btn btn-primary" style="margin-left:10px;"> -->
 					<button id="submit_usage" class="btn btn-primary" style="margin-left:10px;">提交</button>
 			</div>
 		</div>
@@ -20,7 +20,7 @@
 <div class="page-body">
 	<div class="pane">
 		<div class="pane-content">
-			<table class="table table-primary table-striped">
+			<table class="table table-primary table-striped" id="UsageTable">
 				<thead>
 					<tr>
 						<th class="c4">云主机名称</th>
