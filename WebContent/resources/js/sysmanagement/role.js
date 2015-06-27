@@ -5,7 +5,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 		//先获取数据，进行加工后再去render
 		Common.render(true,{
 			tpl:'tpls/sysmanagement/role/list.html',
-			data:'/v2.0/roles/page/10/1',
+			data:'/identity/v2.0/roles/page/1/10',
 			beforeRender: function(data){
 				return data.result;
 			},
@@ -55,7 +55,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
     	                			"name": $("[name='name']").val(),
     	                			"description": $("[name='description']").val()
         					};
-    	                	Common.xhr.postJSON('/v2.0/OS-KSADM/roles',serverData,function(data){
+    	                	Common.xhr.postJSON('/identity/v2.0/OS-KSADM/roles',serverData,function(data){
     	                		if(data){
     	                			Modal.success('保存成功')
     	                			setTimeout(function(){Modal.closeAll()},2000);
@@ -97,7 +97,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 //	    	            		if(!valid) return false;
 //	    	            		var serverData = {
 //		    	                	  };
-//	    	                	Common.xhr.putJSON('/v2.0/OS-KSADM/roles/'+id,serverData,function(data){ //需修改接口
+//	    	                	Common.xhr.putJSON('/identity/v2.0/OS-KSADM/roles/'+id,serverData,function(data){ //需修改接口
 //	    	                		if(data){
 //	    	                			Modal.success('保存成功')
 //	    	                			setTimeout(function(){Modal.closeAll()},2000);
@@ -125,7 +125,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 	    	 var id = $(this).attr("data");
 	    	 Modal.confirm('确定要删除该角色吗?', function(result){
 	             if(result) {
-	            	 Common.xhr.del('/v2.0/OS-KSADM/roles/'+id,
+	            	 Common.xhr.del('/identity/v2.0/OS-KSADM/roles/'+id,
 	                     function(data){
 	                    	 if(data){
 	                    		 Modal.success('删除成功')
