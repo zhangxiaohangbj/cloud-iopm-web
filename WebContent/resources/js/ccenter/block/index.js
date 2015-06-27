@@ -45,16 +45,13 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 				az: null,	//当前可用分区
 				netId: null
 		};
-        //初始化加载，不依赖其他模块
-		var DataGetter = {
-				getVdc:function(){
-					//管理员和普通租户的逻辑在此判断
-					Common.xhr.ajax('/v2.0/tenants',function(vdcDatas){
-						renderData.vdcList = vdcDatas.tenants;
-					});
-				}
-		};
-		DataGetter.getVdc();
+		
+		//初始化加载，不依赖其他模块
+		//管理员和普通租户的逻辑在此判断
+		Common.xhr.ajax('/v2.0/tenants',function(vdcDatas){
+			renderData.vdcList = vdcDatas.tenants;
+		});
+		
 		//载入默认的数据 inits
 		var DataIniter = {
 				//载入可用分区
@@ -111,45 +108,62 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 						});
 					}
 				},
+				
+				//quatos  getClass  
+				renderQuatos: function(options){
+					function _renderQuatos(options) {
+						var quatos = options.quatos || []
+						var vdcId = options.vdcId;
+						var size = $(options.valueNode).val() || 0;
+						Common.xhr.ajax('/v2.0/' + vdcId + '/os-quota-sets/' + vdcId,function(allQuotas){
+							allQuotas = (allQuotas && allQuotas.quota_set) || {};
+							Common.xhr.ajax('/v2.0/' + vdcId + '/limits',function(allQuotaUsages){
+								var datas = []
+								for(var i=0; i<quatos.length; i++) {
+									var q = quatos[i];
+									var type = q.type || "count";
+									var total = allQuotas[q.name];
+									
+									var newUse = type == "count" ? (size>0 ? 1 : 0) : size;
+									var used = allQuotaUsages[q.name] + Number(newUse);
+									var rate = 100;
+									if(total != 0) {
+										rate = Math.round((parseInt(used)/parseInt(total))*100);
+									}
+									var style = rate <= 30 ? 'progress-bar-success' : rate >= 80 ? 'progress-bar-danger' : 'progress-bar-info';
+									datas.push({
+										name: q.name, title: q.title, total: total, used: used, rate: rate, style: style
+									})
+								}
+								//生成html数据
+								Common.render('tpls/common/quota.html', datas, function(html){
+									$(options.domNode).html(html);
+									if(options.callback) {
+										options.callback();
+									}
+								});
+							});
+						});
+					}
+					
+					$(options.valueNode).on("blur", function(){
+						_renderQuatos(options);
+					})
+					_renderQuatos(options);
+				},
 				//初始化配额信息
 				initQuato: function(vdc_id){
 					vdc_id = vdc_id || currentChosenObj.vdc || $('select.tenant_id').find('option:selected').val();
 					if(vdc_id){
-						//获取vdc的配额
-						Common.xhr.ajax('/v2.0/'+current_vdc_id+'/os-quota-sets/'+vdc_id,function(quotas){
-							if(!quotas) return;
-							quotas = quotas.quota_set || {};
-							//获取vdc的配额使用情况
-							Common.xhr.ajax('/v2.0/'+vdc_id+'/limits',function(quotaUsages){
-								var getMathRound = function(used,total){
-									if(total == 0) return 100;
-									return Math.round((parseInt(used)/parseInt(total))*100);
-								}
-								var getClass = function(rate){
-									return rate <= 30 ? 'progress-bar-success' : rate >= 80 ? 'progress-bar-danger' : 'progress-bar-info';
-								}
-								if($('#size').val()){
-									quotaUsages.gigabytes = parseInt(quotaUsages.gigabytes) + parseInt($('#size').val());
-								}
-								var rateDiskNums = getMathRound(quotaUsages.volumes, quotas.volumes || 0),
-								rateDiskTotalSizes = getMathRound(quotaUsages.gigabytes, quotas.gigabytes || 0),
-								styleDiskNums = getClass(rateDiskNums),styleDiskTotalSizes = getClass(rateDiskTotalSizes);
-								var renderData = [
-											        {
-											        	name: 'DiskTotalSizes',title: '容量',total: quotas.gigabytes, used: quotaUsages.gigabytes, rate: rateDiskTotalSizes, style: styleDiskTotalSizes
-											        },
-											        {
-											        	name: 'diskNums',title: '磁盘数量',total: quotas.volumes, used: quotaUsages.volumes, rate: rateDiskNums, style: styleDiskNums
-											        }
-											 ];
-								//生成html数据
-								Common.render('tpls/common/quota.html',renderData,function(html){
-									$('div.quotas').html(html);
-									EventsHandler.checkNextWizard();
-								});
-								
-							})
+						this.renderQuatos({
+							vdcId : vdc_id,
+							valueNode : '#size',
+							quatos : [{name: "volumes", title: "磁盘数量", type: "count"},
+							          {name: "gigabytes", title: "容量", type: "mount"}],
+							domNode : 'div.quotas',
+							callback : EventsHandler.checkNextWizard
 						})
+					
 					}else{
 						Modal.error('尚未选择vdc');
 					}
@@ -184,13 +198,13 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 				    })
 				},
 				//input propertychange
-				inputListener: function(){
-					$('#size').on('blur',function(){
-						if($(this).parents('form:first').validate().element('#size')){
-							DataIniter.initQuato();//重新加载配额数据
-						}
-					})
-				},
+//				inputListener: function(){
+//					$('#size').on('blur',function(){
+//						if($(this).parents('form:first').validate().element('#size')){
+//							DataIniter.initQuato();//重新加载配额数据
+//						}
+//					})
+//				},
 				checkNextWizard: function(){
 					$('.form-group .progress-bar').each(function(){
 						var info = $(this).parent().prev(),
@@ -276,7 +290,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
     				})
     				//载入事件
     		    	EventsHandler.vdcChange();
-    				EventsHandler.inputListener();
+    				//EventsHandler.inputListener();
     			});
     			var getMountVm = function(){
     				var data = [];
@@ -358,50 +372,57 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 	    var moreAction = {
     		editMount: function(){
     			$('.dropdown-menu a.edit_mount').on('click',function(){
-    				var tr = $(this).parent('tr:first'),
-    					id = tr.attr("data-id"),
-    					name = tr.find('.volume_name').text();
-    				Common.render(false,'tpls/ccenter/block/volume/edit_mount.html','/resources/data/specs.txt',function(html){
-    					Modal.show({
-    	    	            title: '挂载'+name+'磁盘到云主机',
-    	    	            message: html,
-    	    	            closeByBackdrop: false,
-    	    	            nl2br: false,
-    	    	            buttons: [{
-    	    	                label: '确定',
-    	    	                action: function(Modal) {
-    	    	                	Common.xhr.postJSON('/v2.0/networks',postData,function(data){
-	    	    	                		if(data){
-	    	    	                			Modal.close();
-	    	    	                			Modal.success('保存成功')
-	    	     	                			setTimeout(function(){Modal.closeAll()},3000);
-	    	    	                			Common.router.route();
-	    									}else{
-	    										alert("保存失败");
-	    									}
-	    	    	    				});
-    	    	                	 }
-    	    	            	},
-    	    	            	{
-    	    	                label: '取消',
-    	    	                action: function(Modal) {
-    	    	                    Modal.close();
-    	    	                	}
-    	    	            	}],
-    	    	            	onshown : function(){
-    	        	            	EventsHandler.initCheckBox();
-    	        	            }
-    					});
+    				var tr = $(this).parents('tr:first')
+    				var	id = tr.attr("data-id")
+    				var	name = tr.find('.volume_name').text()
+    				Common.render({
+    					tpl:'tpls/ccenter/block/volume/edit_mount.html',
+						data:'/' + current_vdc_id + '/servers/page/1/200',
+						beforeRender: function(data){
+							return {servers:data.result, volName:name};
+						},
+						callback: function(html) {
+							Modal.show({
+	    	    	            title: '挂载'+name+'磁盘到云主机',
+	    	    	            message: html,
+	    	    	            closeByBackdrop: false,
+	    	    	            nl2br: false,
+	    	    	            buttons: [{
+	    	    	                label: '确定',
+	    	    	                action: function(Modal) {
+	    	    	                	Common.xhr.postJSON('/v2.0/networks',postData,function(data){
+		    	    	                		if(data){
+		    	    	                			Modal.close();
+		    	    	                			Modal.success('保存成功')
+		    	     	                			setTimeout(function(){Modal.closeAll()},3000);
+		    	    	                			Common.router.route();
+		    									}else{
+		    										alert("保存失败");
+		    									}
+		    	    	    				});
+	    	    	                	 }
+	    	    	            	},
+	    	    	            	{
+	    	    	                label: '取消',
+	    	    	                action: function(Modal) {
+	    	    	                    Modal.close();
+	    	    	                	}
+	    	    	            	}],
+	    	    	            	onshown : function(){
+	    	        	            	EventsHandler.initCheckBox();
+	    	        	            }
+	    					});
+						}
     				})
     			})
     		},
     		//删除
     		deleteVolume: function(){
-    			$("#networkTable_wrapper a.delete").on("click",function(){
-    				var id = $(this).parent('tr:first').attr("data-id");
+    			$("#VolumeTable a.delete").on("click",function(){
+    				var id = $(this).parents('tr:first').attr("data-id");
 	       	    	 Modal.confirm('确定要删除该磁盘吗?', function(result){
 	       	             if(result) {
-	       	            	 /*Common.xhr.del('/v2.0/networks/'+id,"",
+	       	            	 Common.xhr.del("/v2/" + current_vdc_id + "/volumes/" + id, "",
 	       	                     function(data){
 	       	                    	 if(data){
 	        	                			Modal.success('删除成功')
@@ -411,11 +432,57 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 	       	                    		Modal.success('删除失败')
 	       	 	                		setTimeout(function(){Modal.closeAll()},3000);
 	       	                    	 }
-	       	                     });*/
+	       	                     });
 	       	             }else {
 	       	            	 //Modal.close();
 	       	             }
 	       	         });
+	       		})
+    		},
+    		extendSize : function() {
+    			$("#VolumeTable a.extend_size").on("click",function(){
+    				var tr = $(this).parents('tr:first')
+    				var	id = tr.attr("data-id")
+    				var	name = tr.find('.volume_name').text()
+	       	    	Common.render({
+    					tpl:'tpls/ccenter/block/volume/extend-size.html',
+						data:'/' + current_vdc_id + '/servers/page/1/200',
+						beforeRender: function(data){
+							return {servers:data.result, volName:name};
+						},
+						callback: function(html) {
+							Modal.show({
+	    	    	            title: '扩展'+name+'磁盘的大小',
+	    	    	            message: html,
+	    	    	            closeByBackdrop: false,
+	    	    	            nl2br: false,
+	    	    	            buttons: [{
+	    	    	                label: '确定',
+	    	    	                action: function(Modal) {
+	    	    	                	Common.xhr.postJSON('/v2.0/networks',postData,function(data){
+		    	    	                		if(data){
+		    	    	                			Modal.close();
+		    	    	                			Modal.success('保存成功')
+		    	     	                			setTimeout(function(){Modal.closeAll()},3000);
+		    	    	                			Common.router.route();
+		    									}else{
+		    										alert("保存失败");
+		    									}
+		    	    	    				});
+	    	    	                	 }
+	    	    	            	},
+	    	    	            	{
+	    	    	                label: '取消',
+	    	    	                action: function(Modal) {
+	    	    	                    Modal.close();
+	    	    	                	}
+	    	    	            	}],
+	    	    	            	onshown : function(){
+	    	        	            	EventsHandler.initCheckBox();
+	    	        	            }
+	    					});
+						}
+    				})
 	       		})
     		}
 	    };
