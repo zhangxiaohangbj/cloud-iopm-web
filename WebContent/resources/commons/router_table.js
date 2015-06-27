@@ -7,5 +7,6 @@ define({
     '^#cresource(!.*)?$': "js/cresource/env",
     '^#sysmanagement(!.*)?$': "js/sysmanagement/user",
     '^#ccenter/vmtype/metadataList/(.*)$' :"js/ccenter/vmtype/metadata",
-    '^#ccenter/block/detail/(.*)$' :"js/ccenter/block/detail"
+    '^#ccenter/block/detail/(.*)$' :"js/ccenter/block/detail",
+    '^#ccenter/vdc/usage/(.*)$' :"js/ccenter/vdc/usage"
 });

@@ -26,7 +26,7 @@
 						<th class="c12">操作</th>
 					</tr>
 				</thead>
-				<tbody>
+<!-- 				<tbody>
 				{{each list as item i}}
 					<tr>
 						<td><label><input type="checkbox"></label></td>
@@ -59,9 +59,9 @@
 			 			</td>
 			 			<td>{{item.created_at}}</td>
 						<td>
-						<!-- <a class="btn-opt" data-toggle="tooltip" title="备份"  style="margin: 0;"><i class="fa fa-files-o"></i></a> -->
+						<a class="btn-opt" data-toggle="tooltip" title="备份"  style="margin: 0;"><i class="fa fa-files-o"></i></a>
 						<a href="javascript:void(0)" class="btn-opt createSnapshot" data-toggle="tooltip" title="创建快照" data-act="stop" data="{{item.id}}" style="margin: 0;"><i class="fa fa-camera"></i></a>
-						<!-- <a class="btn-opt" data-toggle="tooltip" title="控制台" data-act="delete"><i class="glyphicon glyphicon-trash"></i></a> -->
+						<a class="btn-opt" data-toggle="tooltip" title="控制台" data-act="delete"><i class="glyphicon glyphicon-trash"></i></a>
 						{{if item.vmState != 'PAUSED' && item.vmState != 'SHUTOFF' && item.vmState != 'SUSPENDED'}}
 						<div class="dropdown">
 							<a class="btn-opt dropdown-toggle" data-toggle="dropdown" title="更多"  aria-expanded="false" ><i class="fa fa-angle-double-right"></i></a>
@@ -97,7 +97,7 @@
 						</td>
 					</tr>
     			{{/each}}
-				</tbody>
+				</tbody> -->
 				<tfoot>
 					<tr>
 						<td>

@@ -3,7 +3,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 	var init = function(){
 		Common.$pageContent.addClass("loading");
 		//render获取的数据
-		Common.render(true,'tpls/ccenter/security/securitygroup/list.html','/v2.0/security-groups/page/1/10',function(){
+		Common.render(true,'tpls/ccenter/security/securitygroup/list.html','/networking/v2.0/security-groups/page/1/10',function(){
 			bindEvent();
 		});
 	};
@@ -39,7 +39,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 				},
 				//安全组列表
 				initSecurityGroupList : function(){
-					Common.xhr.ajax('/v2.0/security-groups',function(data){
+					Common.xhr.ajax('/networking/v2.0/security-groups',function(data){
 						var securitygroups = data.security_groups;
 						var id = $('select.remote_group_id').attr("data");
 						if(id!=null){
@@ -134,7 +134,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
     	                	for(var i=0;i<data.length;i++){
     	                		postData.security_group[data[i]["name"]] = data[i]["value"];
     						}
-    	                	Common.xhr.postJSON('/v2.0/security-groups',postData,function(data){
+    	                	Common.xhr.postJSON('/networking/v2.0/security-groups',postData,function(data){
     	                		if(data){
     	                			Dialog.success('保存成功')
      	                			setTimeout(function(){Dialog.closeAll()},3000);
@@ -163,7 +163,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 	    	 var id = $(this).attr("data");
 	    	 Dialog.confirm('确定要删除该安全组吗?', function(result){
 	             if(result) {
-	            	 Common.xhr.del('/v2.0/security-groups/'+id,
+	            	 Common.xhr.del('/networking/v2.0/security-groups/'+id,
 	                     function(data){
 	                    	 if(data){
 	                    		 Dialog.success('删除成功')
