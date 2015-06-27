@@ -1,7 +1,7 @@
 /*!
  * 公共header和侧边栏的维护
  */
-define(function() {
+define('commons/pub_menu', function() {
     // init nav & sideBar
     var navPrimaryItems = [
         {

@@ -1,7 +1,7 @@
 /**
  * 初始化对象,包含公共的初始化加载方法和全局的方法，包括路由注册
  */
-define(
+define('commons/main',
     [
         'PubView', 'bs/modal', 'json', 'template',
         'commons/pub_menu', 'commons/router_table',
@@ -571,27 +571,20 @@ define(
                     'Content-Type': "application/json"
                 };
                 this.ajax = function(url, success) {
+                    var self = this;
                     var resolve = function(msg) {
                         that._inRender && (that._inRender = false);
                         that._deferred && that.resolve();
                         msg && Modal.error(msg);
                     };
                     if(url) {
-                        var object;
-                        if(PubView.utils.isString(url)) {
-                            object = $.extend({}, {url: url});
-                        } else if(!PubView.utils.isPlainObject(url) || !url.url) {
-                            resolve("Ajax Error: 请确定请求内容url");
-                            return false;
-                        } else {
-                            object = $.extend({}, url);
-                        }
-                        object.url = this._getFullUrl(object.url);
-                        var defaults = {
-                            type: 'GET',
-                            headers: this.headers,
-                            dataType: 'json',
-                            error: function(xhr, errorText) {
+                        var requests = [],
+                            defaults = {
+                                type: 'GET',
+                                headers: this.headers,
+                                dataType: 'json'
+                            },
+                            failureCallback = function(xhr, errorText) {
                                 if(errorText) {
                                     errorText = errorText.replace(/(.+)error$/, "$1 error").replace(/\b\w+\b/g,function(w) {
                                         return w.substr(0,1).toLocaleUpperCase() + w.substring(1);
@@ -600,13 +593,40 @@ define(
                                     errorText = 'Error';
                                 }
                                 resolve("Ajax "+errorText+ (xhr.status >= 400 ? ": Status "+xhr.status+" / "+xhr.statusText : "."));
+                            };
+                        var initRequests = function(request, level) {
+                            level = level || 1;
+                            if(PubView.utils.isString(request)) {
+                                requests.push($.extend({}, {url: request}));
+                            } else if(PubView.utils.isPlainObject(request) && request.url) {
+                                requests.push(request);
+                            } else if(PubView.utils.isArray(request)) {
+                                $.each(request, function(i, req) {
+                                    if(level > 100) return;
+                                    initRequests(req, level+1);
+                                });
                             }
                         };
-                        return $.ajax($.extend(
-                                {},
-                                defaults,
-                                object,
-                                PubView.utils.isFunction(success) ? {success: success} : null)
+                        initRequests(requests);
+                        if(requests.length <= 0) {
+                            resolve("Ajax Error: 请确定请求内容url");
+                            return false;
+                        }
+                        var deferreds = [];
+                        $.each(requests, function(i, req) {
+                            req.url = self._getFullUrl(req.url);
+                            deferreds.push($.ajax($.extend({}, defaults, req)));
+                        });
+                        var deferredsHandler = $.when.apply(that, deferreds);
+                        return deferredsHandler.then(
+                            function() {
+                                // success
+                                PubView.utils.isFunction(success) && success.apply(that, arguments);
+                            },
+                            function() {
+                                // failure
+                                failureCallback.apply(that, arguments);
+                            }
                         );
                     } else {
                         resolve("Ajax Error: 请确定请求内容url");

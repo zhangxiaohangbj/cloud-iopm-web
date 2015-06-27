@@ -115,4 +115,27 @@ war {
 			from "${buildDir}/classes/main","${buildDir}/resources/main"
 		}
 	}
+
+	exclude "resources/commons/"
+
+	from("${buildDir}/resourcesWeb/") {
+		into "resources/"
+	}
 }
+
+task initJS << {
+	def initJS = new File("${buildDir}/resourcesWeb/initializer.js");
+	if(initJS.exists()) initJS.delete();
+	def parent = initJS.getParentFile();
+	if(!parent.exists()) parent.mkdir();
+	[
+		"WebContent/resources/commons/pub_menu.js",
+		"WebContent/resources/commons/router_table.js",
+		"WebContent/resources/commons/main.js",
+		"WebContent/resources/commons/init.js"
+	].each {
+		initJS.append(new File(it).text, "utf-8")
+	}
+}
+
+war.dependsOn initJS
