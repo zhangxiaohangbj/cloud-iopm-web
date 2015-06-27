@@ -761,7 +761,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
     	//成员管理
     	 Member : function(vdc_id){
     		 //根据vdc_id获取用户列表，包括角色  resources/data/user.txt
-    		 Common.xhr.ajax("/v2.0/tenants/"+vdc_id+"/users",function(data){
+    		 Common.xhr.ajax("/identity/v2.0/tenants/"+vdc_id+"/users",function(data){
 			 	var userList = data.users;
 	    		var loadmore = false;
 				if(userTotalSize > userSize * userIndex){
