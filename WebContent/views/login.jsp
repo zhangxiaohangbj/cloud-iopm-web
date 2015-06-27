@@ -94,10 +94,10 @@
 	        });
 		}
 		function callbackSuccess(res){
-			if(res != null && res.error_code == null && res.access.token != null){
+			if(res != null && res.error == null && res.access.token != null){
 				window.location.href="${pageContext.request.contextPath}";
 			}else{
-				alert("错误代码："+res.error_code+"\n错误描述: "+res.error_desc);
+				alert("错误代码："+res.error.title+"\n错误描述: "+res.error.message);
 			}
 		}
 		function callbackErr(res){
