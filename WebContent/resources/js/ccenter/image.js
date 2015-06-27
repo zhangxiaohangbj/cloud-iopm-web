@@ -5,7 +5,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 		//先获取数据，进行加工后再去render
 		Common.render(true,{
 			tpl:'tpls/ccenter/image/list.html',
-			data:'/cloud/task/strategy?deleted=false',
+			data:'/v2/9cc717d8047e46e5bf23804fc4400247/images?isDeleted=false',
 			beforeRender: function(data){
 				return data;
 			},
@@ -15,7 +15,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 	
 	var bindEvent = function(){
 		//dataTables
-		Common.initDataTable($('#strategyTable'),function($tar){
+		Common.initDataTable($('#imageTable'),function($tar){
 			$tar.prev().find('.left-col:first').append(
 					'<span class="btn btn-add">新 建</span>'
 			);
@@ -27,14 +27,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 		var renderData = {};
         //初始化加载，不依赖其他模块
 		var DataGetter = {
-				//镜像分组列表
-				getStrategyGroupList: function(type){
-					Common.xhr.get('/cloud/task/strategy-group',{'deleted':'false'},function(list){
-						renderData.strategyGroupList = list;
-					});
-				},
 		}
-		DataGetter.getStrategyGroupList();
 		
 		//事件处理
 		var EventsHandler = {
@@ -46,19 +39,21 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 		                    required: true,
 		                    maxlength:255
 		                },
-		                'memo': {
+		                'description': {
 		                    maxlength:255
 		                },
-		                'className': {
+		                'locations': {
 		                	required: true,
 		                    maxlength:255
 		                },
-		                'methodName': {
-		                	required: true,
-		                    maxlength:255
+		                'diskFormat': {
+		                	required: true
 		                },
-		                'paramsMemo': {
-		                    maxlength:1024
+		                'minDisk': {
+		                	required: true
+		                },
+		                'minRam': {
+		                	required: true
 		                }
 		            }
 		        });
@@ -82,7 +77,32 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 	    	            		if(!valid) return false;
 	    	            		Modal.confirm('确定要保存吗?', function(result){
 	    	            			if(result) {
-	    	            				Common.xhr.postJSON('/cloud/task/strategy',$("#editStrategy").serializeObject(),function(data){
+	    	            				debugger;
+	    	            				var pageData = $("#editImage").serializeObject();
+	    	            				if(pageData.isPublic){
+	    	            					pageData.isPublic = true;
+	    	            				}else{
+	    	            					pageData.isPublic = false;
+	    	            				}
+	    	            				if(pageData.isProtected){
+	    	            					pageData.isProtected = true;
+	    	            				}else{
+	    	            					pageData.isProtected = false;
+	    	            				}
+	    	            				
+	    	            				var properties = {};
+	    	            				properties["description"] = pageData.description
+	    	            				
+	    	            				pageData["properties"] = properties;
+	    	            				pageData["containerFormat"] = "BARE";
+	    	            				pageData["status"] = "queued";
+	    	            				pageData["imageType"] = "image";
+	    	            				
+	    	            				delete pageData["description"];
+	    	            				delete pageData["locations"];
+	    	            				delete pageData["imageSource"];
+	    	            				debugger;
+	    	            				Common.xhr.postJSON('/v2/9cc717d8047e46e5bf23804fc4400247/images',pageData,function(data){
 	    	    	                		if(data){
 	    	    	                			Modal.alert("保存成功",function(){
 		    	    	                			dialog.close();
@@ -93,7 +113,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 		    	    	                			
 	    	    	                			});
 	    									}
-	    								})
+	    								});
 	    	            			}
 	    	            		});
 	    	                }
@@ -110,9 +130,10 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 	    	
 	    	//编辑弹框
 	    	Edit : function(id,cb){
-	    		Common.xhr.ajax('/cloud/task/strategy/'+id,function(data){
-	    			data.strategyGroupList=renderData.strategyGroupList;
+	    		Common.xhr.ajax('/v2/9cc717d8047e46e5bf23804fc4400247/images/'+id,function(data){
+	    			debugger;
 	    			Common.render('tpls/ccenter/image/add.html',data,function(html){
+	    				debugger;
 						Modal.show({
 		    	            title: '编辑镜像',
 		    	            message: html,
@@ -124,8 +145,30 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 		    	            		if(!valid) return false;
 		    	            		Modal.confirm('确定要保存吗?', function(result){
 		    	            			if(result) {
-		    	            				Common.xhr.putJSON('/cloud/task/strategy/'+id,$("#editStrategy").serializeObject(),function(data){
-		    	            					if(data){
+		    	            				debugger;
+		    	            				var pageData = $("#editImage").serializeObject();
+		    	            				if(pageData.isPublic){
+		    	            					pageData.isPublic = true;
+		    	            				}else{
+		    	            					pageData.isPublic = false;
+		    	            				}
+		    	            				if(pageData.isProtected){
+		    	            					pageData.isProtected = true;
+		    	            				}else{
+		    	            					pageData.isProtected = false;
+		    	            				}
+		    	            				
+		    	            				var properties = {};
+		    	            				properties["description"] = pageData.description
+		    	            				
+		    	            				pageData["properties"] = properties;
+		    	            				
+		    	            				delete pageData["description"];
+		    	            				delete pageData["locations"];
+		    	            				delete pageData["imageSource"];
+		    	            				debugger;
+		    	            				Common.xhr.putJSON('/v2/9cc717d8047e46e5bf23804fc4400247/images/'+id,pageData,function(data){
+		    	    	                		if(data){
 		    	    	                			Modal.alert("保存成功",function(){
 			    	    	                			dialog.close();
 			    	    	                			Common.router.reload();
@@ -135,7 +178,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 			    	    	                			
 		    	    	                			});
 		    									}
-		    								})
+		    								});
 		    	            			}
 		    	            		});
 		    	                }
@@ -145,7 +188,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 		    	                    dialog.close();
 		    	                }
 		    	            }],
-		    	            onshown : cb
+		    	            onshown : cb(data)
 		    	        });
 					})
 	    		});
@@ -153,26 +196,29 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 	    }
 		
 		//新建
-		$("#strategyTable_wrapper span.btn-add").on("click",function(){
+		$("#imageTable_wrapper span.btn-add").on("click",function(){
 	    	EditData.Add(function(){
 	    		EventsHandler.formValidator();
 	    	});
 	    });
 		
 	    //编辑
-	    $("#strategyTable_wrapper a.btn-opt").on("click",function(){
-	    	EditData.Edit($(this).attr("data"),function(){
+	    $("#imageTable_wrapper a.btn-opt").on("click",function(){
+	    	EditData.Edit($(this).attr("data"),function(data){
 	    		EventsHandler.formValidator();
+	    		alert(data.diskFormat+"<1>"+$("#diskFormat"));
+	    		$("#diskFormat").val(data.diskFormat);
+//	    		$("#diskFormat").find("option[text='"+data.diskFormat+"']").attr("selected",true);
 	    	});
 	    });
 	    
 	    //删除
-	    $("#strategyTable_wrapper a.delete").on("click",function(){
+	    $("#imageTable_wrapper a.delete").on("click",function(){
 	    	debugger;
 	    	var id = $(this).attr("data");
 	    	Modal.confirm('确定要删除吗?', function(result){
 	    		if(result) {
-	    			Common.xhr.del('/cloud/task/strategy/'+id,"",function(data){
+	    			Common.xhr.del('/v2/9cc717d8047e46e5bf23804fc4400247/images/'+id,"",function(data){
     					if(data){
                 			Modal.alert("删除成功",function(){
 	                			Common.router.reload();

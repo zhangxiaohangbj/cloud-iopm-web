@@ -15,10 +15,10 @@
 						<th class="c1">
 							<label><input type="checkbox" class="selectAll"></label>
 						</th>
-						<th class="c3">网络名称</th>
-						<th class="c3">子网名称</th>
+						<th class="c2">网络名称</th>
+						<th class="c2">子网名称</th>
 						<th class="c2">CIDR</th>
-						<th class="c3">虚拟数据中心</th>
+						<th class="c2">虚拟数据中心</th>
 						<th class="c2">IP版本</th>
 						<th class="c2">网关</th>
 						<th class="c1 sorting_disabled" >操作</th>
@@ -28,10 +28,10 @@
 				{{each result as item i}}
 					<tr>
 						<td><label><input type="checkbox"></label></td>
-						<td>{{item.network_id}}</td>
+						<td>{{item.network_name}}</td>
 						<td><a href="javascript:void(0);" class="subnet-name" data="{{item.id}}">{{item.name}}</a></td>
 						<td>{{item.cidr}}</td>
-						<td>{{item.tenant_id}}</td>
+						<td>{{item.vdc_name}}</td>
 						<td>IPV{{item.ip_version}}</td>
 						<td>
 			 				{{item.gateway_ip}}

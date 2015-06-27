@@ -33,13 +33,13 @@
 						<td><a href="javascript:void(0);" class="vm_name" data="{{item.id}}">{{item.name}}</a></td>
 						<td>{{item.fixedIps}}</td>
 						<td class="vm_floating_ips">{{#item.floatingIps}}</td>
-						<td>
+						<td class="vm_type" data_memory="{{item.flavor.ram}}" data_cores="{{item.flavor.vcpus}}" data_name="{{item.flavor.name}}">
 						{{if item.flavor != null}}
 							{{(item.flavor.ram%512==0)?(item.flavor.ram/1024):(item.flavor.ram/1024).toFixed(1)}}GB|{{item.flavor.vcpus}}CPUs|{{item.flavor.disk}}GB
 						{{/if}}
 						</td>
 						<td>{{item.availability_zone}}</td>
-						<td>{{item.vdcName}}</td>
+						<td class="vdc_name" data="{{item.tenant_id}}">{{item.vdcName}}</td>
 						<td>
 			 			{{if item.vmState == 'ACTIVE'}} <span class="text-success">运行中</span>
 							{{else if item.vmState == 'BUILD'}} <span class="text-warning">创建中</span>

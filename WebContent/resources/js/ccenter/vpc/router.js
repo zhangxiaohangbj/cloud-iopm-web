@@ -3,7 +3,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 	var init = function(){
 		Common.$pageContent.addClass("loading");
 		//render获取的数据
-		Common.render(true,'tpls/ccenter/vpc/router/list.html','/v2.0/routers/page/1/10',function(){
+		Common.render(true,'tpls/ccenter/vpc/router/list.html','/networking/v2.0/routers/page/1/10',function(){
 			bindEvent();
 		});
 	};
@@ -38,7 +38,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 		var DataIniter = {
 				//子网列表
 				initSubnetList : function(){
-					Common.xhr.ajax('/v2.0/subnets',function(data){
+					Common.xhr.ajax('/networking/v2.0/subnets',function(data){
 						var subnets = data.subnets;
 						var id = $("[name='subnetId']").attr("data");
 						if(id!=null){
@@ -56,7 +56,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 				//vpc列表
 				initNetworkList : function(){
 					var data = {isExternalNetwork:true};
-					Common.xhr.get('/v2.0/networks',data,function(data){
+					Common.xhr.get('/networking/v2.0/networks',data,function(data){
 						var networks = data.networks;
 						var id = $("[name='network_id']").attr("data");
 						if(id!=null){
@@ -94,7 +94,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 	            				    "name":  $("[name='name']").val()
 	            				  }
 		                	  };
-		                	Common.xhr.postJSON('/v2.0/routers',routerData,function(data){
+		                	Common.xhr.postJSON('/networking/v2.0/routers',routerData,function(data){
 		                		if(data){
 		                			Dialog.success('保存成功')
 		                			setTimeout(function(){Dialog.closeAll()},2000);
@@ -116,7 +116,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 		//编辑路由
 	    $("#RouterTable_wrapper a.editRouter").on("click",function(){
 	    	var id= $(this).attr("data");
-	    	Common.xhr.ajax('/v2.0/routers/'+id,function(data){
+	    	Common.xhr.ajax('/networking/v2.0/routers/'+id,function(data){
 	    		Common.render('tpls/ccenter/vpc/router/edit.html',data.router,function(html){
 		    	Dialog.show({
 		            title: '编辑路由',
@@ -134,7 +134,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 	            				    "name":  $("[name='name']").val(),
 	            				  }
 		                	  };
-		                	Common.xhr.putJSON('/v2.0/routers/'+id,routerData,function(data){
+		                	Common.xhr.putJSON('/networking/v2.0/routers/'+id,routerData,function(data){
 		                		if(data){
 		                			Dialog.success('保存成功')
 		                			setTimeout(function(){Dialog.closeAll()},2000);
@@ -158,7 +158,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 	    	 var id = $(this).attr("data");
 	    	 Dialog.confirm('确定要删除该路由吗?', function(result){
 	             if(result) {
-	            	 Common.xhr.del('/v2.0/routers/'+id,
+	            	 Common.xhr.del('/networking/v2.0/routers/'+id,
 	                     function(data){
 	                    	 if(data){
 	                    		 Dialog.success('删除成功')
@@ -179,7 +179,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 	    	 Dialog.confirm('确定要清除网关吗?', function(result){
 	             if(result) {
 					var routerData = { "router": {"external_gateway_info": {"network_id":""}}};
-					Common.xhr.putJSON('/v2.0/routers/'+id, routerData,
+					Common.xhr.putJSON('/networking/v2.0/routers/'+id, routerData,
 						function(data){
 							 if(data){
 								 Dialog.success('操作成功')
@@ -197,7 +197,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 	     //设置网关
 	     $("#RouterTable_wrapper span.setGateway").on("click",function(){
 	    	 var id = $(this).attr("data");
-	    	 Common.xhr.ajax('/v2.0/routers/'+id,function(data){
+	    	 Common.xhr.ajax('/networking/v2.0/routers/'+id,function(data){
 				    Common.render('tpls/ccenter/vpc/router/setgateway.html',data.router,function(html){
 			    	 Dialog.show({
 				            title: '设置网关',
@@ -216,7 +216,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 			            				    		}
 			            				  }
 				                	  };
-				                	Common.xhr.putJSON('/v2.0/routers/'+id,routerData,function(data){
+				                	Common.xhr.putJSON('/networking/v2.0/routers/'+id,routerData,function(data){
 				                		if(data){
 				                			Dialog.success('设置成功')
 				                			setTimeout(function(){Dialog.closeAll()},2000);
@@ -237,7 +237,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 	     });
 		//路由明细
 		$("#RouterTable_wrapper a.router-name").on("click",function(){
-		    	Common.xhr.ajax('/v2.0/routers/'+$(this).attr("data"),function(data){
+		    	Common.xhr.ajax('/networking/v2.0/routers/'+$(this).attr("data"),function(data){
 		    		Common.render('tpls/ccenter/vpc/router/detail.html',data.router,function(html){
 		    			$("#page-main .page-content").html(html);
 		    			//返回按钮
@@ -265,7 +265,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 	    	                				  "port_id": null,
 	    	                				  "subnet_id": $("[name='subnetId']").val(),
 			    	                	  };
-			    	                	Common.xhr.putJSON('/v2.0/routers/'+id+'/add_router_interface',routerInterface,function(data){ //需修改接口
+			    	                	Common.xhr.putJSON('/networking/v2.0/routers/'+id+'/add_router_interface',routerInterface,function(data){ //需修改接口
 			    	                		if(data){
 			    	                			Dialog.success('保存成功')
 			    	                			setTimeout(function(){Dialog.closeAll()},2000);
@@ -310,7 +310,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 	    	                				  "subnet_id": subnetId,
 	    	                				  "port_id": portId
 			    	                	  };
-					            	 Common.xhr.putJSON('/v2.0/routers/'+id+'/remove_router_interface',serverData,  //需修改接口
+					            	 Common.xhr.putJSON('/networking/v2.0/routers/'+id+'/remove_router_interface',serverData,  //需修改接口
 					                     function(data){
 					                    	 if(data){
 					                    		 Dialog.success('删除成功');
