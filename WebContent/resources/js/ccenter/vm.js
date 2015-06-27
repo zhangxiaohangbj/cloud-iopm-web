@@ -31,7 +31,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 		      "processing": true,  //加载效果，默认false
 		      "serverSide": true,  //页面在加载时就请求后台，以及每次对 datatable 进行操作时也是请求后台
 		      "ordering": false,   //禁用所有排序
-		      "sAjaxSource":current_vdc_id+'/servers/page/', //ajax源，后端提供的分页接口
+		      "sAjaxSource":"compute/v2/"+current_vdc_id+'/servers/page/', //ajax源，后端提供的分页接口
 		      /*fnServerData是与服务器端交换数据时被调用的函数
 		       * sSource： 就是sAjaxSource中指定的地址，接收数据的url需要拼装成 v2.0/users/page/10/1 格式
 		       *      aoData[4].value为每页显示条数，aoData[3].value/aoData[4].value+1为请求的页码数
@@ -455,7 +455,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 			initKeyPairs: function(){
 				var vdc_id = currentChosenObj.vdc || $('select.tenant_id').children('option:selected').val();
 				if(vdc_id){
-					Common.xhr.ajax('/'+vdc_id+'/os-keypairs',function(keypairs){
+					Common.xhr.ajax("/compute/v2/"+vdc_id+'/os-keypairs',function(keypairs){
 						var keypairData = []
 						for(var i=0;i<keypairs.length;i++){
 							keypairData[i] = {value:keypairs[i].name};
@@ -469,7 +469,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 			},
 			//外部网络
 			initExtNetwork: function(serverId){
-				Common.xhr.getSync('/'+currentChosenObj.vdc+'/servers/'+serverId+'/list-floating-pools',function(data){
+				Common.xhr.getSync("/compute/v2/"+currentChosenObj.vdc+'/servers/'+serverId+'/list-floating-pools',function(data){
             		var poolList = []; 
 					if(data){
 						for (var i=0;i<data.length;i++) {
@@ -484,7 +484,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 			//浮动IP
 			initFloatingIp: function(serverId){
 				var poolId = $('select.ip-pools').val();
-        		Common.xhr.ajax('/'+currentChosenObj.vdc+'/servers/'+serverId+'/list-unallocated-floating-ips?network_id='+poolId,function(data){
+        		Common.xhr.ajax("/compute/v2/"+currentChosenObj.vdc+'/servers/'+serverId+'/list-unallocated-floating-ips?network_id='+poolId,function(data){
             		var ipList = []; 
 					if(data){
 						for (var i=0;i<data.length;i++) {
@@ -498,7 +498,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 			},
 			//网卡
 			initNetworkInterface:function(serverId){
-				Common.xhr.ajax('/'+currentChosenObj.vdc+'/servers/'+serverId+'/list-network-interfaces',function(data){
+				Common.xhr.ajax("/compute/v2/"+currentChosenObj.vdc+'/servers/'+serverId+'/list-network-interfaces',function(data){
 					var ncList = []; 
 					if(data){
 						for (var i=0;i<data.length;i++) {
@@ -815,7 +815,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
     				
     				serverData.server["networks"]=networkData;
     				serverData.server["security_groups"]=getSecruityGroup();
-    				Common.xhr.postJSON('/'+current_vdc_id+'/servers/'+currentChosenObj.vdc,serverData,function(data){
+    				Common.xhr.postJSON("/compute/v2/"+current_vdc_id+'/servers/'+currentChosenObj.vdc,serverData,function(data){
     					if(data.error){
     						Modal.error(data.message)
     					}
@@ -871,9 +871,9 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 	    		Common.$pageContent.addClass("loading");
 	    		var pageData={};
 				//取云主机列表
-				Common.xhr.getSync('/'+vdcId+'/servers/'+id+'/list-unattched-security-groups',function(data){
+				Common.xhr.getSync("/compute/v2/"+vdcId+'/servers/'+id+'/list-unattched-security-groups',function(data){
 					pageData.unattched=data;});
-				Common.xhr.getSync('/'+vdcId+'/servers/'+id+'/list-attched-security-groups',function(data){
+				Common.xhr.getSync("/compute/v2/"+vdcId+'/servers/'+id+'/list-attched-security-groups',function(data){
 					pageData.attched=data;});
 				
 		    	//生成html数据
@@ -942,7 +942,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
                                          "flavorRef": $('#flavorRef option:selected').val()
                                      }
                                  }
-                                 Common.xhr.postJSON('/'+current_vdc_id+'/servers/'+id+'/action', flavor_data, function(data){
+                                 Common.xhr.postJSON("/compute/v2/"+current_vdc_id+'/servers/'+id+'/action', flavor_data, function(data){
                                      if(!data.error){
                                          alert("保存成功");
 
@@ -966,7 +966,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 	    	
 	    	DoAction:function(id,name,vdcId,rq,dc){
 	    		Common.$pageContent.addClass("loading");
-                Common.xhr.postJSON('/'+vdcId+'/servers/'+id+'/action',rq,function(data){
+                Common.xhr.postJSON("/compute/v2/"+vdcId+'/servers/'+id+'/action',rq,function(data){
                 	if(data.success){
                 		Modal.success("云主机["+name+"]已"+dc+"!");
                 		setTimeout(function(){Modal.closeAll()},3000);
@@ -981,7 +981,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 		//明细
 	    $("#VmTable_wrapper a.vm_name").on("click",function(){
 	    	var id = $(this).attr("data");
-	    	Common.render(true,'tpls/ccenter/vm/detail.html','/'+currentChosenObj.vdc+'/servers/'+id,function(html){
+	    	Common.render(true,'tpls/ccenter/vm/detail.html',"/compute/v2/"+currentChosenObj.vdc+'/servers/'+id,function(html){
 					 $("a.reload").on("click",function(){
 		    		    	Common.router.route();
 		    		  });
@@ -1026,7 +1026,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 	    	var serverId = $(this).attr("data");
 	    	Modal.confirm("你已经选择了 ["+serverName+"] 。 请确认您的选择。终止的云主机均无法恢复。",function(result){
 	            if(result) {
-	                Common.xhr.del('/'+vdcId+'/servers/'+serverId,function(data){
+	                Common.xhr.del("/compute/v2/"+vdcId+'/servers/'+serverId,function(data){
 	                	if(data.success||data.code==404){
 	                		Modal.success("云主机["+serverName+"]已终止！");
 	                	}else{
@@ -1161,7 +1161,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
     	                	var ipId = $('select.floating-ips').val();
     	                	var portId = $('select.network-interface').val();
     	                	
-    	                	Common.xhr.postJSON('/'+vdcId+'/servers/'+serverId+'/add-floating-ip?floating_ip_id='+ipId+'&port_id='+portId,null,function(data){
+    	                	Common.xhr.postJSON("/compute/v2/"+vdcId+'/servers/'+serverId+'/add-floating-ip?floating_ip_id='+ipId+'&port_id='+portId,null,function(data){
     	                    	debugger
     	                		if(data.success){
     	                    		dialog.close();
@@ -1216,7 +1216,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
     	                action: function(dialog) {
     	                	var ip = $('select.floating-ips').val();
     	                	
-    	                	Common.xhr.postJSON('/'+vdcId+'/servers/'+serverId+'/remove-floating-ip?floating_ip='+ip,null,function(data){
+    	                	Common.xhr.postJSON("/compute/v2/"+vdcId+'/servers/'+serverId+'/remove-floating-ip?floating_ip='+ip,null,function(data){
     	                    	debugger
     	                		if(data.success){
     	                    		dialog.close();
@@ -1302,7 +1302,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
                     "type": "novnc"
                 }
             }
-            Common.xhr.postJSON('/'+current_vdc_id+'/servers/'+serverId+'/action',info,function(data){
+            Common.xhr.postJSON("/compute/v2/"+current_vdc_id+'/servers/'+serverId+'/action',info,function(data){
                 var url = data['console']['url'];
                 Common.render('tpls/ccenter/vm/vncconsole.html', {url: url}, function (html) {
                     Modal.show({
@@ -1327,7 +1327,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
                     "length": 30
                 }
             }
-            Common.xhr.postJSON('/'+current_vdc_id+'/servers/'+serverId+'/action',info,function(data){
+            Common.xhr.postJSON("/compute/v2/"+current_vdc_id+'/servers/'+serverId+'/action',info,function(data){
                 var output = data['output'];
                 Modal.show({
                     size: 'size-_console',
