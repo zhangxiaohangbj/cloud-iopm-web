@@ -516,12 +516,14 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 	    });
 	  //查看使用情况
 	    $("ul.dropdown-menu a.usage").on("click",function(){
+	    	Common.$pageContent.addClass("loading");
 	    	var vdc_id = $(this).attr("data");
 	    	var vdc_name = $(this).attr("data-name");
 	    	Common.render(true,{
 				tpl:'tpls/ccenter/vdc/usage.html',
 				data:'/v2.0/'+Common.cookies.getVdcId()+'/os-simple-tenant-usage/' + vdc_id,
 				beforeRender: function(data){
+					
 					var usageData = {
 							vdc_name:vdc_name,
 							usageList:data.tenant_usage.server_usages
@@ -529,6 +531,10 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 					return usageData;
 				},
 				callback: function(){
+					Common.initDataTable($('#UsageTable'),function($tar){
+						$tar.prev().hide();
+						Common.$pageContent.removeClass("loading");
+					});
 					 $("#reload").on("click",function(){
 						 Common.router.reload();
 					 })
@@ -540,7 +546,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 					    	if(time == null || time == "")return;
 					    	var start =  $.trim(time.split("-")[0]);
 					    	var end = $.trim(time.split("-")[1]);
-					    	Common.xhr.get('/v2.0/'+Common.cookies.getVdcId()+'/os-simple-tenant-usage/' + vdc_id,function(data){
+					    	Common.xhr.get('/v2.0/'+Common.cookies.getVdcId()+'/os-simple-tenant-usage/' + vdc_id,{'start':start,'end':end},function(data){
 					    		var usageList = $("#usageList");
 					    		usageList.empty();
 					    		var list = data.tenant_usage.server_usages;
@@ -558,6 +564,10 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 					    				usageList.html(usageData.join(""));
 					    			}
 					    		}
+					    		Common.initDataTable($('#UsageTable'),function($tar){
+									$tar.prev().hide();
+									Common.$pageContent.removeClass("loading");
+								});
 							});
 					  });
 				}
