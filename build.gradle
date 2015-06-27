@@ -117,11 +117,6 @@ war {
 	}
 
 	exclude "resources/commons/"
-	exclude "resources/initializer.js"
-
-	from("${webAppDirName}/resources/initializer.js") {
-		into "resources/"
-	}
 }
 
 task initJS << {

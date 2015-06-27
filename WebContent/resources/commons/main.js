@@ -620,7 +620,15 @@ define('commons/main',
                         return deferredsHandler.then(
                             function() {
                                 // success
-                                PubView.utils.isFunction(success) && success.apply(that, arguments);
+                                var results = [];
+                                if(requests.length > 1) {
+                                    $.each(arguments, function(i, arg) {
+                                        results.push(arg[0]);
+                                    });
+                                } else {
+                                    results.push(arguments[0]);
+                                }
+                                PubView.utils.isFunction(success) && success.apply(that, results);
                             },
                             function() {
                                 // failure
