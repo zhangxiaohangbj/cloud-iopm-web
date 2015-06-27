@@ -836,6 +836,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 	    	DoAction:function(id,name,vdcId,rq,dc){
 	    		Common.$pageContent.addClass("loading");
                 Common.xhr.postJSON('/'+vdcId+'/servers/'+id+'/action',rq,function(data){
+                	alert(JSON.stringify(data));
                 	if(data.success){
                 		Modal.success("云主机["+name+"]已"+dc+"!");
                 		setTimeout(function(){Modal.closeAll()},3000);
@@ -982,7 +983,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 	    	var serverId = $(this).attr("data");
 	    	var vdcId = $(this).parents('tr:first').find('td.vdc_name').attr("data");
 	    	var imageList;
-	    	Common.xhr.getSync('/v2/images/?owner='+current_vdc_id,function(data){
+	    	Common.xhr.getSync('/v2/'+vdcId+'/images/?owner='+vdcId,function(data){
     			imageList=data;
     		});
 	    	Common.render('tpls/ccenter/vm/rebuild.html',imageList,function(html){
