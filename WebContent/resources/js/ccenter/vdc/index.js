@@ -164,72 +164,96 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 				//配额的表单验证
 				vdc_form:function($form){
 					if(!$form)return null;
+					$.validator.addMethod("integer",function(str){
+						if(parseInt(str) == str){
+							 return true;
+						}else{
+							return false;
+						}
+						
+					},"必须输入整数");
 					return $form.validate({
 						errorContainer: "_form",
 						rules:{
 							'metadata_items': {
 			                    required: true,
-			                    digits:true
+			                    integer:true,
+			                    min:-1
 			                },
 			                'cores': {
 			                    required: true,
-			                    digits:true
+			                    integer:true,
+			                    min:-1
 			                },
 			                'instances': {
 			                    required: true,
-			                    digits:true
+			                    integer:true,
+			                    min:-1
 			                },
 			                'injected_files': {
 			                    required: true,
-			                    digits:true
+			                    integer:true,
+			                    min:-1
 			                },
 			                'injected_file_content_bytes': {
 			                    required: true,
-			                    digits:true
+			                    integer:true,
+			                    min:-1
 			                },
 			                'volumes': {
 			                    required: true,
-			                    digits:true
+			                    integer:true,
+			                    min:-1
 			                },
 			                'snapshots': {
 			                    required: true,
-			                    digits:true
+			                    integer:true,
+			                    min:-1
 			                },
 			                'gigabytes': {
 			                    required: true,
-			                    digits:true
+			                    integer:true,
+			                    min:-1
 			                },
 			                'ram': {
 			                    required: true,
-			                    digits:true
+			                    integer:true,
+			                    min:-1
 			                },
 			                'security_group': {
 			                    required: true,
-			                    digits:true
+			                    integer:true,
+			                    min:-1
 			                },
 			                'security_group_rule': {
 			                    required: true,
-			                    digits:true
+			                    integer:true,
+			                    min:-1
 			                },
 			                'floatingip': {
 			                    required: true,
-			                    digits:true
+			                    integer:true,
+			                    min:-1
 			                },
 			                'network': {
 			                    required: true,
-			                    digits:true
+			                    integer:true,
+			                    min:-1
 			                },
 			                'port': {
 			                    required: true,
-			                    digits:true
+			                    integer:true,
+			                    min:-1
 			                },
 			                'route': {
 			                    required: true,
-			                    digits:true
+			                    integer:true,
+			                    min:-1
 			                },
 			                'subnet': {
 			                    required: true,
-			                    digits:true
+			                    integer:true,
+			                    min:-1
 			                },
 			                'vdc-name': {
 			                    required: true,
@@ -515,7 +539,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 	    	more.Member($(this).attr("data"));
 	    });
 	  //查看使用情况
-	    $("ul.dropdown-menu a.usage").on("click",function(){
+	/*    $("ul.dropdown-menu a.usage").on("click",function(){
 	    	Common.$pageContent.addClass("loading");
 	    	var vdc_id = $(this).attr("data");
 	    	var vdc_name = $(this).attr("data-name");
@@ -572,7 +596,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 					  });
 				}
 			});
-	    });
+	    });*/
 	 
 	    //外部网络管理
 	  /*  $("ul.dropdown-menu a.floatIP").on("click",function(){
@@ -737,7 +761,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
     	//成员管理
     	 Member : function(vdc_id){
     		 //根据vdc_id获取用户列表，包括角色  resources/data/user.txt
-    		 Common.xhr.ajax("/v2.0/tenants/"+vdc_id+"/users",function(data){
+    		 Common.xhr.ajax("/identity/v2.0/tenants/"+vdc_id+"/users",function(data){
 			 	var userList = data.users;
 	    		var loadmore = false;
 				if(userTotalSize > userSize * userIndex){
