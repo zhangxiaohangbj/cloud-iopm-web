@@ -69,47 +69,36 @@ define(['Common','bs/modal','jq/form/wizard','jq/form/validator-bs3','bs/tooltip
         //初始化资源
         var resourceHandler ={
             init:function(resourceName,elem){
-                var resourceTypeArray ;
-                resourceTypeArray= renderData.type.slice(0);
-                debugger
                 var link ;
                 var rtype;
-                var choseObj;
-                resourceTypeArray.forEach(function(e){
-                    if(e.name == resourceName){
-                        link = e.link;
-                        rtype= e.type;
-                        //e.selected = true;
-                        choseObj = e;
-                        choseObj
-                        return
+                //复制一个array,用来初始化choose的headAppend
+                var tempArray=[];
+                renderData.type.forEach(function(e){
+                    var temType = {
+                        name:e.name,
+                        type:e.type,
                     }
+                    if(e.name == resourceName){
+                       temType.selected = true;
+                        rtype = e.type;
+                        link = e.link;
+                    }
+                    tempArray.push(temType);
                 })
                 Common.xhr.ajax(link,function(data){
-                    var dataList = data;
-                    //遍历对象，生成两个list ， unchosen/chosen
-                    var unChosenList=[];
-                    $.each(dataList,function(i,item){
-                        item.icon_type = rtype;
-                        var flag = true;
-                        $.each(chosenList,function(i,item0){
-                            if(item0.id == item.id){
-                                flag = false;
-                            }
-                        })
-                        if(flag){
-                            unChosenList.push(item);
-                        }
-                    })
+                    //遍历对象，过滤unchosenList
+                    var unChosenList=resourceHandler.refreshUnChosenList(data,rtype);
+                    //复制chosen，符合当前资源类型的可编辑
+                    var tmpChosenList = resourceHandler.refreshChosen(rtype);
                     require(['js/common/choose'],function(choose){
                         var options = {
                             selector: '#'+elem,
                             allData: unChosenList,
-                            selectData:chosenList,
+                            selectData:tmpChosenList,
                             doneCall: resourceHandler.changeHandler,
                             headAppend: {
                                 className: 'select-resource-type',
-                                list: resourceTypeArray
+                                list: tempArray
                             }
                         };
                         choose.initChoose(options);
@@ -117,27 +106,51 @@ define(['Common','bs/modal','jq/form/wizard','jq/form/validator-bs3','bs/tooltip
                     resourceHandler.changeHandler();
                 });
             },
-            saveChosen:function(){
-
+            //刷新已选择列表，与当前选中的资源类型对应
+            refreshChosen:function(resourceType){
+                var tmpChosen = [];
+                $.each(chosenList,function(i,item){
+                    var tempObj = {
+                        id:item.id,
+                        name:item.name,
+                        icon_type:item.icon_type
+                    };
+                    if(item.icon_type != resourceType){
+                        item.minus_class="hide";
+                    }
+                    tmpChosen.push(tempObj);
+                });
+                return tmpChosen;
             },
-            refreshChosen:function(){
-
-            },
-            listChosen:function(){
-
+            //刷新未选择资源的列表，只显示当前资源类型下，还未被选择的资源
+            refreshUnChosenList:function(dataList,resourceType){
+                var unChosenList=[];
+                $.each(dataList,function(i,item){
+                    item.icon_type = resourceType;
+                    var flag = true;
+                    //根据id判断是否已经出现在chosen中
+                    $.each(chosenList,function(i,item0){
+                        if(item0.id == item.id){
+                            flag = false;
+                        }
+                    })
+                    if(flag){
+                        unChosenList.push(item);
+                    }
+                });
+                return unChosenList;
             },
             changeHandler:function(){
                 $("#choseResource").find("select.select-resource-type").change(function(){
                     chosenList =[];  //reInit
                     var resourceName = $(this).children('option:selected').val();
-                    debugger
                     $("#choseResource .show-selected").find("ul.list-group-item").each(function(){
                         var curLi = $(this).find("li.member");
                         var curClass= $(this).find("i.type_icons").attr("class");
                         var curR = {
                             id:curLi.attr("data-id"),
                             name:curLi.attr("data-name"),
-                            type: curClass.split(" ")[1]
+                            icon_type: curClass.split(" ")[1]
                         };
                         chosenList.push(curR)
                     });
@@ -321,8 +334,6 @@ define(['Common','bs/modal','jq/form/wizard','jq/form/validator-bs3','bs/tooltip
             var data = $(this).attr("data");
             Common.xhr.ajax( "/v2/os-availability-zone/"+data,function(zoneInfo){
                 Common.render('tpls/cresource/zone/addResource.html',renderData,function(html){
-
-
                     Modal.show({
                         title: '添加资源',
                         message: html,
