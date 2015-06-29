@@ -103,6 +103,11 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 							return '<span class="text-danger">未知</span>';
 					    }
 					},
+					{
+	                       "targets": [6],
+	                       "data": "tenant_id",
+	                       "class": "vdc_name"
+	                },
                     {
 	                       "targets": [4],
 	                       "data": "id",
@@ -1110,10 +1115,12 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 	    });
 	    
 	    //重建云主机
-	    $("ul.dropdown-menu a.rebuild").on("click",function(){
+//	    $("ul.dropdown-menu a.rebuild").on("click",function(){
+	    $(document).on("click","ul.dropdown-menu a.rebuild",function(){
 	    	var serverName = $(this).parents('tr:first').find('a.vm_name').html();
 	    	var serverId = $(this).attr("data");
-	    	var vdcId = $(this).parents('tr:first').find('td.vdc_name').attr("data");
+//	    	var vdcId = $(this).parents('tr:first').find('td.vdc_name').html(); //.attr("data")
+	    	var vdcId=current_vdc_id;
 	    	var imageList;
 	    	Common.xhr.getSync('/v2/'+vdcId+'/images/?owner='+vdcId,function(data){
     			imageList=data;
