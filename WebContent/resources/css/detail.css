@@ -1,6 +1,9 @@
 .detail-info{
 	padding-bottom:30px;
 }
+#page-main > .page-content > .page-header > .breadcrumb{
+	
+}
 .detail-info .nav-tabs{
 	border-color:#EFEDED;
 }

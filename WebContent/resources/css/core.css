@@ -405,13 +405,32 @@ body{
 	display:table;
 }
 #page-main > .page-content > .page-header > .breadcrumb{
-	background:none;
-	font-size:16px;
-	line-height:42px;
 	margin:0;
 	padding:0;
+	background:none;
+	position:relative;
+	font-size:16px;
+	line-height:42px;
 }
-
+#page-main > .page-content > .page-header > .breadcrumb.minus{
+	font-size:13px;
+	margin-bottom:20px;
+	border-bottom:1px solid #F5F4F4;
+}
+#page-main > .page-content > .page-header > .breadcrumb.minus li.backlist a{
+	right:0;bottom:0;
+	background:#EBF0F3;
+	padding:5px;color:#333;
+	line-height:1em;
+	position:absolute;
+}
+#page-main > .page-content > .page-header > .breadcrumb.minus li.backlist a:hover{
+	background:#E6EBED;
+	text-decoration:none;
+}
+#page-main > .page-content > .page-header > .breadcrumb.minus li.backlist:before{
+	content:"";
+}
 .icon-squre-d {
 	position: relative;
 	display: inline-block;
