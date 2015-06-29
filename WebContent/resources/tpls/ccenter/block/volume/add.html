@@ -6,18 +6,18 @@
 				<div class="wizard-card-content col-sm-8">
 					<div class="wizard-input-section">
 						<div class="form-group">
-							<label for="volume_name" class="control-label col-sm-3"><span>* </span>名称：</label>
+							<label for="name" class="control-label col-sm-3"><span>* </span>名称：</label>
 							<div class="col-sm-6 col-sm">
-								<input type="text" class="form-control"  name="volume_name" placeholder="磁盘名称">
+								<input type="text" class="form-control"  name="name" placeholder="磁盘名称">
 							</div>
 						</div>
 					</div>
 					
 					 <div class="wizard-input-section">
 						<div class="form-group">
-							<label for="tenant_id" class="control-label col-sm-3"><span>* </span>虚拟数据中心：</label>
+							<label for="os-vol-tenant-attr:tenant_id" class="control-label col-sm-3"><span>* </span>虚拟数据中心：</label>
 							<div class="col-sm-7 col-sm">
-								<select name="tenant_id"  class="form-control select tenant_id">
+								<select name="os-vol-tenant-attr:tenant_id"  class="form-control select tenant_id">
 								    {{#uiSelectList(vdcList)}}
 								</select>
 							</div>
@@ -25,7 +25,7 @@
 					</div>
 					<div class="wizard-input-section">
 						<div class="form-group">
-							<label for="availability_zone" class="control-label col-sm-3"><span>* </span>可用分区：</label>
+							<label for="availability_zone" class="control-label col-sm-3">可用分区：</label>
 							<div class="col-sm-7 col-sm">
 								<select name="availability_zone"   class="form-control select availability_zone">
 								</select>
@@ -41,26 +41,26 @@
 					</div>
 					<div class="wizard-input-section">
 						<div class="form-group">
-							<label for="volume_type" class="control-label col-sm-3"><span>* </span>卷类型：</label>
+							<label for="storageId" class="control-label col-sm-3"><span>* </span>卷类型：</label>
 							<div class="col-sm-7 col-sm">
-								<select name="volume_type"   class="form-control select volume_type">
+								<select name="storageId"   class="form-control select volume_type">
 								</select>
 							</div>
 						</div>
 					</div>
 					<div class="wizard-input-section">
 						<div class="form-group">
-							<label for="volume_size" class="control-label col-sm-3"><span>* </span>容量(GB)：</label>
+							<label for="size" class="control-label col-sm-3"><span>* </span>容量(GB)：</label>
 							<div class="col-sm-7 col-sm">
-								<input type="text" class="form-control" id="volume_size"  name="volume_size" placeholder="单位GB">
+								<input type="text" class="form-control" id="size"  name="size" placeholder="单位GB">
 							</div>
 						</div>
 					</div>
 					<div class="wizard-input-section">
 						<div class="form-group">
-							<label for="server_desc" class="control-label col-sm-3"><span> </span>描述：</label>
+							<label for="description" class="control-label col-sm-3"><span> </span>描述：</label>
 							<div class="col-sm-7 col-sm">
-								<textarea name="server_desc" class="form-control wizard-form-control" rows="3"  placeholder="输入磁盘描述"></textarea>
+								<textarea name="description" class="form-control wizard-form-control" rows="3"  placeholder="输入磁盘描述"></textarea>
 							</div>
 						</div>
 					</div>

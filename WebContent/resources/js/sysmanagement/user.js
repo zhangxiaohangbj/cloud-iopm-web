@@ -2,13 +2,9 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 	Common.requestCSS('css/wizard.css');
 	var init = function(){
 		Common.$pageContent.addClass("loading");
-		//先获取数据，进行加工后再去render
+		//render
 		Common.render(true,{
 			tpl:'tpls/sysmanagement/user/list.html',
-			data:'/v2.0/users/page/10/1',
-			beforeRender: function(data){
-				return data.result;
-			},
 			callback: bindEvent
 		});
 	};
@@ -16,32 +12,86 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 	var bindEvent = function(){
 		//页面渲染完后进行各种事件的绑定
 		//dataTables
-		Common.initDataTable($('#UserTable'),function($tar){
+		Common.initDataTable($('#UserTable'),{
+		      "processing": true,  //加载效果，默认false
+		      "serverSide": true,  //页面在加载时就请求后台，以及每次对 datatable 进行操作时也是请求后台
+		      "ordering": false,   //禁用所有排序
+		      "sAjaxSource":"identity/v2.0/users/page/", //ajax源，后端提供的分页接口
+		      /*fnServerData是与服务器端交换数据时被调用的函数
+		       * sSource： 就是sAjaxSource中指定的地址，接收数据的url需要拼装成 v2.0/users/page/10/1 格式
+		       *      aoData[4].value为每页显示条数，aoData[3].value/aoData[4].value+1为请求的页码数
+		       * aoData：请求参数，其中包含search 输入框中的值
+		       * */
+		      "fnServerData": function( sSource, aoData, fnCallback ) {
+		    	    $.ajax( {   
+		    	        "url": sSource + (aoData[3].value/aoData[4].value+1) +"/"+aoData[4].value, 
+		    	        "data":aoData,
+		    	        "dataType": "json",   
+		    	        "success": function(resp) {
+		    	        	/*渲染前预处理后端返回的数据为DataTables期望的格式,
+		    	        	 * 后端返回数据格式 {"pageNo":1,"pageSize":5,"orderBy":null,"order":null,"autoCount":true,"result":[{"id":"07da487da17b4354a4b5d8e2b2e41485","name":"wzz"}],
+		    	        	 * "totalCount":31,"first":1,"orderBySetted":false,"totalPages":7,"hasNext":true,"nextPage":2,"hasPre":false,"prePage":1}
+		    	        	 * DataTables期望的格式 {"draw": 2,"recordsTotal": 11,"recordsFiltered": 11,"data": [{"id": 1,"firstName": "Troy"}]}
+							*/
+		    	        	resp.data = resp.result;
+		    	        	resp.recordsTotal = resp.totalCount;
+		    	        	resp.recordsFiltered = resp.totalCount;
+		    	            fnCallback(resp);   //fnCallback：服务器返回数据后的处理函数，需要按DataTables期望的格式传入返回数据 
+		    	        }   
+		    	    });   
+		      },
+	    	  /*属性 columns 用来配置具体列的属性，包括对应的数据列名,如trueName，是否支持搜索，是否显示，是否支持排序等*/
+		      "columns": [
+			        {"data": ""},
+			        {"data": "name"},
+			        {"data": "trueName"},
+			        {"data": "phone"},
+			        {"data": "email"},
+			        {"data": "status"}
+		      ],
+		      /*
+		       * columnDefs 属性操作自定义列
+		       * targets ： 表示具体需要操作的目标列，下标从 0 开始
+		       * data: 表示我们需要的某一列数据对应的属性名
+		       * render: 返回需要显示的内容。在此我们可以修改列中样式，增加具体内容
+		       *  属性列表： data，之前属性定义中对应的属性值； type，未知；full,全部数据值可以通过属性列名获取 
+		       * */
+		      "columnDefs": [
+					{
+					    "targets": [0],
+					    "orderable": false,
+					    "render": function() {
+					      return "<label><input type='checkbox'></label>";
+					    }
+					},
+					{
+					    "targets": [5],
+					    "data": "status",
+					    "render": function(data, type, full) {
+					    	if(data == "normal") return "正常";
+					    	if(data == "locked") return "已锁定";
+					    	if(data == "delete") return "已删除";
+					    	if(data == "disabled") return "已禁用";
+					    	if(data == "reset_pwd") return "密码重置";
+					    }
+					},
+                     {
+                       "targets": [6],
+                       "data": "id",
+                       "render": function(data, type, full) {
+                         return '<a class="btn-edit" data-toggle="tooltip" title="编辑" href="javascript:void(0)" data="'+data+'" data-act="stop" style="margin: 0 8px;"><li class="glyphicon glyphicon-edit"></li></a>'
+							+'<a class="btn-delete" data-toggle="tooltip" title="删除" href="javascript:void(0)" data="'+data+'" style="margin: 0 8px;"><i class="fa fa-trash-o fa-fw"></i></a>'
+							+'<a class="btn-edit-role" data-toggle="tooltip" title="权限设置" href="javascript:void(0)" data="'+data+'" style="margin: 0 8px;">权限设置</a>';
+                       }
+                     }
+                ]
+		    },
+		    function($tar){
 			$tar.prev().find('.left-col:first').append(
 					'<span class="btn btn-add">新建用户 </span>'
 				);
 			Common.$pageContent.removeClass("loading");
 		});
-		//载入默认的数据 inits,创建数据载入类
-//		var DataIniter = {
-//			//vdc列表
-//			initVdcList : function(){
-//				Common.xhr.ajax('/v2.0/tenants',function(data){
-//					var tenants = data.tenants;
-//					var id = $('select.tenant_id').attr("data");
-//					if(id!=null){
-//						for (var i=0;i<tenants.length;i++) {
-//							if (tenants[i].id==id) {
-//								tenants[i].selected="selected";
-//							}
-//						}
-//					}				
-//					var html = Common.uiSelect(tenants);
-//			    	$('select.tenant_id').html(html);
-//			    	
-//				})
-//			}
-//		}
 		//载入后的事件
 		var EventsHandler = {
 			//选择部门
@@ -119,7 +169,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 				$(document).off("click","span.chooseRole");
 				$(document).on("click","span.chooseRole",function(){
 					var obj = $(this);
-					Common.render('tpls/sysmanagement/user/rolelist.html','/v2.0/roles/page/10/1',function(html){
+					Common.render('tpls/sysmanagement/user/rolelist.html','/identity/v2.0/roles/page/10/1',function(html){
 						Modal.show({
 		    	            title: '选择角色',
 		    	            message: html,
@@ -244,7 +294,8 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 				}
 		}
 		//增加按钮
-	    $("#UserTable_wrapper span.btn-add").on("click",function(){
+		$(document).off("click","#UserTable_wrapper span.btn-add");
+	    $(document).on("click","#UserTable_wrapper span.btn-add",function(){
 	    	//需要修改为真实数据源
 			Common.render('tpls/sysmanagement/user/add.html','',function(html){
 				$('body').append(html);
@@ -332,7 +383,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
         					"organId": $( " [name='organId']").val()
             				};
     				postData.userRoleList = jsonData.authorityJson("#authorityInfo");
-    				Common.xhr.postJSON('/v2.0/users',postData,function(data){
+    				Common.xhr.postJSON('/identity/v2.0/users',postData,function(data){
     					wizard._submitting = false;
     					wizard.updateProgressBar(100);
     					closeWizard();
@@ -342,9 +393,10 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 			});
 	    });
 		//编辑用户信息
-	    $("#UserTable_wrapper a.btn-edit").on("click",function(){
-	    	var id= $(this).attr("data");
-	    	Common.xhr.ajax('/v2.0/users/'+id,function(data){  //需修改接口
+		$(document).off("click","#UserTable_wrapper a.btn-edit");
+		$(document).on("click","#UserTable_wrapper a.btn-edit",function(){
+			var id= $(this).attr("data");
+	    	Common.xhr.ajax('/identity/v2.0/users/'+id,function(data){  //需修改接口
 	    		Common.render('tpls/sysmanagement/user/edit.html',data,function(html){
 	    			Modal.show({
 	    	            title: '用户信息编辑',
@@ -364,7 +416,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 	    	        					"trueName": $( " [name='trueName']").val(),
 	    	        					"organId": $( " [name='organId']").val()
 	    	            				};
-	    	                	Common.xhr.putJSON('/v2.0/users/'+id,serverData,function(data){
+	    	                	Common.xhr.putJSON('/identity/v2.0/users/'+id,serverData,function(data){
 	    	                		if(data){
 	    	                			Modal.success('保存成功')
 	    	                			setTimeout(function(){Modal.closeAll()},2000);
@@ -387,31 +439,33 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 	    	        });
 	    		});
 	    		});
-	    });
-	    //删除用户
-	     $("#UserTable_wrapper a.btn-delete").on("click",function(){
-	    	 var id = $(this).attr("data");
-	    	 Modal.confirm('确定要删除该用户吗?', function(result){
-	             if(result) {
-	            	 Common.xhr.del('/v2.0/users/'+id,
-	                     function(data){
-	                    	 if(data){
-	                    		 Modal.success('删除成功')
-	                			 setTimeout(function(){Modal.closeAll()},2000);
-	                    		 Common.router.route();
-	                    	 }else{
-	                    		 Modal.warning ('删除失败')
-	                    	 }
-	                     });
-	             }else {
-	            	 Modal.closeAll();
-	             }
-	         });
-	     });
-	     //权限设置
-	     $("#UserTable_wrapper a.btn-edit-role").on("click",function(){
-		    	var id= $(this).attr("data");
-		    	Common.xhr.ajax('/v2.0/users/tenants/'+id,function(data){  //需修改接口
+			});
+			//删除用户
+			$(document).off("click","#UserTable_wrapper a.btn-delete");
+			$(document).on("click","#UserTable_wrapper a.btn-delete",function(){
+				 var id = $(this).attr("data");
+		    	 Modal.confirm('确定要删除该用户吗?', function(result){
+		             if(result) {
+		            	 Common.xhr.del('/identity/v2.0/users/'+id,
+		                     function(data){
+		                    	 if(data){
+		                    		 Modal.success('删除成功')
+		                			 setTimeout(function(){Modal.closeAll()},2000);
+		                    		 Common.router.route();
+		                    	 }else{
+		                    		 Modal.warning ('删除失败')
+		                    	 }
+		                     });
+		             }else {
+		            	 Modal.closeAll();
+		             }
+		         });
+			})
+			//权限设置
+			$(document).off("click","a.btn-edit-role");
+			$(document).on("click","a.btn-edit-role",function(){
+				var id= $(this).attr("data");
+		    	Common.xhr.ajax('/identity/v2.0/users/tenants/'+id,function(data){  //需修改接口
 		    		Common.render('tpls/sysmanagement/user/editrole.html',data,function(html){
 		    			Modal.show({
 		    	            title: '用户权限设置',
@@ -421,7 +475,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 		    	                label: '保存',
 		    	                action: function(dialog) {
 		    	                	var serverData = jsonData.roleJson("#authorityInfo");
-		    	                	Common.xhr.postJSON('/v2.0/users/tenants/'+id,serverData,function(data){
+		    	                	Common.xhr.postJSON('/identity/v2.0/users/tenants/'+id,serverData,function(data){
 		    	                		if(data){
 		    	                			Modal.success('保存成功')
 		    	                			setTimeout(function(){Modal.closeAll()},2000);
@@ -446,7 +500,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 		    	        });
 		    		});
 		    		});
-		    });
+			});
 	}
 	return {
 		init:init

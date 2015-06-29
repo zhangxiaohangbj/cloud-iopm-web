@@ -3,7 +3,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 	var init = function(){
 		Common.$pageContent.addClass("loading");
 		//render获取的数据
-		Common.render(true,'tpls/ccenter/vpc/subnet/list.html','/v2.0/subnets/page/1/10',function(){
+		Common.render(true,'tpls/ccenter/vpc/subnet/list.html','/networking/v2.0/subnets/page/1/10',function(){
 			bindEvent();
 		});
 	};
@@ -140,7 +140,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 	    	//创建子网弹框
 	    	AddSubnet : function(cb){
 	    		//先获取vpc后，再render
-	    		Common.xhr.ajax('/v2.0/networks',function(data){
+	    		Common.xhr.ajax('/networking/v2.0/networks',function(data){
 	    			Common.render('tpls/ccenter/vpc/subnet/add.html',data,function(html){
 		    			Dialog.show({
 		    	            title: '子网创建',
@@ -181,7 +181,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 	           	    	                	    "tenant_id": "vdcid1"
 		    	                		}
 		    	                	  };
-		    	                	Common.xhr.postJSON('/v2.0/subnets',serverData,function(data){
+		    	                	Common.xhr.postJSON('/networking/v2.0/subnets',serverData,function(data){
 		    	                		if(data){
 		    	                			Dialog.success('保存成功')
 		    	                			setTimeout(function(){Dialog.closeAll()},2000);
@@ -200,7 +200,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 	    	},
 	    	//编辑子网弹框
 	    	EditSubnet : function(id,cb){
-	    		Common.xhr.ajax('/v2.0/subnets/'+id,function(data){
+	    		Common.xhr.ajax('/networking/v2.0/subnets/'+id,function(data){
 	    		Common.render('tpls/ccenter/vpc/subnet/edit.html',data.subnet,function(html){
 	    			Dialog.show({
 	    	            title: '子网编辑',
@@ -238,7 +238,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 	           	    	                	    "name": $("#addSubnet [name='name']").val()
 		    	                		}
 		    	                	  };
-	    	                	Common.xhr.putJSON('/v2.0/subnets/'+id,serverData,function(data){
+	    	                	Common.xhr.putJSON('/networking/v2.0/subnets/'+id,serverData,function(data){
 	    	                		if(data){
 	    	                			Dialog.success('保存成功')
 	    	                			setTimeout(function(){Dialog.closeAll()},2000);
@@ -273,7 +273,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 	    	});
 	    });
 	    $("#SubnetTable_wrapper a.subnet-name").on("click",function(){
-	    	Common.xhr.ajax('/v2.0/subnets/'+$(this).attr("data"),function(data){
+	    	Common.xhr.ajax('/networking/v2.0/subnets/'+$(this).attr("data"),function(data){
 	    		Common.render('tpls/ccenter/vpc/subnet/detail.html',data.subnet,function(html){
 	    			$("#page-main .page-content").html(html);
 	    			EventsHandler.switcher();
@@ -289,7 +289,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 	    	 var id = $(this).attr("data");
 	    	 Dialog.confirm('确定要删除该子网吗?', function(result){
 	             if(result) {
-	            	 Common.xhr.del('/v2.0/subnets/'+id,
+	            	 Common.xhr.del('/networking/v2.0/subnets/'+id,
 	                     function(data){
 	                    	 if(data){
 	                    		 Dialog.success('删除成功')

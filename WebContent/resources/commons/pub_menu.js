@@ -1,7 +1,7 @@
 /*!
  * 公共header和侧边栏的维护
  */
-define(function() {
+define('commons/pub_menu', function() {
     // init nav & sideBar
     var navPrimaryItems = [
         {
@@ -99,7 +99,7 @@ define(function() {
             items: [
                 {
                     text: '<i class="fa fa-cloud"></i>虚拟数据中心',
-                    link: '#vdc'
+                    link: '#vdc/'
                 },
                 {
                     text: '<i class="fa fa-tachometer"></i>云主机管理',

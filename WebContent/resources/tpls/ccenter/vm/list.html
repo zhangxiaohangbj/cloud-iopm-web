@@ -26,20 +26,20 @@
 						<th class="c12">操作</th>
 					</tr>
 				</thead>
-				<tbody>
+<!-- 				<tbody>
 				{{each list as item i}}
 					<tr>
 						<td><label><input type="checkbox"></label></td>
 						<td><a href="javascript:void(0);" class="vm_name" data="{{item.id}}">{{item.name}}</a></td>
 						<td>{{item.fixedIps}}</td>
 						<td class="vm_floating_ips">{{#item.floatingIps}}</td>
-						<td>
+						<td class="vm_type" data_memory="{{item.flavor.ram}}" data_cores="{{item.flavor.vcpus}}" data_name="{{item.flavor.name}}">
 						{{if item.flavor != null}}
 							{{(item.flavor.ram%512==0)?(item.flavor.ram/1024):(item.flavor.ram/1024).toFixed(1)}}GB|{{item.flavor.vcpus}}CPUs|{{item.flavor.disk}}GB
 						{{/if}}
 						</td>
 						<td>{{item.availability_zone}}</td>
-						<td>{{item.vdcName}}</td>
+						<td class="vdc_name" data="{{item.tenant_id}}">{{item.vdcName}}</td>
 						<td>
 			 			{{if item.vmState == 'ACTIVE'}} <span class="text-success">运行中</span>
 							{{else if item.vmState == 'BUILD'}} <span class="text-warning">创建中</span>
@@ -59,9 +59,9 @@
 			 			</td>
 			 			<td>{{item.created_at}}</td>
 						<td>
-						<!-- <a class="btn-opt" data-toggle="tooltip" title="备份"  style="margin: 0;"><i class="fa fa-files-o"></i></a> -->
+						<a class="btn-opt" data-toggle="tooltip" title="备份"  style="margin: 0;"><i class="fa fa-files-o"></i></a>
 						<a href="javascript:void(0)" class="btn-opt createSnapshot" data-toggle="tooltip" title="创建快照" data-act="stop" data="{{item.id}}" style="margin: 0;"><i class="fa fa-camera"></i></a>
-						<!-- <a class="btn-opt" data-toggle="tooltip" title="控制台" data-act="delete"><i class="glyphicon glyphicon-trash"></i></a> -->
+						<a class="btn-opt" data-toggle="tooltip" title="控制台" data-act="delete"><i class="glyphicon glyphicon-trash"></i></a>
 						{{if item.vmState != 'PAUSED' && item.vmState != 'SHUTOFF' && item.vmState != 'SUSPENDED'}}
 						<div class="dropdown">
 							<a class="btn-opt dropdown-toggle" data-toggle="dropdown" title="更多"  aria-expanded="false" ><i class="fa fa-angle-double-right"></i></a>
@@ -97,7 +97,7 @@
 						</td>
 					</tr>
     			{{/each}}
-				</tbody>
+				</tbody> -->
 				<tfoot>
 					<tr>
 						<td>

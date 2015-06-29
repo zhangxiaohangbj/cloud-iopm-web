@@ -18,12 +18,12 @@
 						</th>
 						<th class="c2">网络名称</th>
 						<th class="c2">虚拟数据中心</th>
-						<th class="c2">网络类型</th>
-						<th class="c1">CIDR</th>
+						<th class="c1">网络类型</th>
+						<th class="c2">CIDR</th>
 						<th class="c1">是否共享</th>
 						<th class="c1">状态</th>
-						<th class="c2">管理员状态</th>
-						<th class="c2 sorting_disabled">操作</th>
+						<th class="c1">管理员状态</th>
+						<th class="c1 sorting_disabled">操作</th>
 					</tr>
 				</thead>
 				<tbody>
@@ -32,7 +32,7 @@
 						<td><label><input type="checkbox"></label></td>
 						<td><a href="javascript:void(0);" class="network-name" data="{{item.id}}">{{item.name}}</a></td>
 						<td>{{item.vdc_name}}</td>
-						<td>{{if item["router:external"] == true}} 外部网络 {{else}} 内部私有网络 {{/if}}</td>
+						<td>{{if item["router:external"] == true}} 外部网络 {{else}} 内部网络 {{/if}}</td>
 						<td>{{item.cidr}}</td>
 						<td>{{if item.shared == true}} 共享 {{else}} 非共享 {{/if}}</td>
 						<td>
