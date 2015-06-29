@@ -119,10 +119,14 @@ war {
 	}
 
 	exclude "resources/commons/"
+	exclude "resources/initializer.js"
+	from("${buildDir}/resourcesWeb/initializer.js") {
+		into "resources/"
+	}
 }
 
 task initJS << {
-	def initJS = new File("${webAppDirName}/resources/initializer.js");
+	def initJS = new File("${buildDir}/resourcesWeb/initializer.js");
 	if(initJS.exists()) initJS.delete();
 	def parent = initJS.getParentFile();
 	if(!parent.exists()) parent.mkdir();
@@ -130,7 +134,7 @@ task initJS << {
 		"WebContent/resources/commons/pub_menu.js",
 		"WebContent/resources/commons/router_table.js",
 		"WebContent/resources/commons/main.js",
-		"WebContent/resources/commons/init.js"
+		"WebContent/resources/initializer.js"
 	].each {
 		initJS.append(new File(it).text, "utf-8")
 	}
