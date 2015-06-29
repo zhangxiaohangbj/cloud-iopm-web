@@ -199,7 +199,7 @@ define(['Common','bs/modal','jq/form/wizard','jq/form/validator-bs3','bs/tooltip
                             rules: {
                                 'env-name': {
                                     required: true,
-                                    minlength: 4,
+                                    minlength: 1,
                                     maxlength:15
                                 },
                                 'env-version': {
@@ -217,7 +217,7 @@ define(['Common','bs/modal','jq/form/wizard','jq/form/validator-bs3','bs/tooltip
                                 },
                                 'connector-username':{
                                     required:true,
-                                    minlength:4,
+                                    minlength:1,
                                     maxlength:15
                                 },
                                 'connector-password': {

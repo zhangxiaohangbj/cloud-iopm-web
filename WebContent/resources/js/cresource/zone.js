@@ -5,6 +5,7 @@ define(['Common','bs/modal','jq/form/wizard','jq/form/validator-bs3','bs/tooltip
     var wizard;
     var renderData = {};
     var currentResourceList={};
+    var chosenList=[];
     var currentZone={
         name:null,
         virtualEnvId:null,
@@ -33,8 +34,6 @@ define(['Common','bs/modal','jq/form/wizard','jq/form/validator-bs3','bs/tooltip
             Common.$pageContent.removeClass("loading");
         });
         $("[data-toggle='tooltip']").tooltip();
-
-
 
         var resetCurrentChosenObj = function(){
             for(var key in currentZone){
@@ -66,44 +65,82 @@ define(['Common','bs/modal','jq/form/wizard','jq/form/validator-bs3','bs/tooltip
         dataGetter.getZone();
         dataGetter.getResourceType();
 
+
         //初始化资源
-        var initResource = function(resourceType,elem){
-            var resourceTypeArray = renderData.type;
-            var link ;
-            resourceTypeArray.forEach(function(e){
-                if(e.type == resourceType){
-                    link = e.link;
-                    return
-                }
-            })
-            Common.xhr.ajax(link,function(data){
-                var dataList = data.data;
-                $.each(dataList,function(i,item){
-                	item.icon_type = resourceType;
-                })
-                /*var resourceListElem = $("#choseResource").find(".list-group-all");
-                var chosenList  = $("#resource-chosen");
-                resourceListElem.empty();
-                var listview=[];
-                for(var i=0;i<dataList.length;i++){
-                    if( chosenList.has("#"+dataList[i]["id"]).length==0){
-                        listview.push('<a href="javascript:void(0);" class="list-group-item '+ resourceType+'">'+dataList[i]["name"]+' <i id = '+dataList[i]["id"]+' class="fa fa-plus-circle fa-fw" style="float: right;"></i></a>')
+        var resourceHandler ={
+            init:function(resourceName,elem){
+                var resourceTypeArray ;
+                resourceTypeArray= renderData.type.slice(0);
+                debugger
+                var link ;
+                var rtype;
+                var choseObj;
+                resourceTypeArray.forEach(function(e){
+                    if(e.name == resourceName){
+                        link = e.link;
+                        rtype= e.type;
+                        //e.selected = true;
+                        choseObj = e;
+                        choseObj
+                        return
                     }
-                }
-                resourceListElem.html(listview.join(""));
-                EventsHandler.resourceAddEvent(resourceType);*/
-                require(['js/common/choose'],function(choose){
-                    var options = {
-                        selector: '#'+elem,
-                        allData: dataList,
-                        headAppend: {
-                        	className: 'select',
-                        	list: resourceTypeArray
-                        }
-                    };
-                    choose.initChoose(options);
                 })
-            });
+                Common.xhr.ajax(link,function(data){
+                    var dataList = data;
+                    //遍历对象，生成两个list ， unchosen/chosen
+                    var unChosenList=[];
+                    $.each(dataList,function(i,item){
+                        item.icon_type = rtype;
+                        var flag = true;
+                        $.each(chosenList,function(i,item0){
+                            if(item0.id == item.id){
+                                flag = false;
+                            }
+                        })
+                        if(flag){
+                            unChosenList.push(item);
+                        }
+                    })
+                    require(['js/common/choose'],function(choose){
+                        var options = {
+                            selector: '#'+elem,
+                            allData: unChosenList,
+                            selectData:chosenList,
+                            doneCall: resourceHandler.changeHandler,
+                            headAppend: {
+                                className: 'select-resource-type',
+                                list: resourceTypeArray
+                            }
+                        };
+                        choose.initChoose(options);
+                    })
+                });
+            },
+            saveChosen:function(){
+
+            },
+            refreshChosen:function(){
+
+            },
+            listChosen:function(){
+
+            },
+            changeHandler:function(){
+                $("#choseResource").find("select.select-resource-type").change(function(){
+                    chosenList =[];  //reInit
+                    var resourceName = $(this).children('option:selected').val();
+                    $("#choseResource .show-selected").find("ul.list-group-item").each(function(){
+                        var curLi = $(this).find("li.member");
+                        var curR = {
+                            id:curLi.attr("data-id"),
+                            name:curLi.attr("data-name"),
+                            type: $(this).find("i.type_icons").attr("class").split(" ")[1]
+                        };
+                        chosenList.push(curR)
+                    });
+                    resourceHandler.init(resourceName,"choseResource");
+                });
+            }
         }
         var dataSetHandler = {
             nameSet:function(){
@@ -116,13 +153,10 @@ define(['Common','bs/modal','jq/form/wizard','jq/form/validator-bs3','bs/tooltip
                 $("#select-env-confirm").val(curEnv.text());
             },
             resourceSet:function(elem){
-                var resourceType = $("#select-resource-type").children('option:selected').val();
-                initResource(resourceType,elem);
-                $("#select-resource-type").change(function(){
-                    var resourceType = $(this).children('option:selected').val();
-                    initResource(resourceType,elem);
-                });
-
+                //修改资源添加
+                var rName = renderData.type[0].name;
+                resourceHandler.init(rName,elem);
+                //resourceHandler.changeHandler();
             },
             regionSet:function(){
                 var curRegion =   $('#select-region option:selected');
@@ -135,41 +169,11 @@ define(['Common','bs/modal','jq/form/wizard','jq/form/validator-bs3','bs/tooltip
             }
         }
 
-        var EventsHandler = {
-            //点击加号，添加可用分区
-            resourceAddEvent:function(type){
-               /* require(['js/common/domchoose'],function(domchoose){
-                    var leftOption = {
-                            appendWrapper: '.resource-all',
-                            clone: 'a.'+type
-                        },
-                        rightOption = {
-                            appendWrapper: '.resource-chosen',
-                            clone: 'a.'+type,//相对clickSelector获取元素
-                            clickSelector: 'i.fa-minus-circle'
-                        };
-                    domchoose.initChoose(leftOption,rightOption);
-                });*/
-
-                //刷新状态
-                var resourceListElem = $("#resource-chosen").find(".list-group-item");
-                resourceListElem.each(function(){
-                    var i = $(this).find("i");
-                    if($(this).hasClass(type)){
-                        i.hasClass("fa-minus-circle")?null:i.addClass("fa-minus-circle");
-                    }else{
-                        i.hasClass("fa-minus-circle")?i.removeClass("fa-minus-circle"):null;
-                    }
-                });
-
-            }
-        }
         //创建按钮
         $("#ZoneTable_wrapper span.btn-add").on("click",function(){
             var selectData= {"data":renderData};
             Common.render('tpls/cresource/zone/add.html',selectData,function(html){
                 $('body').append(html);
-
                 $.fn.wizard.logging = true;
                 wizard = $('#create-zone-wizard').wizard({
                     keyboard : false,
@@ -190,7 +194,6 @@ define(['Common','bs/modal','jq/form/wizard','jq/form/validator-bs3','bs/tooltip
                         }
                     }
                 });
-
                 //加载时载入validate
                 wizard.on('show',function(){
                     wizard.form.each(function(){
@@ -210,7 +213,10 @@ define(['Common','bs/modal','jq/form/wizard','jq/form/validator-bs3','bs/tooltip
                         });
                     })
                 });
-
+                //资源选择页面的监听事件
+                wizard.cards.resource.on("selected",function(){
+                    resourceHandler.changeHandler();
+                });
                 //确认信息卡片被选中的监听
                 wizard.cards.confirm.on('selected',function(card){
                     //获取上几步中填写的值
@@ -219,10 +225,7 @@ define(['Common','bs/modal','jq/form/wizard','jq/form/validator-bs3','bs/tooltip
                     dataSetHandler.envSet();
                     dataSetHandler.regionSet();
                 });
-
-
                 wizard.show();
-
                 //关闭弹窗
                 var closeWizard = function(){
                     $('div.wizard').remove();
@@ -233,9 +236,7 @@ define(['Common','bs/modal','jq/form/wizard','jq/form/validator-bs3','bs/tooltip
                 wizard.on('closed', function() {
                     closeWizard();
                 });
-
                 dataSetHandler.resourceSet("choseResource");
-
                 //提交按钮
                 wizard.on("submit", function(wizard) {
                     //合并数据
@@ -251,10 +252,14 @@ define(['Common','bs/modal','jq/form/wizard','jq/form/validator-bs3','bs/tooltip
                         }
                     });
                     Common.xhr.postJSON('/v2/tenant_id/os-availability-zone',currentZone,function(data){
-                        wizard._submitting = false;
-                        wizard.updateProgressBar(100);
-                        closeWizard();
-                        Common.router.route();
+                        if(data && data.error !=true){
+                            wizard._submitting = false;
+                            wizard.updateProgressBar(100);
+                            closeWizard();
+                            Common.router.route();
+                        } else{
+                            Modal.warning ('保存失败')
+                        }
                     });
                 });
             });
@@ -344,7 +349,7 @@ define(['Common','bs/modal','jq/form/wizard','jq/form/validator-bs3','bs/tooltip
                             }],
                         onshown : function(){
                             var rtype = renderData.type[0].type;
-                            initResource(rtype,"addResource");
+                            //initResource(rtype,"addResource");
                         }
                     });
 
