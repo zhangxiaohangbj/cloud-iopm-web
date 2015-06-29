@@ -229,7 +229,7 @@ define('commons/main',
                 } else {
                     $table = tableSelector;
                 }
-                if($table.length <= 0) return null;
+                if($table.length <= 0 || !$table.selector) return null;
                 if(_options && PubView.utils.isFunction(_options.initComplete)) {
                     complete = _options.initComplete;
                 }
@@ -245,6 +245,10 @@ define('commons/main',
                     args.unshift($table);
                     PubView.utils.isFunction(complete) && complete.apply(this, args);
                 }});
+                if($.fn.dataTable.isDataTable($table.selector) && !_options) {
+                    console.error("DataTable Error: table '"+$table.selector+"' has already been initialised.");
+                    return null;
+                }
                 return $table.DataTable(_options);
             } else if(PubView.utils.isFunction(complete)) {
                 complete.call(this, tableSelector);
