@@ -495,13 +495,13 @@ body{
 .table-primary.dataTable > tbody > tr > td {
     font-size: 0.9em;
     font-weight: normal;
-    text-align: center;
+    text-align: left;
     vertical-align: middle;
     padding:9px 8px;
 }
-/* .table-primary.dataTable > thead > tr > th{
-	text-align:center;
-} */
+.table-primary.dataTable > thead > tr > th{
+	padding:0 8px;
+}
 .table-primary > tbody > tr > td >a{
 	color:#227B9B;
 }
