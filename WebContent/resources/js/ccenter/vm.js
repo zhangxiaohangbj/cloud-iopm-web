@@ -215,7 +215,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 				//vdc列表,获取完vdc列表后，需要去加载可用域的数据以及可用网络的数据和安全组的数据
 				getVdc:function(){
 					//管理员和普通租户的逻辑在此判断
-					Common.xhr.ajax('/v2.0/tenants',function(vdcDatas){
+					Common.xhr.ajax('/identity/v2.0/tenants',function(vdcDatas){
 						renderData.vdcList = vdcDatas.tenants;
 					});
 				},
