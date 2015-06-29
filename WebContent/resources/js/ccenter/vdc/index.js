@@ -528,7 +528,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 	    });
 	    //删除一个vdc
 	    $("ul.dropdown-menu a.deleteTenant").on("click",function(){
-	    	more.DeleteTenant($(this).attr("data"));
+	    	more.DeleteTenant($(this).attr("data"),$(this).attr("data-name"));
 	    });
 	   //编辑vdc
 	    $("ul.dropdown-menu a.editTenantBasic").on("click",function(){
@@ -700,8 +700,8 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
     		})		
     	 },
     	//删除一个租户
-    	DeleteTenant : function(vdc_id){
-    		Modal.confirm('确定要删除该虚拟数据中心吗?', function(result){
+    	DeleteTenant : function(vdc_id,vdc_name){
+    		Modal.confirm('确定要删除"'+vdc_name+'"吗?', function(result){
 	             if(result) {
 	            	 Common.xhr.del('/v2.0/tenants/' + vdc_id,
 	                     function(data){
