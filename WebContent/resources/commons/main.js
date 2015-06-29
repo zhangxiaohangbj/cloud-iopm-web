@@ -117,7 +117,7 @@ define('commons/main',
             // 初始化页面结构
             $(document.body).removeClass("loading").append(
                 '<div id="page-main" class="clearfix">'+
-                '<div class="page-content clearfix"></div>'+
+                    '<div class="page-content clearfix"></div>'+
                 '</div>'
             );
             this.$pageMain = $("#page-main");
