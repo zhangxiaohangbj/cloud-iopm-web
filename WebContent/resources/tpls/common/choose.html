@@ -18,16 +18,16 @@
 		  <div class="list-group list-group-all">
 		  	{{each allData as item i}}
 		  	<ul class="nav nav-pills btn-group btn-group-sm list-group-item">
-		  		{{if item.icon_type}}
-		  			<li class="item_type">
-						<i class="type_icons {{item.icon_type}}"></i>
-					</li>
-				{{/if}}
 				{{if typeof item ==='string'}}
 					<li class="member adjust" data-id="{{item}}" data-name="{{item}}">
 					<span class="display_name">{{item}}</span>
 				</li>
 					{{else}}
+					{{if item.icon_type}}
+			  			<li class="item_type">
+							<i class="type_icons {{item.icon_type}}"></i>
+						</li>
+					{{/if}}
 				<li class="member adjust" data-id="{{item.id}}" data-name="{{item.name}}">
 					<span class="display_name">{{item.name}}</span>
 				</li>
@@ -62,6 +62,11 @@
 						<span class="display_name">{{item}}</span>
 					</li>
 					{{else}}
+					{{if item.icon_type}}
+			  			<li class="item_type">
+							<i class="type_icons {{item.icon_type}}"></i>
+						</li>
+					{{/if}}
 					<li class="member adjust" data-id="{{item.id}}" data-name="{{item.name}}">
 						<span class="display_name">{{item.name}}</span>
 					</li>
