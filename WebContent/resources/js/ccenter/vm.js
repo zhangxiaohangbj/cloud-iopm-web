@@ -222,6 +222,9 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 				//虚机规格
 				getSpecs: function(){
 					Common.xhr.ajax('/v2/'+current_vdc_id+'/flavors/detail',function(flavors){
+    					if(flavors&&flavors["error"]){
+    						Modal.error(flavors.message)
+    					}
 						var flavorsData = flavors['flavors'];
 						for(var i=0;i<flavorsData.length;i++){
 							flavorsData[i]["ephemeral"] = flavorsData[i]["OS-FLV-EXT-DATA:ephemeral"]
@@ -263,7 +266,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 						data = data["availabilityZoneInfo"]||{};
 						for(var i=0;i<data.length;i++){
 							if(data[i]["zoneState"]["available"]){
-								selectData.push({"name":data[i]["zoneName"],"id":data[i]["id"]});
+								selectData.push({"name":data[i]["zoneName"]});
 							}
 						}
 						var html = Common.uiSelect(selectData);
@@ -305,13 +308,13 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 				}
 				if(vdc_id){
 					//获取vdc的配额
-					Common.xhr.ajax('/v2.0/'+current_vdc_id+'/os-quota-sets/'+vdc_id,function(quotas){
+					Common.xhr.ajax('/identity/v2.0/'+current_vdc_id+'/os-quota-sets/'+vdc_id,function(quotas){
 						if(!quotas) {
 							quotas = {};
 						}
 						quotas = quotas.quota_set||{};
 						//获取vdc的配额使用情况
-						Common.xhr.ajax('/v2.0/'+vdc_id+'/limits',function(quotaUsages){
+						Common.xhr.ajax('/identity/v2.0/'+vdc_id+'/limits',function(quotaUsages){
 							//当前配额 等于 当前vdc下总配额 减去  当前选中规格的额度
 							var current = currentChosenObj.specs;
 							if(current && current.length){
@@ -356,7 +359,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 			//根据vdc可用网络信息
 			initAvailableNetWorks : function(){
 				var vdc_id = currentChosenObj.vdc || $('select.tenant_id').children('option:selected').val();
-				Common.xhr.get('/v2.0/networks',{"vdcId":vdc_id},function(data){
+				Common.xhr.get('/networking/v2.0/networks',{"vdcId":vdc_id},function(data){
 					var dataArr = [];
 					if(data){
 						var networks = data.networks;
@@ -370,7 +373,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 										var dtd = $.Deferred();
 										var netId = $clone.find('li:first').attr('data-id');
 										//请求subnet
-										Common.xhr.get('/v2.0/subnets',{"networkId":netId},function(data){
+										Common.xhr.get('/networking/v2.0/subnets',{"networkId":netId},function(data){
 											var selectData = [{id:"default",name:"默认子网"}].concat(data.subnets);
 											var html = Common.uiSelect({list:selectData,className:'select-subnet'});
 											$clone.append('<li class="pull-right fixedip"><select class="select-fixedip"><option>DHCP</option></select></li>');
@@ -442,7 +445,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 			},
 			//载入安全组
 			initSecurityGroup : function(){
-				Common.xhr.get('/v2.0/security-groups',{"vdcId":currentChosenObj.vdc},function(data){
+				Common.xhr.get('/networking/v2.0/security-groups',{"vdcId":currentChosenObj.vdc},function(data){
 			    	var dataArr = [];
 					if(data && data.security_groups){
 						for(var i=0,l=data.security_groups.length;i<l;i++){
@@ -611,7 +614,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 						subnetId = that.children('option:selected').val();
 						if(subnetId){
 							if(subnetId!='default'){
-								Common.xhr.get('/v2.0/subnets/'+subnetId+'/availableips',function(data){
+								Common.xhr.get('/networking/v2.0/subnets/'+subnetId+'/availableips',function(data){
 									var selectData = [];
 									for(var i=0;i<data.availableips.length;i++){
 										selectData[i] = {id:data.availableips[i],name:data.availableips[i]};
@@ -822,7 +825,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
     				serverData.server["networks"]=networkData;
     				serverData.server["security_groups"]=getSecruityGroup();
     				Common.xhr.postJSON("/compute/v2/"+current_vdc_id+'/servers/'+currentChosenObj.vdc,serverData,function(data){
-    					if(data.error){
+    					if(data&&data["error"]){
     						Modal.error(data.message)
     					}
     					wizard._submitting = false;
@@ -950,12 +953,11 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
                                  }
                                  Common.xhr.postJSON("/compute/v2/"+current_vdc_id+'/servers/'+id+'/action', flavor_data, function(data){
                                      if(!data.error){
+                                         alert("保存成功");
+
                                          dialog.close();
-                                         Modal.success("云主机配置已更改!");
-     	    	                		 setTimeout(function(){Modal.closeAll()},3000);
-         	                			 Common.router.route();
                                      }else{
-                                    	 Modal.error("云主机变更配置失败!");
+                                         alert("保存失败");
                                      }
                                  });
 	    	                }
@@ -974,7 +976,6 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 	    	DoAction:function(id,name,vdcId,rq,dc){
 	    		Common.$pageContent.addClass("loading");
                 Common.xhr.postJSON("/compute/v2/"+vdcId+'/servers/'+id+'/action',rq,function(data){
-                	//alert(JSON.stringify(data));
                 	if(data.success){
                 		Modal.success("云主机["+name+"]已"+dc+"!");
                 		setTimeout(function(){Modal.closeAll()},3000);
@@ -1132,7 +1133,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 	    	var serverId = $(this).attr("data");
 	    	var vdcId = $(this).parents('tr:first').find('td.vdc_name').attr("data");
 	    	var imageList;
-	    	Common.xhr.getSync('/v2/'+vdcId+'/images/?owner='+vdcId,function(data){
+	    	Common.xhr.getSync('/v2/images/?owner='+current_vdc_id,function(data){
     			imageList=data;
     		});
 	    	Common.render('tpls/ccenter/vm/rebuild.html',imageList,function(html){

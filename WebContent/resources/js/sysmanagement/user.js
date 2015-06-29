@@ -42,7 +42,10 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 		      },
 	    	  /*属性 columns 用来配置具体列的属性，包括对应的数据列名,如trueName，是否支持搜索，是否显示，是否支持排序等*/
 		      "columns": [
-			        {"data": ""},
+			        {"data": "",
+			        	"orderable": false,
+			        	"defaultContent":"<label><input type='checkbox'></label>"
+			        },
 			        {"data": "name"},
 			        {"data": "trueName"},
 			        {"data": "phone"},
@@ -57,13 +60,6 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 		       *  属性列表： data，之前属性定义中对应的属性值； type，未知；full,全部数据值可以通过属性列名获取 
 		       * */
 		      "columnDefs": [
-					{
-					    "targets": [0],
-					    "orderable": false,
-					    "render": function() {
-					      return "<label><input type='checkbox'></label>";
-					    }
-					},
 					{
 					    "targets": [5],
 					    "data": "status",
@@ -149,6 +145,11 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 
 		    	            		var zNodes =data;
 		    	            		$.fn.zTree.init($("#organTree"), setting, zNodes);
+		    	            		var treeObj = $.fn.zTree.getZTreeObj("organTree");
+		    	            		if($("[name='organId']").val()){
+		    	            			var node = treeObj.getNodeByParam("id", $("[name='organId']").val(), null);
+			    	            		treeObj.checkNode(node, true, false); 
+		    	            		}
 
 		    	            	});
 		    	            }
@@ -435,7 +436,8 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 		//编辑用户信息
 		$(document).off("click","#UserTable_wrapper a.btn-edit");
 		$(document).on("click","#UserTable_wrapper a.btn-edit",function(){
-			var id= $(this).attr("data");
+			var rowdata = $(this).parents("tr:first").data("rowData.dt");
+			var id= rowdata.id;
 	    	Common.xhr.ajax('/identity/v2.0/users/'+id,function(data){  //需修改接口
 	    		Common.render('tpls/sysmanagement/user/edit.html',data,function(html){
 	    			Modal.show({
