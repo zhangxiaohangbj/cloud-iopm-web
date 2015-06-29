@@ -495,22 +495,19 @@ body{
 .table-primary.dataTable > tbody > tr > td {
     font-size: 0.9em;
     font-weight: normal;
-    text-align: center;
+    text-align: left;
     vertical-align: middle;
+    padding:9px 8px;
 }
+/* .table-primary.dataTable > thead > tr > th{
+	text-align:center;
+} */
 .table-primary > tbody > tr > td >a{
 	color:#227B9B;
 }
 
 .table-primary > tbody > tr > td a:hover{
 	text-decoration:none;
-}
-.table-primary > tbody > tr > td,
-.table-primary > tfoot > tr > td,
-.table-primary.dataTable > tbody > tr > td,
-{
-    padding: 9px 8px;
-    border-top: 1px solid #e4e9ec;
 }
 .table-primary.table-striped > tbody > tr:nth-child(odd),
 .table-primary.table-striped > tbody > tr.odd,
