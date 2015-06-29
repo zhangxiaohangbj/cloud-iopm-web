@@ -113,7 +113,8 @@ define(['Common','bs/modal','jq/form/wizard','jq/form/validator-bs3','bs/tooltip
                             }
                         };
                         choose.initChoose(options);
-                    })
+                    });
+                    resourceHandler.changeHandler();
                 });
             },
             saveChosen:function(){
@@ -129,12 +130,14 @@ define(['Common','bs/modal','jq/form/wizard','jq/form/validator-bs3','bs/tooltip
                 $("#choseResource").find("select.select-resource-type").change(function(){
                     chosenList =[];  //reInit
                     var resourceName = $(this).children('option:selected').val();
+                    debugger
                     $("#choseResource .show-selected").find("ul.list-group-item").each(function(){
                         var curLi = $(this).find("li.member");
+                        var curClass= $(this).find("i.type_icons").attr("class");
                         var curR = {
                             id:curLi.attr("data-id"),
                             name:curLi.attr("data-name"),
-                            type: $(this).find("i.type_icons").attr("class").split(" ")[1]
+                            type: curClass.split(" ")[1]
                         };
                         chosenList.push(curR)
                     });
@@ -185,7 +188,7 @@ define(['Common','bs/modal','jq/form/wizard','jq/form/validator-bs3','bs/tooltip
                         cancelText: "取消",
                         nextText: "下一步",
                         backText: "上一步",
-                        submitText: "提交",
+                        submitText: "提  交",
                         submittingText: "提交中..."
                     },
                     validate: {
