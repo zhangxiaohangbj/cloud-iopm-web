@@ -632,16 +632,32 @@ define('commons/main',
                         var deferredsHandler = $.when.apply(that, deferreds);
                         return deferredsHandler.then(
                             function() {
-                                // success
-                                var results = [];
+                                var results = [], errors = [];
                                 if(requests.length > 1) {
                                     $.each(arguments, function(i, arg) {
-                                        results.push(arg[0]);
+                                        if(arg[0] && arg[0].error) {
+                                            errors.push(arg[0]);
+                                        } else {
+                                            results.push(arg[0]);
+                                        }
                                     });
                                 } else {
-                                    results.push(arguments[0]);
+                                    if(arguments[0] && arguments[0].error) {
+                                        errors.push(arguments[0]);
+                                    } else {
+                                        results.push(arguments[0]);
+                                    }
                                 }
-                                PubView.utils.isFunction(success) && success.apply(that, results);
+                                if(errors.length > 0) {
+                                    var errMsg;
+                                    $.each(errors, function(i, error) {
+                                        if(error.message) errMsg = error.message;
+                                    });
+                                    errMsg = errMsg || '服务器端发生未知错误';
+                                    resolve("Ajax Error: "+errMsg);
+                                } else {
+                                    PubView.utils.isFunction(success) && success.apply(that, results);
+                                }
                             },
                             function() {
                                 // failure
