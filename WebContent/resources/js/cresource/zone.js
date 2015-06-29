@@ -4,8 +4,8 @@ define(['Common','bs/modal','jq/form/wizard','jq/form/validator-bs3','bs/tooltip
     //初始化
     var wizard;
     var renderData = {};
-    var currentResourceList={};
-    var chosenList=[];
+    var currentResourceList={}; //
+    var chosenList=[];         //用于记录选择资源框中的已选的记录
     var currentZone={
         name:null,
         virtualEnvId:null,
@@ -39,6 +39,7 @@ define(['Common','bs/modal','jq/form/wizard','jq/form/validator-bs3','bs/tooltip
             for(var key in currentZone){
                 currentZone[key] = null;
             }
+            chosenList = [];
         }
 
         var dataGetter={
@@ -95,7 +96,9 @@ define(['Common','bs/modal','jq/form/wizard','jq/form/validator-bs3','bs/tooltip
                             selector: '#'+elem,
                             allData: unChosenList,
                             selectData:tmpChosenList,
-                            doneCall: resourceHandler.changeHandler,
+                            doneCall: function(){
+                                resourceHandler.changeHandler(elem);
+                            },
                             headAppend: {
                                 className: 'select-resource-type',
                                 list: tempArray
@@ -103,7 +106,6 @@ define(['Common','bs/modal','jq/form/wizard','jq/form/validator-bs3','bs/tooltip
                         };
                         choose.initChoose(options);
                     });
-                    resourceHandler.changeHandler();
                 });
             },
             //刷新已选择列表，与当前选中的资源类型对应
@@ -116,7 +118,7 @@ define(['Common','bs/modal','jq/form/wizard','jq/form/validator-bs3','bs/tooltip
                         icon_type:item.icon_type
                     };
                     if(item.icon_type != resourceType){
-                        item.minus_class="hide";
+                        tempObj.minus_class="hide";
                     }
                     tmpChosen.push(tempObj);
                 });
@@ -140,11 +142,12 @@ define(['Common','bs/modal','jq/form/wizard','jq/form/validator-bs3','bs/tooltip
                 });
                 return unChosenList;
             },
-            changeHandler:function(){
-                $("#choseResource").find("select.select-resource-type").change(function(){
+            changeHandler:function(elem){
+                var curDiv = $("#"+elem);
+                curDiv.find("select.select-resource-type").change(function(){
                     chosenList =[];  //reInit
                     var resourceName = $(this).children('option:selected').val();
-                    $("#choseResource .show-selected").find("ul.list-group-item").each(function(){
+                    curDiv.find(".show-selected").find("ul.list-group-item").each(function(){
                         var curLi = $(this).find("li.member");
                         var curClass= $(this).find("i.type_icons").attr("class");
                         var curR = {
@@ -154,7 +157,7 @@ define(['Common','bs/modal','jq/form/wizard','jq/form/validator-bs3','bs/tooltip
                         };
                         chosenList.push(curR)
                     });
-                    resourceHandler.init(resourceName,"choseResource");
+                    resourceHandler.init(resourceName,elem);
                 });
             }
         }
@@ -172,7 +175,6 @@ define(['Common','bs/modal','jq/form/wizard','jq/form/validator-bs3','bs/tooltip
                 //修改资源添加
                 var rName = renderData.type[0].name;
                 resourceHandler.init(rName,elem);
-                //resourceHandler.changeHandler();
             },
             regionSet:function(){
                 var curRegion =   $('#select-region option:selected');
@@ -231,7 +233,7 @@ define(['Common','bs/modal','jq/form/wizard','jq/form/validator-bs3','bs/tooltip
                 });
                 //资源选择页面的监听事件
                 wizard.cards.resource.on("selected",function(){
-                    resourceHandler.changeHandler();
+                    resourceHandler.changeHandler("choseResource");
                 });
                 //确认信息卡片被选中的监听
                 wizard.cards.confirm.on('selected',function(card){
@@ -307,7 +309,6 @@ define(['Common','bs/modal','jq/form/wizard','jq/form/validator-bs3','bs/tooltip
                                         "regionId":  $('#edit-region option:selected').val(),
                                         "description": $("#edit-zone-description").val()
                                     }
-                                    debugger;
                                     Common.xhr.putJSON('/v2/tenant_id/os-availability-zone',azone,function(data){
                                         if(data &&data.error!=true){
                                             Modal.success('保存成功');
@@ -362,8 +363,7 @@ define(['Common','bs/modal','jq/form/wizard','jq/form/validator-bs3','bs/tooltip
                                 }
                             }],
                         onshown : function(){
-                            var rtype = renderData.type[0].type;
-                            //initResource(rtype,"addResource");
+                            dataSetHandler.resourceSet("choseResource");
                         }
                     });
 

@@ -102,6 +102,7 @@ define(['Common','bs/modal','jq/form/wizard','jq/form/validator-bs3','bs/tooltip
         var dataSetHandler={
             nameSet:function(){
                 currentChosenEnv.name = $("#env-name").val();
+                currentChosenConnector.name= $("#env-name").val();
                  $("#env-name-confirm").val(currentChosenEnv.name);
             },
             typeSet:function(){
@@ -278,8 +279,10 @@ define(['Common','bs/modal','jq/form/wizard','jq/form/validator-bs3','bs/tooltip
                     Common.xhr.postJSON('/v2/virtual-env',currentChosenEnv,function(data){
 
                         if(data && data.error!=true){
+                            wizard._submitting = false;
+                            wizard.updateProgressBar(100);
+                            closeWizard();
                             Modal.success('保存成功');
-                            setTimeout(function(){Modal.closeAll()},2000);
                             Common.router.route();
                         }else{
                             Modal.warning ('保存失败')
