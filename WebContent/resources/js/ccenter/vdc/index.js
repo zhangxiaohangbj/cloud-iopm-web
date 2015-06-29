@@ -9,7 +9,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 		Common.$pageContent.addClass("loading");
 		Common.render(true,{
 			tpl:'tpls/ccenter/vdc/list.html',
-			data:'/v2.0/tenants',
+			data:'/identity/v2.0/tenants',
 			beforeRender: function(data){
 				return data.tenants;
 			},
@@ -495,7 +495,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
     							"virtualEnvId":virtualEnvId
     						}
     				};
-    				Common.xhr.postJSON('/v2.0/tenants',vdcData,function(data){
+    				Common.xhr.postJSON('/identity/v2.0/tenants',vdcData,function(data){
     					wizard._submitting = false;
     					wizard.updateProgressBar(100);
     					closeWizard();
@@ -610,7 +610,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 		    	//配额管理
 		    	QuotaSets : function(id){
 		    		//先获取QuotaSets后，再render
-		    		Common.xhr.ajax('/v2.0/'+Common.cookies.getVdcId()+ '/os-quota-sets/' + id,function(data){
+		    		Common.xhr.ajax('/identity/v2.0/'+Common.cookies.getVdcId()+'/os-quota-sets/' + id,function(data){
 		    			Common.render('tpls/ccenter/vdc/quota.html',data.quota_set,function(html){
 		    				Modal.show({
 			    	            title: '配额',
@@ -624,7 +624,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 			    	                	var serverData = {
 				    	            			"quota_set":jsonData.quotaSetsJson("#vdcQuota")
 			    	        				};
-			    	                	Common.xhr.putJSON('/v2.0/'+Common.cookies.getVdcId()+'/os-quota-sets/'+id,serverData,function(data){
+			    	                	Common.xhr.putJSON('/identity/v2.0/'+Common.cookies.getVdcId()+'/os-quota-sets/'+id,serverData,function(data){
 			    	                		if(data){
 					                    		 Modal.success('保存成功')
 				 	                			 setTimeout(function(){Modal.closeAll()},2000);
@@ -645,7 +645,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 	  //可用分区管理
     	AZ : function(ve_id,vdc_id){
     		Common.xhr.ajax('/v2/os-availability-zone/virtualEnv/' + ve_id,function(eaz){
-    			Common.xhr.ajax('/v2.0/az/' + vdc_id,function(vaz){
+    			Common.xhr.ajax('/identity/v2.0/tenants/az/' + vdc_id,function(vaz){
     				var data = {
     						veList:renderData.veList
     				},
@@ -673,7 +673,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
     	    	    	    							"available_zones":jsonData.azJson("#vdcAZ .list-group-select"),
     	    	    	    							"virtualEnvId":virtualEnvId
     	    	    	    				      };
-    	    	    	                	Common.xhr.putJSON('/v2.0/az/'+vdc_id,putData,function(data){
+    	    	    	                	Common.xhr.putJSON('/identity/v2.0/tenants/az/'+vdc_id,putData,function(data){
     	    	    	                		if(data){
     	    	    	                			 Modal.success('保存成功')
       				 	                			 setTimeout(function(){Modal.closeAll()},1000);
@@ -703,7 +703,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
     	DeleteTenant : function(vdc_id,vdc_name){
     		Modal.confirm('确定要删除"'+vdc_name+'"吗?', function(result){
 	             if(result) {
-	            	 Common.xhr.del('/v2.0/tenants/' + vdc_id,
+	            	 Common.xhr.del('/identity/v2.0/tenants/' + vdc_id,
 	                     function(data){
 	                    	 if(data.success||data.code==404){
 	                    		 Modal.success('删除成功')
@@ -720,7 +720,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
     	 },
     	//编辑租户的基本信息
     	 EditTenantBasic : function(vdc_id){
-    		 Common.xhr.ajax('v2.0/tenants/' + vdc_id,function(data){
+    		 Common.xhr.ajax('/identity/v2.0/tenants/' + vdc_id,function(data){
     			 Common.render('tpls/ccenter/vdc/edit.html',data.tenants,function(html){
       				Modal.show({
   	    	            title: '虚拟数据中心信息',
@@ -739,7 +739,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
     	                			     "name": $("#editVdcBasic [name='vdc-name']").val()
     	                			}
   	    	                	};
-	  	    	              	Common.xhr.putJSON('v2.0/tenants/'+vdc_id,vdcData,function(data){
+	  	    	              	Common.xhr.putJSON('/identity/v2.0/tenants/'+vdc_id,vdcData,function(data){
 		  	    	              	if(data){
 			                    		 Modal.success('保存成功')
 		 	                			 setTimeout(function(){Modal.closeAll()},2000);
@@ -840,7 +840,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 	    	    	                	var userRolesData= {
 	    	    	                			"memberList":jsonData.userJson("#vdc-users .list-group-select")
 	    	    	                	}
-	    	    	                	Common.xhr.postJSON('/v2.0/tenants/'+vdc_id+'/userroles',userRolesData,function(data){
+	    	    	                	Common.xhr.postJSON('/identity/v2.0/tenants/'+vdc_id+'/userroles',userRolesData,function(data){
 	    	    	                		if(data){
 	    	    	                			 Modal.success('保存成功')
 		   		 	                			 setTimeout(function(){Modal.closeAll()},2000);
