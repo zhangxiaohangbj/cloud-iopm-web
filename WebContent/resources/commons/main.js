@@ -233,11 +233,30 @@ define('commons/main',
                 if(_options && PubView.utils.isFunction(_options.initComplete)) {
                     complete = _options.initComplete;
                 }
+                var th_num = $table.find("thead th").length;
+                if($table.find("tfoot")){
+                	var td_num = $table.find("tfoot td").length;
+                	if(th_num > td_num)
+                		$table.find("tfoot td:last").attr("colspan",th_num-td_num+1);
+                	if(th_num < td_num)
+                		$table.find("thead th:last").attr("colspan",td_num-th_num+1);
+                }
                 _options = $.extend(true, {}, _options, {
                     'initComplete': function() {
-                        var firstColumn = this.fnSettings().aoColumns[0];
+                    	var settings = this.fnSettings();
+                        var firstColumn = settings.aoColumns[0];
                         if(firstColumn && !firstColumn.orderable) {
                             $(firstColumn.nTh).removeClass("sorting sorting_asc sorting_desc").addClass(firstColumn.sSortingClass || "sorting_disabled");
+                        }
+                        var rowDataList = settings.aoData;
+                        if(rowDataList) {
+                        	$.each(rowDataList, function(i, rowData) {
+                        		if(rowData._aFilterData) {
+                        			$(rowData.nTr).data('rowData.dt', rowData._aFilterData);
+                        		} else {
+                        			$(rowData.nTr).data('rowData.dt', rowData._aData);
+                        		}
+                        	});
                         }
                         var args = [];
                         $.each(arguments, function(i, arg) {
