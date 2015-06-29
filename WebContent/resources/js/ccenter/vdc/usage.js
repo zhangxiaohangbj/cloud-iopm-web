@@ -10,13 +10,13 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 	    	start = decodeURIComponent(hashArr[hashArr.length-2]);
 	    	end = decodeURIComponent(hashArr[hashArr.length-1]);
 	    }
-	    var url = '/v2.0/'+Common.cookies.getVdcId()+'/os-simple-tenant-usage/' + vdc_id;
+	    var url = '/identity/v2.0/'+Common.cookies.getVdcId()+'/os-simple-tenant-usage/' + vdc_id;
 	    if(start || end){
-	    	url = '/v2.0/'+Common.cookies.getVdcId()+'/os-simple-tenant-usage/' + vdc_id +'?start='+start+'&end='+end;
+	    	url = '/identity/v2.0/'+Common.cookies.getVdcId()+'/os-simple-tenant-usage/' + vdc_id +'?start='+start+'&end='+end;
 	    }   
 	    var vdcInfo;
 	    var vdc = function (id){
-			Common.xhr.get('/v2.0/tenants/'+id,function(data){///v2/images
+			Common.xhr.get('/identity/v2.0/tenants/'+id,function(data){///v2/images
 				vdcInfo = data.tenants;
 			});
 		}
