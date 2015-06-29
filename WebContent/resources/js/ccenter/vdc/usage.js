@@ -46,11 +46,18 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 		 $("#submit_usage").on("click",function(){
 			 var time = $.trim($("#time_text").val());
 		     if(time == null || time == "")return;
-			 var hashArr = Common.hash;
-			 var start =  encodeURIComponent($.trim(time.split("-")[0]));
-		     var end = encodeURIComponent($.trim(time.split("-")[1]));
-		     //Common.router.route(Common.hash +'/' +start +'/'+end);
-		     window.location.href= Common.hash +'/' +start +'/'+end;
+			 var hashArr = Common.hash.split('/');
+			 if(hashArr.length == 6){
+				 var start =  encodeURIComponent($.trim(time.split("-")[0]));
+			     var end = encodeURIComponent($.trim(time.split("-")[1]));
+			     var vdc_id = hashArr[hashArr.length-3];
+			     window.location.href= "#ccenter/vdc/usage/" + vdc_id +'/' +start +'/'+end;
+			 }else{
+				 var start =  encodeURIComponent($.trim(time.split("-")[0]));
+			     var end = encodeURIComponent($.trim(time.split("-")[1]));
+			     window.location.href= Common.hash +'/' +start +'/'+end;
+			 }
+			
 		 })
 	}	
 	return {
