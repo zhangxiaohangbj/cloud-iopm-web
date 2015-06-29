@@ -117,7 +117,7 @@ define('commons/main',
             // 初始化页面结构
             $(document.body).removeClass("loading").append(
                 '<div id="page-main" class="clearfix">'+
-                '<div class="page-content clearfix"></div>'+
+                    '<div class="page-content clearfix"></div>'+
                 '</div>'
             );
             this.$pageMain = $("#page-main");
@@ -210,12 +210,12 @@ define('commons/main',
          * @param complete
          *          初始化后的回调方法，此参数也可直接写在options中，对应键是initComplete
          *          function($table, settings, json) {
-     *              // do something
-     *          }
+         *              // do something
+         *          }
          * @returns dataTable API实例，为 NULL 则表示表格未找到或未初始化成功
          */
         initDataTable: function(tableSelector, options, complete) {
-            var _options;
+            var that = this, _options;
             if(PubView.utils.isFunction(options)) {
                 complete = options;
                 _options = null;
@@ -229,23 +229,40 @@ define('commons/main',
                 } else {
                     $table = tableSelector;
                 }
-                if($table.length <= 0) return null;
+                if($table.length <= 0 || !$table.selector) return null;
                 if(_options && PubView.utils.isFunction(_options.initComplete)) {
                     complete = _options.initComplete;
                 }
-                _options = $.extend(true, {}, _options, {'initComplete': function() {
-                    var firstColumn = this.fnSettings().aoColumns[0];
-                    if(firstColumn && !firstColumn.orderable) {
-                        $(firstColumn.nTh).removeClass("sorting sorting_asc sorting_desc").addClass(firstColumn.sSortingClass || "sorting_disabled");
+                _options = $.extend(true, {}, _options, {
+                    'initComplete': function() {
+                        var firstColumn = this.fnSettings().aoColumns[0];
+                        if(firstColumn && !firstColumn.orderable) {
+                            $(firstColumn.nTh).removeClass("sorting sorting_asc sorting_desc").addClass(firstColumn.sSortingClass || "sorting_disabled");
+                        }
+                        var args = [];
+                        $.each(arguments, function(i, arg) {
+                            args.push(arg);
+                        });
+                        args.unshift($table);
+                        PubView.utils.isFunction(complete) && complete.apply(this, args);
                     }
-                    var args = [];
-                    $.each(arguments, function(i, arg) {
-                        args.push(arg);
-                    });
-                    args.unshift($table);
-                    PubView.utils.isFunction(complete) && complete.apply(this, args);
-                }});
-                return $table.DataTable(_options);
+                });
+                var tableFlag = true;
+                $.fn.dataTableExt.errMode = function(table, errCode, errText) {
+                    tableFlag = false;
+                    var errMsg = "";
+                    switch(errCode) {
+                        case 3:
+                            errMsg = "DataTables error: table id='"+$table.selector+"' has already been initialised.";
+                            break;
+                        default:
+                            errMsg = errText.replace("warning:", "error:");
+                    }
+                    that.error(errMsg);
+                };
+                var tableApi = $table.DataTable(_options);
+                !tableFlag && (tableApi = null);
+                return tableApi;
             } else if(PubView.utils.isFunction(complete)) {
                 complete.call(this, tableSelector);
             }
@@ -379,14 +396,13 @@ define('commons/main',
                         that.resolve();
                         if(e.requireType) {
                             if(e.requireMap) {
-                                Modal.error('Script error for ' + e.requireMap.id + ': ' + e.message);
+                                that.error('Script error for ' + e.requireMap.id + ': ' + e.message);
                             } else {
-                                Modal.error(e.message.split('\n')[0] + '. Can not load this Control Module');
+                                that.error(e.message.split('\n')[0] + '. Can not load this Control Module');
                             }
                         } else {
-                            Modal.error(e.message);
+                            that.error(e.message);
                         }
-                        console.error(e);
                     });
                     return this;
                 };
@@ -443,19 +459,18 @@ define('commons/main',
                                     inHtml = render(data);
                                 if(_renderToPage) {
                                     that.html(that.$pageContent, inHtml);
-                                    PubView.utils.isFunction(_callback) && _callback(_data);
+                                    PubView.utils.isFunction(_callback) && _callback.call(that, tplText, _data);
                                     that.resolve();
                                 } else {
-                                    PubView.utils.isFunction(_callback) && _callback(inHtml, _data);
+                                    PubView.utils.isFunction(_callback) && _callback.call(that, inHtml, tplText, _data);
                                 }
                             }catch(e){
                                 that.resolve();
-                                Modal.error(e.message);
-                                console.error(e);
+                                that.error(e);
                             }
                         }, function(e) {
                             that.resolve();
-                            Modal.error("Template load error: " + e.message.split(' ')[0]);
+                            that.error("Template load error: " + e.message.split(' ')[0]);
                         });
                     };
                     var filterData = function(data) {
@@ -483,8 +498,7 @@ define('commons/main',
                     }
                 } catch (e) {
                     that.resolve();
-                    Modal.error(e.message);
-                    console.error(e);
+                    that.error(e);
                 }
             }
         },
@@ -501,7 +515,7 @@ define('commons/main',
                     this._initComponents($parent);
                 }
             } catch (e) {
-                Modal.error('Common html error: '+ e.message);
+                this.error('Common html error: '+ e.message);
             }
         },
         componentsDefaults: {
@@ -545,8 +559,7 @@ define('commons/main',
                         return inHtml;
                     }
                 } catch (e) {
-                    Modal.error(e.message);
-                    console.error(e);
+                    this.error(e);
                     if(this._deferred) {
                         this.resolve(false);
                     }
@@ -575,7 +588,7 @@ define('commons/main',
                     var resolve = function(msg) {
                         that._inRender && (that._inRender = false);
                         that._deferred && that.resolve();
-                        msg && Modal.error(msg);
+                        msg && that.error(msg);
                     };
                     if(url) {
                         var defaults = {
@@ -619,16 +632,32 @@ define('commons/main',
                         var deferredsHandler = $.when.apply(that, deferreds);
                         return deferredsHandler.then(
                             function() {
-                                // success
-                                var results = [];
+                                var results = [], errors = [];
                                 if(requests.length > 1) {
                                     $.each(arguments, function(i, arg) {
-                                        results.push(arg[0]);
+                                        if(arg[0] && arg[0].error) {
+                                            errors.push(arg[0]);
+                                        } else {
+                                            results.push(arg[0]);
+                                        }
                                     });
                                 } else {
-                                    results.push(arguments[0]);
+                                    if(arguments[0] && arguments[0].error) {
+                                        errors.push(arguments[0]);
+                                    } else {
+                                        results.push(arguments[0]);
+                                    }
                                 }
-                                PubView.utils.isFunction(success) && success.apply(that, results);
+                                if(errors.length > 0) {
+                                    var errMsg;
+                                    $.each(errors, function(i, error) {
+                                        if(error.message) errMsg = error.message;
+                                    });
+                                    errMsg = errMsg || '服务器端发生未知错误';
+                                    resolve("Ajax Error: "+errMsg);
+                                } else {
+                                    PubView.utils.isFunction(success) && success.apply(that, results);
+                                }
                             },
                             function() {
                                 // failure
@@ -785,7 +814,7 @@ define('commons/main',
                         });
                         return this.ajax(requests, _success);
                     } catch (e) {
-                        Modal.error("Ajax postJSON Error: data param parse error.");
+                        that.error("Ajax postJSON Error: data param parse error.");
                     }
                 };
                 this.postJSONSync = function(url, data, success) {
@@ -805,7 +834,7 @@ define('commons/main',
                         });
                         return this.ajax(requests, _success);
                     } catch (e) {
-                        Modal.error("Ajax postJSONSync Error: data param parse error.");
+                        that.error("Ajax postJSONSync Error: data param parse error.");
                     }
                 };
                 this.putJSON = function(url, data, success) {
@@ -825,7 +854,7 @@ define('commons/main',
                         });
                         return this.ajax(requests, _success);
                     } catch (e) {
-                        Modal.error("Ajax putJSON Error: data param parse error.");
+                        that.error("Ajax putJSON Error: data param parse error.");
                     }
                 };
                 this.putJSONSync = function(url, data, success) {
@@ -845,7 +874,7 @@ define('commons/main',
                         });
                         return this.ajax(requests, _success);
                     } catch (e) {
-                        Modal.error("Ajax putJSONSync Error: data param parse error.");
+                        that.error("Ajax putJSONSync Error: data param parse error.");
                     }
                 };
                 this._getFullUrl = function(url, isResource) {
@@ -1038,28 +1067,28 @@ define('commons/main',
                 message: function() {
                     return [
                         '<div class="signin-header">',
-                        '<div class="signin-title">',
-                        '<img class="signin-logo" alt="IOP Manager" src="',PubView.root,'/resources/css/login/img/header-logo.png"/>',
-                        '</div>',
+                            '<div class="signin-title">',
+                                '<img class="signin-logo" alt="IOP Manager" src="',PubView.root,'/resources/css/login/img/header-logo.png"/>',
+                            '</div>',
                         '</div>',
                         '<form class="form-horizontal form-signin" onsubmit="return false;" role="form" autocomplete="off">',
-                        '<div class="input-group">',
-                        '<span class="signin-icons signin-icon-input signin-icon-user">',
-                        '<i class="signin-icons signin-icon-br"></i>',
-                        '</span>',
-                        '<input id="loginName" class="form-control" name="loginName" type="text" />',
-                        '</div>',
-                        '<div class="input-group">',
-                        '<span class="signin-icons signin-icon-input signin-icon-pwd">',
-                        '<i class="signin-icons signin-icon-br"></i>',
-                        '</span>',
-                        '<input id="password" class="form-control" name="password" type="password" />',
-                        '</div>',
-                        '<div class="checkbox">',
-                        '<label>',
-                        '<input type="checkbox" name="remember_me" value="1" /> 记住密码',
-                        '</label>',
-                        '</div>',
+                            '<div class="input-group">',
+                                '<span class="signin-icons signin-icon-input signin-icon-user">',
+                                    '<i class="signin-icons signin-icon-br"></i>',
+                                '</span>',
+                                '<input id="loginName" class="form-control" name="loginName" type="text" />',
+                            '</div>',
+                            '<div class="input-group">',
+                                '<span class="signin-icons signin-icon-input signin-icon-pwd">',
+                                    '<i class="signin-icons signin-icon-br"></i>',
+                                '</span>',
+                                '<input id="password" class="form-control" name="password" type="password" />',
+                            '</div>',
+                            '<div class="checkbox">',
+                                '<label>',
+                                    '<input type="checkbox" name="remember_me" value="1" /> 记住密码',
+                                '</label>',
+                            '</div>',
                         '</form>'
                     ].join('')
                 }(),
@@ -1144,6 +1173,14 @@ define('commons/main',
                     dialog.enableButtons(true);
                 }
             });
+        },
+        error: function(e) {
+            if(typeof e === "string") {
+                Modal.error(e);
+            } else {
+                Modal.error(e.message || "发生了未知错误");
+            }
+            console.error(e);
         }
     };
 });
