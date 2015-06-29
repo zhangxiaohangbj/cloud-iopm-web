@@ -59,7 +59,8 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 			        {"data": ""},
 			        {"data": "name"},
 			        {"data": "description"},
-			        {"data": "enabled"}
+			        {"data": "enabled"},
+			        {"data": {}}
 		      ],
 		      /*
 		       * columnDefs 属性操作自定义列
@@ -91,13 +92,14 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
                        "targets": [4],
                        "data": {id:"id",name:"name",virtualEnvId:"virtualEnvId"},
                        "render": function(data, type, full) {
+                    	  // debugger;
                          return '<a class="btn-opt members" href="javascript:void(0)" data="'+data.id+'" data-toggle="tooltip" title="成员管理" data-act="stop" style="margin: 0;"><i class="fa fa-user fa-fw"></i></a>'
 							+'<div class="dropdown">'
 							+'<a class="btn-opt dropdown-toggle" data-toggle="dropdown" title="更多"  aria-expanded="false" ><i class="fa fa-angle-double-right"></i></a>'
 							+'<ul class="dropdown-menu" style="right: 0;left: initial;">'
 							+'<li><a href="javascript:void(0)"  data="'+data.id+'" class="updateQuota"><i class="fa fa-list-alt fa-fw"></i>配额管理</a></li>'
 							+'<li><a href="javascript:void(0)" data="'+data.id+'" data-env="'+data.virtualEnvId+'" class="vdcAz"><i class="fa fa-gear fa-fw"></i>可用分区管理</a></li>'
-							+'<li><a href="#ccenter/vdc/usage/{{item.id}}" class="usage" data="'+data.id+'" data-name="'+data.name+'"><i class="fa fa-file-text fa-fw"></i>使用情况</a></li>'
+							+'<li><a href="#ccenter/vdc/usage/'+data.id+'" class="usage" data="'+data.id+'" data-name="'+data.name+'"><i class="fa fa-file-text fa-fw"></i>使用情况</a></li>'
 							+'<li><a href="javascript:void(0)" data="'+data.id+'" class="editTenantBasic"><i class="fa fa-edit fa-fw"></i>编辑</a></li>'
 							+'<li><a href="javascript:void(0)" data="'+data.id+'" data-name="'+data.name+'" class="deleteTenant"><i class="fa fa-trash-o fa-fw"></i>删除</a></li>'
 							+'</ul></div>';
@@ -107,7 +109,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 		    },
 		    function($tar){
 			$tar.prev().find('.left-col:first').append(
-					'<span class="btn btn-add">新建用户 </span>'
+					'<span class="btn btn-add">创建</span>'
 				);
 			Common.$pageContent.removeClass("loading");
 		});
@@ -481,7 +483,8 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 			}*/
 		}
 	  //增加按钮
-	    $("#VdcTable_wrapper span.btn-add").on("click",function(){
+		$(document).off("#VdcTable_wrapper span.btn-add");
+		$(document).on("click","#VdcTable_wrapper span.btn-add",function(){
 	    	//需要修改为真实数据源
 			Common.render('tpls/ccenter/vdc/add.html',renderData,function(html){
 				userIndex = 1;
@@ -597,11 +600,13 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 	    });
 	    
 	    //更新配额
-	    $("ul.dropdown-menu a.updateQuota").on("click",function(){
+		$(document).off("ul.dropdown-menu a.updateQuota");
+		$(document).on("click","ul.dropdown-menu a.updateQuota",function(){
 	    	more.QuotaSets($(this).attr("data"));
 	    });
 	    //可用分区
-	    $("ul.dropdown-menu a.vdcAz").on("click",function(){
+		$(document).off("ul.dropdown-menu a.vdcAz");
+		$(document).on("click","ul.dropdown-menu a.vdcAz",function(){
 	    	var ve_id =  $(this).attr("data-env");
 	    	var vdc_id = $(this).attr("data");
 	    	//先获取az后，再render
@@ -618,15 +623,18 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 	    	more.AZ(ve_id,vdc_id);
 	    });
 	    //删除一个vdc
-	    $("ul.dropdown-menu a.deleteTenant").on("click",function(){
+		$(document).off("ul.dropdown-menu a.deleteTenant");
+		$(document).on("click","ul.dropdown-menu a.deleteTenant",function(){
 	    	more.DeleteTenant($(this).attr("data"),$(this).attr("data-name"));
 	    });
 	   //编辑vdc
-	    $("ul.dropdown-menu a.editTenantBasic").on("click",function(){
+		$(document).off("ul.dropdown-menu a.editTenantBasic");
+		$(document).on("click","ul.dropdown-menu a.editTenantBasic",function(){
 	    	more.EditTenantBasic($(this).attr("data"));
 	    });
 	    //成员管理
-	    $(".members").on("click",function(){
+		$(document).off(".members");
+		$(document).on("click",".members",function(){
 	    	more.Member($(this).attr("data"));
 	    });
 	  //查看使用情况
