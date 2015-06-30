@@ -24,14 +24,14 @@
                 {{each zone as item i}}
                 <tr>
                     <td><label><input type="radio"></label></td>
-                    <td>{{item.name}}</td>
+                    <td><a class="env-name" href="#cresource/zone/detail/{{item.id}}">{{item.name}}</a></td>
                     <td>{{item.virtualEnvName}}</td>
                     <td>{{item.regionName}}</td>
                     <td>{{item.hosts.length}}个服务器</td>
                     <td>
-                        <a class="btn-opt pull-left add-resource" data-toggle="tooltip" data-act="log" style="margin: 0 5px;" data="{{item.id}}">增加资源</a>
-                        <a class="btn-opt pull-left edit" data-toggle="tooltip" data-act="edit" style="margin: 0 5px;" data="{{item.id}}">编辑</a>
-                        <a class="btn-opt pull-left delete" data-toggle="tooltip" data-act="delete" style="margin: 0 5px;" data="{{item.id}}">删除</a>
+                        <a class="btn-opt pull-left add-resource" data-toggle="tooltip" data-act="log" title="增加资源" style="margin: 0 5px;" data="{{item.id}}"><i class="fa fa-files-o"></i></a>
+                        <a class="btn-opt pull-left edit" data-toggle="tooltip" data-act="edit" style="margin: 0 5px;" title="编辑" data="{{item.id}}"><i class="fa fa-files-o"></i></a>
+                        <a class="btn-opt pull-left delete" data-toggle="tooltip" data-act="delete" style="margin: 0 5px;" title="删除" data="{{item.id}}"><i class="fa fa-files-o"></i></a>
                     </td>
                 </tr>
                 {{/each}}

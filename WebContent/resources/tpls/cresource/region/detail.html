@@ -1,0 +1,90 @@
+<div class="page-header">
+    <ol class="breadcrumb">
+        <li><a href="javascript:void(0);" class="reload">可用分区管理</a></li>
+        <li class="active">{{name}}</li>
+    </ol>
+</div>
+<div class="page-body">
+    <div class="pane">
+        <div class="pane-content">
+            <div class="detail-info">
+
+                <!-- Nav tabs -->
+                <ul class="nav nav-tabs" role="tablist">
+                    <li class="active"  data-for="basic"><a href="javascript:void(0)">基本信息</a></li>
+                    <li class="active"  data-for="basic"><a href="javascript:void(0)">基本信息</a></li>
+                </ul>
+                <div class="detail-info-content">
+                    <div  class="tab-pane basic active">
+                        <div class="clearfix">
+                            <div class="row">
+                                <label  class="control-label col-sm-3">ID：</label>
+                                <div class="col-sm-7 col-sm query-info query-volume-name">
+                                    {{id}}
+                                </div>
+                            </div>
+                            <div class="row">
+                                <label  class="control-label col-sm-3">名称：</label>
+                                <div class="col-sm-7 col-sm query-info query-volume-name">
+                                    {{name}}
+                                </div>
+                            </div>
+                            <div class="row">
+                                <label class="control-label col-sm-3">虚拟化类型：</label>
+                                <div class="col-sm-7 col-sm query-info query-volume-size">
+                                    {{id}}
+                                </div>
+                            </div>
+                            <div class="row">
+                                <label class="control-label col-sm-3">版本：</label>
+                                <div class="col-sm-7 col-sm query-info query-volume-size">
+                                    {{size}}
+                                </div>
+                            </div>
+                            <div class="row">
+                                <label class="control-label col-sm-3">区域：</label>
+                                <div class="col-sm-7 col-sm query-info query-volume-size">
+                                    {{size}}
+                                </div>
+
+                            </div>
+                            <div class="row">
+                                <label class="control-label col-sm-3">连接状态：</label>
+                                <div class="col-sm-7 col-sm query-info query-volume-type">
+                                    {{if status == 'in-use'}}
+                                    <span class="text-success">连接成功</span>
+                                    {{else if status == 'available'}}
+                                    <span class="text-info">连接失败</span>
+                                    {{/if}}
+                                </div>
+                            </div>
+                            <div class="row">
+                                <label class="control-label col-sm-3">更新状态：</label>
+                                <div class="col-sm-7 col-sm query-info query-volume-type">
+                                    {{if status == 'in-use'}}
+                                    <span class="text-success">更新成功</span>
+                                    {{else if status == 'available'}}
+                                    <span class="text-info">更新失败</span>
+                                    {{/if}}
+                                </div>
+                            </div>
+                            <div class="row">
+                                <label class="control-label col-sm-3">同步周期：</label>
+                                <div class="col-sm-7 col-sm query-info">
+                                    {{period}}
+                                </div>
+                            </div>
+                    </div>
+                    <div class="tab-pane snapshot">
+                    </div>
+                    <div class="tab-pane monitor">
+                        <div class="monitor-request-read" style="height:250px;"></div>
+                        <div class="monitor-request-write"></div>
+                        <div class="monitor-rate-read"></div>
+                        <div class="monitor-rate-write"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

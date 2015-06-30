@@ -41,6 +41,9 @@ define(['Common','bs/modal','jq/form/wizard','jq/form/validator-bs3','bs/tooltip
             );
             Common.$pageContent.removeClass("loading");
         });
+
+        var wizard;
+
         $("[data-toggle='tooltip']").tooltip();
         //创建按钮
         $("#namespaceTable_wrapper span.btn-add").on("click",function(){
