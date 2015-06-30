@@ -497,10 +497,11 @@ define(['Common','bs/modal','rq/text!tpls/ccenter/block/volume/list-opts.html', 
 		});
 	    var moreAction = {
     		editMount: function(){
-    			Common.on("click", ".dropdown-menu a.edit_mount", function(){
-    				var	id = $(this).attr("data-id")
-    				var rowData = $(this).parents("tr:first").data("rowData.dt"); 
-    				var name = rowData.name;
+    			Common.on('click','.dropdown-menu a.edit_mount',function(){
+    				var rowdata = $(this).parents("tr:first").data("rowData.dt");
+    				var id = rowdata.id,
+    				name = rowdata.name;
+
     				Common.render({
     					tpl:'tpls/ccenter/block/volume/edit_mount.html',
 						data:'/compute/v2/' + current_vdc_id + '/servers/page/1/200',
@@ -544,8 +545,10 @@ define(['Common','bs/modal','rq/text!tpls/ccenter/block/volume/list-opts.html', 
     		},
     		//删除
     		deleteVolume: function(){
-    			Common.on("click", "#VolumeTable a.delete", function(){
-    				var id = $(this).attr("data-id");
+
+    			Common.on('click','.dropdown-menu a.delete',function(){
+    				var rowdata = $(this).parents("tr:first").data("rowData.dt");
+    				var id = rowdata.id;
 	       	    	 Modal.confirm('确定要删除该磁盘吗?', function(result){
 	       	             if(result) {
 	       	            	 Common.xhr.del("block-storage/v2/" + current_vdc_id + "/volumes/" + id, "",
@@ -566,7 +569,8 @@ define(['Common','bs/modal','rq/text!tpls/ccenter/block/volume/list-opts.html', 
 	       		})
     		},
     		extendSize : function() {
-    			Common.on("click", "#VolumeTable a.extend_size", function(){
+
+    			Common.on('click','.dropdown-menu a.extend_size',function(){
     				var rowData = $(this).parents("tr:first").data("rowData.dt"); 
     				var	id = rowData.id;
     				var	name = rowData.name;
