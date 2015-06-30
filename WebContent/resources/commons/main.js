@@ -611,7 +611,7 @@ define('commons/main',
                  * @param success 请求成功后的回调
                  *                若同时发送了多个请求，多个请求的回调将以多个参数形式返回，即 fn{data1, data2, ...}
                  * @param error 请求错误后的回调
-                 *                若多个请求中有一个请求发生了错误，将执行此回调方法，参数同ajax的error回调 fn{xhr, errorText, errorThrown}
+                 *                若多个请求中有一个请求发生了错误，将执行此回调方法，参数同ajax的error回调 fn{xhr, errorName, errorText}
                  */
                 this.ajax = function(request, success, error) {
                     var self = this;
@@ -626,15 +626,15 @@ define('commons/main',
                                 headers: this.headers,
                                 dataType: 'json'
                             },
-                            failureCallback = function(xhr, errorText) {
-                                if(errorText) {
-                                    errorText = errorText.replace(/(.+)error$/, "$1 error").replace(/\b\w+\b/g,function(w) {
+                            failureCallback = function(xhr, errorName, errorText) {
+                                if(errorName) {
+                                    errorName = errorName.replace(/(.+)error$/, "$1 error").replace(/\b\w+\b/g,function(w) {
                                         return w.substr(0,1).toLocaleUpperCase() + w.substring(1);
                                     });
                                 } else {
-                                    errorText = 'Error';
+                                    errorName = 'Error';
                                 }
-                                resolve("Ajax "+errorText+ (xhr.status >= 400 ? ": Status "+xhr.status+" / "+xhr.statusText : "."));
+                                resolve("Ajax "+errorName+ (xhr.status >= 400 ? ": Status "+xhr.status+" / "+xhr.statusText : "."));
 
                                 PubView.utils.isFunction(error) && error.apply(that, arguments);
                             };
@@ -656,10 +656,11 @@ define('commons/main',
                             resolve("Ajax Error: 请确定请求内容url");
                             return false;
                         }
-                        var deferreds = [];
+                        var deferreds = [], requestConf;
                         $.each(requests, function(i, req) {
                             req.url = self._getFullUrl(req.url);
-                            deferreds.push($.ajax($.extend({}, defaults, req)));
+                            requestConf = $.extend({}, defaults, req);
+                            deferreds.push($.ajax(requestConf));
                         });
                         var deferredsHandler = $.when.apply(that, deferreds);
                         deferredsHandler.then(
@@ -735,7 +736,8 @@ define('commons/main',
                 this.postJSON = function(url, data, success, error) {
                     try {
                         var defaults = { 'type': 'POST','contentType': 'application/json' };
-                        return this._createAjax(defaults, $.extend({}, arguments, data && !PubView.utils.isFunction(data) ? {1: JSON.stringify(data)} : null));
+                        data && !PubView.utils.isFunction(data) && (arguments[1] = JSON.stringify(data));
+                        return this._createAjax(defaults, arguments);
                     } catch (e) {
                         that.error("Ajax postJSON Error: data param parse error.");
                     }
@@ -751,7 +753,9 @@ define('commons/main',
                     }
                     try {
                         var defaults = { 'type': 'POST','contentType': 'application/json','async': false };
-                        return this._createAjax(defaults, $.extend({}, arguments, data && !PubView.utils.isFunction(data) ? {1: JSON.stringify(data)} : null));
+                        var args = [].concat(arguments);
+                        data && !PubView.utils.isFunction(data) && (args[1] = JSON.stringify(data));
+                        return this._createAjax(defaults, args);
                     } catch (e) {
                         that.error("Ajax postJSONSync Error: data param parse error.");
                     }
@@ -767,7 +771,8 @@ define('commons/main',
                     }
                     try {
                         var defaults = { 'type': 'PUT','contentType': 'application/json' };
-                        return this._createAjax(defaults, $.extend({}, arguments, data && !PubView.utils.isFunction(data) ? {1: JSON.stringify(data)} : null));
+                        data && !PubView.utils.isFunction(data) && (arguments[1] = JSON.stringify(data));
+                        return this._createAjax(defaults, arguments);
                     } catch (e) {
                         that.error("Ajax putJSON Error: data param parse error.");
                     }
@@ -783,7 +788,9 @@ define('commons/main',
                     }
                     try {
                         var defaults = { 'type': 'PUT','contentType': 'application/json','async': false };
-                        return this._createAjax(defaults, $.extend({}, arguments, data && !PubView.utils.isFunction(data) ? {1: JSON.stringify(data)} : null));
+                        var args = [].concat(arguments);
+                        data && !PubView.utils.isFunction(data) && (args[1] = JSON.stringify(data));
+                        return this._createAjax(defaults, args);
                     } catch (e) {
                         that.error("Ajax putJSONSync Error: data param parse error.");
                     }
@@ -804,7 +811,7 @@ define('commons/main',
                 this._createAjax = function(defaults, args) {
                     var initArgs = function(url, data, success, error) {
                         var args = {
-                            url: url,
+                            url: $.extend({}, defaults, {url: url}),
                             data: null,
                             success: null,
                             error: null
