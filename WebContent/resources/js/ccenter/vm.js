@@ -708,6 +708,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
     			wizard.on('show',function(){
     				wizard.form.each(function(){
     					$(this).validate({
+    						ignore: "",
                             errorContainer: '_form',
                             rules: {
     			            	'name': {
