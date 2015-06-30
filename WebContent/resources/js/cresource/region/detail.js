@@ -30,7 +30,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
             var $tab = $('.detail-info-content').find('div.'+data);
             $tab.addClass('active');
             Common.showLocalLoading($tab);
-            Common.hideLoclLoading($tab);
+            Common.hideLocalLoading($tab);
         }
 
     }

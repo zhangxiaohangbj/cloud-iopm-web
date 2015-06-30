@@ -43,8 +43,11 @@ define(['Common','bs/modal','jq/form/wizard','jq/form/validator-bs3','bs/tooltip
         });
 
         var wizard;
-        var renderData;
-
+        var renderData={
+            type:null,
+            relatedType:null
+        };
+        var chosenList=[];
         //获取资源类型
         var dataGetter = {
             //获取资源类型
@@ -52,47 +55,44 @@ define(['Common','bs/modal','jq/form/wizard','jq/form/validator-bs3','bs/tooltip
                 Common.xhr.ajax("/resources/data/resourceType.txt",function(type){
                     renderData.type = type;
                 });
-            },
-            //获取已经关联的资源类型
-            getChosenResourceType:function(namespace){
-                Common.xhr.ajax("/v2/metadefs/namespaces/"+namespace+"/resource_types",function(relatedType){
-                    renderData.relatedType = relatedType;
-                })
             }
-
         }
         dataGetter.getResourceType();
         //初始化资源
         var resourceTypeHandler ={
             init:function(chosenData,elem){
-                //1.获取所有的资源类型
-                //遍历对象，过滤unchosenList
-                var unChosenList=resourceTypeHandler.refreshUnChosenList(data);
                 require(['js/common/choose'],function(choose){
-                    var options = {
-                        selector: '#'+elem,
-                        allData: unChosenList,
-                        selectData:chosenData
-                    };
+                    var options = resourceTypeHandler.getOptionData(chosenData);
+                    options.selector = '#'+elem;
                     choose.initChoose(options);
                 });
             },
             //刷新未选择资源的列表，只显示当前资源类型下，还未被选择的资源
-            refreshUnChosenList:function(dataList){
+            getOptionData:function(chosenList){
                 var unChosenList=[];
-                $.each(dataList,function(i,item){
+                var retChosenList=[];
+                $.each(renderData.type,function(i,item){
                     var flag = true;
                     //根据id判断是否已经出现在chosen中
                     $.each(chosenList,function(i,item0){
-                        if(item0.id == item.id){
+                        if(item0.resourceType == item.id){
                             flag = false;
                         }
                     })
                     if(flag){
                         unChosenList.push(item);
+                    }else{
+                        retChosenList.push(item);
                     }
                 });
-                return unChosenList;
+                var options={};
+                if(unChosenList.length>0){
+                    options.allData =  unChosenList;
+                }
+                if(retChosenList.length>0){
+                    options.selectData =  retChosenList;
+                }
+                return options;
             }
         }
 
@@ -148,12 +148,8 @@ define(['Common','bs/modal','jq/form/wizard','jq/form/validator-bs3','bs/tooltip
                        });
                    })
                });
-               resourceTypeHandler.init([],"bindResourceType");
-               //确认信息卡片被选中的监听
-               wizard.cards.bind.on('selected',function(card){
-                   //获取上几步中填写的值
-                   //var serverData = wizard.serializeObject()
-               });
+               resourceTypeHandler.init(null,"bindResourceType");
+
                wizard.show();
                //关闭弹窗
                var closeWizard = function(){
@@ -176,10 +172,17 @@ define(['Common','bs/modal','jq/form/wizard','jq/form/validator-bs3','bs/tooltip
                        "owner":"admin"
                    }
                    //为namespace添加类型
-                   var types = {
-                   }
-                   if(types.length >0){
-                     //  namespace['']
+                   var selectedList = [];
+                   $("#bindResourceType .show-selected").find("ul.list-group-item").each(function(){
+                       var curLi = $(this).find("li.member");
+                       var tempRT = {
+                           resourceType:curLi.attr("data-id"),
+                       }
+                       selectedList.push(tempRT);
+                   })
+
+                   if(selectedList.length >0){
+                     namespace.resource_type_associations=selectedList;
                    }
                    Common.xhr.postJSON("/v2/metadefs/namespaces", namespace, function (data) {
                        wizard._submitting = false;
@@ -192,6 +195,45 @@ define(['Common','bs/modal','jq/form/wizard','jq/form/validator-bs3','bs/tooltip
 
         });
 
+        //绑定资源类型
+        $("a.bind").on("click",function(){
+            var namespace = $(this).attr("data");
+            Common.xhr.ajax("/v2/metadefs/namespaces/"+namespace+"/resource_types",function(relatedType){
+                var resourceTypeAssociations = relatedType.resource_type_associations;
+                Common.render('tpls/cresource/metadata/namespace/editBind.html',resourceTypeAssociations,function(html){
+                    Modal.show({
+                        title: '编辑资源绑定',
+                        message: html,
+                        nl2br: false,
+                        buttons: [{
+                            label:'取消',
+                            action:function(dialog){
+                                dialog.close();
+                            }
+                        },
+                            {
+                                label: '确定',
+                                action: function(dialog) {
+
+                                    Common.xhr.putJSON('/v2/metadefs/namespaces/'+name,namespaceMeta,function(data){
+                                        if(data){
+                                            Modal.success('保存成功');
+                                            setTimeout(function(){Modal.closeAll()},2000);
+                                            Common.router.route();
+                                        }else{
+                                            Modal.warning ('保存失败')
+                                        }
+                                    })
+                                }
+                            }],
+                        onshown : function(){
+                            resourceTypeHandler.init(resourceTypeAssociations,"bindType")
+                        }
+                    });
+
+                });
+            })
+        })
 
         //编辑按钮
         $("a.edit").on("click",function(){

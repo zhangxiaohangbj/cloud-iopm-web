@@ -39,7 +39,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
             }else if('basic' == data){
 
             }
-            Common.hideLoclLoading($tab);
+            Common.hideLocalLoading($tab);
         }
 
     }

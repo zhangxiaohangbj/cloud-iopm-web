@@ -77,11 +77,11 @@ define(['Common','bs/modal','jq/form/wizard','jq/form/validator-bs3','bs/tooltip
                 renderData.type.forEach(function(e){
                     var temType = {
                         name:e.name,
-                        type:e.type,
+                        type:e.name,
                     }
                     if(e.name == resourceName){
                        temType.selected = true;
-                        rtype = e.type;
+                        rtype = e.name;
                         link = e.link;
                     }
                     tempArray.push(temType);
