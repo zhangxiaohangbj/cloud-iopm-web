@@ -112,7 +112,7 @@ define(['Common','bs/modal','rq/text!tpls/ccenter/block/volume/list-opts.html', 
 	    	  /*属性 columns 用来配置具体列的属性，包括对应的数据列名,如trueName，是否支持搜索，是否显示，是否支持排序等*/
 		      "columns": [
 			        {"data": ""},
-			        {"data": "name"},
+			        {"data": {}},
 			        {"data": "size"},
 			        {"data": "status"},
 			        {"data": "vmId"},
@@ -137,6 +137,12 @@ define(['Common','bs/modal','rq/text!tpls/ccenter/block/volume/list-opts.html', 
 					    "orderable": false,
 					    "render": function() {
 					      return "<label><input type='checkbox'></label>";
+					    }
+					},
+					{
+					    "targets": [1],
+					    "render": function(data, type, full) {
+					      return '<a class="volume_name" href="#ccenter/block/detail/'+data.id+'">'+data.name+"</a>";
 					    }
 					},
 					{
