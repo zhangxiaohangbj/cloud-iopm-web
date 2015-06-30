@@ -47,6 +47,11 @@ define(['Common'],function(Common){
 				$('#btn-login').on('click', function() {
 					Common.login();
 				});
+				Common.xhr.putJSON('/xxx.js', ['111', '222'], function() {
+					debugger
+				}, function() {
+					debugger;
+				});
 			}
 		});
 	};
