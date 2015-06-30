@@ -54,7 +54,7 @@ define('commons/main',
         showLocalLoading: function($wrapper){
             $wrapper.append('<p class="loading" style="width:100%;text-align:center;line-height:100px;">加载中...</p>');
         },
-        hideLoclLoading: function($wrapper){
+        hideLocalLoading: function($wrapper){
             $wrapper.find('.loading').remove();
         },
         pub: {
@@ -1121,6 +1121,15 @@ define('commons/main',
                 Modal.error(e.message || "发生了未知错误");
             }
             console.error(e);
+        },
+        on: function(type,selector,cb){
+        	if(type && selector && typeof cb === 'function'){
+        		if(selector instanceof jQuery){
+        			selector = selector.selector;
+        		}
+        		$(document).off(selector);
+        		$(document).on(type,selector,cb);
+        	}
         }
     };
 });
