@@ -1,36 +1,91 @@
-define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3'],function(Common,Modal){
+define(['Common','bs/modal','rq/text!tpls/ccenter/block/volume/list-opts.html', 'jq/form/wizard','bs/tooltip','jq/form/validator-bs3'],function(Common,Modal, optsTpl){
 	Common.requestCSS('css/wizard.css');
 	var current_vdc_id = '9cc717d8047e46e5bf23804fc4400247';
+	
 	var wizard;
 	var init = function(){
 		Common.$pageContent.addClass("loading");
 		Common.render(true,{
 			tpl:'tpls/ccenter/block/volume/list.html',
-			//data:'/v2.0/tenants/page/10/1',
-			//data:'/resources/data/volume.txt',
-			/*data: '/v2/' + current_vdc_id + '/volumes/1/20',
-			beforeRender: function(data){
-				return data.result;
-				//return data;//.result;
-			},*/
 			callback: bindEvent
 		});
 	};
+	
+	//quatos  getClass  
+	var renderQuatos = function(options){
+		function _renderQuatos(options) {
+			var quatos = options.quatos || []
+			var vdcId = options.vdcId;
+			var size = $(options.valueNode).val() || 0;
+			Common.xhr.ajax('/compute/v2/' + vdcId + '/os-quota-sets/' + vdcId,function(allQuotas){
+				allQuotas = (allQuotas && allQuotas.quota_set) || {};
+				Common.xhr.ajax('/compute/v2/' + vdcId + '/limits',function(allQuotaUsages){
+					var datas = [];
+					var message = "";
+					for(var i=0; i<quatos.length; i++) {
+						var q = quatos[i];
+						var type = q.type || "count";
+						var total = allQuotas[q.name];
+						
+						var newUse = type == "count" ? (size>0 ? 1 : 0) : size;
+						var used = allQuotaUsages[q.name] + Number(newUse);
+						var rate = 100;
+						if(total != 0) {
+							rate = Math.round((parseInt(used)/parseInt(total))*100);
+						}
+						var style = rate <= 30 ? 'progress-bar-success' : rate >= 80 ? 'progress-bar-danger' : 'progress-bar-info';
+						datas.push({
+							name: q.name, title: q.title, total: total, used: used, rate: rate, style: style
+						})
+						if(rate > 100) {
+							message = q.name + "(" + used + ")超出配额(" + total + ")";
+							if(i > 0) {
+								message = "\n" + message;
+							}
+						}
+					}
+					//生成html数据
+					Common.render('tpls/common/quota.html', datas, function(html){
+						$(options.domNode).html(html);
+						if(options.callback) {
+							options.callback(message);
+						}
+					});
+				});
+			});
+		}
+		
+		$(options.valueNode).on("blur", function(){
+			_renderQuatos(options);
+		})
+		_renderQuatos(options);
+	}
+	
+	
 	var bindEvent = function(){
 		//dataTables
-		/*Common.initDataTable($('#VolumeTable'),function($tar){
-			$tar.prev().find('.left-col:first').append(
-					'<span class="btn btn-add">新建</span>'
-				);
-			Common.$pageContent.removeClass("loading");
-		});*/
 		
-		//dataTables
-		Common.initDataTable($('#VolumeTable'),{
+		var volumeStatus = {
+			available: "可用", 
+			attaching: "挂载中", 
+			backing_up: "备份", 
+			creating: "正在创建", 
+			deleting: "正在删除", 
+			downloading: "下载中", 
+			uploading: "上传中", 
+			error: "错误", 
+			error_deleting: "删除错误", 
+			deleted: "已删除", 
+			error_restoring: "恢复错误", 
+			in_use: "使用中", 
+			restoring_backup: "恢复中", 
+			unrecognized: "未知"	
+		}
+		var table = Common.initDataTable($('#VolumeTable'),{
 		      "processing": true,  //加载效果，默认false
 		      "serverSide": true,  //页面在加载时就请求后台，以及每次对 datatable 进行操作时也是请求后台
 		      "ordering": false,   //禁用所有排序
-		      "sAjaxSource":'v2/' + current_vdc_id + '/volumes/', //ajax源，后端提供的分页接口
+		      "sAjaxSource":'block-storage/v2/' + current_vdc_id + '/volumes/', //ajax源，后端提供的分页接口
 		      /*fnServerData是与服务器端交换数据时被调用的函数
 		       * sSource： 就是sAjaxSource中指定的地址，接收数据的url需要拼装成 v2.0/users/page/10/1 格式
 		       *      aoData[4].value为每页显示条数，aoData[3].value/aoData[4].value+1为请求的页码数
@@ -56,20 +111,18 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 		      },
 	    	  /*属性 columns 用来配置具体列的属性，包括对应的数据列名,如trueName，是否支持搜索，是否显示，是否支持排序等*/
 		      "columns": [
-			        {	"data": "",
-			        	"orderable": false,
-			        	"defaultContent":"<label><input type='checkbox'></label>"
-			        },
-			        {"data": {}},
+			        {"data": ""},
+			        {"data": "name"},
 			        {"data": "size"},
 			        {"data": "status"},
 			        {"data": "vmId"},
 			        {"data": "volume_type"},
-			        {"data": "vdcReferenceId"},
+			        {"data": "os-vol-tenant-attr:tenant_id"},
 			        {"data": "availability_zone"},
-			        {"data": "read_only"},
+			        {"data": "attach_status"},//是否只读未实现
 			        {"data": "description"},
 			        {"data": {}}
+			        
 		      ],
 		      /*
 		       * columnDefs 属性操作自定义列
@@ -87,84 +140,65 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 					    }
 					},
 					{
-					    "targets": [1],
-					    "render": function(data, type, full) {
-					      return '<a class="volume_name" href="#ccenter/block/detail/'+data.id+'">'+data.name+"</a>";
-					    }
-					},
-					{
-					    "targets": [2],
-					    "data": "size",
-					    "render": function(data, type, full) {
-					      return data+"GB";
-					    }
-					},
-					{
 					    "targets": [3],
 					    "data": "status",
 					    "render": function(data, type, full) {
-					    	if(data == "in-use"){
-					    		return '<span class="text-success">使用中</span>';
-					    	}else if(data == "available"){
-					    		return '<span class="text-info">可用</span>';
-					    	}else{
-					    		return '<span class="text-danger">已删除</span>';
-					    	}
+					    	return volumeStatus[data] || "";
 					    }
 					},
-                     {
-                       "targets": [8],
-                       "data": "read_only",
-                       "render": function(data, type, full) {
-                    	   if(data == "1"){
-					    		return '<span class="text-success">是</span>';
-					    	}else{
-					    		return '<span class="text-danger">否</span>';
-					    	}
-                       }
-                     },
-                     {
-                         "targets": [10],
-                         "render": function(data, type, full) {
-                        	 var dataArr = [];
-                        	 dataArr.push('<a class="btn-opt" data-toggle="tooltip" title="创建快照"  style="margin: 0;"><i class="fa fa-camera"></i></a>');
-                        	 dataArr.push('<a class="btn-opt" data-toggle="tooltip" title="备份"  style="margin: 0;"><i class="fa fa-files-o"></i></a>');
-                        	 dataArr.push('<div class="dropdown">');
-                        	 dataArr.push('<a class="btn-opt dropdown-toggle" data-toggle="dropdown" title="更多"  aria-expanded="false" ><i class="fa fa-angle-double-right"></i></a>');
-                        	 dataArr.push('<ul class="dropdown-menu" style="right: 0;left: initial;">');
-                        	 dataArr.push('<li><a class="edit_mount" href="javascript:void(0)"><i class="fa fa-file-text fa-fw"></i>挂载到虚机</a></li>');
-                        	 dataArr.push('<li><a href="javascript:void(0)"><i class="fa fa-gear fa-fw"></i>从虚机卸载</a></li>');
-                        	 dataArr.push('<li><a class="extend_size" href="javascript:void(0)" class=""><i class="fa fa-file-text fa-fw"></i>扩展容量</a></li>');
-                        	 dataArr.push('<li><a href="javascript:void(0)" class=""><i class="fa fa-file-text fa-fw"></i>设置为只读</a></li>');
-                        	 dataArr.push('<li><a href="javascript:void(0)"><i class="fa fa-file-text fa-fw"></i>设置为读写</a></li>');
-                        	 dataArr.push('<li><a class="delete" href="javascript:void(0)"><i class="fa fa-file-text fa-fw"></i>删除</a></li>');
-                        	 dataArr.push('</ul></div>');
-                        	 return dataArr.join('');
-                         }
-                       }
-                ]
+					{
+					    "targets": [8],
+					    "data": "attach_status",
+					    "render": function(data, type, full) {
+					    	return data == 'rw' ? "否" : '是';
+					    }
+					},
+                   {
+                     "targets": [10],
+                     "data": "id",
+                     "render": function(data, type, full) {
+                    	 return Common.template(optsTpl, {
+  							opts:[
+ 							      {title: "创建快照", clazz: "btn-opt"}
+ 							],
+ 							moreOpts:[
+ 							    {title: "挂载到虚机", clazz: "edit_mount"},
+ 							    {title: "从虚机卸载", clazz: "detach_mount"},
+ 							    {title: "扩展容量", clazz: "extend_size"},
+ 							    {title: "设置为只读", clazz: "make_rw"},
+ 							    {title: "设置为读写", clazz: "make_r"},
+ 							    {title: "备份", clazz: "backup"},
+ 							    {title: "删除", clazz: "delete"}
+ 							],
+ 							data: data
+ 							
+ 						});
+                     }
+                   }
+              ]
 		    },
 		    function($tar){
-			$tar.prev().find('.left-col:first').append(
-					'<span class="btn btn-add">新建 </span>'
-				);
-			//icheck
-		    $('input[type="checkbox"]').iCheck({
-		    	checkboxClass: "icheckbox-info",
-		        radioClass: "iradio-info"
-		    }).on('ifChecked',function(e){
-		    	if(e.target.className == 'selectAll'){
-		    		$('.table-primary').find('input[type=checkbox]').iCheck('check');
-		    	}
-		    }).on('ifUnchecked',function(e){
-		    	if(e.target.className == 'selectAll'){
-		    		$('.table-primary').find('input[type=checkbox]').iCheck('uncheck');
-		    	}
-		    });
-		    Common.$pageContent.removeClass("loading");
+		    	$tar.prev().find('.left-col:first').append(
+						'<span class="btn btn-add">新建</span>'
+					);
+				Common.$pageContent.removeClass("loading");
 		});
 		
 		
+		
+		//icheck
+	    $('input[type="checkbox"]').iCheck({
+	    	checkboxClass: "icheckbox-info",
+	        radioClass: "iradio-info"
+	    }).on('ifChecked',function(e){
+	    	if(e.target.className == 'selectAll'){
+	    		$('.table-primary').find('input[type=checkbox]').iCheck('check');
+	    	}
+	    }).on('ifUnchecked',function(e){
+	    	if(e.target.className == 'selectAll'){
+	    		$('.table-primary').find('input[type=checkbox]').iCheck('uncheck');
+	    	}
+	    });
 	    var renderData = {};
 	    var azList=[];
 	  //维护当前select的值
@@ -176,9 +210,10 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 		
 		//初始化加载，不依赖其他模块
 		//管理员和普通租户的逻辑在此判断
-		Common.xhr.ajax('/v2.0/tenants',function(vdcDatas){
+		Common.xhr.ajax('/identity/v2.0/tenants',function(vdcDatas){
 			renderData.vdcList = vdcDatas.tenants;
 		});
+		
 		
 		//载入默认的数据 inits
 		var DataIniter = {
@@ -230,60 +265,21 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 					var envir_id = $('.virtual_envir').attr('data-id');
 					if(envir_id){
 						///resources/data/select.txt
-						Common.xhr.ajax('/v2/' + current_vdc_id + '/types', function(data){
-							var  html = Common.uiSelect(data.volume_types);
+						Common.xhr.ajax('/block-storage/v2/' + current_vdc_id + '/types', function(data){
+							var volumeTypes = data.volume_types;
+							volumeTypes = [{id:null, name:""}].concat(volumeTypes);
+							var  html = Common.uiSelect(volumeTypes);
 							$('select.volume_type').html(html);
 						});
 					}
 				},
 				
-				//quatos  getClass  
-				renderQuatos: function(options){
-					function _renderQuatos(options) {
-						var quatos = options.quatos || []
-						var vdcId = options.vdcId;
-						var size = $(options.valueNode).val() || 0;
-						Common.xhr.ajax('/v2.0/' + vdcId + '/os-quota-sets/' + vdcId,function(allQuotas){
-							allQuotas = (allQuotas && allQuotas.quota_set) || {};
-							Common.xhr.ajax('/v2.0/' + vdcId + '/limits',function(allQuotaUsages){
-								var datas = []
-								for(var i=0; i<quatos.length; i++) {
-									var q = quatos[i];
-									var type = q.type || "count";
-									var total = allQuotas[q.name];
-									
-									var newUse = type == "count" ? (size>0 ? 1 : 0) : size;
-									var used = allQuotaUsages[q.name] + Number(newUse);
-									var rate = 100;
-									if(total != 0) {
-										rate = Math.round((parseInt(used)/parseInt(total))*100);
-									}
-									var style = rate <= 30 ? 'progress-bar-success' : rate >= 80 ? 'progress-bar-danger' : 'progress-bar-info';
-									datas.push({
-										name: q.name, title: q.title, total: total, used: used, rate: rate, style: style
-									})
-								}
-								//生成html数据
-								Common.render('tpls/common/quota.html', datas, function(html){
-									$(options.domNode).html(html);
-									if(options.callback) {
-										options.callback();
-									}
-								});
-							});
-						});
-					}
-					
-					$(options.valueNode).on("blur", function(){
-						_renderQuatos(options);
-					})
-					_renderQuatos(options);
-				},
+				
 				//初始化配额信息
 				initQuato: function(vdc_id){
 					vdc_id = vdc_id || currentChosenObj.vdc || $('select.tenant_id').find('option:selected').val();
 					if(vdc_id){
-						this.renderQuatos({
+						renderQuatos({
 							vdcId : vdc_id,
 							valueNode : '#size',
 							quatos : [{name: "volumes", title: "磁盘数量", type: "count"},
@@ -348,7 +344,8 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 				}
 		};
 	  //增加按钮
-	    $("#VolumeTable_wrapper span.btn-add").on("click",function(){
+		Common.on("click", "#VolumeTable_wrapper span.btn-add", function(){
+
 	    	//需要修改为真实数据源
 			Common.render('tpls/ccenter/block/volume/add.html',renderData,function(html){
 				$('body').append(html);
@@ -471,7 +468,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
     					volume.availability_zone = null;
     				}
     				var serverData = {volume:volume};
-    				Common.xhr.postJSON('/v2/' + current_vdc_id + '/volumes',serverData,function(data){
+    				Common.xhr.postJSON('block-storage/v2/' + current_vdc_id + '/volumes',serverData,function(data){
     					wizard._submitting = false;
     					wizard.updateProgressBar(100);
     					closeWizard();
@@ -496,16 +493,18 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
     				closeWizard();
     			});
 			});
-	    });
+	    
+		});
 	    var moreAction = {
     		editMount: function(){
     			Common.on('click','.dropdown-menu a.edit_mount',function(){
     				var rowdata = $(this).parents("tr:first").data("rowData.dt");
     				var id = rowdata.id,
-    					name = rowdata.name;
+    				name = rowdata.name;
+
     				Common.render({
     					tpl:'tpls/ccenter/block/volume/edit_mount.html',
-						data:'/' + current_vdc_id + '/servers/page/1/200',
+						data:'/compute/v2/' + current_vdc_id + '/servers/page/1/200',
 						beforeRender: function(data){
 							return {servers:data.result, volName:name};
 						},
@@ -546,12 +545,13 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
     		},
     		//删除
     		deleteVolume: function(){
+
     			Common.on('click','.dropdown-menu a.delete',function(){
     				var rowdata = $(this).parents("tr:first").data("rowData.dt");
     				var id = rowdata.id;
 	       	    	 Modal.confirm('确定要删除该磁盘吗?', function(result){
 	       	             if(result) {
-	       	            	 Common.xhr.del("/v2/" + current_vdc_id + "/volumes/" + id, "",
+	       	            	 Common.xhr.del("block-storage/v2/" + current_vdc_id + "/volumes/" + id, "",
 	       	                     function(data){
 	       	                    	 if(data){
 	        	                			Modal.success('删除成功')
@@ -569,28 +569,38 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 	       		})
     		},
     		extendSize : function() {
+
     			Common.on('click','.dropdown-menu a.extend_size',function(){
-    				var rowdata = $(this).parents("tr:first").data("rowData.dt");
-    				var id = rowdata.id,
-    					name = rowdata.name;
+    				var rowData = $(this).parents("tr:first").data("rowData.dt"); 
+    				var	id = rowData.id;
+    				var	name = rowData.name;
+    				var extendDialog;
 	       	    	Common.render({
     					tpl:'tpls/ccenter/block/volume/extend-size.html',
-						data:'/' + current_vdc_id + '/servers/page/1/200',
-						beforeRender: function(data){
-							return {servers:data.result, volName:name};
-						},
+						data: {volName:name},
 						callback: function(html) {
 							Modal.show({
 	    	    	            title: '扩展'+name+'磁盘的大小',
 	    	    	            message: html,
 	    	    	            closeByBackdrop: false,
 	    	    	            nl2br: false,
+	    	    	            onshow: function(dialog) {
+	    	    	            	extendDialog = dialog;
+	    	    	                dialog.getButton('os-extend-btn').disable();
+	    	    	            },
 	    	    	            buttons: [{
+	    	    	            	id: 'os-extend-btn',
 	    	    	                label: '确定',
-	    	    	                action: function(Modal) {
-	    	    	                	Common.xhr.postJSON('/v2.0/networks',postData,function(data){
+	    	    	                action: function(dialog) {
+	    	    	                	var url = 'block-storage/v2/' + current_vdc_id + '/volumes/' + id + '/action';
+	    	    	                	var newSize = {
+    	    	                		    "os-extend": {
+    	    	                		        "new_size": $("#extend_size").val()
+    	    	                		    }
+    	    	                		};
+	    	    	                	Common.xhr.postJSON(url , newSize, function(data){
 		    	    	                		if(data){
-		    	    	                			Modal.close();
+		    	    	                			dialog.close();
 		    	    	                			Modal.success('保存成功')
 		    	     	                			setTimeout(function(){Modal.closeAll()},3000);
 		    	    	                			Common.router.route();
@@ -599,18 +609,33 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 		    									}
 		    	    	    				});
 	    	    	                	 }
-	    	    	            	},
-	    	    	            	{
-	    	    	                label: '取消',
-	    	    	                action: function(Modal) {
-	    	    	                    Modal.close();
+	    	    	            	}, {
+	    	    	            		label: '取消',
+	    	    	            		action: function(dialog) {
+	    	    	            			dialog.close();
 	    	    	                	}
 	    	    	            	}],
 	    	    	            	onshown : function(){
-	    	        	            	EventsHandler.initCheckBox();
+	    	    	            		renderQuatos({
+	    									vdcId : current_vdc_id,
+	    									valueNode : '#extend_size',
+	    									quatos : [{name: "gigabytes", title: "容量", type: "mount"}],
+	    									domNode : 'div.quotas-size',
+	    									callback: function(msg) {
+	    										if(msg) {
+	    											Modal.warn('保存成功')
+	    											extendDialog.getButton('os-extend-btn').disable();
+	    										} else {
+	    											extendDialog.getButton('os-extend-btn').enable();
+	    										}
+	    									}
+	    								})
 	    	        	            }
 	    					});
+							
 						}
+						
+						
     				})
 	       		})
     		}
@@ -625,3 +650,4 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 		init : init
 	}
 })
+
