@@ -187,24 +187,23 @@ define(['Common','bs/modal','rq/text!tpls/ccenter/block/volume/list-opts.html', 
 		    	$tar.prev().find('.left-col:first').append(
 						'<span class="btn btn-add">新建</span>'
 					);
+		    	//icheck
+			    $('input[type="checkbox"]').iCheck({
+			    	checkboxClass: "icheckbox-info",
+			        radioClass: "iradio-info"
+			    }).on('ifChecked',function(e){
+			    	if(e.target.className == 'selectAll'){
+			    		$('.table-primary').find('input[type=checkbox]').iCheck('check');
+			    	}
+			    }).on('ifUnchecked',function(e){
+			    	if(e.target.className == 'selectAll'){
+			    		$('.table-primary').find('input[type=checkbox]').iCheck('uncheck');
+			    	}
+			    });
 				Common.$pageContent.removeClass("loading");
 		});
 		
 		
-		
-		//icheck
-	    $('input[type="checkbox"]').iCheck({
-	    	checkboxClass: "icheckbox-info",
-	        radioClass: "iradio-info"
-	    }).on('ifChecked',function(e){
-	    	if(e.target.className == 'selectAll'){
-	    		$('.table-primary').find('input[type=checkbox]').iCheck('check');
-	    	}
-	    }).on('ifUnchecked',function(e){
-	    	if(e.target.className == 'selectAll'){
-	    		$('.table-primary').find('input[type=checkbox]').iCheck('uncheck');
-	    	}
-	    });
 	    var renderData = {};
 	    var azList=[];
 	  //维护当前select的值
