@@ -1,12 +1,12 @@
 define(['Common','bs/modal','bs/wizard','bs/tooltip','jq/form/validator-bs3'],function(Common,Modal){
 	Common.requestCSS('css/wizard.css');
-	var current_vdc_id = '9cc717d8047e46e5bf23804fc4400247';
+	var current_vdc_id = Common.cookies.getVdcId();
 	var init = function(){
 		Common.$pageContent.addClass("loading");
 		//先获取数据，进行加工后再去render
 		Common.render(true,{
 			tpl:'tpls/ccenter/security/keypair/list.html',
-			data:'/'+current_vdc_id+'/os-keypairs',
+			data:'/compute/v2/'+current_vdc_id+'/os-keypairs',
 			beforeRender: function(data){
 				return data.result;
 			},
@@ -94,7 +94,7 @@ define(['Common','bs/modal','bs/wizard','bs/tooltip','jq/form/validator-bs3'],fu
     	            		var name = $("input.name").val();
     	                	var postData={"keypair":{"name":name}};
     	                	//alert("Value: " + postData.toString());
-    	                	Common.xhr.postJSON('/'+current_vdc_id+'/os-keypairs',postData,function(data){
+    	                	Common.xhr.postJSON('/compute/v2/'+current_vdc_id+'/os-keypairs',postData,function(data){
     	                		if(data){
     	                			dialog.close();
     	                			
@@ -169,7 +169,7 @@ define(['Common','bs/modal','bs/wizard','bs/tooltip','jq/form/validator-bs3'],fu
     	            		var publicKey = $("textarea.publickey");
     	                	var postData={"keypair":$("#import-keypair").serializeObject()};
 //    	                	alert("Value: " + JSON.stringify(postData));
-    	                	Common.xhr.postJSON('/'+current_vdc_id+'/os-keypairs',postData,function(data){
+    	                	Common.xhr.postJSON('/compute/v2/'+current_vdc_id+'/os-keypairs',postData,function(data){
     	                		if(data){
     	                			dialog.close();
     	                			Modal.success('密钥对['+name+']导入成功');
@@ -206,7 +206,7 @@ define(['Common','bs/modal','bs/wizard','bs/tooltip','jq/form/validator-bs3'],fu
 		$("#KeypairTable_wrapper a.keypair-name").on("click",function(){
 	    	var id = $(this).attr("data");
 			//需要修改为真实数据源	
-			Common.render(true,'tpls/ccenter/security/keypair/detail.html','/'+current_vdc_id+'/os-keypairs/'+id,function(data){	
+			Common.render(true,'tpls/ccenter/security/keypair/detail.html','/compute/v2/'+current_vdc_id+'/os-keypairs/'+id,function(data){	
 //				alert("Value: " + JSON.stringify(data));
 				$("a.reload").on("click",function(){
     		    	Common.router.route();
@@ -219,7 +219,7 @@ define(['Common','bs/modal','bs/wizard','bs/tooltip','jq/form/validator-bs3'],fu
 		//单条记录删除
 		$("#KeypairTable_wrapper a.keypair-del").on("click",function(){
 			var id = $(this).attr("data");
-			Common.xhr.del('/'+current_vdc_id+'/os-keypairs/'+id,function(data){
+			Common.xhr.del('/compute/v2/'+current_vdc_id+'/os-keypairs/'+id,function(data){
 				if(data){
 					Modal.success('密钥对['+id+']删除成功');
 					setTimeout(function(){Modal.closeAll()},3000);
@@ -235,7 +235,7 @@ define(['Common','bs/modal','bs/wizard','bs/tooltip','jq/form/validator-bs3'],fu
 			Common.$pageContent.addClass("loading");
 			$("#KeypairTable").find("tbody input[type='checkbox']:checked").each(function(){
 				id = $(this).attr("myval");
-				Common.xhr.delSync('/'+current_vdc_id+'/os-keypairs/'+id,function(data){
+				Common.xhr.delSync('/compute/v2/'+current_vdc_id+'/os-keypairs/'+id,function(data){
 					if(data){
 						Modal.success('密钥对['+id+']删除成功');
 						setTimeout(function(){Modal.closeAll()},3000);

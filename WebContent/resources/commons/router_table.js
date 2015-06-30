@@ -9,6 +9,7 @@ define('commons/router_table', function() {
         '^#sysmanagement(!.*)?$': "js/sysmanagement/user",
         '^#ccenter/vmtype/metadataList/(.*)$' :"js/ccenter/vmtype/metadata",
         '^#ccenter/block/detail/(.*)$' :"js/ccenter/block/detail",
+        '^#ccenter/snapshot/detail/(.*)$' :"js/ccenter/snapshot/detail",
         '^#ccenter/vdc/usage/(.*)$' :"js/ccenter/vdc/usage"
     };
 });
