@@ -71,17 +71,19 @@
 								<input type="text" class="form-control" value="{{server.flavor.rootGb}}GB" readonly="true">
 							</div>
 						</div>												
-					<p>网络</p><hr>	
-					{{each server.networks as item i}}
+					<p>IP</p><hr>	
 						<div class="form-group">
+							<label class="control-label col-sm-3">静态IP:</label>
 						 	<div class="col-sm-3 col-sm">
-								<input type="text" class="form-control" value="{{item.uuid}}" readonly="true">
-							</div>
-						 	<div class="col-sm-3 col-sm">
-								<input type="text" class="form-control" value="{{server.fixed_ip}}" readonly="true">
+								<input type="text" class="form-control" value="{{server.fixedIps}}" readonly="true">
 							</div>
 						</div>
-					{{/each}}						
+						<div class="form-group">
+							<label class="control-label col-sm-3">动态IP:</label>
+						 	<div class="col-sm-3 col-sm">
+								<input type="text" class="form-control" value="{{server.floatingIps}}" readonly="true">
+							</div>
+						</div>
 					<p>安全组</p><hr>		
 					{{each server.security_groups as item i}}
 						<div class="form-group">
@@ -103,8 +105,13 @@
 					{{/each}}	
 					</div>
 				</div>						
+				<div class="form-group">
+					<label for="server-name" class="control-label col-sm-3"></label>
+				 	<div class="col-sm-5 col-sm">
+						<a href="javascript:void(0);" class="btn btn-default reload">返回</a>
+					</div>
+				</div>			
 			</form>
-			
 		</div>
 	</div>
 </div>			

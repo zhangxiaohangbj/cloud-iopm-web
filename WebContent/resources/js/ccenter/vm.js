@@ -179,13 +179,13 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 		var DataGetter = {
 				//镜像列表,type:类型
 				getImage: function(type){
-					Common.xhr.get('/v2/'+current_vdc_id+'/images',{'imageType':'image'},function(imageList){
+					Common.xhr.get('/image/v2/'+current_vdc_id+'/images',{'imageType':'image'},function(imageList){
 						renderData.imageList = imageList;
 					});
 				},
 				//快照列表,
 				getSnapshot :  function(uid){
-					Common.xhr.get('/v2/'+current_vdc_id+'/images',{'imageType':'snapshot'},function(snapShotList){
+					Common.xhr.get('/image/v2/'+current_vdc_id+'/images',{'imageType':'snapshot'},function(snapShotList){
 						renderData.snapshotList = snapShotList;
 					});
 				},
@@ -841,22 +841,22 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
     					}
     					networkData.push(network);
     				});
-    				
     				serverData.server["networks"]=networkData;
     				serverData.server["security_groups"]=getSecruityGroup();
-    				Common.xhr.postJSON("/compute/v2/"+current_vdc_id+'/servers/'+currentChosenObj.vdc,serverData,function(data){
-    					if(data&&data["error"]){
-    						Modal.error("dddd"+data.message);
-    					}
-    					wizard._submitting = false;
-    					wizard.updateProgressBar(100);
-    					closeWizard();
-    					Common.router.reload();
-    				},
-    				function(data){
-						wizard._submitting = true;
-						wizard.updateProgressBar(0);
-    				})
+    				//提交请求
+    				Common.xhr.postJSON(
+    						"/compute/v2/"+current_vdc_id+'/servers/'+currentChosenObj.vdc,
+    						serverData,
+		    				function(data){
+		    					wizard._submitting = false;
+		    					wizard.updateProgressBar(100);
+		    					closeWizard();
+		    					Common.router.reload();
+		    				},
+		    				function(data){
+		    					wizard.submitError();
+		    					wizard.reset();
+		    				})
     			});
 
 			})
@@ -1015,7 +1015,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 		$(document).off("click","#VmTable_wrapper a.vm_name");
 	    $(document).on("click","#VmTable_wrapper a.vm_name",function(){	    
 	    	var id = $(this).attr("data");
-	    	Common.render(true,'tpls/ccenter/vm/detail.html',"/compute/v2/"+currentChosenObj.vdc+'/servers/'+id,function(html){
+	    	Common.render(true,'tpls/ccenter/vm/detail.html',"/compute/v2/"+current_vdc_id+'/servers/'+id,function(html){
 					 $("a.reload").on("click",function(){
 		    		    	Common.router.route();
 		    		  });
@@ -1157,7 +1157,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 	    	var serverId = $(this).attr("data");
 	    	var vdcId = $(this).parents('tr:first').find('td.vdc_name').attr("data");
 	    	var imageList;
-	    	Common.xhr.getSync('/v2/images/?owner='+current_vdc_id,function(data){
+	    	Common.xhr.getSync('/image/v2/images/?owner='+current_vdc_id,function(data){
     			imageList=data;
     		});
 	    	Common.render('tpls/ccenter/vm/rebuild.html',imageList,function(html){
