@@ -166,7 +166,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 					var vdc_id = obj.prev().val();
 					Common.render({
 						tpl:'tpls/sysmanagement/user/vdclist.html',
-						data:'/v2.0/tenants',    //需修改接口
+						data:'/identity/v2.0/tenants',    //需修改接口
 						beforeRender: function(data){
 							data.vdc_id = vdc_id;
 							return data;
@@ -207,7 +207,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 				$(document).off("click","span.chooseRole");
 				$(document).on("click","span.chooseRole",function(){
 					var obj = $(this);
-					Common.render('tpls/sysmanagement/user/rolelist.html','/identity/v2.0/roles/page/10/1',function(html){
+					Common.render('tpls/sysmanagement/user/rolelist.html','/identity/v2.0/roles/page/1/10',function(html){
 						Modal.show({
 		    	            title: '选择角色',
 		    	            message: html,
@@ -311,10 +311,12 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 					var authorityList = [];
 					$(obj+" tbody").find("tr").each(function(i,element){
 						var vdc_id = $(element).find("[name='vdc']").val();
-						var role_id = $(element).find("[name='role']").val();
-						var role_ids = role_id.split(",");
-						for(var i = 0; i<role_ids.length;i++){
-							authorityList.push({"scopeId":vdc_id,"roleId":role_ids[i],"scopeType":"tenant"});
+						if(vdc_id){
+							var role_id = $(element).find("[name='role']").val();
+							var role_ids = role_id.split(",");
+							for(var i = 0; i<role_ids.length;i++){
+								authorityList.push({"scopeId":vdc_id,"roleId":role_ids[i],"scopeType":"tenant"});
+							}
 						}
 					});
 					return authorityList;
@@ -323,6 +325,9 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 					var roleList = [];
 					$(obj+" tbody").find("tr").each(function(i,element){
 						var vdc_id = $(element).find("[name='vdc']").val();
+						if(!vdc_id){
+							return roleList;
+						}
 						var role_id = $(element).find("[name='role']").val();
 						var role_ids = role_id.split(",");
 						var roles = [];

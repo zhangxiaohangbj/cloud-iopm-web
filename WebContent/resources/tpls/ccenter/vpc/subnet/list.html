@@ -12,54 +12,18 @@
 			<table class="table table-primary table-striped" id="SubnetTable">
 				<thead>
 					<tr>
-						<th class="c1">
+						<th class="c5">
 							<label><input type="checkbox" class="selectAll"></label>
 						</th>
-						<th class="c2">网络名称</th>
-						<th class="c2">子网名称</th>
-						<th class="c2">CIDR</th>
-						<th class="c2">虚拟数据中心</th>
-						<th class="c2">IP版本</th>
-						<th class="c2">网关</th>
-						<th class="c1 sorting_disabled" >操作</th>
+						<th class="c15">网络名称</th>
+						<th class="c15">子网名称</th>
+						<th class="c15">CIDR</th>
+						<th class="c15">虚拟数据中心</th>
+						<th class="c10">IP版本</th>
+						<th class="c15">网关</th>
+						<th class="c10 sorting_disabled" >操作</th>
 					</tr>
 				</thead>
-				<tbody>
-				{{each result as item i}}
-					<tr>
-						<td><label><input type="checkbox"></label></td>
-						<td>{{item.network_name}}</td>
-						<td><a href="javascript:void(0);" class="subnet-name" data="{{item.id}}">{{item.name}}</a></td>
-						<td>{{item.cidr}}</td>
-						<td>{{item.vdc_name}}</td>
-						<td>IPV{{item.ip_version}}</td>
-						<td>
-			 				{{item.gateway_ip}}
-			 			</td>
-						<td>
-							<a class="btn-opt pull-left" data-toggle="tooltip" title="编辑" data-act="stop" style="margin: 0;" data="{{item.id}}"><i class="glyphicon glyphicon-edit"></i></a>
-							<div class="dropdown">
-								<span class="btn btn-more dropdown-toggle" data-toggle="dropdown" aria-expanded="false">更 多 <i class="fa fa-angle-down fa-fw"></i></span>
-								<ul class="dropdown-menu" style="right: 0;left: initial;">
-									<li><a href="javascript:void(0)" class="deleteSubnet" data="{{item.id}}"><i class="fa fa-trash-o fa-fw"></i>删除子网</a></li>
-								</ul>
-							</div>	
-						</td>
-					</tr>
-    			{{/each}}
-				</tbody>
-				<tfoot>
-					<tr>
-						<td></td>
-						<td></td>
-						<td></td>
-						<td></td>
-						<td></td>
-						<td></td>
-						<td></td>
-						<td></td>
-					</tr>
-				</tfoot>
 			</table>
 		</div>
 	</div>
