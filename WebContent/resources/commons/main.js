@@ -602,28 +602,41 @@ define('commons/main',
                     Accept: "application/json",
                     'Content-Type': "application/json"
                 };
-                this.ajax = function(url, success) {
+                /**
+                 * 服务器端请求方法
+                 * @param request 请求参数，可为字符串，数组、对象等。
+                 *                {String} 若为字符串: 作为请求url
+                 *                {Object} 若为对象: 作为请求配置项，必须含有url配置
+                 *                {Array} 若为数组: 将同时发送多个请求。数组每项配置同以上{String}和{Object}规则，不含有请求地址url的项将被过滤掉
+                 * @param success 请求成功后的回调
+                 *                若同时发送了多个请求，多个请求的回调将以多个参数形式返回，即 fn{data1, data2, ...}
+                 * @param error 请求错误后的回调
+                 *                若多个请求中有一个请求发生了错误，将执行此回调方法，参数同ajax的error回调 fn{xhr, errorName, errorText}
+                 */
+                this.ajax = function(request, success, error) {
                     var self = this;
                     var resolve = function(msg) {
                         that._inRender && (that._inRender = false);
                         that._deferred && that.resolve();
                         msg && that.error(msg);
                     };
-                    if(url) {
+                    if(request) {
                         var defaults = {
                                 type: 'GET',
                                 headers: this.headers,
                                 dataType: 'json'
                             },
-                            failureCallback = function(xhr, errorText) {
-                                if(errorText) {
-                                    errorText = errorText.replace(/(.+)error$/, "$1 error").replace(/\b\w+\b/g,function(w) {
+                            failureCallback = function(xhr, errorName, errorText) {
+                                if(errorName) {
+                                    errorName = errorName.replace(/(.+)error$/, "$1 error").replace(/\b\w+\b/g,function(w) {
                                         return w.substr(0,1).toLocaleUpperCase() + w.substring(1);
                                     });
                                 } else {
-                                    errorText = 'Error';
+                                    errorName = 'Error';
                                 }
-                                resolve("Ajax "+errorText+ (xhr.status >= 400 ? ": Status "+xhr.status+" / "+xhr.statusText : "."));
+                                resolve("Ajax "+errorName+ (xhr.status >= 400 ? ": Status "+xhr.status+" / "+xhr.statusText : "."));
+
+                                PubView.utils.isFunction(error) && error.apply(that, arguments);
                             };
                         var initRequests = function(request, level) {
                             level = level || 1;
@@ -638,18 +651,19 @@ define('commons/main',
                                 });
                             }
                         };
-                        var requests = this._getRequests(url);
+                        var requests = this._initRequests(request);
                         if(requests.length <= 0) {
                             resolve("Ajax Error: 请确定请求内容url");
                             return false;
                         }
-                        var deferreds = [];
+                        var deferreds = [], requestConf;
                         $.each(requests, function(i, req) {
                             req.url = self._getFullUrl(req.url);
-                            deferreds.push($.ajax($.extend({}, defaults, req)));
+                            requestConf = $.extend({}, defaults, req);
+                            deferreds.push($.ajax(requestConf));
                         });
                         var deferredsHandler = $.when.apply(that, deferreds);
-                        return deferredsHandler.then(
+                        deferredsHandler.then(
                             function() {
                                 var results = [], errors = [];
                                 if(requests.length > 1) {
@@ -685,158 +699,50 @@ define('commons/main',
                         );
                     } else {
                         resolve("Ajax Error: 请确定请求内容url");
-                        return false;
                     }
                 };
-                this.get = function(url, data, success) {
-                    var _data, _success;
-                    if(PubView.utils.isFunction(data)) {
-                        _success = data;
-                        _data = null;
-                    } else {
-                        _data = data;
-                        _success = success;
-                    }
-                    var defaults = { 'type': 'GET' },
-                        requests = this._getRequests(url);
-                    $.each(requests, function(i, req) {
-                        requests[i] = $.extend(req, defaults, {data: PubView.utils.isArray(_data) ? data[i] : data});
-                    });
-                    return this.ajax(requests, _success);
+                this.get = function(url, data, success, error) {
+                    var defaults = { 'type': 'GET' };
+                    return this._createAjax(defaults, arguments);
                 };
-                this.getSync = function(url, data, success) {
-                    var _data, _success;
-                    if(PubView.utils.isFunction(data)) {
-                        _success = data;
-                        _data = null;
-                    } else {
-                        _data = data;
-                        _success = success;
-                    }
-                    var defaults = { 'type': 'GET','async': false },
-                        requests = this._getRequests(url);
-                    $.each(requests, function(i, req) {
-                        requests[i] = $.extend(req, defaults, {data: PubView.utils.isArray(_data) ? data[i] : data});
-                    });
-                    return this.ajax(requests, _success);
+                this.getSync = function(url, data, success, error) {
+                    var defaults = { 'type': 'GET','async': false };
+                    return this._createAjax(defaults, arguments);
                 };
-                this.post = function(url, data, success) {
-                    var _data, _success;
-                    if(PubView.utils.isFunction(data)) {
-                        _success = data;
-                        _data = null;
-                    } else {
-                        _data = data;
-                        _success = success;
-                    }
-                    var defaults = { 'type': 'POST' },
-                        requests = this._getRequests(url);
-                    $.each(requests, function(i, req) {
-                        requests[i] = $.extend(req, defaults, {data: PubView.utils.isArray(_data) ? data[i] : data});
-                    });
-                    return this.ajax(requests, _success);
+                this.post = function(url, data, success, error) {
+                    var defaults = { 'type': 'POST' };
+                    return this._createAjax(defaults, arguments);
                 };
-                this.postSync = function(url, data, success) {
-                    var _data, _success;
-                    if(PubView.utils.isFunction(data)) {
-                        _success = data;
-                        _data = null;
-                    } else {
-                        _data = data;
-                        _success = success;
-                    }
-                    var defaults = { 'type': 'POST','async': false },
-                        requests = this._getRequests(url);
-                    $.each(requests, function(i, req) {
-                        requests[i] = $.extend(req, defaults, {data: PubView.utils.isArray(_data) ? data[i] : data});
-                    });
-                    return this.ajax(requests, _success);
+                this.postSync = function(url, data, success, error) {
+                    var defaults = { 'type': 'POST','async': false };
+                    return this._createAjax(defaults, arguments);
                 };
-                this.put = function(url, data, success) {
-                    var _data, _success;
-                    if(PubView.utils.isFunction(data)) {
-                        _success = data;
-                        _data = null;
-                    } else {
-                        _data = data;
-                        _success = success;
-                    }
-                    var defaults = { 'type': 'PUT' },
-                        requests = this._getRequests(url);
-                    $.each(requests, function(i, req) {
-                        requests[i] = $.extend(req, defaults, {data: PubView.utils.isArray(_data) ? data[i] : data});
-                    });
-                    return this.ajax(requests, _success);
+                this.put = function(url, data, success, error) {
+                    var defaults = { 'type': 'PUT' };
+                    return this._createAjax(defaults, arguments);
                 };
-                this.putSync = function(url, data, success) {
-                    var _data, _success;
-                    if(PubView.utils.isFunction(data)) {
-                        _success = data;
-                        _data = null;
-                    } else {
-                        _data = data;
-                        _success = success;
-                    }
-                    var defaults = { 'type': 'PUT','async': false },
-                        requests = this._getRequests(url);
-                    $.each(requests, function(i, req) {
-                        requests[i] = $.extend(req, defaults, {data: PubView.utils.isArray(_data) ? data[i] : data});
-                    });
-                    return this.ajax(requests, _success);
+                this.putSync = function(url, data, success, error) {
+                    var defaults = { 'type': 'PUT','async': false };
+                    return this._createAjax(defaults, arguments);
                 };
-                this.del = function(url, data, success) {
-                    var _data, _success;
-                    if(PubView.utils.isFunction(data)) {
-                        _success = data;
-                        _data = null;
-                    } else {
-                        _data = data;
-                        _success = success;
-                    }
-                    var defaults = { 'type': 'DELETE' },
-                        requests = this._getRequests(url);
-                    $.each(requests, function(i, req) {
-                        requests[i] = $.extend(req, defaults, {data: PubView.utils.isArray(_data) ? data[i] : data});
-                    });
-                    return this.ajax(requests, _success);
+                this.del = function(url, data, success, error) {
+                    var defaults = { 'type': 'DELETE' };
+                    return this._createAjax(defaults, arguments);
                 };
-                this.delSync = function(url, data, success) {
-                    var _data, _success;
-                    if(PubView.utils.isFunction(data)) {
-                        _success = data;
-                        _data = null;
-                    } else {
-                        _data = data;
-                        _success = success;
-                    }
-                    var defaults = { 'type': 'DELETE','async': false },
-                        requests = this._getRequests(url);
-                    $.each(requests, function(i, req) {
-                        requests[i] = $.extend(req, defaults, {data: PubView.utils.isArray(_data) ? data[i] : data});
-                    });
-                    return this.ajax(requests, _success);
+                this.delSync = function(url, data, success, error) {
+                    var defaults = { 'type': 'DELETE','async': false };
+                    return this._createAjax(defaults, arguments);
                 };
-                this.postJSON = function(url, data, success) {
-                    var _data, _success;
-                    if(PubView.utils.isFunction(data)) {
-                        _success = data;
-                        _data = {};
-                    } else {
-                        _data = data;
-                        _success = success;
-                    }
+                this.postJSON = function(url, data, success, error) {
                     try {
-                        var defaults = { 'type': 'POST','contentType': 'application/json' },
-                            requests = this._getRequests(url);
-                        $.each(requests, function(i, req) {
-                            requests[i] = $.extend(req, defaults, {data: PubView.utils.isArray(_data) ? JSON.stringify(_data[i]) : JSON.stringify(_data)});
-                        });
-                        return this.ajax(requests, _success);
+                        var defaults = { 'type': 'POST','contentType': 'application/json' };
+                        data && !PubView.utils.isFunction(data) && (arguments[1] = JSON.stringify(data));
+                        return this._createAjax(defaults, arguments);
                     } catch (e) {
                         that.error("Ajax postJSON Error: data param parse error.");
                     }
                 };
-                this.postJSONSync = function(url, data, success) {
+                this.postJSONSync = function(url, data, success, error) {
                     var _data, _success;
                     if(PubView.utils.isFunction(data)) {
                         _success = data;
@@ -846,17 +752,15 @@ define('commons/main',
                         _success = success;
                     }
                     try {
-                        var defaults = { 'type': 'POST','contentType': 'application/json','async': false },
-                            requests = this._getRequests(url);
-                        $.each(requests, function(i, req) {
-                            requests[i] = $.extend(req, defaults, {data: PubView.utils.isArray(_data) ? JSON.stringify(_data[i]) : JSON.stringify(_data)});
-                        });
-                        return this.ajax(requests, _success);
+                        var defaults = { 'type': 'POST','contentType': 'application/json','async': false };
+                        var args = [].concat(arguments);
+                        data && !PubView.utils.isFunction(data) && (args[1] = JSON.stringify(data));
+                        return this._createAjax(defaults, args);
                     } catch (e) {
                         that.error("Ajax postJSONSync Error: data param parse error.");
                     }
                 };
-                this.putJSON = function(url, data, success) {
+                this.putJSON = function(url, data, success, error) {
                     var _data, _success;
                     if(PubView.utils.isFunction(data)) {
                         _success = data;
@@ -866,17 +770,14 @@ define('commons/main',
                         _success = success;
                     }
                     try {
-                        var defaults = { 'type': 'PUT','contentType': 'application/json' },
-                            requests = this._getRequests(url);
-                        $.each(requests, function(i, req) {
-                            requests[i] = $.extend(req, defaults, {data: PubView.utils.isArray(_data) ? JSON.stringify(_data[i]) : JSON.stringify(_data)});
-                        });
-                        return this.ajax(requests, _success);
+                        var defaults = { 'type': 'PUT','contentType': 'application/json' };
+                        data && !PubView.utils.isFunction(data) && (arguments[1] = JSON.stringify(data));
+                        return this._createAjax(defaults, arguments);
                     } catch (e) {
                         that.error("Ajax putJSON Error: data param parse error.");
                     }
                 };
-                this.putJSONSync = function(url, data, success) {
+                this.putJSONSync = function(url, data, success, error) {
                     var _data, _success;
                     if(PubView.utils.isFunction(data)) {
                         _success = data;
@@ -886,12 +787,10 @@ define('commons/main',
                         _success = success;
                     }
                     try {
-                        var defaults = { 'type': 'PUT','contentType': 'application/json','async': false },
-                            requests = this._getRequests(url);
-                        $.each(requests, function(i, req) {
-                            requests[i] = $.extend(req, defaults, {data: PubView.utils.isArray(_data) ? JSON.stringify(_data[i]) : JSON.stringify(_data)});
-                        });
-                        return this.ajax(requests, _success);
+                        var defaults = { 'type': 'PUT','contentType': 'application/json','async': false };
+                        var args = [].concat(arguments);
+                        data && !PubView.utils.isFunction(data) && (args[1] = JSON.stringify(data));
+                        return this._createAjax(defaults, args);
                     } catch (e) {
                         that.error("Ajax putJSONSync Error: data param parse error.");
                     }
@@ -909,19 +808,41 @@ define('commons/main',
                         return PubView.root;
                     }
                 };
-                this._getRequests = function(request, requests) {
+                this._createAjax = function(defaults, args) {
+                    var initArgs = function(url, data, success, error) {
+                        var args = {
+                            url: $.extend({}, defaults, {url: url}),
+                            data: null,
+                            success: null,
+                            error: null
+                        };
+                        if(PubView.utils.isFunction(data)) {
+                            args.success = data;
+                            success && (args.error = success);
+                        } else {
+                            data && (args.data = data);
+                            success && (args.success = success);
+                            error && (args.error = error);
+                        }
+                        return args;
+                    };
+                    args = initArgs.apply(this, args);
+                    var requests = this._initRequests(args.url, args.data);
+                    return this.ajax(requests, args.success, args.error);
+                };
+                this._initRequests = function(request, data, requests) {
                     if(!requests || !PubView.utils.isArray(requests)) {
                         requests = [];
                     }
                     if(PubView.utils.isString(request)) {
-                        requests.push($.extend({}, {url: request}));
+                        requests.push($.extend({url: request}, data ? {data: data} : null));
                     } else if(PubView.utils.isPlainObject(request) && request.url) {
-                        requests.push(request);
+                        requests.push($.extend(request, data ? {data: data} : null));
                     } else if(PubView.utils.isArray(request)) {
                         for (var i=0; i<request.length; i++) {
                             if(requests.length > 100) return requests;
                             var req = request[i];
-                            requests = this._getRequests(req, requests);
+                            requests = this._initRequests(req, data, requests);
                             req = null;
                         }
                     }
