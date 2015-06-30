@@ -114,7 +114,7 @@ define('commons/pub_menu', function() {
                     link: '#block/'
                 },
                 {
-                    text: '<i class="fa fa-camera"></i>快照管理',
+                    text: '<i class="fa fa-camera"></i>快照管理<i class="fa icon-arrow"></i>',
                     link: '',
                     items: [
                         {
