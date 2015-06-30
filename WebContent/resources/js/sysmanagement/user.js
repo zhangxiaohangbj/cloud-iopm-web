@@ -42,7 +42,10 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 		      },
 	    	  /*属性 columns 用来配置具体列的属性，包括对应的数据列名,如trueName，是否支持搜索，是否显示，是否支持排序等*/
 		      "columns": [
-			        {"data": ""},
+			        {"data": "",
+			        	"orderable": false,
+			        	"defaultContent":"<label><input type='checkbox'></label>"
+			        },
 			        {"data": "name"},
 			        {"data": "trueName"},
 			        {"data": "phone"},
@@ -57,13 +60,6 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 		       *  属性列表： data，之前属性定义中对应的属性值； type，未知；full,全部数据值可以通过属性列名获取 
 		       * */
 		      "columnDefs": [
-					{
-					    "targets": [0],
-					    "orderable": false,
-					    "render": function() {
-					      return "<label><input type='checkbox'></label>";
-					    }
-					},
 					{
 					    "targets": [5],
 					    "data": "status",
@@ -96,28 +92,70 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 		var EventsHandler = {
 			//选择部门
 			organChoose : function(){
-				$(document).off("click","input[name='organ_id']");
-				$(document).on("click","input[name='organ_id']",function(){
-					Modal.show({
-	    	            title: '选择部门',
-	    	            message: "",
-	    	            closeByBackdrop: false,
-	    	            nl2br: false,
-	    	            buttons: [{
-	    	                label: '确定',
-	    	                action: function(dialog) {
-	    	                	 dialog.close();
-	    	                }
-	    	            }, {
-	    	                label: '取消',
-	    	                action: function(dialog) {
-	    	                    dialog.close();
-	    	                }
-	    	            }],
-	    	            onshown : function(dialog){
-	    	    			dialog.setData("formvalid",EventsHandler.formValidator());
-	    	            }
-	    	        });
+				$(document).off("click","input[name='organName']");
+				$(document).on("click","input[name='organName']",function(){
+					Common.xhr.ajax('/identity/v2.0/users/page/1/10',function(data){  //需修改接口
+			    		data =[
+		    					{ id:1, pId:0, name:"浪潮集团",open:true},
+		    					{ id:2, pId:1, name:"浪潮软件"},
+		    					{ id:21,pId:2,name:"IOP研发中心"},
+		 						{ id:22,pId:2,name:"大数据事业部"},
+		 						{ id:23,pId:2,name:"技术中心"},
+		    					{ id:3, pId:1, name:"浪潮通软"},
+		    					{ id:4, pId:1, name:"浪潮通信"}
+		    				];
+			    		Modal.show({
+		    	            title: '选择部门',
+		    	            message: '<div><ul id="organTree" class="ztree"></ul></div>',
+		    	            closeByBackdrop: false,
+		    	            nl2br: false,
+		    	            buttons: [{
+		    	                label: '确定',
+		    	                action: function(dialog) {
+		    	                	var treeObj = $.fn.zTree.getZTreeObj("organTree");
+		    	                	var nodes = treeObj.getCheckedNodes(true);
+		    	                	if(nodes.length == 0){
+		    	                		Modal.warning ('请选择部门');
+		    	                		return;
+		    	                	}
+		    	                	$("[name='organId']").val(nodes[0].id);
+		    	                	$("[name='organName']").val(nodes[0].name);
+		    	                	 dialog.close();
+		    	                }
+		    	            }, {
+		    	                label: '取消',
+		    	                action: function(dialog) {
+		    	                    dialog.close();
+		    	                }
+		    	            }],
+		    	            onshown : function(dialog){
+		    	            	require(['jq/ztree'], function() {
+		    	            		var setting = {
+		    	            			check: {
+		    	            				enable: true,
+		    	            				chkStyle: "radio",
+		    	            				radioType: "all"
+		    	            			},
+		    	            			data: {
+		    	            				simpleData: {
+		    	            					enable: true
+		    	            				}
+		    	            			}
+		    	            		};
+
+		    	            		var zNodes =data;
+		    	            		$.fn.zTree.init($("#organTree"), setting, zNodes);
+		    	            		var treeObj = $.fn.zTree.getZTreeObj("organTree");
+		    	            		if($("[name='organId']").val()){
+		    	            			var node = treeObj.getNodeByParam("id", $("[name='organId']").val(), null);
+			    	            		treeObj.checkNode(node, true, false); 
+		    	            		}
+
+		    	            	});
+		    	            }
+		    	        });
+					})
+					
 				});
 			},	
 			//选择VDC
@@ -254,6 +292,9 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 		                'organId': {
 		                    required: true,
 		                    maxlength:36
+		                },
+		                'organName': {
+		                    required: true
 		                }
 					},
 					messages: {
@@ -395,7 +436,8 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 		//编辑用户信息
 		$(document).off("click","#UserTable_wrapper a.btn-edit");
 		$(document).on("click","#UserTable_wrapper a.btn-edit",function(){
-			var id= $(this).attr("data");
+			var rowdata = $(this).parents("tr:first").data("rowData.dt");
+			var id= rowdata.id;
 	    	Common.xhr.ajax('/identity/v2.0/users/'+id,function(data){  //需修改接口
 	    		Common.render('tpls/sysmanagement/user/edit.html',data,function(html){
 	    			Modal.show({

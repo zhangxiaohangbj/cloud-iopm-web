@@ -7,12 +7,16 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 	};	//缓存数据
 	var init = function(){
 		Common.$pageContent.addClass("loading");
-		Common.render(true,{
+	/*	Common.render(true,{
 			tpl:'tpls/ccenter/vdc/list.html',
-			data:'/v2.0/tenants',
+			data:'/identity/v2.0/tenants',
 			beforeRender: function(data){
 				return data.tenants;
 			},
+			callback: bindEvent
+		});*/
+		Common.render(true,{
+			tpl:'tpls/ccenter/vdc/list.html',
 			callback: bindEvent
 		});
 	};
@@ -20,13 +24,105 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 		var userIndex = 1;//用户列表的起始页码
 		var userSize = 10;//
 		var userTotalSize = 0;
+		//页面渲染完后进行各种事件的绑定
 		//dataTables
-		Common.initDataTable($('#VdcTable'),function($tar){
+		Common.initDataTable($('#VdcTable'),{
+		      "processing": true,  //加载效果，默认false
+		      "serverSide": true,  //页面在加载时就请求后台，以及每次对 datatable 进行操作时也是请求后台
+		      "ordering": false,   //禁用所有排序
+		      "sAjaxSource":"identity/v2.0/tenants/page/", //ajax源，后端提供的分页接口
+		      /*fnServerData是与服务器端交换数据时被调用的函数
+		       * sSource： 就是sAjaxSource中指定的地址，接收数据的url需要拼装成 v2.0/users/page/10/1 格式
+		       *      aoData[4].value为每页显示条数，aoData[3].value/aoData[4].value+1为请求的页码数
+		       * aoData：请求参数，其中包含search 输入框中的值
+		       * */
+		      "fnServerData": function( sSource, aoData, fnCallback ) {
+		    	  debugger;
+		    	  var url = sSource + (aoData[3].value/aoData[4].value+1) +"/"+aoData[4].value
+		    	    $.ajax( {   
+		    	        "url": url, 
+		    	        "data":aoData,
+		    	        "dataType": "json",   
+		    	        "success": function(resp) {
+		    	        	/*渲染前预处理后端返回的数据为DataTables期望的格式,
+		    	        	 * 后端返回数据格式 {"pageNo":1,"pageSize":5,"orderBy":null,"order":null,"autoCount":true,"result":[{"id":"07da487da17b4354a4b5d8e2b2e41485","name":"wzz"}],
+		    	        	 * "totalCount":31,"first":1,"orderBySetted":false,"totalPages":7,"hasNext":true,"nextPage":2,"hasPre":false,"prePage":1}
+		    	        	 * DataTables期望的格式 {"draw": 2,"recordsTotal": 11,"recordsFiltered": 11,"data": [{"id": 1,"firstName": "Troy"}]}
+							*/
+		    	        	resp.data = resp.result;
+		    	        	resp.recordsTotal = resp.totalCount;
+		    	        	resp.recordsFiltered = resp.totalCount;
+		    	            fnCallback(resp);   //fnCallback：服务器返回数据后的处理函数，需要按DataTables期望的格式传入返回数据 
+		    	        }   
+		    	    });   
+		      },
+	    	  /*属性 columns 用来配置具体列的属性，包括对应的数据列名,如trueName，是否支持搜索，是否显示，是否支持排序等*/
+		      "columns": [
+			        {"data": ""},
+			        {"data": "name"},
+			        {"data": "description"},
+			        {"data": "enabled"},
+			        {"data": {}}
+		      ],
+		      /*
+		       * columnDefs 属性操作自定义列
+		       * targets ： 表示具体需要操作的目标列，下标从 0 开始
+		       * data: 表示我们需要的某一列数据对应的属性名
+		       * render: 返回需要显示的内容。在此我们可以修改列中样式，增加具体内容
+		       *  属性列表： data，之前属性定义中对应的属性值； type，未知；full,全部数据值可以通过属性列名获取 
+		       * */
+		      "columnDefs": [
+					{
+					    "targets": [0],
+					    "orderable": false,
+					    "render": function() {
+					      return "<label><input type='checkbox'></label>";
+					    }
+					},
+					{
+					    "targets": [3],
+					    "data": "enabled",
+					    "render": function(data, type, full) {
+					    	if(data == "1"){
+					    		return '<span class="text-success">已激活</span>';
+					    	} else{
+					    		return '<span class="text-success">待激活</span>';
+					    	}
+					    }
+					},
+                     {
+                       "targets": [4],
+                       "orderable": false,
+                       "data": {id:"id",name:"name",virtualEnvId:"virtualEnvId"},
+                       "render": function(data, type, full) {
+                    	  // debugger;
+                         return '<a class="btn-opt members" href="javascript:void(0)" data="'+data.id+'" data-toggle="tooltip" title="成员管理" data-act="stop" style="margin: 0;"><i class="fa fa-user fa-fw"></i></a>'
+							+'<div class="dropdown">'
+							+'<a class="btn-opt dropdown-toggle" data-toggle="dropdown" title="更多"  aria-expanded="false" ><i class="fa fa-angle-double-right"></i></a>'
+							+'<ul class="dropdown-menu" style="right: 0;left: initial;">'
+							+'<li><a href="javascript:void(0)"  data="'+data.id+'" class="updateQuota"><i class="fa fa-list-alt fa-fw"></i>配额管理</a></li>'
+							+'<li><a href="javascript:void(0)" data="'+data.id+'" data-env="'+data.virtualEnvId+'" class="vdcAz"><i class="fa fa-gear fa-fw"></i>可用分区管理</a></li>'
+							+'<li><a href="#ccenter/vdc/usage/'+data.id+'" class="usage" data="'+data.id+'" data-name="'+data.name+'"><i class="fa fa-file-text fa-fw"></i>使用情况</a></li>'
+							+'<li><a href="javascript:void(0)" data="'+data.id+'" class="editTenantBasic"><i class="fa fa-edit fa-fw"></i>编辑</a></li>'
+							+'<li><a href="javascript:void(0)" data="'+data.id+'" data-name="'+data.name+'" class="deleteTenant"><i class="fa fa-trash-o fa-fw"></i>删除</a></li>'
+							+'</ul></div>';
+                       }
+                     }
+                ]
+		    },
+		    function($tar){
 			$tar.prev().find('.left-col:first').append(
 					'<span class="btn btn-add">创建</span>'
 				);
 			Common.$pageContent.removeClass("loading");
 		});
+		//dataTables
+		/*Common.initDataTable($('#VdcTable'),function($tar){
+			$tar.prev().find('.left-col:first').append(
+					'<span class="btn btn-add">创建</span>'
+				);
+			Common.$pageContent.removeClass("loading");
+		});*/
 		//icheck
 	    $('input[type="checkbox"]').iCheck({
 	    	checkboxClass: "icheckbox-info",
@@ -114,7 +210,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 				//获取成员信息
 				getUsers : function(index,size){
 					///'cloud/am/user/page/'+index + '/'+size,resources/data/arrays.txt'
-					Common.xhr.ajax('/identity/v2.0/users/page/'+size + '/'+index,function(userList){
+					Common.xhr.ajax('/identity/v2.0/users/page/'+index + '/'+size,function(userList){
 						renderData.userList = userList.result;
 						cacheData.userList = userList.result;
 						userTotalSize = userList.totalCount;
@@ -164,72 +260,96 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 				//配额的表单验证
 				vdc_form:function($form){
 					if(!$form)return null;
+					$.validator.addMethod("integer",function(str){
+						if(parseInt(str) == str){
+							 return true;
+						}else{
+							return false;
+						}
+						
+					},"必须输入整数");
 					return $form.validate({
 						errorContainer: "_form",
 						rules:{
 							'metadata_items': {
 			                    required: true,
-			                    digits:true
+			                    integer:true,
+			                    min:-1
 			                },
 			                'cores': {
 			                    required: true,
-			                    digits:true
+			                    integer:true,
+			                    min:-1
 			                },
 			                'instances': {
 			                    required: true,
-			                    digits:true
+			                    integer:true,
+			                    min:-1
 			                },
 			                'injected_files': {
 			                    required: true,
-			                    digits:true
+			                    integer:true,
+			                    min:-1
 			                },
 			                'injected_file_content_bytes': {
 			                    required: true,
-			                    digits:true
+			                    integer:true,
+			                    min:-1
 			                },
 			                'volumes': {
 			                    required: true,
-			                    digits:true
+			                    integer:true,
+			                    min:-1
 			                },
 			                'snapshots': {
 			                    required: true,
-			                    digits:true
+			                    integer:true,
+			                    min:-1
 			                },
 			                'gigabytes': {
 			                    required: true,
-			                    digits:true
+			                    integer:true,
+			                    min:-1
 			                },
 			                'ram': {
 			                    required: true,
-			                    digits:true
+			                    integer:true,
+			                    min:-1
 			                },
 			                'security_group': {
 			                    required: true,
-			                    digits:true
+			                    integer:true,
+			                    min:-1
 			                },
 			                'security_group_rule': {
 			                    required: true,
-			                    digits:true
+			                    integer:true,
+			                    min:-1
 			                },
 			                'floatingip': {
 			                    required: true,
-			                    digits:true
+			                    integer:true,
+			                    min:-1
 			                },
 			                'network': {
 			                    required: true,
-			                    digits:true
+			                    integer:true,
+			                    min:-1
 			                },
 			                'port': {
 			                    required: true,
-			                    digits:true
+			                    integer:true,
+			                    min:-1
 			                },
 			                'route': {
 			                    required: true,
-			                    digits:true
+			                    integer:true,
+			                    min:-1
 			                },
 			                'subnet': {
 			                    required: true,
-			                    digits:true
+			                    integer:true,
+			                    min:-1
 			                },
 			                'vdc-name': {
 			                    required: true,
@@ -251,7 +371,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 					});
 					$(document).off("click",".list-group .loadmore");
 					$(document).on("click",".list-group .loadmore",function(event){
-						Common.xhr.ajax('/identity/v2.0/users/page/'+ userSize + '/'+(userIndex + 1),function(userList){
+						Common.xhr.ajax('/identity/v2.0/users/page/'+ (userIndex + 1) + '/'+userSize,function(userList){
 							var data = {};
 							data.userList = userList.result;
 							//data.roleList = cacheData.roleList;
@@ -366,7 +486,8 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 			}*/
 		}
 	  //增加按钮
-	    $("#VdcTable_wrapper span.btn-add").on("click",function(){
+		$(document).off("#VdcTable_wrapper span.btn-add");
+		$(document).on("click","#VdcTable_wrapper span.btn-add",function(){
 	    	//需要修改为真实数据源
 			Common.render('tpls/ccenter/vdc/add.html',renderData,function(html){
 				userIndex = 1;
@@ -471,7 +592,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
     							"virtualEnvId":virtualEnvId
     						}
     				};
-    				Common.xhr.postJSON('/v2.0/tenants',vdcData,function(data){
+    				Common.xhr.postJSON('/identity/v2.0/tenants',vdcData,function(data){
     					wizard._submitting = false;
     					wizard.updateProgressBar(100);
     					closeWizard();
@@ -482,11 +603,13 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 	    });
 	    
 	    //更新配额
-	    $("ul.dropdown-menu a.updateQuota").on("click",function(){
+		$(document).off("ul.dropdown-menu a.updateQuota");
+		$(document).on("click","ul.dropdown-menu a.updateQuota",function(){
 	    	more.QuotaSets($(this).attr("data"));
 	    });
 	    //可用分区
-	    $("ul.dropdown-menu a.vdcAz").on("click",function(){
+		$(document).off("ul.dropdown-menu a.vdcAz");
+		$(document).on("click","ul.dropdown-menu a.vdcAz",function(){
 	    	var ve_id =  $(this).attr("data-env");
 	    	var vdc_id = $(this).attr("data");
 	    	//先获取az后，再render
@@ -503,19 +626,22 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 	    	more.AZ(ve_id,vdc_id);
 	    });
 	    //删除一个vdc
-	    $("ul.dropdown-menu a.deleteTenant").on("click",function(){
-	    	more.DeleteTenant($(this).attr("data"));
+		$(document).off("ul.dropdown-menu a.deleteTenant");
+		$(document).on("click","ul.dropdown-menu a.deleteTenant",function(){
+	    	more.DeleteTenant($(this).attr("data"),$(this).attr("data-name"));
 	    });
 	   //编辑vdc
-	    $("ul.dropdown-menu a.editTenantBasic").on("click",function(){
+		$(document).off("ul.dropdown-menu a.editTenantBasic");
+		$(document).on("click","ul.dropdown-menu a.editTenantBasic",function(){
 	    	more.EditTenantBasic($(this).attr("data"));
 	    });
 	    //成员管理
-	    $(".members").on("click",function(){
+		$(document).off(".members");
+		$(document).on("click",".members",function(){
 	    	more.Member($(this).attr("data"));
 	    });
 	  //查看使用情况
-	    $("ul.dropdown-menu a.usage").on("click",function(){
+	/*    $("ul.dropdown-menu a.usage").on("click",function(){
 	    	Common.$pageContent.addClass("loading");
 	    	var vdc_id = $(this).attr("data");
 	    	var vdc_name = $(this).attr("data-name");
@@ -572,7 +698,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 					  });
 				}
 			});
-	    });
+	    });*/
 	 
 	    //外部网络管理
 	  /*  $("ul.dropdown-menu a.floatIP").on("click",function(){
@@ -586,7 +712,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 		    	//配额管理
 		    	QuotaSets : function(id){
 		    		//先获取QuotaSets后，再render
-		    		Common.xhr.ajax('/v2.0/'+Common.cookies.getVdcId()+ '/os-quota-sets/' + id,function(data){
+		    		Common.xhr.ajax('/compute/v2/'+Common.cookies.getVdcId()+'/os-quota-sets/' + id,function(data){
 		    			Common.render('tpls/ccenter/vdc/quota.html',data.quota_set,function(html){
 		    				Modal.show({
 			    	            title: '配额',
@@ -600,7 +726,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 			    	                	var serverData = {
 				    	            			"quota_set":jsonData.quotaSetsJson("#vdcQuota")
 			    	        				};
-			    	                	Common.xhr.putJSON('/v2.0/'+Common.cookies.getVdcId()+'/os-quota-sets/'+id,serverData,function(data){
+			    	                	Common.xhr.putJSON('/compute/v2/'+Common.cookies.getVdcId()+'/os-quota-sets/'+id,serverData,function(data){
 			    	                		if(data){
 					                    		 Modal.success('保存成功')
 				 	                			 setTimeout(function(){Modal.closeAll()},2000);
@@ -621,7 +747,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 	  //可用分区管理
     	AZ : function(ve_id,vdc_id){
     		Common.xhr.ajax('/v2/os-availability-zone/virtualEnv/' + ve_id,function(eaz){
-    			Common.xhr.ajax('/v2.0/az/' + vdc_id,function(vaz){
+    			Common.xhr.ajax('/identity/v2.0/tenants/az/' + vdc_id,function(vaz){
     				var data = {
     						veList:renderData.veList
     				},
@@ -649,7 +775,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
     	    	    	    							"available_zones":jsonData.azJson("#vdcAZ .list-group-select"),
     	    	    	    							"virtualEnvId":virtualEnvId
     	    	    	    				      };
-    	    	    	                	Common.xhr.putJSON('/v2.0/az/'+vdc_id,putData,function(data){
+    	    	    	                	Common.xhr.putJSON('/identity/v2.0/tenants/az/'+vdc_id,putData,function(data){
     	    	    	                		if(data){
     	    	    	                			 Modal.success('保存成功')
       				 	                			 setTimeout(function(){Modal.closeAll()},1000);
@@ -676,10 +802,10 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
     		})		
     	 },
     	//删除一个租户
-    	DeleteTenant : function(vdc_id){
-    		Modal.confirm('确定要删除该虚拟数据中心吗?', function(result){
+    	DeleteTenant : function(vdc_id,vdc_name){
+    		Modal.confirm('确定要删除"'+vdc_name+'"吗?', function(result){
 	             if(result) {
-	            	 Common.xhr.del('/v2.0/tenants/' + vdc_id,
+	            	 Common.xhr.del('/identity/v2.0/tenants/' + vdc_id,
 	                     function(data){
 	                    	 if(data.success||data.code==404){
 	                    		 Modal.success('删除成功')
@@ -696,7 +822,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
     	 },
     	//编辑租户的基本信息
     	 EditTenantBasic : function(vdc_id){
-    		 Common.xhr.ajax('v2.0/tenants/' + vdc_id,function(data){
+    		 Common.xhr.ajax('/identity/v2.0/tenants/' + vdc_id,function(data){
     			 Common.render('tpls/ccenter/vdc/edit.html',data.tenants,function(html){
       				Modal.show({
   	    	            title: '虚拟数据中心信息',
@@ -715,7 +841,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
     	                			     "name": $("#editVdcBasic [name='vdc-name']").val()
     	                			}
   	    	                	};
-	  	    	              	Common.xhr.putJSON('v2.0/tenants/'+vdc_id,vdcData,function(data){
+	  	    	              	Common.xhr.putJSON('/identity/v2.0/tenants/'+vdc_id,vdcData,function(data){
 		  	    	              	if(data){
 			                    		 Modal.success('保存成功')
 		 	                			 setTimeout(function(){Modal.closeAll()},2000);
@@ -737,7 +863,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
     	//成员管理
     	 Member : function(vdc_id){
     		 //根据vdc_id获取用户列表，包括角色  resources/data/user.txt
-    		 Common.xhr.ajax("/v2.0/tenants/"+vdc_id+"/users",function(data){
+    		 Common.xhr.ajax("/identity/v2.0/tenants/"+vdc_id+"/users",function(data){
 			 	var userList = data.users;
 	    		var loadmore = false;
 				if(userTotalSize > userSize * userIndex){
@@ -816,7 +942,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 	    	    	                	var userRolesData= {
 	    	    	                			"memberList":jsonData.userJson("#vdc-users .list-group-select")
 	    	    	                	}
-	    	    	                	Common.xhr.postJSON('/v2.0/tenants/'+vdc_id+'/userroles',userRolesData,function(data){
+	    	    	                	Common.xhr.postJSON('/identity/v2.0/tenants/'+vdc_id+'/userroles',userRolesData,function(data){
 	    	    	                		if(data){
 	    	    	                			 Modal.success('保存成功')
 		   		 	                			 setTimeout(function(){Modal.closeAll()},2000);

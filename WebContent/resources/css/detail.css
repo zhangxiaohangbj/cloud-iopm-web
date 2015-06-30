@@ -1,9 +1,32 @@
 .detail-info{
-	margin-bottom:30px;
+	display:table;
+	width:100%;
+	padding-bottom:30px;
+}
+.detail-info .nav-tabs{
+	border-color:#EFEDED;
+}
+.detail-info .tab-content .tab-pane{
+	background:#FBF9FA;
+	padding-top:15px;
+	border-left:1px solid #EFEDED;
+	border-right:1px solid #EFEDED;
+}
+.detail-info .nav-tabs>li>a{
+	color:#000;
+	border-radius:0;
+	padding:5px 10px;
+}
+.nav-tabs>li.active>a, .nav-tabs>li.active>a:focus, .nav-tabs>li.active>a:hover{
+	color:#43BAE2;
+	border-color:#EFEDED;
+	border-bottom-color:transparent;
+	background:#FBF9FA;
 }
 .detail-info .row{
 	margin:5px;
 	padding:5px;
+	font-size:13px;
 }
 .detail-info .row .control-label{
 	text-align:right;

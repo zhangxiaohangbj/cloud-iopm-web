@@ -1,3 +1,6 @@
+/*!
+ * 定义全局的公共套件模块
+ */
 define('Common', ['commons/main'], function(Common) { return Common; });
 /*!
  * 页面初始化
