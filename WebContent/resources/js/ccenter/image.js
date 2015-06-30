@@ -1,11 +1,11 @@
-define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3'],function(Common,Modal){
+define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3','jq/form'],function(Common,Modal){
 	Common.requestCSS('css/wizard.css');
 	var init = function(){
 		Common.$pageContent.addClass("loading");
 		//先获取数据，进行加工后再去render
 		Common.render(true,{
 			tpl:'tpls/ccenter/image/list.html',
-			data:'/v2/9cc717d8047e46e5bf23804fc4400247/images?isDeleted=false',
+			data:'/image/v2/9cc717d8047e46e5bf23804fc4400247/images?isDeleted=false',
 			beforeRender: function(data){
 				return data;
 			},
@@ -78,6 +78,17 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 	    	            		Modal.confirm('确定要保存吗?', function(result){
 	    	            			if(result) {
 	    	            				debugger;
+	    	            				if($("#isPublic_checkbox").prop("checked")){
+	    	            					$("#isPublic").attr("value",'1');
+	    	            				}else{
+	    	            					$("#isPublic").attr("value",'0');
+	    	            				}
+	    	            				if($("#isProtected_checkbox").prop("checked")){
+	    	            					$("#isProtected").attr("value",'1');
+	    	            				}else{
+	    	            					$("#isProtected").attr("value",'0');
+	    	            				}
+	    	            				/*
 	    	            				var pageData = $("#editImage").serializeObject();
 	    	            				if(pageData.isPublic){
 	    	            					pageData.isPublic = true;
@@ -102,7 +113,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 	    	            				delete pageData["locations"];
 	    	            				delete pageData["imageSource"];
 	    	            				debugger;
-	    	            				Common.xhr.postJSON('/v2/9cc717d8047e46e5bf23804fc4400247/images',pageData,function(data){
+	    	            				Common.xhr.postJSON('/image/v2/9cc717d8047e46e5bf23804fc4400247/images',pageData,function(data){
 	    	    	                		if(data){
 	    	    	                			Modal.alert("保存成功",function(){
 		    	    	                			dialog.close();
@@ -113,7 +124,14 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 		    	    	                			
 	    	    	                			});
 	    									}
-	    								});
+	    								});*/
+	    	            				$("#editImage").attr("action", "image/v2/9cc717d8047e46e5bf23804fc4400247/images/upload");
+	    	            				$("#editImage").ajaxSubmit(function () {
+	    	            					Modal.alert("保存成功",function(){
+//	    	    	                			dialog.close();
+//	    	    	                			Common.router.reload();
+    	    	                			});
+	    	            				});
 	    	            			}
 	    	            		});
 	    	                }
@@ -130,7 +148,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 	    	
 	    	//编辑弹框
 	    	Edit : function(id,cb){
-	    		Common.xhr.ajax('/v2/9cc717d8047e46e5bf23804fc4400247/images/'+id,function(data){
+	    		Common.xhr.ajax('/image/v2/9cc717d8047e46e5bf23804fc4400247/images/'+id,function(data){
 	    			debugger;
 	    			Common.render('tpls/ccenter/image/add.html',data,function(html){
 	    				debugger;
@@ -167,7 +185,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 		    	            				delete pageData["locations"];
 		    	            				delete pageData["imageSource"];
 		    	            				debugger;
-		    	            				Common.xhr.putJSON('/v2/9cc717d8047e46e5bf23804fc4400247/images/'+id,pageData,function(data){
+		    	            				Common.xhr.putJSON('/image/v2/9cc717d8047e46e5bf23804fc4400247/images/'+id,pageData,function(data){
 		    	    	                		if(data){
 		    	    	                			Modal.alert("保存成功",function(){
 			    	    	                			dialog.close();
@@ -218,7 +236,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 	    	var id = $(this).attr("data");
 	    	Modal.confirm('确定要删除吗?', function(result){
 	    		if(result) {
-	    			Common.xhr.del('/v2/9cc717d8047e46e5bf23804fc4400247/images/'+id,"",function(data){
+	    			Common.xhr.del('/image/v2/9cc717d8047e46e5bf23804fc4400247/images/'+id,"",function(data){
     					if(data){
                 			Modal.alert("删除成功",function(){
 	                			Common.router.reload();

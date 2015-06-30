@@ -3,7 +3,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 	var init = function(){
 		Common.$pageContent.addClass("loading");
 		//render获取的数据
-		Common.render(true,'tpls/ccenter/vpc/subnet/list.html','/networking/v2.0/subnets/page/1/10',function(){
+		Common.render(true,'tpls/ccenter/vpc/subnet/list.html',function(){
 			bindEvent();
 		});
 	};
@@ -11,7 +11,56 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 	var bindEvent = function(){
 		//页面渲染完后进行各种事件的绑定
 		//dataTables
-		Common.initDataTable($('#SubnetTable'),function($tar){
+		Common.initDataTable($('#SubnetTable'),{
+		      "processing": true,  //加载效果，默认false
+		      "serverSide": true,  //页面在加载时就请求后台，以及每次对 datatable 进行操作时也是请求后台
+		      "ordering": false,   //禁用所有排序
+		      "sAjaxSource":"networking/v2.0/subnets/page/", //ajax源，后端提供的分页接口
+		      "fnServerData": function( sSource, aoData, fnCallback ) {
+		    	    $.ajax( {   
+		    	        "url": sSource + (aoData[3].value/aoData[4].value+1) +"/"+aoData[4].value, 
+		    	        "data":aoData,
+		    	        "dataType": "json",   
+		    	        "success": function(resp) {
+		    	        	resp.data = resp.result;
+		    	        	resp.recordsTotal = resp.totalCount;
+		    	        	resp.recordsFiltered = resp.totalCount;
+		    	            fnCallback(resp);   //fnCallback：服务器返回数据后的处理函数，需要按DataTables期望的格式传入返回数据 
+		    	        }   
+		    	    });   
+		      },
+		      "columns": [
+			        {
+			        	"orderable": false,
+			        	"defaultContent":"<label><input type='checkbox'></label>"
+			        },
+			        {"data": "network_name"},
+			        {"data": "name"},
+			        {"data": "cidr"},
+			        {"data": "vdc_name"},
+			        {"data": "ip_version"},
+			        {"data": "gateway_ip"},
+			        {
+			        	"defaultContent":'<a class="btn-edit pull-left" data-toggle="tooltip" title="编辑" data-act="stop" href="javascript:void(0)"><li class="glyphicon glyphicon-edit"></li></a>'
+							+'<a href="javascript:void(0)" class="deleteSubnet" style="margin: 0 8px;"><i class="fa fa-trash-o fa-fw"></i></a>'
+			        }
+		      ],
+		      "columnDefs": [
+					{
+					    "targets": [2],
+					    "render": function(data, type, full) {
+					    	return "<a class='subnet-name' href='javascript:void(0)'>"+data+"</a>";
+					    }
+					},
+					{
+					    "targets": [5],
+					    "render": function(data, type, full) {
+					    	return "IPV"+data;
+					    }
+					}
+                ]
+		    },
+			function($tar){
 			$tar.prev().find('.left-col:first').append(
 					'<span class="btn btn-add">创 建</span>'
 				);
@@ -89,6 +138,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 	    		//表单校验
 				formValidator: function(){
 					$(".form-horizontal").validate({
+						errorContainer:"_form",
 			            rules: {
 			            	'name': {
 			                    required: true,
@@ -178,7 +228,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 	           	    	                	    "name": $("#addSubnet [name='name']").val(),
 	           	    	                	    "network_id": $("#addSubnet [name='network_id']").val(),
 	           	    	                	    "shared": 0,
-	           	    	                	    "tenant_id": "vdcid1"
+	           	    	                	    "tenant_id": "9cc717d8047e46e5bf23804fc4400247"
 		    	                		}
 		    	                	  };
 		    	                	Common.xhr.postJSON('/networking/v2.0/subnets',serverData,function(data){
@@ -257,7 +307,8 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 	    }
 	    
 	  //创建子网
-	    $("#SubnetTable_wrapper span.btn-add").on("click",function(){
+	    $(document).off("click","#SubnetTable_wrapper span.btn-add");
+	    $(document).on("click","#SubnetTable_wrapper span.btn-add",function(){
 	    	EditData.AddSubnet(function(){
 	    		EventsHandler.switcher();
 	    		EventsHandler.enable_ip();
@@ -265,15 +316,19 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 	    	});
 	    });
 	    //编辑子网
-	    $("#SubnetTable_wrapper a.btn-opt").on("click",function(){
-	    	EditData.EditSubnet($(this).attr("data"),function(){
+	    $(document).off("click","#SubnetTable_wrapper a.btn-edit");
+	    $(document).on("click","#SubnetTable_wrapper a.btn-edit",function(){
+	    	var id = $(this).parents("tr:first").data("rowData.dt").id;
+	    	EditData.EditSubnet(id,function(){
 	    		EventsHandler.switcher();
 	    		EventsHandler.enable_ip();
 	    		EventsHandler.formValidator();
 	    	});
 	    });
-	    $("#SubnetTable_wrapper a.subnet-name").on("click",function(){
-	    	Common.xhr.ajax('/networking/v2.0/subnets/'+$(this).attr("data"),function(data){
+	    $(document).off("click","#SubnetTable_wrapper a.subnet-name")
+	    $(document).on("click","#SubnetTable_wrapper a.subnet-name",function(){
+	    	var id = $(this).parents("tr:first").data("rowData.dt").id;
+	    	Common.xhr.ajax('/networking/v2.0/subnets/'+id,function(data){
 	    		Common.render('tpls/ccenter/vpc/subnet/detail.html',data.subnet,function(html){
 	    			$("#page-main .page-content").html(html);
 	    			EventsHandler.switcher();
@@ -285,8 +340,8 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 	    	});
 	    })
 	    //删除子网
-	     $("#SubnetTable_wrapper a.deleteSubnet").on("click",function(){
-	    	 var id = $(this).attr("data");
+	     $(document).on("click","#SubnetTable_wrapper a.deleteSubnet",function(){
+	    	 var id = $(this).parents("tr:first").data("rowData.dt").id;
 	    	 Dialog.confirm('确定要删除该子网吗?', function(result){
 	             if(result) {
 	            	 Common.xhr.del('/networking/v2.0/subnets/'+id,
