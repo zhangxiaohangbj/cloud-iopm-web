@@ -1,0 +1,55 @@
+<div class="page-header">
+    <ol class="breadcrumb minus">
+        <li><a href="#cresource/metadata/namespace" class="reload">命名空间管理</a></li>
+        <li class="active">{{namespace}}</li>
+        <li class="backlist"><a href="#cresource/metadata/namespace">返回列表</a></li>
+    </ol>
+</div>
+<div class="page-body">
+    <div class="pane">
+        <div class="pane-content">
+            <div class="detail-info">
+
+                <!-- Nav tabs -->
+                <ul class="nav nav-tabs" role="tablist">
+                    <li class="active"  data-for="basic"><a href="javascript:void(0)">地区基本信息</a></li>
+                    <li data-for="resources"><a href="javascript:void(0)">绑定列表</a></li>
+                </ul>
+                <div class="tab-content detail-info-content">
+                    <div  class="tab-pane basic active">
+                        <div class="clearfix">
+                            <div class="row">
+                                <label  class="control-label col-sm-3">ID：</label>
+                                <div class="col-sm-7 col-sm query-info query-volume-name">
+                                    {{id}}
+                                </div>
+                            </div>
+                            <div class="row">
+                                <label  class="control-label col-sm-3">名称：</label>
+                                <div class="col-sm-7 col-sm query-info query-volume-name">
+                                    {{namespace}}
+                                </div>
+                            </div>
+                            <div class="row">
+                                <label class="control-label col-sm-3">可见性：</label>
+                                <div class="col-sm-7 col-sm query-info query-volume-size">
+                                    {{visibility}}
+                                </div>
+                            </div>
+                            <div class="row">
+                                <label class="control-label col-sm-3">描述：</label>
+                                <div class="col-sm-7 col-sm query-info query-volume-size">
+                                    {{description}}
+                                </div>
+                            </div>
+                    </div>
+                </div>
+                <div class="tab-pane resources">
+                </div>
+            </div>
+
+
+        </div>
+        </div>
+    </div>
+</div>

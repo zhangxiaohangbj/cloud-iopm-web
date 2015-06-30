@@ -29,7 +29,7 @@
                 {{each data as item i}}
                 <tr>
                     <td><label><input type="checkbox"></label></td>
-                    <td>{{item.name}}</td>
+                    <td><a class="env-name" href="#cresource/env/detail/{{item.id}}">{{item.name}}</a></td>
                     <td>{{item.type}}</td>
                     <td>{{item.version}}</td>
                     <td>{{item.regionName}}</td>

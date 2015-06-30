@@ -2,14 +2,15 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 	Common.requestCSS('css/detail.css');
 
 
-	var curZoneInfo ={};
+	var curEnvInfo={};
 	var init = function(){
 		Common.$pageContent.addClass("loading");
 		var hashArr = Common.hash.split('/');
-	    var zoneId = hashArr[hashArr.length-1];
-		Common.xhr.ajax("/v2/os-availability-zone/"+zoneId,function(zoneInfo){
-			curZoneInfo = zoneInfo;
-			Common.render(true,'tpls/cresource/zone/detail.html',zoneInfo,function(html){
+	    var envId = hashArr[hashArr.length-1];
+		Common.xhr.ajax("/v2/virtual-env/"+envId,function(envInfo){
+			curEnvInfo = envInfo;
+			debugger
+			Common.render(true,'tpls/cresource/env/detail.html',envInfo,function(html){
 				bindEvent();
 			});
 		})
@@ -36,6 +37,8 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 				Common.render(false,'tpls/cresource/zone/list_resources.html',curZoneInfo,function(html){
 					$tab.empty().append(html);
 				});
+			}else if('basic' == data){
+
 			}
 			Common.hideLoclLoading($tab);
 		}

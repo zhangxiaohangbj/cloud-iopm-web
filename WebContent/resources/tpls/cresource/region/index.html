@@ -25,7 +25,7 @@
                 {{each cloudService as item i}}
                 <tr>
                     <td>{{i}}</td>
-                    <td>{{item.region.name}}</td>
+                    <td><a class="region-name" href="#cresource/region/detail/{{item.id}}">{{item.region.name}}</a></td>
                     <td>{{item.connector.version}}</td>
                     <td>{{item.connector.ip}}</td>
                     {{if item.serviceStatus !="false" }}
