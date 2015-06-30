@@ -10,9 +10,9 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 	    	start = decodeURIComponent(hashArr[hashArr.length-2]);
 	    	end = decodeURIComponent(hashArr[hashArr.length-1]);
 	    }
-	    var url = '/identity/v2.0/'+Common.cookies.getVdcId()+'/os-simple-tenant-usage/' + vdc_id;
+	    var url = '/compute/v2/'+Common.cookies.getVdcId()+'/os-simple-tenant-usage/' + vdc_id;
 	    if(start || end){
-	    	url = '/identity/v2.0/'+Common.cookies.getVdcId()+'/os-simple-tenant-usage/' + vdc_id +'?start='+start+'&end='+end;
+	    	url = '/compute/v2/'+Common.cookies.getVdcId()+'/os-simple-tenant-usage/' + vdc_id +'?start='+start+'&end='+end;
 	    }   
 	    var vdcInfo;
 	    var vdc = function (id){

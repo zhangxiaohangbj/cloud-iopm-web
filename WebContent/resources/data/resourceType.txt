@@ -7,11 +7,12 @@
 	{
 		"name" : "存储设备",
 		"type":"storage",
-        "link":"/resources/data/env.txt"
+        "link":"/resources/data/arrays.txt"
+
 	},
 	{
 		"name" : "网络设备",
 		"type":"network",
-        "link":"/resources/data/env.txt"
+        "link":"/resources/data/networks.txt"
 	}
 ]

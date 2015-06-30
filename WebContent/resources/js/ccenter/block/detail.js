@@ -34,13 +34,13 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 				$('.detail-info .nav li').removeClass('active');
 				$this.addClass('active');
 				var data = $this.attr('data-for');
-				$('.detail-info-content').find('.tab-pane').removeClass('active');
+				$('.tab-content').find('.tab-pane').removeClass('active');
 				renderTab(data);
 			}
 		});
 		//异步渲染tab标签内容
 		function renderTab(data){
-			var $tab = $('.detail-info-content').find('div.'+data);
+			var $tab = $('.tab-content').find('div.'+data);
 			$tab.addClass('active');
 			Common.showLocalLoading($tab);
 			if('snapshot' == data){

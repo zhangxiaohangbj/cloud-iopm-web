@@ -143,7 +143,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 	   //权限设置
 	     $("#RoleTable_wrapper a.btn-edit-authority").on("click",function(){
 		    	var id= $(this).attr("data");
-		    	Common.xhr.ajax('/v2.0/subnets/'+id,function(data){  //需修改接口
+		    	Common.xhr.ajax('/identity/v2.0/OS-KSADM/roles/'+id,function(data){  //需修改接口
 		    		data =[
 	    					{ id:1, pId:0, name:"首页", checked:true},
 	    					{ id:2, pId:0, name:"资源管理"},
@@ -173,7 +173,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 	    	                		serverData.push({"id":nodes[i].id});
 	    	                	}
 	    	            		
-	    	                	Common.xhr.putJSON('/v2.0/users/'+id,serverData,function(data){  //需修改接口
+	    	                	Common.xhr.putJSON('/identity/v2.0/users/'+id,serverData,function(data){  //需修改接口
 	    	                		if(data){
 	    	                			Modal.success('保存成功')
 	    	                			setTimeout(function(){Modal.closeAll()},2000);

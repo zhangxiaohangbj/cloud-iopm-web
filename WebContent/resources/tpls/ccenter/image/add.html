@@ -1,4 +1,4 @@
-<form class="form-horizontal" id="editImage">
+<form class="form-horizontal" id="editImage" enctype="multipart/form-data" method="post">
 	<div class="form-group">
 		<label for="name" class="control-label col-sm-4"><span style="color: red;">* </span>名称：</label>
 	 	<div class="col-sm-5 col-sm">
@@ -83,10 +83,20 @@
 	</div>
 	<div class="form-group">
 		<label for="className" class="control-label col-sm-4"><span style="color: red;"></span></label>
+	 	{{if id!=null}}
 	 	<div class="col-sm-5 col-sm">
-			公有：<input type="checkbox" name="isPublic" {{if isPublic==true}} checked {{/if}}>
+			公有：<input type="checkbox" name="isPublic" id="isPublic" {{if isPublic==true}} checked {{/if}}>
 			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-			受保护的：<input type="checkbox" name="isProtected" {{if isProtected==true}} checked {{/if}}>
+			受保护的：<input type="checkbox" name="isProtected" id="isProtected" {{if isProtected==true}} checked {{/if}}>
 		</div>
+		{{else}}
+		<div class="col-sm-5 col-sm">
+			公有：<input type="checkbox" id="isPublic_checkbox">
+			<input type="hidden" name="isPublic" id="isPublic" value="0">
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+			受保护的：<input type="checkbox" id="isProtected_checkbox">
+			<input type="hidden" name="isProtected" id="isProtected" value="0">
+		</div>
+		{{/if}}
 	</div>
 </form>
