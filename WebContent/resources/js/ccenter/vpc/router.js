@@ -3,7 +3,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 	var init = function(){
 		Common.$pageContent.addClass("loading");
 		//render获取的数据
-		Common.render(true,'tpls/ccenter/vpc/router/list.html','/networking/v2.0/routers/page/1/10',function(){
+		Common.render(true,'tpls/ccenter/vpc/router/list.html',function(){
 			bindEvent();
 		});
 	};
@@ -11,7 +11,68 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 	var bindEvent = function(){
 		//页面渲染完后进行各种事件的绑定
 		//dataTables
-		Common.initDataTable($('#RouterTable'),function($tar){
+		Common.initDataTable($('#RouterTable'),{
+		      "processing": true,  //加载效果，默认false
+		      "serverSide": true,  //页面在加载时就请求后台，以及每次对 datatable 进行操作时也是请求后台
+		      "ordering": false,   //禁用所有排序
+		      "sAjaxSource":"networking/v2.0/routers/page/", //ajax源，后端提供的分页接口
+		      "fnServerData": function( sSource, aoData, fnCallback ) {
+		    	    $.ajax( {   
+		    	        "url": sSource + (aoData[3].value/aoData[4].value+1) +"/"+aoData[4].value, 
+		    	        "data":aoData,
+		    	        "dataType": "json",   
+		    	        "success": function(resp) {
+		    	        	resp.data = resp.result;
+		    	        	resp.recordsTotal = resp.totalCount;
+		    	        	resp.recordsFiltered = resp.totalCount;
+		    	            fnCallback(resp);   //fnCallback：服务器返回数据后的处理函数，需要按DataTables期望的格式传入返回数据 
+		    	        }   
+		    	    });   
+		      },
+	    	  /*属性 columns 用来配置具体列的属性，包括对应的数据列名,如trueName，是否支持搜索，是否显示，是否支持排序等*/
+		      "columns": [
+			        {
+			        	"orderable": false,
+			        	"defaultContent":"<label><input type='checkbox'></label>"
+			        },
+			        {"data": "name"},
+			        {"data": "status"},
+			        {"data": "external_gateway_info.network_id"},
+			        {"data":""}
+		      ],
+		      /*
+		       * columnDefs 属性操作自定义列
+		       * targets ： 表示具体需要操作的目标列，下标从 0 开始
+		       * data: 表示我们需要的某一列数据对应的属性名
+		       * render: 返回需要显示的内容。在此我们可以修改列中样式，增加具体内容
+		       *  属性列表： data，之前属性定义中对应的属性值； type，未知；full,全部数据值可以通过属性列名获取 
+		       * */
+		      "columnDefs": [
+		            {
+		            	"targets":[1],
+		            	"render":function(data, type, full){
+		            		return "<a href='javascript:void(0);' class='router-name'>"+data+"</a>";
+		            	}
+		            },
+					{
+					    "targets": [4],
+					    "data" :"external_gateway_info.network_id",
+					    "render": function(data, type, full) {
+					    	var html = '<a class="subnet" data-toggle="tooltip" title="连接子网" href="javascript:void(0)">连接子网</a>';
+					    	if(data!=null) html += '<a class="deleteGateway" data-toggle="tooltip" title="清除网关" href="javascript:void(0)" style="margin: 0 8px;">清除网关</a>';
+					    	else html+= '<a class="setGateway" data-toggle="tooltip" title="设置网关" href="javascript:void(0)" style="margin: 0 8px;">设置网关</a>';
+					    	html += '<div class="dropdown">'
+					    		+'<a class="btn-opt dropdown-toggle" data-toggle="dropdown" title="更多" aria-expanded="false"><li class="fa fa-angle-double-right"></li></a>'
+					    		+'<ul class="dropdown-menu" style="right: 0;left: initial;">'
+								+'<li><a href="javascript:void(0)" class="editRouter" data="{{item.id}}"><i class="fa fa-pencil fa-fw"></i>编辑路由</a></li>'
+								+'<li><a href="javascript:void(0)" class="deleteRouter" data="{{item.id}}"><i class="fa fa-trash-o fa-fw"></i>删除路由</a></li>'
+								+'</ul></div>';
+					    	return html;
+					    }
+					}
+                ]
+		    },
+			function($tar){
 			$tar.prev().find('.left-col:first').append(
 					'<span class="btn btn-add">创 建</span>'
 				);
@@ -21,6 +82,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 	    		//表单校验
 				formValidator: function(){
 					$(".form-horizontal").validate({
+						errorContainer:"_form",
 			            rules: {
 			            	'name': {
 			                    required: true,
@@ -32,7 +94,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 				},
 				switcher:function(){
 					$(".col-sm input[type=\"checkbox\"], input[type=\"radio\"]").not("[data-switch-no-init]").switcher();
-				},
+				}
 		}
 		 //载入默认的数据 inits,创建数据载入类
 		var DataIniter = {
@@ -73,7 +135,8 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 				}
 		};
 		//创建路由
-	    $("#RouterTable_wrapper span.btn-add").on("click",function(){
+		$(document).off("click","#RouterTable_wrapper span.btn-add");
+	    $(document).on("click","#RouterTable_wrapper span.btn-add",function(){
 	    	Common.render('tpls/ccenter/vpc/router/add.html','',function(html){
 		    	Dialog.show({
 		            title: '路由创建',
@@ -114,8 +177,9 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 			});
 	    });
 		//编辑路由
-	    $("#RouterTable_wrapper a.editRouter").on("click",function(){
-	    	var id= $(this).attr("data");
+	    $(document).off("click","#RouterTable_wrapper a.editRouter");
+	    $(document).on("click","#RouterTable_wrapper a.editRouter",function(){
+	    	var id= $(this).parents("tr:first").data("rowData.dt").id;
 	    	Common.xhr.ajax('/networking/v2.0/routers/'+id,function(data){
 	    		Common.render('tpls/ccenter/vpc/router/edit.html',data.router,function(html){
 		    	Dialog.show({
@@ -154,8 +218,9 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 	    	});
 	    })
 	  //删除路由
-	     $("#RouterTable_wrapper a.deleteRouter").on("click",function(){
-	    	 var id = $(this).attr("data");
+	    $(document).off("click","#RouterTable_wrapper a.deleteRouter");
+	     $(document).on("click","#RouterTable_wrapper a.deleteRouter",function(){
+	    	 var id= $(this).parents("tr:first").data("rowData.dt").id;
 	    	 Dialog.confirm('确定要删除该路由吗?', function(result){
 	             if(result) {
 	            	 Common.xhr.del('/networking/v2.0/routers/'+id,
@@ -174,8 +239,9 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 	         });
 	     })
 	     //清除网关
-	     $("#RouterTable_wrapper span.deleteGateway").on("click",function(){
-	    	 var id = $(this).attr("data");
+	     $(document).off("click","#RouterTable_wrapper a.deleteGateway");
+	     $(document).on("click","#RouterTable_wrapper a.deleteGateway",function(){
+	    	 var id= $(this).parents("tr:first").data("rowData.dt").id;
 	    	 Dialog.confirm('确定要清除网关吗?', function(result){
 	             if(result) {
 					var routerData = { "router": {"external_gateway_info": {"network_id":""}}};
@@ -195,8 +261,9 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 	         })
 	     });
 	     //设置网关
-	     $("#RouterTable_wrapper span.setGateway").on("click",function(){
-	    	 var id = $(this).attr("data");
+	     $(document).off("click","#RouterTable_wrapper a.setGateway");
+	     $(document).on("click","#RouterTable_wrapper a.setGateway",function(){
+	    	 var id= $(this).parents("tr:first").data("rowData.dt").id;
 	    	 Common.xhr.ajax('/networking/v2.0/routers/'+id,function(data){
 				    Common.render('tpls/ccenter/vpc/router/setgateway.html',data.router,function(html){
 			    	 Dialog.show({
@@ -236,8 +303,8 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 	    	 });
 	     });
 		//路由明细
-		$("#RouterTable_wrapper a.router-name").on("click",function(){
-		    	Common.xhr.ajax('/networking/v2.0/routers/'+$(this).attr("data"),function(data){
+		$(document).on("click","#RouterTable_wrapper a.router-name",function(){
+		    	Common.xhr.ajax('/networking/v2.0/routers/'+$(this).parents("tr:first").data("rowData.dt").id,function(data){
 		    		Common.render('tpls/ccenter/vpc/router/detail.html',data.router,function(html){
 		    			$("#page-main .page-content").html(html);
 		    			//返回按钮
@@ -283,8 +350,78 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 		    	},
 		    	//获取子网连接列表
 		    	GetSubnetList :function(id){
-		    		Common.render(true,'tpls/ccenter/vpc/router/linksubnet.html','/v2.0/ports?device_owner=network&device_id='+id,function(html){ //需修改接口
-			    		Common.initDataTable($('#subnetTable'),function($tar){
+		    		Common.render(true,'tpls/ccenter/vpc/router/linksubnet.html',function(html){
+			    		Common.initDataTable($('#subnetTable'),{
+			  		      "processing": true,  //加载效果，默认false
+					      "serverSide": true,  //页面在加载时就请求后台，以及每次对 datatable 进行操作时也是请求后台
+					      "ordering": false,   //禁用所有排序
+					      "sAjaxSource":"networking/v2.0/ports/page/",
+					      "fnServerData": function( sSource, aoData, fnCallback ) {
+					    	  //拼装请求参数
+					    	  aoData.push({"name":"device_owner","value":"network"},{"name":"device_id","value":id});
+					    	    $.ajax( {   
+					    	        "url": sSource + (aoData[3].value/aoData[4].value+1) +"/"+aoData[4].value, 
+					    	        "data":aoData,
+					    	        "dataType": "json",   
+					    	        "success": function(resp) {
+					    	        	resp.data = resp.result;
+					    	        	resp.recordsTotal = resp.totalCount;
+					    	        	resp.recordsFiltered = resp.totalCount;
+					    	            fnCallback(resp);   //fnCallback：服务器返回数据后的处理函数，需要按DataTables期望的格式传入返回数据 
+					    	        }   
+					    	    });   
+					      },
+					      "columns": [
+						        {
+						        	"orderable": false,
+						        	"defaultContent":"<label><input type='checkbox'></label>"
+						        },
+						        {"data": "network_id"},
+						        {"data": "fixed_ips"}, //fixed_ips[0].subnet_id
+						        {"data": ""}, //fixed_ips[0].ip_address
+						        {"data": "status"},
+						        {"data": "device_owner"},
+						        {"data": "admin_state_up"},
+						        {"defaultContent":""}
+					      ],
+					      "columnDefs": [
+								{
+								    "targets": [2],
+								    "render": function(data, type, full) {
+								    	return data != null? data[0].subnet_id:"";
+								    }
+								},
+								{
+								    "targets": [3],
+								    "render": function(data, type, row) {
+								    	return row.fixed_ips != null? data[0].ip_address:"";
+								    }
+								},
+								{
+								    "targets": [5],
+								    "render": function(data, type, full) {
+								    	if(data == "network:router_interface") return "子网链接";
+								    	else return "外部网关";
+								    }
+								},
+								{
+								    "targets": [6],
+								    "render": function(data, type, full) {
+								    	if(data == "1") return "启用";
+								    	else return "禁用";
+								    }
+								},
+								{
+								    "targets": [7],
+								    "data": "device_id",
+								    "render": function(data, type, row) {
+								    	if(row.device_owner == "network:router_interface") 
+								    		return '<a class="btn-delete" data-toggle="tooltip" title="删除" href="javascript:void(0)"><i class="fa fa-trash-o fa-fw"></i></a>';
+								    }
+								}
+			                ]
+					    },
+			    		function($tar){
 			    			$tar.prev().find('.left-col:first').append(
 			    					'<span class="btn btn-add">添加子网连接</span>'
 			    				);
@@ -293,14 +430,16 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 		    		    	Common.router.route();
 		    		    })
 			    		//添加子网连接
-				    	$("#subnetTable_wrapper span.btn-add").on("click",function(){
+		    		    $(document).off("click","#subnetTable_wrapper span.btn-add");
+				    	$(document).on("click","#subnetTable_wrapper span.btn-add",function(){
 				    		EditData.AddRouterSubnet(id,function(){
 				    			DataIniter.initSubnetList();
 				    			EventsHandler.formValidator();
 				    		})
 				    	});
 					    //删除子网连接
-					    $("#subnetTable_wrapper a.btn-delete").on("click",function(){
+			    		$(document).off("click","#subnetTable_wrapper a.btn-delete");
+					    $(document).on("click","#subnetTable_wrapper a.btn-delete",function(){
 					    	var portId= $(this).attr("data");
 					    	var subnetId= $(this).attr("datasubnet");
 					    	Dialog.confirm('确定要删除该子网连接吗?', function(result){
@@ -329,8 +468,8 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 		    	}
 		}
 		//连接子网
-	    $("#RouterTable_wrapper span.subnet").on("click",function(){
-	    	var id = $(this).attr("data");
+	    $(document).on("click","#RouterTable_wrapper a.subnet",function(){
+	    	var id = $(this).parents("tr:first").data("rowData.dt").id;
 	    	EditData.GetSubnetList(id);
 	    })
 	}
