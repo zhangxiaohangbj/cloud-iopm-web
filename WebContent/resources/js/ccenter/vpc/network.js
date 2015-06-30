@@ -41,7 +41,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 			        {"data": "status"},
 			        {"data": "admin_state_up"},
 			        {
-			        	"defaultContent":'<a class="btn-edit" data-toggle="tooltip" title="编辑网络" href="javascript:void(0)" data-act="stop" style="margin: 0 8px;"><li class="glyphicon glyphicon-edit"></li></a>'
+			        	"defaultContent":'<a class="btn-edit" data-toggle="tooltip" title="编辑网络" href="javascript:void(0)" data-act="stop"><li class="glyphicon glyphicon-edit"></li></a>'
 							+'<a class="btn-delete" data-toggle="tooltip" title="删除网络" href="javascript:void(0)" style="margin: 0 8px;"><i class="fa fa-trash-o fa-fw"></i></a>'
 			        }
 		      ],
@@ -119,6 +119,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 	    		//表单校验
 				formValidator: function(){
 					return $(".form-horizontal").validate({
+						errorContainer:"_form",
 			            rules: {
 			            	'name': {
 			            		required: true,
