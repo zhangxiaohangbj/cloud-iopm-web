@@ -123,7 +123,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
                        "targets": [9],
                        "data": "id",
                        "render": function(data, type, full) {
-                    	   var html = '<a href="javascript:void(0)" class="btn-opt createSnapshot" data-toggle="tooltip" title="创建快照" data-act="stop" data="'+data+'" style="margin: 0;"><i class="fa fa-camera"></i></a>'
+                    	   var html = '<a href="javascript:void(0)" class="btn-opt createSnapshot" data-toggle="tooltip" title="创建快照" data-act="stop" data="'+data.id+'" style="margin: 0;"><i class="fa fa-camera"></i></a>'
                     	   if(data.vmState != 'PAUSED' && data.vmState != 'SHUTOFF' && data.vmState != 'SUSPENDED'){
                     		   html = html + 
                     		   '<div class="dropdown">'
@@ -190,13 +190,13 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 		var DataGetter = {
 				//镜像列表,type:类型
 				getImage: function(type){
-					Common.xhr.get('/v2/'+current_vdc_id+'/images',{'imageType':'image'},function(imageList){
+					Common.xhr.get('/image/v2/'+current_vdc_id+'/images',{'imageType':'image'},function(imageList){
 						renderData.imageList = imageList;
 					});
 				},
 				//快照列表,
 				getSnapshot :  function(uid){
-					Common.xhr.get('/v2/'+current_vdc_id+'/images',{'imageType':'snapshot'},function(snapShotList){
+					Common.xhr.get('/image/v2/'+current_vdc_id+'/images',{'imageType':'snapshot'},function(snapShotList){
 						renderData.snapshotList = snapShotList;
 					});
 				},
@@ -308,13 +308,13 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 				}
 				if(vdc_id){
 					//获取vdc的配额
-					Common.xhr.ajax('/identity/v2.0/'+current_vdc_id+'/os-quota-sets/'+vdc_id,function(quotas){
+					Common.xhr.ajax('/compute/v2/'+current_vdc_id+'/os-quota-sets/'+vdc_id,function(quotas){
 						if(!quotas) {
 							quotas = {};
 						}
 						quotas = quotas.quota_set||{};
 						//获取vdc的配额使用情况
-						Common.xhr.ajax('/identity/v2.0/'+vdc_id+'/limits',function(quotaUsages){
+						Common.xhr.ajax('/compute/v2/'+vdc_id+'/limits',function(quotaUsages){
 							//当前配额 等于 当前vdc下总配额 减去  当前选中规格的额度
 							var current = currentChosenObj.specs;
 							if(current && current.length){
@@ -1142,7 +1142,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 	    	var rowData = $(this).parents('tr:first').data("rowData.dt");
 	    	var vdcId = rowData.tenant_id;
 	    	var imageList;
-	    	Common.xhr.getSync('/v2/'+vdcId+'/images/?owner='+vdcId,function(data){
+	    	Common.xhr.getSync('/image/v2/'+vdcId+'/images/?owner='+vdcId,function(data){
     			imageList=data;
     		});
 	    	Common.render('tpls/ccenter/vm/rebuild.html',imageList,function(html){
