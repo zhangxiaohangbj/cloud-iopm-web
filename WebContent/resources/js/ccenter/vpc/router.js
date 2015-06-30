@@ -303,6 +303,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 	    	 });
 	     });
 		//路由明细
+	     $(document).off("click","#RouterTable_wrapper a.router-name");
 		$(document).on("click","#RouterTable_wrapper a.router-name",function(){
 		    	Common.xhr.ajax('/networking/v2.0/routers/'+$(this).parents("tr:first").data("rowData.dt").id,function(data){
 		    		Common.render('tpls/ccenter/vpc/router/detail.html',data.router,function(html){
@@ -468,6 +469,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 		    	}
 		}
 		//连接子网
+		$(document).off("click","#RouterTable_wrapper a.subnet");
 	    $(document).on("click","#RouterTable_wrapper a.subnet",function(){
 	    	var id = $(this).parents("tr:first").data("rowData.dt").id;
 	    	EditData.GetSubnetList(id);
