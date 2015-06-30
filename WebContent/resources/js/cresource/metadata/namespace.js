@@ -43,6 +43,59 @@ define(['Common','bs/modal','jq/form/wizard','jq/form/validator-bs3','bs/tooltip
         });
 
         var wizard;
+        var renderData;
+
+        //获取资源类型
+        var dataGetter = {
+            //获取资源类型
+            getResourceType:function(){
+                Common.xhr.ajax("/resources/data/resourceType.txt",function(type){
+                    renderData.type = type;
+                });
+            },
+            //获取已经关联的资源类型
+            getChosenResourceType:function(namespace){
+                Common.xhr.ajax("/v2/metadefs/namespaces/"+namespace+"/resource_types",function(relatedType){
+                    renderData.relatedType = relatedType;
+                })
+            }
+
+        }
+        dataGetter.getResourceType();
+        //初始化资源
+        var resourceTypeHandler ={
+            init:function(chosenData,elem){
+                //1.获取所有的资源类型
+                //遍历对象，过滤unchosenList
+                var unChosenList=resourceTypeHandler.refreshUnChosenList(data);
+                require(['js/common/choose'],function(choose){
+                    var options = {
+                        selector: '#'+elem,
+                        allData: unChosenList,
+                        selectData:chosenData
+                    };
+                    choose.initChoose(options);
+                });
+            },
+            //刷新未选择资源的列表，只显示当前资源类型下，还未被选择的资源
+            refreshUnChosenList:function(dataList){
+                var unChosenList=[];
+                $.each(dataList,function(i,item){
+                    var flag = true;
+                    //根据id判断是否已经出现在chosen中
+                    $.each(chosenList,function(i,item0){
+                        if(item0.id == item.id){
+                            flag = false;
+                        }
+                    })
+                    if(flag){
+                        unChosenList.push(item);
+                    }
+                });
+                return unChosenList;
+            }
+        }
+
 
         $("[data-toggle='tooltip']").tooltip();
         //创建按钮
@@ -95,6 +148,7 @@ define(['Common','bs/modal','jq/form/wizard','jq/form/validator-bs3','bs/tooltip
                        });
                    })
                });
+               resourceTypeHandler.init([],"bindResourceType");
                //确认信息卡片被选中的监听
                wizard.cards.bind.on('selected',function(card){
                    //获取上几步中填写的值
