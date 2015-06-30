@@ -54,7 +54,7 @@ define('commons/main',
         showLocalLoading: function($wrapper){
             $wrapper.append('<p class="loading" style="width:100%;text-align:center;line-height:100px;">加载中...</p>');
         },
-        hideLoclLoading: function($wrapper){
+        hideLocalLoading: function($wrapper){
             $wrapper.find('.loading').remove();
         },
         pub: {
@@ -606,7 +606,7 @@ define('commons/main',
                  * 服务器端请求方法
                  * @param request 请求参数，可为字符串，数组、对象等。
                  *                {String} 若为字符串: 作为请求url
-                 *                {Object} 若为对象: 作为请求配置项，必须含有url配置
+                 *                {Object} 若为对象: 作为请求配置项，必须含有url属性
                  *                {Array} 若为数组: 将同时发送多个请求。数组每项配置同以上{String}和{Object}规则，不含有请求地址url的项将被过滤掉
                  * @param success 请求成功后的回调
                  *                若同时发送了多个请求，多个请求的回调将以多个参数形式返回，即 fn{data1, data2, ...}
@@ -663,7 +663,7 @@ define('commons/main',
                             deferreds.push($.ajax(requestConf));
                         });
                         var deferredsHandler = $.when.apply(that, deferreds);
-                        deferredsHandler.then(
+                        return deferredsHandler.then(
                             function() {
                                 var results = [], errors = [];
                                 if(requests.length > 1) {
@@ -688,6 +688,8 @@ define('commons/main',
                                     });
                                     errMsg = errMsg || '服务器端发生未知错误';
                                     resolve("Ajax Error: "+errMsg);
+
+                                    PubView.utils.isFunction(error) && error.apply(that, errors);
                                 } else {
                                     PubView.utils.isFunction(success) && success.apply(that, results);
                                 }
@@ -734,8 +736,8 @@ define('commons/main',
                     return this._createAjax(defaults, arguments);
                 };
                 this.postJSON = function(url, data, success, error) {
+                    var defaults = { 'type': 'POST','contentType': 'application/json' };
                     try {
-                        var defaults = { 'type': 'POST','contentType': 'application/json' };
                         data && !PubView.utils.isFunction(data) && (arguments[1] = JSON.stringify(data));
                         return this._createAjax(defaults, arguments);
                     } catch (e) {
@@ -743,34 +745,17 @@ define('commons/main',
                     }
                 };
                 this.postJSONSync = function(url, data, success, error) {
-                    var _data, _success;
-                    if(PubView.utils.isFunction(data)) {
-                        _success = data;
-                        _data = {};
-                    } else {
-                        _data = data;
-                        _success = success;
-                    }
+                    var defaults = { 'type': 'POST','contentType': 'application/json','async': false };
                     try {
-                        var defaults = { 'type': 'POST','contentType': 'application/json','async': false };
-                        var args = [].concat(arguments);
-                        data && !PubView.utils.isFunction(data) && (args[1] = JSON.stringify(data));
-                        return this._createAjax(defaults, args);
+                        data && !PubView.utils.isFunction(data) && (arguments[1] = JSON.stringify(data));
+                        return this._createAjax(defaults, arguments);
                     } catch (e) {
                         that.error("Ajax postJSONSync Error: data param parse error.");
                     }
                 };
                 this.putJSON = function(url, data, success, error) {
-                    var _data, _success;
-                    if(PubView.utils.isFunction(data)) {
-                        _success = data;
-                        _data = {};
-                    } else {
-                        _data = data;
-                        _success = success;
-                    }
+                    var defaults = { 'type': 'PUT','contentType': 'application/json' };
                     try {
-                        var defaults = { 'type': 'PUT','contentType': 'application/json' };
                         data && !PubView.utils.isFunction(data) && (arguments[1] = JSON.stringify(data));
                         return this._createAjax(defaults, arguments);
                     } catch (e) {
@@ -778,19 +763,10 @@ define('commons/main',
                     }
                 };
                 this.putJSONSync = function(url, data, success, error) {
-                    var _data, _success;
-                    if(PubView.utils.isFunction(data)) {
-                        _success = data;
-                        _data = {};
-                    } else {
-                        _data = data;
-                        _success = success;
-                    }
+                    var defaults = { 'type': 'PUT','contentType': 'application/json','async': false };
                     try {
-                        var defaults = { 'type': 'PUT','contentType': 'application/json','async': false };
-                        var args = [].concat(arguments);
-                        data && !PubView.utils.isFunction(data) && (args[1] = JSON.stringify(data));
-                        return this._createAjax(defaults, args);
+                        data && !PubView.utils.isFunction(data) && (arguments[1] = JSON.stringify(data));
+                        return this._createAjax(defaults, arguments);
                     } catch (e) {
                         that.error("Ajax putJSONSync Error: data param parse error.");
                     }
@@ -1121,6 +1097,15 @@ define('commons/main',
                 Modal.error(e.message || "发生了未知错误");
             }
             console.error(e);
+        },
+        on: function(type,selector,cb){
+        	if(type && selector && typeof cb === 'function'){
+        		if(selector instanceof jQuery){
+        			selector = selector.selector;
+        		}
+        		$(document).off(selector);
+        		$(document).on(type,selector,cb);
+        	}
         }
     };
 });

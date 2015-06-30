@@ -1,24 +1,13 @@
 define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3'],function(Common,Modal){
 	Common.requestCSS('css/wizard.css');
 	var current_vdc_id = Common.cookies.getVdcId();
+	var current_user_id = Common.cookies.getUid();
+	var default_vdc_id = Common.cookies.getUser().defaultVdcId;
 	var init = function(){
 		Common.$pageContent.addClass("loading");
 		//先获取数据，进行加工后再去render
 		Common.render(true,{
 			tpl:'tpls/ccenter/vm/list.html',
-//			data:'/'+current_vdc_id+'/servers/page/1/10',
-//			beforeRender: function(data){
-//				var vms = data.result
-//	    		for(var i=0;i<vms.length;i++){
-//	    			if(vms[i]['fixedIps']!=null){//ip 换行显示
-//	    				vms[i]['fixedIps'] = vms[i]['fixedIps'].replace(new RegExp(/(,)/g),'<br>')
-//	    			}
-//	    			if(vms[i]['floatingIps']!=null){//ip 换行显示
-//	    				vms[i]['floatingIps'] = vms[i]['floatingIps'].replace(new RegExp(/(,)/g),'<br>')
-//	    			}
-//	    		}
-//				return vms;
-//			},
 			callback: bindEvent
 		});
 	};
@@ -215,8 +204,13 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 				//vdc列表,获取完vdc列表后，需要去加载可用域的数据以及可用网络的数据和安全组的数据
 				getVdc:function(){
 					//管理员和普通租户的逻辑在此判断
-					Common.xhr.ajax('/identity/v2.0/tenants',function(vdcDatas){
-						renderData.vdcList = vdcDatas.tenants;
+					Common.xhr.ajax('/identity/v2.0/users/tenants/'+current_user_id,function(vdcDatas){
+						for(var i=0;i<vdcDatas.length;i++){
+							if(vdcDatas[i]["id"]==default_vdc_id){
+								vdcDatas[i]["selected"]=true;
+							}
+						}
+						renderData.vdcList = vdcDatas;
 					});
 				},
 				//虚机规格
@@ -462,19 +456,16 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 			},
 			//密钥对
 			initKeyPairs: function(){
-				var vdc_id = currentChosenObj.vdc || $('select.tenant_id').children('option:selected').val();
-				if(vdc_id){
-					Common.xhr.ajax("/compute/v2/"+vdc_id+'/os-keypairs',function(keypairs){
-						var keypairData = []
-						for(var i=0;i<keypairs.length;i++){
-							keypairData[i] = {value:keypairs[i].name};
+				Common.xhr.ajax("/compute/v2/"+current_vdc_id+'/os-keypairs',function(keypairs){
+					var keypairData = []
+					if(keypairs&&keypairs["keypair"]){
+						for(var i=0;i<keypairs["keypair"].length;i++){
+							keypairData[i] = {value:keypairs["keypair"][i].name};
 						}
-						var html = Common.uiSelect(keypairData);
-				    	$('select.keypairs').html(html);
-					});
-				}else{
-					Modal.error('尚未选择所属vdc');
-				}
+					}
+					var html = Common.uiSelect(keypairData);
+			    	$('select.keypairs').html(html);
+				});
 			},
 			//外部网络
 			initExtNetwork: function(serverId){
@@ -591,6 +582,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 				    	DataIniter.initQuatos();//重新加载配额数据
 				    	DataIniter.initAvailableNetWorks();//重新获取可用网络数据
 				    	DataIniter.initKeyPairs();//加载可用密钥对
+				    	DataIniter.initSecurityGroup();
     				});
 				},
 				//规格change
@@ -661,7 +653,27 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 							wizard.enableNextButton();
 						}
 					})
-				}
+				},
+				//表单校验
+				snapshotFormValidator: function(){
+					return $(".form-horizontal").validate({
+			            rules: {
+			            	'name': {
+			            		required: true,
+			                    minlength: 4,
+			                    maxlength:255
+			                },
+			                'imageRef':{
+			                	required: true,
+			                    minlength: 1,
+			                    ignore: ""
+			                },
+			                'public_key':{
+			                	required: true
+			                }
+			            }
+			        });
+				},
 		};
 		
 		//重置CurrentChosenObj对象
@@ -706,8 +718,10 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
     			});
     			//加载时载入validate
     			wizard.on('show',function(){
+    				$('input[id="name"]').focus();
     				wizard.form.each(function(){
     					$(this).validate({
+    						ignore: "",
                             errorContainer: '_form',
                             rules: {
     			            	'name': {
@@ -723,6 +737,13 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
     			            }
     					});
     				})
+    			});
+    			
+    			//云主机名称 聚焦
+    			wizard.cards.basic.on('selected',function(card){
+    				setTimeout(function(){
+    					$('input[id="name"]').focus();
+    				},500)
     			});
     			
     			var getSecruityGroup = function(){
@@ -746,15 +767,14 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
     					$('.network-confirm').text("网络："+network_uuid+"            IP:"+fixedIp)
     				});
     				var sgGroupStr = ""
-    				$('div.security-group').find('.icheckbox-info').each(function(){
-    					if($(this).hasClass('checked')){
-    						if(sgGroupStr==""){
-    							sgGroupStr = $(this).parent().attr('data-id');
-    						}else{
-    							sgGroupStr = sgGroupStr+ "," + $(this).parent().attr('data-id');
-    						}
+    				var sgGroup = getSecruityGroup();
+    				for(var i=0;i<sgGroup.length;i++){
+    					if(sgGroupStr==""){
+    						sgGroupStr = sgGroup[i]["name"];
+    					}else{
+    						sgGroupStr = sgGroupStr + "," + sgGroup[i]["name"];
     					}
-    				});
+    				}
     				$('.name-confirm').text(serverData.name);
     				$('.image-confirm').text(serverData.imageRef);
     				$('.vdc-confirm').text(serverData.tenant_id);
@@ -832,6 +852,10 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
     					wizard.updateProgressBar(100);
     					closeWizard();
     					Common.router.reload();
+    				},
+    				function(data){
+						wizard._submitting = true;
+						wizard.updateProgressBar(0);
     				})
     			});
 
@@ -1306,7 +1330,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
     	                }
     	            }],
     	            onshown : function(dialog){
-//    	            	dialog.setData("formvalid",EventsHandler.formValidator());
+    	            	dialog.setData("formvalid",EventsHandler.snapshotFormValidator());
     	            }
     	        });
 	    	});
