@@ -340,6 +340,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 	    	});
 	    })
 	    //删除子网
+	    $(document).off("click","#SubnetTable_wrapper a.deleteSubnet");
 	     $(document).on("click","#SubnetTable_wrapper a.deleteSubnet",function(){
 	    	 var id = $(this).parents("tr:first").data("rowData.dt").id;
 	    	 Dialog.confirm('确定要删除该子网吗?', function(result){

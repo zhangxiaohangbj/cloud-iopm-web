@@ -110,8 +110,22 @@ define('commons/pub_menu', function() {
                     link: '#vmtype/'
                 },
                 {
-                    text: '<i class="fa fa-database"></i>磁盘管理',
+                    text: '<i class="fa fa-hdd-o"></i>磁盘管理',
                     link: '#block/'
+                },
+                {
+                    text: '<i class="fa fa-camera"></i>快照管理<i class="fa icon-arrow"></i>',
+                    link: '',
+                    items: [
+                        {
+                            text: '磁盘快照',
+                            link: '#snapshot/volume'
+                        },
+                        {
+                            text: '主机快照',
+                            link: '#snapshot/vm'
+                        }
+                    ]
                 },
                 {
                     text: '<i class="fa fa-cube"></i>镜像管理',

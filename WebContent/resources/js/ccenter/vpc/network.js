@@ -241,6 +241,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 			});
 		});
 		//删除子网
+		$(document).off("click","#networkTable_wrapper a.btn-delete");
 		$(document).on("click","#networkTable_wrapper a.btn-delete",function(){
 			var rowData = $(this).parents("tr:first").data("rowData.dt");
 	    	 var id = rowData.id;
