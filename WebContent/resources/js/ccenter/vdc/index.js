@@ -37,8 +37,10 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 		       * aoData：请求参数，其中包含search 输入框中的值
 		       * */
 		      "fnServerData": function( sSource, aoData, fnCallback ) {
+		    	  debugger;
+		    	  var url = sSource + (aoData[3].value/aoData[4].value+1) +"/"+aoData[4].value
 		    	    $.ajax( {   
-		    	        "url": sSource + (aoData[3].value/aoData[4].value+1) +"/"+aoData[4].value, 
+		    	        "url": url, 
 		    	        "data":aoData,
 		    	        "dataType": "json",   
 		    	        "success": function(resp) {
@@ -90,6 +92,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 					},
                      {
                        "targets": [4],
+                       "orderable": false,
                        "data": {id:"id",name:"name",virtualEnvId:"virtualEnvId"},
                        "render": function(data, type, full) {
                     	  // debugger;
@@ -709,7 +712,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 		    	//配额管理
 		    	QuotaSets : function(id){
 		    		//先获取QuotaSets后，再render
-		    		Common.xhr.ajax('/identity/v2.0/'+Common.cookies.getVdcId()+'/os-quota-sets/' + id,function(data){
+		    		Common.xhr.ajax('/compute/v2/'+Common.cookies.getVdcId()+'/os-quota-sets/' + id,function(data){
 		    			Common.render('tpls/ccenter/vdc/quota.html',data.quota_set,function(html){
 		    				Modal.show({
 			    	            title: '配额',
@@ -723,7 +726,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 			    	                	var serverData = {
 				    	            			"quota_set":jsonData.quotaSetsJson("#vdcQuota")
 			    	        				};
-			    	                	Common.xhr.putJSON('/identity/v2.0/'+Common.cookies.getVdcId()+'/os-quota-sets/'+id,serverData,function(data){
+			    	                	Common.xhr.putJSON('/compute/v2/'+Common.cookies.getVdcId()+'/os-quota-sets/'+id,serverData,function(data){
 			    	                		if(data){
 					                    		 Modal.success('保存成功')
 				 	                			 setTimeout(function(){Modal.closeAll()},2000);
