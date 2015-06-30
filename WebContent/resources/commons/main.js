@@ -54,7 +54,7 @@ define('commons/main',
         showLocalLoading: function($wrapper){
             $wrapper.append('<p class="loading" style="width:100%;text-align:center;line-height:100px;">加载中...</p>');
         },
-        hideLoclLoading: function($wrapper){
+        hideLocalLoading: function($wrapper){
             $wrapper.find('.loading').remove();
         },
         pub: {
@@ -663,7 +663,7 @@ define('commons/main',
                             deferreds.push($.ajax(requestConf));
                         });
                         var deferredsHandler = $.when.apply(that, deferreds);
-                        deferredsHandler.then(
+                        return deferredsHandler.then(
                             function() {
                                 var results = [], errors = [];
                                 if(requests.length > 1) {
@@ -736,8 +736,8 @@ define('commons/main',
                     return this._createAjax(defaults, arguments);
                 };
                 this.postJSON = function(url, data, success, error) {
+                    var defaults = { 'type': 'POST','contentType': 'application/json' };
                     try {
-                        var defaults = { 'type': 'POST','contentType': 'application/json' };
                         data && !PubView.utils.isFunction(data) && (arguments[1] = JSON.stringify(data));
                         return this._createAjax(defaults, arguments);
                     } catch (e) {
@@ -745,16 +745,8 @@ define('commons/main',
                     }
                 };
                 this.postJSONSync = function(url, data, success, error) {
-                    var _data, _success;
-                    if(PubView.utils.isFunction(data)) {
-                        _success = data;
-                        _data = {};
-                    } else {
-                        _data = data;
-                        _success = success;
-                    }
+                    var defaults = { 'type': 'POST','contentType': 'application/json','async': false };
                     try {
-                        var defaults = { 'type': 'POST','contentType': 'application/json','async': false };
                         data && !PubView.utils.isFunction(data) && (arguments[1] = JSON.stringify(data));
                         return this._createAjax(defaults, arguments);
                     } catch (e) {
@@ -762,16 +754,8 @@ define('commons/main',
                     }
                 };
                 this.putJSON = function(url, data, success, error) {
-                    var _data, _success;
-                    if(PubView.utils.isFunction(data)) {
-                        _success = data;
-                        _data = {};
-                    } else {
-                        _data = data;
-                        _success = success;
-                    }
+                    var defaults = { 'type': 'PUT','contentType': 'application/json' };
                     try {
-                        var defaults = { 'type': 'PUT','contentType': 'application/json' };
                         data && !PubView.utils.isFunction(data) && (arguments[1] = JSON.stringify(data));
                         return this._createAjax(defaults, arguments);
                     } catch (e) {
@@ -779,16 +763,8 @@ define('commons/main',
                     }
                 };
                 this.putJSONSync = function(url, data, success, error) {
-                    var _data, _success;
-                    if(PubView.utils.isFunction(data)) {
-                        _success = data;
-                        _data = {};
-                    } else {
-                        _data = data;
-                        _success = success;
-                    }
+                    var defaults = { 'type': 'PUT','contentType': 'application/json','async': false };
                     try {
-                        var defaults = { 'type': 'PUT','contentType': 'application/json','async': false };
                         data && !PubView.utils.isFunction(data) && (arguments[1] = JSON.stringify(data));
                         return this._createAjax(defaults, arguments);
                     } catch (e) {
@@ -1121,6 +1097,15 @@ define('commons/main',
                 Modal.error(e.message || "发生了未知错误");
             }
             console.error(e);
+        },
+        on: function(type,selector,cb){
+        	if(type && selector && typeof cb === 'function'){
+        		if(selector instanceof jQuery){
+        			selector = selector.selector;
+        		}
+        		$(document).off(selector);
+        		$(document).on(type,selector,cb);
+        	}
         }
     };
 });
