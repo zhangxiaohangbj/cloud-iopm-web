@@ -50,7 +50,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 				});
 			}else if('monitor' == data){
 				require(['echarts','echarts/chart/line'],function (ec) {
-						Common.hideLoclLoading($tab);
+						Common.hideLocalLoading($tab);
 	                    //--- 折柱 ---
 	                    var myChart = ec.init($tab.find('.monitor-request-read')[0]);
 	                    var options = {
@@ -127,7 +127,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 	                }
 		        );
 			}
-			Common.hideLoclLoading($tab);
+			Common.hideLocalLoading($tab);
 		}
 		
 	}
