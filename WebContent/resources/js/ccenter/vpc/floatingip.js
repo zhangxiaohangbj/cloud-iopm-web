@@ -3,13 +3,57 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 	var init = function(){
 		Common.$pageContent.addClass("loading");
 		//先获取数据，进行加工后再去render
-		Common.render(true,'tpls/ccenter/vpc/floatingip/list.html','/networking/v2.0/floatingips',function(){
+		Common.render(true,'tpls/ccenter/vpc/floatingip/list.html',function(){
 			bindEvent();
 		});
 	};
 	
 	var bindEvent = function(){
-		Common.initDataTable($('#floatingipTable'),function($tar){
+		Common.initDataTable($('#floatingipTable'),{
+		      "processing": true,  //加载效果，默认false
+		      "serverSide": true,  //页面在加载时就请求后台，以及每次对 datatable 进行操作时也是请求后台
+		      "ordering": false,   //禁用所有排序
+		      "sAjaxSource":"networking/v2.0/floatingips/page/", //ajax源，后端提供的分页接口
+		      "fnServerData": function( sSource, aoData, fnCallback ) {
+		    	    $.ajax( {   
+		    	        "url": sSource + (aoData[3].value/aoData[4].value+1) +"/"+aoData[4].value, 
+		    	        "data":aoData,
+		    	        "dataType": "json",   
+		    	        "success": function(resp) {
+		    	        	resp.data = resp.result;
+		    	        	resp.recordsTotal = resp.totalCount;
+		    	        	resp.recordsFiltered = resp.totalCount;
+		    	            fnCallback(resp);   //fnCallback：服务器返回数据后的处理函数，需要按DataTables期望的格式传入返回数据 
+		    	        }   
+		    	    });   
+		      },
+		      "columns": [
+			        {
+			        	"orderable": false,
+			        	"defaultContent":"<label><input type='checkbox'></label>"
+			        },
+			        {"data": "floating_ip_address"},
+			        {"data": "floating_network_id"},
+			        {"data": "tenant_id"},
+			        {"data": "router_id"},
+			        {"data": "fixed_ip_address"},
+			        {"data": "status"},
+			        {
+			        	"defaultContent":'<a class="btn-edit" data-toggle="tooltip" title="解除绑定" href="javascript:void(0)" data-act="stop"><li class="glyphicon glyphicon-edit"></li></a>'
+							+'<a class="btn-delete" data-toggle="tooltip" title="释放浮动IP" href="javascript:void(0)" style="margin: 0 8px;"><i class="fa fa-trash-o fa-fw"></i></a>'
+			        }
+		      ],
+		      "columnDefs": [
+					{
+					    "targets": [6],
+					    "render": function(data, type, full) {
+					    	if(data == "ACTIVE") return "运行中";
+					    	else return "停止";
+					    }
+					}
+                ]
+		    },
+			function($tar){
 			$tar.prev().find('.left-col:first').append(
 					'<span class="btn btn-add">创 建</span>'
 				);
@@ -27,7 +71,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 		var DataIniter = {
 				//vdc列表
 				initVdcList : function(){
-					Common.xhr.ajax('/v2.0/tenants',function(data){
+					Common.xhr.ajax('/identity/v2.0/tenants',function(data){
 						var tenants = data.tenants;			
 						var html = Common.uiSelect(tenants);
 				    	$('select.tenant_id').html(html);
@@ -127,8 +171,9 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 		}
 
 		//解除绑定
-		$("#floatingipTable_wrapper a.btn-edit").on("click",function(){
-	    	 var id = $(this).attr("data")
+		$(document).off("click","#floatingipTable_wrapper a.btn-edit");
+		$(document).on("click","#floatingipTable_wrapper a.btn-edit",function(){
+	    	 var id = $(this).parents("tr:first").data("rowData.dt").id;
 	    	 Dialog.confirm('确定要解除绑定吗?', function(result){
 	             if(result) {
 	            	 var data = {"floatingip":{"id":id}};
@@ -149,8 +194,9 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 	         });
 		});
 		//删除floatingip
-		$("#floatingipTable_wrapper a.btn-delete").on("click",function(){
-	    	 var id = $(this).attr("data")
+		$(document).off("click","#floatingipTable_wrapper a.btn-delete");
+		$(document).on("click","#floatingipTable_wrapper a.btn-delete",function(){
+			 var id = $(this).parents("tr:first").data("rowData.dt").id;
 	    	 Dialog.confirm('确定要删除浮动IP吗?', function(result){
 	             if(result) {
 	            	 var data = {"floatingip":{"id":id}};
@@ -171,7 +217,8 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 	         });
 		});
 		//增加按钮
-		$("#floatingipTable_wrapper span.btn-add").on("click",function(){
+		$(document).off("click","#floatingipTable_wrapper span.btn-add");
+		$(document).on("click","#floatingipTable_wrapper span.btn-add",function(){
 	    	//需要修改为真实数据源
 			Common.render('tpls/ccenter/vpc/floatingip/add.html','',function(html){
 				Dialog.show({
