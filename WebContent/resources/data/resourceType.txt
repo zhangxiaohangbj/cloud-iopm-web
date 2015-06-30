@@ -1,18 +1,21 @@
 [
 	{
-		"name" : "计算服务器",
-		"type":"physicalHost",
+		"id":"1",
+		"description" : "计算服务器",
+		"name":"physicalHost",
 		"link":"/resources/data/env.txt"
 	},
 	{
-		"name" : "存储设备",
-		"type":"storage",
+		"id":"2",
+		"description" : "存储设备",
+		"name":"storage",
         "link":"/resources/data/arrays.txt"
 
 	},
 	{
-		"name" : "网络设备",
-		"type":"network",
+		"id":"3",
+		"description" : "网络设备",
+		"name":"network",
         "link":"/resources/data/networks.txt"
 	}
 ]
