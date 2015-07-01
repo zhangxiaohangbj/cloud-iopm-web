@@ -1,117 +1,85 @@
-<div class="page-header clearfix">
-	<ol class="breadcrumb">
-	  <li class="active"><h4>云主机概况</h4></li>
+<div class="page-header">
+	<ol class="breadcrumb minus">
+		<li class="active"><h4>云主机概况</h4></li>
 	</ol>
 </div>
 <div class="page-body">
 	<div class="pane">
 		<div class="pane-content">
-			<form class="form-horizontal" id="editVmDetail">
-				<div class="wizard-card-content none-desc col-sm-12">
-					<div class="wizard-input-section">
-					<p>基本信息</p><hr>
-						<div class="form-group">
+			<div class="detail-info">
+				<div class="tab-content">
+					<div class="clearfix">
+						<p>基本信息</p>
+						<hr>
+						<div class="row">
 							<label class="control-label col-sm-3">名称：</label>
-						 	<div class="col-sm-3 col-sm">
-								<input type="text" class="form-control" value="{{server.name}}" readonly="true">
-							</div>							
+							<div class="col-sm-7 col-sm">{{server.name}}</div>
 						</div>
-						<div class="form-group">
+						<div class="row">
 							<label class="control-label col-sm-3">ID：</label>
-						 	<div class="col-sm-3 col-sm">
-								<input type="text" class="form-control" value="{{server.id}}" readonly="true">
-							</div>							
+							<div class="col-sm-7 col-sm">{{server.id}}</div>
 						</div>
-						<div class="form-group">
+						<div class="row">
 							<label class="control-label col-sm-3">状态：</label>
-						 	<div class="col-sm-3 col-sm">
-								<input type="text" class="form-control" value="{{server.vmState}}" readonly="true">
-							</div>							
+							<div class="col-sm-7 col-sm">
+								{{server.vmState}}</div>
 						</div>
-						<div class="form-group">
+						<div class="row">
 							<label class="control-label col-sm-3">可用域：</label>
-						 	<div class="col-sm-3 col-sm">
-								<input type="text" class="form-control" value="{{server.availability_zone}}" readonly="true">
-							</div>							
+							<div class="col-sm-7 col-sm">{{server.availability_zone}}</div>
 						</div>
-						<div class="form-group">
+						<div class="row">
 							<label class="control-label col-sm-3">镜像：</label>
-						 	<div class="col-sm-3 col-sm">
-								<input type="text" class="form-control" value="{{server.imageRef}}" readonly="true">
-							</div>
+							<div class="col-sm-7 col-sm">{{server.imageRef}}</div>
 						</div>
-					<p>规格</p><hr>	
-						<div class="form-group">
+						<p>规格</p><hr> 
+						<div class="row">
 							<label class="control-label col-sm-3">云主机类型：</label>
-						 	<div class="col-sm-3 col-sm">
-								<input type="text" class="form-control" value="{{server.flavor.name}}" readonly="true">
-							</div>
+							<div class="col-sm-7 col-sm">{{server.flavor.name}}</div>
 						</div>
-						<div class="form-group">
+						<div class="row">
 							<label class="control-label col-sm-3">云主机类型ID：</label>
-						 	<div class="col-sm-3 col-sm">
-								<input type="text" class="form-control" value="{{server.flavor.id}}" readonly="true">
-							</div>
+							<div class="col-sm-7 col-sm">{{server.flavor.id}}</div>
 						</div>
-						<div class="form-group">
+						<div class="row">
 							<label class="control-label col-sm-3">内存：</label>
-						 	<div class="col-sm-3 col-sm">
-								<input type="text" class="form-control" value="{{server.flavor.memoryMb}}MB" readonly="true">
+							<div class="col-sm-7 col-sm">{{server.flavor.memoryMb}}MB
 							</div>
 						</div>
-						<div class="form-group">
+						<div class="row">
 							<label class="control-label col-sm-3">虚拟内核数：</label>
-						 	<div class="col-sm-3 col-sm">
-								<input type="text" class="form-control" value="{{server.flavor.vcpus}}虚拟内核" readonly="true">
-							</div>
-						</div>												
-						<div class="form-group">
-							<label class="control-label col-sm-3">磁盘：</label>
-						 	<div class="col-sm-3 col-sm">
-								<input type="text" class="form-control" value="{{server.flavor.rootGb}}GB" readonly="true">
-							</div>
-						</div>												
-					<p>IP</p><hr>	
-						<div class="form-group">
-							<label class="control-label col-sm-3">静态IP:</label>
-						 	<div class="col-sm-3 col-sm">
-								<input type="text" class="form-control" value="{{server.fixedIps}}" readonly="true">
-							</div>
+							<div class="col-sm-7 col-sm">{{server.flavor.vcpus}}虚拟内核</div>
 						</div>
-						<div class="form-group">
-							<label class="control-label col-sm-3">动态IP:</label>
-						 	<div class="col-sm-3 col-sm">
-								<input type="text" class="form-control" value="{{server.floatingIps}}" readonly="true">
-							</div>
-						</div>
-					<p>安全组</p><hr>		
-					{{each server.security_groups as item i}}
-						<div class="form-group">
-						 	<div class="col-sm-3 col-sm">
-								<input type="text" class="form-control" value="{{item.name}}" readonly="true">
-							</div>
-						</div>
-					{{/each}}				
-					<p>元数据</p><hr>	
-					{{each server.metadata as item i}}
-						<div class="form-group">
-						 	<div class="col-sm-3 col-sm">
-								<input type="text" class="form-control" value="{{item.key}}" readonly="true">
-							</div>
-						 	<div class="col-sm-3 col-sm">
-								<input type="text" class="form-control" value="{{item.value}}" readonly="true">
-							</div>							
-						</div>
-					{{/each}}	
+						<div class="row">
+                            <label class="control-label col-sm-3">磁盘：</label>
+                            <div class="col-sm-7 col-sm">{{server.flavor.rootGb}}GB</div>
+                        </div>
+                        <p>IP</p><hr>   
+                        <div class="row">
+                            <label class="control-label col-sm-3">静态IP:</label>
+                            <div class="col-sm-7 col-sm">{{server.fixedIps}}</div>
+                        </div>
+                        <div class="row">
+                            <label class="control-label col-sm-3">动态IP:</label>
+                            <div class="col-sm-7 col-sm">{{server.floatingIps}}</div>
+                        </div>
+                        <p>安全组</p><hr>
+                        {{each server.security_groups as item i}}      
+                        <div class="row">
+                            <label class="control-label col-sm-3">{{item.name}}:</label>
+                            <div class="col-sm-7 col-sm"></div>
+                        </div>
+                        {{/each}}
+                        <p>元数据</p><hr>  
+                        {{each server.metadata as item i}}
+                        <div class="row">
+                            <label class="control-label col-sm-3">{{item.key}}</label>
+                            <div class="col-sm-7 col-sm">{{item.value}}</div>
+                        </div>
+                        {{/each}}   
 					</div>
-				</div>						
-				<div class="form-group">
-					<label for="server-name" class="control-label col-sm-3"></label>
-				 	<div class="col-sm-5 col-sm">
-						<a href="javascript:void(0);" class="btn btn-default reload">返回</a>
-					</div>
-				</div>			
-			</form>
+				</div>
+			</div>
 		</div>
 	</div>
-</div>			
+</div>
