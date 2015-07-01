@@ -40,27 +40,27 @@ define('commons/pub_menu', function() {
                     link:'#device',
                     items: [
                         {
-                            text: '<i class="fa fa-cloud"></i>服务器',
+                            text: '<i class="fa fa-circle fa-1"></i>服务器',
                             link: '#vdc'
                         },
                         {
-                            text: '<i class="fa fa-cloud"></i>存储设备',
+                            text: '<i class="fa fa-circle fa-1"></i>存储设备',
                             link: '#vdc'
                         },
                         {
-                            text: '<i class="fa fa-cloud"></i>交换机',
+                            text: '<i class="fa fa-circle fa-1"></i>交换机',
                             link: '#vdc'
                         },
                         {
-                            text: '<i class="fa fa-cloud"></i>防火墙',
+                            text: '<i class="fa fa-circle fa-1"></i>防火墙',
                             link: '#vdc'
                         },
                         {
-                            text: '<i class="fa fa-cloud"></i>负载均衡设备',
+                            text: '<i class="fa fa-circle fa-1"></i>负载均衡设备',
                             link: '#vdc'
                         },
                         {
-                            text: '<i class="fa fa-cloud"></i>路由器',
+                            text: '<i class="fa fa-circle fa-1"></i>路由器',
                             link: '#vdc'
                         },
                     ]
@@ -118,11 +118,11 @@ define('commons/pub_menu', function() {
                     link: '',
                     items: [
                         {
-                            text: '磁盘快照',
+                            text: '<i class="fa fa-circle fa-1"></i>磁盘快照',
                             link: '#snapshot/volume'
                         },
                         {
-                            text: '主机快照',
+                            text: '<i class="fa fa-circle fa-1"></i>主机快照',
                             link: '#snapshot/vm'
                         }
                     ]
@@ -135,19 +135,19 @@ define('commons/pub_menu', function() {
                     text: '<i class="fa fa-vimeo-square"></i>VPC管理<i class="fa icon-arrow"></i>',
                     items: [
                         {
-                            text: '网络管理',
+                            text: '<i class="fa fa-circle fa-1"></i>网络管理',
                             link: '#vpc/network'
                         },
                         {
-                            text: '子网管理',
+                            text: '<i class="fa fa-circle fa-1"></i>子网管理',
                             link: '#vpc/subnet'
                         },
                         {
-                            text: '路由器管理',
+                            text: '<i class="fa fa-circle fa-1"></i>路由器管理',
                             link: '#vpc/router'
                         },
                         {
-                            text: '浮动IP管理',
+                            text: '<i class="fa fa-circle fa-1"></i>浮动IP管理',
                             link: '#vpc/floatingip'
                         }
                     ]
@@ -156,20 +156,16 @@ define('commons/pub_menu', function() {
                     text: '<i class="fa fa-th-large"></i>安全管理<i class="fa icon-arrow"></i>',
                     items: [
                         {
-                            text: 'ACLs',
-                            link: '#security/acls'
-                        },
-                        {
-                            text: '安全组',
+                            text: '<i class="fa fa-circle fa-1"></i>安全组',
                             link: '#security/securitygroup'
                         },
                         {
-                            text: '密钥对',
+                            text: '<i class="fa fa-circle fa-1"></i>密钥对',
                             link: '#security/keypair'
                         },
                         {
-                            text: '防火墙',
-                            link: '#'
+                            text: '<i class="fa fa-circle fa-1"></i>防火墙',
+                            link: '#security/firewall'
                         }
                     ]
                 },
@@ -178,26 +174,26 @@ define('commons/pub_menu', function() {
                     link: '',
                     items: [
                         {
-                            text: 'VPN网关',
+                            text: '<i class="fa fa-circle fa-1"></i>VPN网关',
                             link: '#vpn/vpn'
                         },
                         {
-                            text: 'VPN链接',
+                            text: '<i class="fa fa-circle fa-1"></i>VPN链接',
                             link: '#network/vpn'
                         }
                     ]
                 },
                 {
-                    text: '<i class="fa fa-list-alt"></i>配额设置<i class="fa icon-arrow"></i>',
+                    text: '<i class="fa fa-1ist-alt"></i>配额设置<i class="fa icon-arrow"></i>',
                     link: '',
                     items: [
                         {
-                            text: 'VDC配额',
-                            link: '#'
+                            text: '<i class="fa fa-circle fa-1"></i>VDC配额',
+                            link: '#quota/'
                         },
                         {
-                            text: 'VPC配额',
-                            link: '#'
+                            text: '<i class="fa fa-circle fa-1"></i>VPC配额',
+                            link: 'security/'
                         }
                     ]
                 }
@@ -211,11 +207,11 @@ define('commons/pub_menu', function() {
                     text: '<i class="fa fa-puzzle-piece"></i>弹性云主机ECS<i class="fa icon-arrow"></i>',
                     items: [
                         {
-                            text: '防火墙',
+                            text: '<i class="fa fa-circle fa-1"></i>防火墙',
                             link: '#firewall'
                         },
                         {
-                            text: 'SSH密钥',
+                            text: '<i class="fa fa-circle fa-1"></i>SSH密钥',
                             link: '#sshkey'
                         }
                     ]
@@ -224,11 +220,11 @@ define('commons/pub_menu', function() {
                     text: '<i class="fa fa-puzzle-piece"></i>Docker容器DCS<i class="fa icon-arrow"></i>',
                     items: [
                         {
-                            text: '防火墙',
+                            text: '<i class="fa fa-circle fa-1"></i>防火墙',
                             link: '#firewall'
                         },
                         {
-                            text: 'SSH密钥',
+                            text: '<i class="fa fa-circle fa-1"></i>SSH密钥',
                             link: '#sshkey'
                         }
                     ]
@@ -237,11 +233,11 @@ define('commons/pub_menu', function() {
                     text: '<i class="fa fa-cloud"></i>数据库RDS<i class="fa icon-arrow"></i>',
                     items: [
                         {
-                            text: '关系型数据库',
+                            text: '<i class="fa fa-circle fa-1"></i>关系型数据库',
                             link: '#db'
                         },
                         {
-                            text: '缓存',
+                            text: '<i class="fa fa-circle fa-1"></i>缓存',
                             link: '#cache'
                         }
                     ]
@@ -250,11 +246,11 @@ define('commons/pub_menu', function() {
                     text: '<i class="fa fa-cloud"></i>大数据处理EMR<i class="fa icon-arrow"></i>',
                     items: [
                         {
-                            text: '关系型数据库',
+                            text: '<i class="fa fa-circle fa-1"></i>关系型数据库',
                             link: '#db'
                         },
                         {
-                            text: '缓存',
+                            text: '<i class="fa fa-circle fa-1"></i>缓存',
                             link: '#cache'
                         }
                     ]
@@ -263,11 +259,11 @@ define('commons/pub_menu', function() {
                     text: '<i class="fa fa-cloud"></i>云存储OSS<i class="fa icon-arrow"></i>',
                     items: [
                         {
-                            text: '关系型数据库',
+                            text: '<i class="fa fa-circle fa-1"></i>关系型数据库',
                             link: '#db'
                         },
                         {
-                            text: '缓存',
+                            text: '<i class="fa fa-circle fa-1"></i>缓存',
                             link: '#cache'
                         }
                     ]
@@ -276,15 +272,15 @@ define('commons/pub_menu', function() {
                     text: '<i class="fa fa-cogs"></i>云应用引擎CAE<i class="fa icon-arrow"></i>',
                     items: [
                         {
-                            text: '硬盘',
+                            text: '<i class="fa fa-circle fa-1"></i>硬盘',
                             link: '#volumes'
                         },
                         {
-                            text: 'vitural SAN',
+                            text: '<i class="fa fa-circle fa-1"></i>vitural SAN',
                             link: '#vsans'
                         },
                         {
-                            text: '快照',
+                            text: '<i class="fa fa-circle fa-1"></i>快照',
                             link: '#snapshots'
                         }
                     ]
@@ -293,11 +289,11 @@ define('commons/pub_menu', function() {
                     text: '<i class="fa fa-cloud"></i>负载均衡LBS<i class="fa icon-arrow"></i>',
                     items: [
                         {
-                            text: '关系型数据库',
+                            text: '<i class="fa fa-circle fa-1"></i>关系型数据库',
                             link: '#db'
                         },
                         {
-                            text: '缓存',
+                            text: '<i class="fa fa-circle fa-1"></i>缓存',
                             link: '#cache'
                         }
                     ]
@@ -312,15 +308,15 @@ define('commons/pub_menu', function() {
                     text: '<i class="fa fa-puzzle-piece"></i>任务调度<i class="fa icon-arrow"></i>',
                     items: [
                         {
-                            text: '任务管理',
+                            text: '<i class="fa fa-circle fa-1"></i>任务管理',
                             link: '#task/task'
                         },
                         {
-                            text: '策略管理',
+                            text: '<i class="fa fa-circle fa-1"></i>策略管理',
                             link: '#task/strategy'
                         },
                         {
-                            text: '执行日志',
+                            text: '<i class="fa fa-circle fa-1"></i>执行日志',
                             link: '#task/monitor'
                         },
                         /*{
@@ -328,7 +324,7 @@ define('commons/pub_menu', function() {
                          link: '#task/taskGroup'
                          },*/
                         {
-                            text: '策略分组',
+                            text: '<i class="fa fa-circle fa-1"></i>策略分组',
                             link: '#task/strategyGroup'
                         }
                     ]
