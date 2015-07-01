@@ -269,8 +269,8 @@ define('commons/pub_menu', function() {
                     ]
                 },
                 {
-                    text: '<i class="fa fa-cogs"></i>云应用引擎CAE<i class="fa icon-arrow"></i>',
-                    items: [
+                    text: '<i class="fa fa-cogs"></i>云应用引擎CAE',
+                    /*items: [
                         {
                             text: '<i class="fa fa-circle fa-1"></i>硬盘',
                             link: '#volumes'
@@ -283,7 +283,8 @@ define('commons/pub_menu', function() {
                             text: '<i class="fa fa-circle fa-1"></i>快照',
                             link: '#snapshots'
                         }
-                    ]
+                    ]*/
+                    link: '#cae/'
                 },
                 {
                     text: '<i class="fa fa-random"></i>负载均衡LBS<i class="fa icon-arrow"></i>',
