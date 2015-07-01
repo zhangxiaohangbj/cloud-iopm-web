@@ -5,7 +5,7 @@ define(['Common','bs/modal','jq/form/validator-bs3'],function(Common,Modal){
 		//先获取数据，进行加工后再去render
 		Common.render(true,{
 			tpl:'tpls/sysmanagement/url/list.html',
-			data:'/v2.0/subnets/page/1/10',  //需修改接口
+			data:'/networking/v2.0/subnets/page/1/10',  //需修改接口
 			beforeRender: function(data){
 				return data.result;
 			},
@@ -49,7 +49,7 @@ define(['Common','bs/modal','jq/form/validator-bs3'],function(Common,Modal){
 						var endpoint_id = obj.prev().val();
 						Common.render({
 							tpl:'tpls/sysmanagement/url/endpointlist.html',
-							data:'/v2.0/tenants',    //需修改接口
+							data:'/identity/v2.0/tenants',    //需修改接口
 							beforeRender: function(data){
 								data.endpoint_id = endpoint_id;
 								return data;
@@ -99,7 +99,7 @@ define(['Common','bs/modal','jq/form/validator-bs3'],function(Common,Modal){
     	                	var valid = $(".form-horizontal").valid();
     	            		if(!valid) return false;
     	                	var serverData = $(".form-horizontal").serializeArray();
-    	                	Common.xhr.postJSON('/v2.0/OS-KSADM/roles',serverData,function(data){  //需修改接口
+    	                	Common.xhr.postJSON('/identity/v2.0/OS-KSADM/roles',serverData,function(data){  //需修改接口
     	                		if(data){
     	                			Modal.success('保存成功')
     	                			setTimeout(function(){Modal.closeAll()},2000);
@@ -125,7 +125,7 @@ define(['Common','bs/modal','jq/form/validator-bs3'],function(Common,Modal){
 		//编辑
 	    $("#URLTable_wrapper a.btn-edit").on("click",function(){
 	    	var id= $(this).attr("data");
-	    	Common.xhr.ajax('/v2.0/subnets/'+id,function(data){  //需修改接口
+	    	Common.xhr.ajax('/networking/v2.0/subnets/'+id,function(data){  //需修改接口
 	    		data={
 	    				"url_name":"添加用户",
 	    				"url_address":"/sys/menuItemAdd",
