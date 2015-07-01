@@ -420,15 +420,18 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
     			//创建提交数据
     			wizard.on("submit", function(wizard) {
     				var postData={
-        					"name": $(" [name='name']").val(),
-        					"password": $(" [name='password']").val(),
-        					"status": $(" [name='status']").val(),
-        					"phone": $(" [name='phone']").val(),
-        					"email": $( " [name='email']").val(),
-        					"trueName": $( " [name='trueName']").val(),
-        					"organId": $( " [name='organId']").val()
-            				};
-    				postData.userRoleList = jsonData.authorityJson("#authorityInfo");
+    						"user":{
+	        					"name": $(" [name='name']").val(),
+	        					"OS-KSADM:password": $(" [name='password']").val(),
+	        					"status": $(" [name='status']").val(),
+	        					"phone": $(" [name='phone']").val(),
+	        					"email": $( " [name='email']").val(),
+	        					"trueName": $( " [name='trueName']").val(),
+	        					"organId": $( " [name='organId']").val(),
+	        					"enabled":true
+	            				}
+    				};
+    				postData.user.userRoleList = jsonData.authorityJson("#authorityInfo");
     				Common.xhr.postJSON('/identity/v2.0/users',postData,function(data){
     					wizard._submitting = false;
     					wizard.updateProgressBar(100);
