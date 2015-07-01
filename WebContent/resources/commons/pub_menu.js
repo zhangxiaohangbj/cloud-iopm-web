@@ -103,7 +103,7 @@ define('commons/pub_menu', function() {
                 },
                 {
                     text: '<i class="fa fa-server"></i>云主机管理',
-                    link: '#vm/'
+                    link: '#vm'
                 },
                 {
                     text: '<i class="fa fa-tachometer"></i>云主机类型管理',
@@ -272,16 +272,20 @@ define('commons/pub_menu', function() {
                     text: '<i class="fa fa-cogs"></i>云应用引擎CAE<i class="fa icon-arrow"></i>',
                     items: [
                         {
-                            text: '<i class="fa fa-circle fa-1"></i>硬盘',
-                            link: '#volumes'
+                            text: '<i class="fa fa-circle fa-1"></i>应用管理',
+                            link: '#cae/app'
                         },
                         {
-                            text: '<i class="fa fa-circle fa-1"></i>vitural SAN',
-                            link: '#vsans'
+                            text: '<i class="fa fa-circle fa-1"></i>镜像管理',
+                            link: '#cae/image'
                         },
                         {
-                            text: '<i class="fa fa-circle fa-1"></i>快照',
-                            link: '#snapshots'
+                            text: '<i class="fa fa-circle fa-1"></i>监控管理',
+                            link: '#cae/monitor'
+                        },
+                        {
+                            text: '<i class="fa fa-circle fa-1"></i>伸缩管理',
+                            link: '#cae/scaling'
                         }
                     ]
                 },

@@ -42,7 +42,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 		      },
 	    	  /*属性 columns 用来配置具体列的属性，包括对应的数据列名,如trueName，是否支持搜索，是否显示，是否支持排序等*/
 		      "columns": [
-			        {"data": "",
+			        {
 			        	"orderable": false,
 			        	"defaultContent":"<label><input type='checkbox'></label>"
 			        },
@@ -50,7 +50,12 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 			        {"data": "trueName"},
 			        {"data": "phone"},
 			        {"data": "email"},
-			        {"data": "status"}
+			        {"data": "status"},
+			        {
+			        	"defaultContent":'<a class="btn-edit" data-toggle="tooltip" title="编辑" href="javascript:void(0)" data-act="stop"><li class="glyphicon glyphicon-edit"></li></a>'
+						+'<a class="btn-delete" data-toggle="tooltip" title="删除" href="javascript:void(0)" style="margin: 0 8px;"><i class="fa fa-trash-o fa-fw"></i></a>'
+						+'<a class="btn-edit-role" data-toggle="tooltip" title="权限设置" href="javascript:void(0)" style="margin: 0 8px;">权限设置</a>'
+			        }
 		      ],
 		      /*
 		       * columnDefs 属性操作自定义列
@@ -70,16 +75,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 					    	if(data == "disabled") return "已禁用";
 					    	if(data == "reset_pwd") return "密码重置";
 					    }
-					},
-                     {
-                       "targets": [6],
-                       "data": "id",
-                       "render": function(data, type, full) {
-                         return '<a class="btn-edit" data-toggle="tooltip" title="编辑" href="javascript:void(0)" data="'+data+'" data-act="stop" style="margin: 0 8px;"><li class="glyphicon glyphicon-edit"></li></a>'
-							+'<a class="btn-delete" data-toggle="tooltip" title="删除" href="javascript:void(0)" data="'+data+'" style="margin: 0 8px;"><i class="fa fa-trash-o fa-fw"></i></a>'
-							+'<a class="btn-edit-role" data-toggle="tooltip" title="权限设置" href="javascript:void(0)" data="'+data+'" style="margin: 0 8px;">权限设置</a>';
-                       }
-                     }
+					}
                 ]
 		    },
 		    function($tar){
@@ -88,6 +84,9 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 				);
 			Common.$pageContent.removeClass("loading");
 		});
+		$.validator.addMethod("phone_rule",function(value,element){
+			return this.optional(element) || /^13[0-9]{9}$|15[0-9]{9}$|18[0-9]{9}$/.test(value);
+		},"请填写正确的手机号");
 		//载入后的事件
 		var EventsHandler = {
 			//选择部门
@@ -272,7 +271,8 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 		                },
 		                'password': {
 		                    required: true,
-		                    maxlength:50
+		                    maxlength:50,
+		                    minlength:6
 		                },
 		                'password_again': {
 		                    required: true,
@@ -280,7 +280,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 		                    equalTo:'#password'
 		                },
 		                'phone': {
-		                    maxlength:50
+		                	phone_rule:true
 		                },
 		                'email': {
 		                	email:true,
@@ -490,7 +490,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 			//删除用户
 			$(document).off("click","#UserTable_wrapper a.btn-delete");
 			$(document).on("click","#UserTable_wrapper a.btn-delete",function(){
-				 var id = $(this).attr("data");
+				 var id = $(this).parents("tr:first").data("rowData.dt").id;
 		    	 Modal.confirm('确定要删除该用户吗?', function(result){
 		             if(result) {
 		            	 Common.xhr.del('/identity/v2.0/users/'+id,
@@ -511,7 +511,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 			//权限设置
 			$(document).off("click","a.btn-edit-role");
 			$(document).on("click","a.btn-edit-role",function(){
-				var id= $(this).attr("data");
+				var id = $(this).parents("tr:first").data("rowData.dt").id;
 		    	Common.xhr.ajax('/identity/v2.0/users/tenants/'+id,function(data){  //需修改接口
 		    		Common.render('tpls/sysmanagement/user/editrole.html',data,function(html){
 		    			Modal.show({
