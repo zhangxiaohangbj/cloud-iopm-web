@@ -1,6 +1,7 @@
 <div class="page-header">
 	<ol class="breadcrumb minus">
 		<li class="active"><h4>云主机概况</h4></li>
+		<li class="backlist"><a href="#ccenter/vm/">返回列表</a></li>
 	</ol>
 </div>
 <div class="page-body">
@@ -21,8 +22,7 @@
 						</div>
 						<div class="row">
 							<label class="control-label col-sm-3">状态：</label>
-							<div class="col-sm-7 col-sm">
-								{{server.vmState}}</div>
+							<div class="col-sm-7 col-sm">{{server.vmState}}</div>
 						</div>
 						<div class="row">
 							<label class="control-label col-sm-3">可用域：</label>
@@ -32,7 +32,8 @@
 							<label class="control-label col-sm-3">镜像：</label>
 							<div class="col-sm-7 col-sm">{{server.imageRef}}</div>
 						</div>
-						<p>规格</p><hr> 
+						<p>规格</p>
+						<hr>
 						<div class="row">
 							<label class="control-label col-sm-3">云主机类型：</label>
 							<div class="col-sm-7 col-sm">{{server.flavor.name}}</div>
@@ -43,40 +44,44 @@
 						</div>
 						<div class="row">
 							<label class="control-label col-sm-3">内存：</label>
-							<div class="col-sm-7 col-sm">{{server.flavor.memoryMb}}MB
-							</div>
+							<div class="col-sm-7 col-sm">{{server.flavor.memoryMb}}MB</div>
 						</div>
 						<div class="row">
 							<label class="control-label col-sm-3">虚拟内核数：</label>
 							<div class="col-sm-7 col-sm">{{server.flavor.vcpus}}虚拟内核</div>
 						</div>
 						<div class="row">
-                            <label class="control-label col-sm-3">磁盘：</label>
-                            <div class="col-sm-7 col-sm">{{server.flavor.rootGb}}GB</div>
-                        </div>
-                        <p>IP</p><hr>   
-                        <div class="row">
-                            <label class="control-label col-sm-3">静态IP:</label>
-                            <div class="col-sm-7 col-sm">{{server.fixedIps}}</div>
-                        </div>
-                        <div class="row">
-                            <label class="control-label col-sm-3">动态IP:</label>
-                            <div class="col-sm-7 col-sm">{{server.floatingIps}}</div>
-                        </div>
-                        <p>安全组</p><hr>
-                        {{each server.security_groups as item i}}      
-                        <div class="row">
-                            <label class="control-label col-sm-3">{{item.name}}:</label>
-                            <div class="col-sm-7 col-sm"></div>
-                        </div>
-                        {{/each}}
-                        <p>元数据</p><hr>  
-                        {{each server.metadata as item i}}
-                        <div class="row">
-                            <label class="control-label col-sm-3">{{item.key}}</label>
-                            <div class="col-sm-7 col-sm">{{item.value}}</div>
-                        </div>
-                        {{/each}}   
+							<label class="control-label col-sm-3">磁盘：</label>
+							<div class="col-sm-7 col-sm">{{server.flavor.rootGb}}GB</div>
+						</div>
+						<p>IP</p>
+						<hr>
+						<div class="row">
+							<label class="control-label col-sm-3">静态IP:</label>
+							<div class="col-sm-7 col-sm">{{server.fixedIps}}</div>
+						</div>
+						<div class="row">
+							<label class="control-label col-sm-3">动态IP:</label>
+							<div class="col-sm-7 col-sm">{{server.floatingIps}}</div>
+						</div>
+						<p>安全组</p>
+						<hr>
+						{{each server.security_groups as item i}}
+						<div class="row">
+							<label class="control-label col-sm-3">{{item.name}}:</label>
+							{{each item.security_group_rules as item_rules j}}
+							<div class="col-sm-7 col-sm">允许</div>
+							{{/each}}
+						</div>
+						{{/each}}
+						<p>元数据</p>
+						<hr>
+						{{each server.metadata as item i}}
+						<div class="row">
+							<label class="control-label col-sm-3">{{item.key}}</label>
+							<div class="col-sm-7 col-sm">{{item.value}}</div>
+						</div>
+						{{/each}}
 					</div>
 				</div>
 			</div>

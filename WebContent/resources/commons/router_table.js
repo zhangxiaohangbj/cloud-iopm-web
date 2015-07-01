@@ -14,6 +14,7 @@ define('commons/router_table', function() {
         '^#ccenter/vmtype/metadataList/(.*)$' :"js/ccenter/vmtype/metadata",
         '^#ccenter/block/detail/(.*)$' :"js/ccenter/block/detail",
         '^#ccenter/snapshot/detail/(.*)$' :"js/ccenter/snapshot/detail",
-        '^#ccenter/vdc/usage/(.*)$' :"js/ccenter/vdc/usage"
+        '^#ccenter/vdc/usage/(.*)$' :"js/ccenter/vdc/usage",
+        '^#ccenter/vm/detail/(.*)/(.*)$' :"js/ccenter/vm/detail"
     };
 });

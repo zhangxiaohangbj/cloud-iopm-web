@@ -103,7 +103,7 @@ define('commons/pub_menu', function() {
                 },
                 {
                     text: '<i class="fa fa-tachometer"></i>云主机管理',
-                    link: '#vm'
+                    link: '#vm/'
                 },
                 {
                     text: '<i class="fa fa-tachometer"></i>云主机类型管理',
