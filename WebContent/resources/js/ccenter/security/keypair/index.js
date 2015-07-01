@@ -202,20 +202,6 @@ define(['Common','bs/modal','bs/wizard','bs/tooltip','jq/form/validator-bs3'],fu
 	    	
 		});
 		
-		//密钥对详情
-		$("#KeypairTable_wrapper a.keypair-name").on("click",function(){
-	    	var id = $(this).attr("data");
-			//需要修改为真实数据源	
-			Common.render(true,'tpls/ccenter/security/keypair/detail.html','/compute/v2/'+current_vdc_id+'/os-keypairs/'+id,function(data){	
-//				alert("Value: " + JSON.stringify(data));
-				$("a.reload").on("click",function(){
-    		    	Common.router.route();
-    		  });
-			});
-			
-	    	
-		});
-		
 		//单条记录删除
 		$("#KeypairTable_wrapper a.keypair-del").on("click",function(){
 			var id = $(this).attr("data");

@@ -75,7 +75,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 					{
 					    "targets": [1],
 					    "render": function(data, type, full) {
-					      return '<a href="#ccenter/vm/detail/'+data.tenant_id+'/'+data.id+'" class="vm_name" data="'+data.id+'">'+data.name+"</a>";
+					      return '<a href="#ccenter/vm/detail/'+data.id+'" class="vm_name" data="'+data.id+'">'+data.name+"</a>";
 					    }
 					},					
 					{

@@ -161,7 +161,7 @@ define('commons/pub_menu', function() {
                         },
                         {
                             text: '<i class="fa fa-circle fa-1"></i>密钥对',
-                            link: '#security/keypair'
+                            link: '#security/keypair/'
                         },
                         {
                             text: '<i class="fa fa-circle fa-1"></i>防火墙',

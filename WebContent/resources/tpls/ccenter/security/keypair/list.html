@@ -1,6 +1,6 @@
 <div class="page-header clearfix">
     <ol class="breadcrumb">
-      <li class="active">密钥对</li>
+      <li class="active">密钥对{{vdcId}}</li>
     </ol>
 </div>
 <div class="page-body">
@@ -18,10 +18,10 @@
                     </tr>
                 </thead>
                 <tbody class="table-body">
-                {{each keypairs as item}}
+                {{each keypairs as item i}}
                     <tr>
                         <td><label><input type="checkbox" myval="{{item.keypair.id}}"></label></td>
-                        <td><a href="javascript:void(0);" class="keypair-name" data="{{item.keypair.id}}">{{item.keypair.name}}</td>
+                        <td><a href="#ccenter/security/keypair/detail/{{item.keypair.id}}" class="keypair-name" data="{{item.keypair.id}}">{{item.keypair.name}}</td>
                         <td>{{item.keypair.fingerprint}}</td>
                         <td>                        
                         <a class="btn-opt keypair-del" data-toggle="tooltip" title="删除密钥对" data="{{item.keypair.id}}" style="margin: 0;"><i class="fa fa-trash-o fa-fw"></i></a>
