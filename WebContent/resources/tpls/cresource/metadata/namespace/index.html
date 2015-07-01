@@ -3,7 +3,7 @@
         <li class="active">命名空间列表</li>
     </ol>
     <p class="description">
-        命名空间，是元数据的分组信息。
+        命名空间，是元数据中的分组。
     </p>
 </div>
 <div class="page-body">
@@ -15,23 +15,23 @@
                     <th class="c1"><label><input type="checkbox"></label></th>
                     <th class="c2">名称</th>
                     <th class="c2">展示名称</th>
+                    <th class="c2">可见性</th>
                     <th class="c2">描述</th>
-                    <th class="c2">创建者</th>
-                    <th class="c3 sorting_disabled" >操作</th>
+                    <th class="c2 sorting_disabled" >操作</th>
                 </tr>
                 </thead>
                 <tbody>
                 {{each namespace as item i}}
                 <tr>
                     <td><label><input type="checkbox"></label></td>
-                    <td>{{item.namespace}}</td>
+                    <td><a class="namespace-name" href="#cresource/metadata/namespace/detail/{{item.namespace}}">{{item.namespace}}</a></td>
                     <td>{{item.display_name}}</td>
+                    <td>{{item.visibility}}</td>
                     <td>{{item.description}}</td>
-                    <td>admin</td>
                     <td>
-                        <a class="btn-opt pull-left bind" data-toggle="tooltip" data-act="edit" style="margin: 0 5px;" data="{{item.namespace}}">绑定资源类型</a>
-                        <a class="btn-opt pull-left edit" data-toggle="tooltip" data-act="delete" style="margin: 0 5px;" data="{{item.namespace}}">修改</a>
-                        <a class="btn-opt pull-left delete" data-toggle="tooltip" data-act="delete" style="margin: 0 5px;" data="{{item.namespace}}">删除</a>
+                        <a class="btn-opt pull-left bind" data-toggle="tooltip" data-act="edit" title="绑定资源类型" style="margin: 0 5px;" data="{{item.namespace}}"><i class="fa fa-files-o"></i></a>
+                        <a class="btn-opt pull-left edit" data-toggle="tooltip" data-act="delete" title="修改" style="margin: 0 5px;" data="{{item.id}}"><i class="fa fa-files-o"></i></a>
+                        <a class="btn-opt pull-left delete" data-toggle="tooltip" data-act="delete" title="删除" style="margin: 0 5px;" data="{{item.id}}"><i class="fa fa-files-o"></i></a>
                     </td>
                 </tr>
                 {{/each}}

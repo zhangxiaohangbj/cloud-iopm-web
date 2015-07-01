@@ -110,8 +110,22 @@ define('commons/pub_menu', function() {
                     link: '#vmtype/'
                 },
                 {
-                    text: '<i class="fa fa-database"></i>磁盘管理',
+                    text: '<i class="fa fa-hdd-o"></i>磁盘管理',
                     link: '#block/'
+                },
+                {
+                    text: '<i class="fa fa-camera"></i>快照管理<i class="fa icon-arrow"></i>',
+                    link: '',
+                    items: [
+                        {
+                            text: '磁盘快照',
+                            link: '#snapshot/volume'
+                        },
+                        {
+                            text: '主机快照',
+                            link: '#snapshot/vm'
+                        }
+                    ]
                 },
                 {
                     text: '<i class="fa fa-cube"></i>镜像管理',
@@ -198,7 +212,7 @@ define('commons/pub_menu', function() {
             current: [1,1],
             items: [
                 {
-                    text: '<i class="fa fa-puzzle-piece"></i>云安全<i class="fa icon-arrow"></i>',
+                    text: '<i class="fa fa-puzzle-piece"></i>弹性云主机ECS<i class="fa icon-arrow"></i>',
                     items: [
                         {
                             text: '防火墙',
@@ -211,7 +225,20 @@ define('commons/pub_menu', function() {
                     ]
                 },
                 {
-                    text: '<i class="fa fa-cloud"></i>数据库<i class="fa icon-arrow"></i>',
+                    text: '<i class="fa fa-puzzle-piece"></i>Docker容器DCS<i class="fa icon-arrow"></i>',
+                    items: [
+                        {
+                            text: '防火墙',
+                            link: '#firewall'
+                        },
+                        {
+                            text: 'SSH密钥',
+                            link: '#sshkey'
+                        }
+                    ]
+                },
+                {
+                    text: '<i class="fa fa-cloud"></i>数据库RDS<i class="fa icon-arrow"></i>',
                     items: [
                         {
                             text: '关系型数据库',
@@ -224,7 +251,33 @@ define('commons/pub_menu', function() {
                     ]
                 },
                 {
-                    text: '<i class="fa fa-cogs"></i>云存储<i class="fa icon-arrow"></i>',
+                    text: '<i class="fa fa-cloud"></i>大数据处理EMR<i class="fa icon-arrow"></i>',
+                    items: [
+                        {
+                            text: '关系型数据库',
+                            link: '#db'
+                        },
+                        {
+                            text: '缓存',
+                            link: '#cache'
+                        }
+                    ]
+                },
+                {
+                    text: '<i class="fa fa-cloud"></i>云存储OSS<i class="fa icon-arrow"></i>',
+                    items: [
+                        {
+                            text: '关系型数据库',
+                            link: '#db'
+                        },
+                        {
+                            text: '缓存',
+                            link: '#cache'
+                        }
+                    ]
+                },
+                {
+                    text: '<i class="fa fa-cogs"></i>云应用引擎CAE<i class="fa icon-arrow"></i>',
                     items: [
                         {
                             text: '硬盘',
@@ -237,6 +290,19 @@ define('commons/pub_menu', function() {
                         {
                             text: '快照',
                             link: '#snapshots'
+                        }
+                    ]
+                },
+                {
+                    text: '<i class="fa fa-cloud"></i>负载均衡LBS<i class="fa icon-arrow"></i>',
+                    items: [
+                        {
+                            text: '关系型数据库',
+                            link: '#db'
+                        },
+                        {
+                            text: '缓存',
+                            link: '#cache'
                         }
                     ]
                 }
