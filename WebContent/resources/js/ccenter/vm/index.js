@@ -75,7 +75,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 					{
 					    "targets": [1],
 					    "render": function(data, type, full) {
-					      return '<a href="javascript:void(0);" class="vm_name" data="'+data.id+'">'+data.name+"</a>";
+					      return '<a href="#ccenter/vm/detail/'+data.tenant_id+'/'+data.id+'" class="vm_name" data="'+data.id+'">'+data.name+"</a>";
 					    }
 					},					
 					{
@@ -1011,17 +1011,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
                 });	    		
 	    	}
 	    };
-		//明细
-		$(document).off("click","#VmTable_wrapper a.vm_name");
-	    $(document).on("click","#VmTable_wrapper a.vm_name",function(){	    
-	    	var id = $(this).attr("data");
-	    	Common.requestCSS('css/detail.css');
-	    	Common.render(true,'tpls/ccenter/vm/detail.html',"/compute/v2/"+currentChosenObj.vdc+'/servers/'+id,function(html){
-					 $("a.reload").on("click",function(){
-		    		    	Common.router.route();
-		    		  });
-	    	});
-	    })
+
 	    //修改云主机名称
 		$(document).off("click","#VmTable_wrapper a.editName");
 	    $(document).on("click","#VmTable_wrapper a.editName",function(){	  	    
