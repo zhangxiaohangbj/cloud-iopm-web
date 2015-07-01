@@ -32,10 +32,10 @@
 						<td>{{item.vdcName}}</td>
 						<td>{{item.imageType}}</td>
 						<td>{{item.status}}</td>
-						<td>{{item.isPublic}}</td>
-						<td>{{item.isProtected}}</td>
+						<td>{{if item.isPublic}} 是{{else}} 否 {{/if}}</td>
+						<td>{{if item.isProtected}} 是{{else}} 否 {{/if}}</td>
 						<td>{{item.diskFormat}}</td>
-						<td>{{item.createdAt}}</td>
+						<td>{{item.created_at}}</td>
 						<td>
 						<a class="btn-opt" data-toggle="tooltip" title="编辑镜像" href="javascript:void(0)" data="{{item.id}}" data-act="stop" style="margin: 0;"><li class="glyphicon glyphicon-edit"></li></a>
 						<div class="dropdown">

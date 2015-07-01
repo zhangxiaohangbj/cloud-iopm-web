@@ -1,35 +1,20 @@
-<form class="form-horizontal" id="editImage" enctype="multipart/form-data" method="post">
+<form class="form-horizontal" id="editImage">
 	<div class="form-group">
 		<label for="name" class="control-label col-sm-4"><span style="color: red;">* </span>名称：</label>
 	 	<div class="col-sm-5 col-sm">
-			<input type="text" class="form-control" name="name">
+			<input type="text" class="form-control" name="name" value="{{name}}">
 		</div>
 	</div>
 	<div class="form-group">
 		<label for="description" class="control-label col-sm-4">描述：</label>
 	 	<div class="col-sm-5 col-sm">
-			<textarea class="form-control" style="height:auto;" rows="4" name="description" placeholder=""></textarea>
+			<textarea class="form-control" style="height:auto;" rows="4" name="description" placeholder="">{{properties.description}}</textarea>
 		</div>
 	</div>
-	<div class="form-group" id="imageSourceDiv">
-		<label for="imageSource" class="control-label col-sm-4"><span style="color: red;"></span>镜像源：</label>
-	 	<div class="col-sm-5 col-sm">
-		 	<select class="form-control select" id="imageSource" name="imageSource" value="file">
-			 	<option value="file" selected>镜像文件</option>
-			 	<option value="address">镜像地址</option>
-		 	</select>
-		</div>
-	</div>
-	<div class="form-group hidden" id="locationsDiv">
+	<div class="form-group" id="locationsDiv">
 		<label for="locations" class="control-label col-sm-4"><span style="color: red;">* </span>镜像地址：</label>
 	 	<div class="col-sm-5 col-sm">
-			<input type="text" class="form-control" name="locations">
-		</div>
-	</div>
-	<div class="form-group" id="fileDiv">
-		<label for="file" class="control-label col-sm-4"><span style="color: red;">* </span>镜像文件：</label>
-	 	<div class="col-sm-5 col-sm">
-			<input type="file" class="form-control" name="file" >
+			<input type="text" class="form-control" name="locations" value="{{locations}}" readonly>
 		</div>
 	</div>
 	<div class="form-group">
@@ -53,7 +38,7 @@
 		<label for="strategyGroupId" class="control-label col-sm-4"><span style="color: red;">* </span>最小磁盘(GB)：</label>
 	 	<div class="col-sm-5 col-sm">
 		 	<div class="spinbox"  id="setMinDisk">
-			  <input type="text" name="minDisk" style="height:35px;"  class="form-control input-mini spinbox-input">
+			  <input type="text" name="minDisk" style="height:35px;"  class="form-control input-mini spinbox-input" value="{{minDisk}}">
 			  <div class="spinbox-buttons btn-group btn-group-vertical">
 			    <button type="button" class="btn btn-default spinbox-up btn-xs">
 			      <span class="glyphicon glyphicon-chevron-up"></span><span class="sr-only">Increase</span>
@@ -69,7 +54,7 @@
 		<label for="strategyGroupId" class="control-label col-sm-4"><span style="color: red;">* </span>最小内存(MB)：</label>
 	 	<div class="col-sm-5 col-sm">
 		 	<div class="spinbox"  id="setMinRam">
-			  <input type="text" name="minRam" style="height:35px;"  class="form-control input-mini spinbox-input">
+			  <input type="text" name="minRam" style="height:35px;"  class="form-control input-mini spinbox-input" value="{{minRam}}">
 			  <div class="spinbox-buttons btn-group btn-group-vertical">
 			    <button type="button" class="btn btn-default spinbox-up btn-xs">
 			      <span class="glyphicon glyphicon-chevron-up"></span><span class="sr-only">Increase</span>
@@ -84,11 +69,9 @@
 	<div class="form-group">
 		<label for="className" class="control-label col-sm-4"><span style="color: red;"></span></label>
 	 	<div class="col-sm-5 col-sm">
-			公有：<input type="checkbox" id="isPublic_checkbox">
-			<input type="hidden" name="isPublic" id="isPublic" value="0">
+			公有：<input type="checkbox" name="isPublic" id="isPublic" {{if isPublic==true}} checked {{/if}}>
 			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-			受保护的：<input type="checkbox" id="isProtected_checkbox">
-			<input type="hidden" name="isProtected" id="isProtected" value="0">
+			受保护的：<input type="checkbox" name="isProtected" id="isProtected" {{if isProtected==true}} checked {{/if}}>
 		</div>
 	</div>
 </form>
