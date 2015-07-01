@@ -9,16 +9,20 @@ define('commons/pub_menu', function() {
             link: '#'
         },
         {
-            text: '基础环境',
-            link: '#cresource'
-        },
-        {
             text: '云中心',
             link: '#ccenter'
         },
         {
-            text: '云服务',
-            link: '#cservice'
+            text: '基础服务',
+            link: '#fservice'
+        },
+        {
+            text: '应用服务',
+            link: '#aservice'
+        },
+        {
+            text: '大数据服务',
+            link: '#bservice'
         },
         {
             text: '监控与调度',
@@ -32,7 +36,7 @@ define('commons/pub_menu', function() {
     var sideBarItems = [
         null,
         {
-            title: '<i class="fa fa-soundcloud fa-fw"></i>基础环境',
+            title: '<i class="fa fa-soundcloud fa-fw"></i>云中心',
             current: [3],
             items:[
                 {
@@ -78,6 +82,10 @@ define('commons/pub_menu', function() {
                     link: '#zone'
                 },
                 {
+                    text: '<i class="fa fa-cloud"></i>虚拟数据中心',
+                    link: '#vdc/'
+                },
+                {
                     text: '<i class="fa fa-medium"></i>元数据<i class="fa icon-arrow"></i>',
                     link: '',
                     items:[
@@ -90,24 +98,43 @@ define('commons/pub_menu', function() {
                             link: '#metadata/tag'
                         }
                     ]
-                }
-            ]
-        },
-        {
-            title: '<i class="fa fa-codepen fa-fw"></i>云中心',
-            current: [2],
-            items: [
-                {
-                    text: '<i class="fa fa-cloud"></i>虚拟数据中心',
-                    link: '#vdc/'
-                },
-                {
-                    text: '<i class="fa fa-server"></i>云主机管理',
-                    link: '#vm'
                 },
                 {
                     text: '<i class="fa fa-tachometer"></i>云主机类型管理',
                     link: '#vmtype/'
+                },
+                {
+                    text: '<i class="fa fa-suitcase"></i>配额设置<i class="fa icon-arrow"></i>',
+                    link: '',
+                    items: [
+                        {
+                            text: '<i class="fa fa-circle fa-1"></i>VDC配额',
+                            link: '#quota/'
+                        },
+                        {
+                            text: '<i class="fa fa-circle fa-1"></i>VPC配额',
+                            link: '#security/'
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            title: '<i class="fa fa-codepen fa-fw"></i>基础服务',
+            current: [2],
+            items: [
+                {
+                    text: '<i class="fa fa-server"></i>弹性云主机ECS<i class="fa icon-arrow"></i>',
+                    items: [
+                        {
+                            text: '<i class="fa fa-circle fa-1"></i>云主机管理',
+                            link: '#vm'
+                        },
+                        {
+                            text: '<i class="fa fa-circle fa-1"></i>弹性伸缩组管理',
+                            link: '#sshkey'
+                        }
+                    ]
                 },
                 {
                     text: '<i class="fa fa-hdd-o"></i>磁盘管理',
@@ -184,92 +211,57 @@ define('commons/pub_menu', function() {
                     ]
                 },
                 {
-                    text: '<i class="fa fa-suitcase"></i>配额设置<i class="fa icon-arrow"></i>',
+                    text: '<i class="fa fa-random"></i>负载均衡LBS<i class="fa icon-arrow"></i>',
                     link: '',
                     items: [
                         {
-                            text: '<i class="fa fa-circle fa-1"></i>VDC配额',
-                            link: '#quota/'
+                            text: '<i class="fa fa-circle fa-1"></i>关系型数据库',
+                            link: '#db'
                         },
                         {
-                            text: '<i class="fa fa-circle fa-1"></i>VPC配额',
-                            link: '#security/'
+                            text: '<i class="fa fa-circle fa-1"></i>缓存',
+                            link: '#cache'
                         }
                     ]
                 }
             ]
         },
         {
-            title: '<i class="fa fa-jsfiddle fa-fw"></i>云服务',
+            title: '<i class="fa fa-jsfiddle fa-fw"></i>应用服务',
             current: [1,1],
             items: [
+				{
+				    text: '<i class="fa fa-database"></i>数据库RDS<i class="fa icon-arrow"></i>',
+				    items: [
+				        {
+				            text: '<i class="fa fa-circle fa-1"></i>关系型数据库',
+				            link: '#db'
+				        },
+				        {
+				            text: '<i class="fa fa-circle fa-1"></i>缓存',
+				            link: '#cache'
+				        }
+				    ]
+				},
                 {
-                    text: '<i class="fa fa-server"></i>弹性云主机ECS<i class="fa icon-arrow"></i>',
+                    text: '<i class="fa fa-archive"></i>Docker容器<i class="fa icon-arrow"></i>',
                     items: [
                         {
-                            text: '<i class="fa fa-circle fa-1"></i>防火墙',
-                            link: '#firewall'
+                            text: '<i class="fa fa-circle fa-1"></i>容器集群',
+                            link: '#container/'
                         },
                         {
-                            text: '<i class="fa fa-circle fa-1"></i>SSH密钥',
-                            link: '#sshkey'
+                            text: '<i class="fa fa-circle fa-1"></i>容器规格模板',
+                            link: '#container/'
+                        },
+                        {
+                            text: '<i class="fa fa-circle fa-1"></i>镜像管理',
+                            link: '#container/'
                         }
                     ]
                 },
                 {
-                    text: '<i class="fa fa-archive"></i>Docker容器DCS<i class="fa icon-arrow"></i>',
-                    items: [
-                        {
-                            text: '<i class="fa fa-circle fa-1"></i>防火墙',
-                            link: '#firewall'
-                        },
-                        {
-                            text: '<i class="fa fa-circle fa-1"></i>SSH密钥',
-                            link: '#sshkey'
-                        }
-                    ]
-                },
-                {
-                    text: '<i class="fa fa-database"></i>数据库RDS<i class="fa icon-arrow"></i>',
-                    items: [
-                        {
-                            text: '<i class="fa fa-circle fa-1"></i>关系型数据库',
-                            link: '#db'
-                        },
-                        {
-                            text: '<i class="fa fa-circle fa-1"></i>缓存',
-                            link: '#cache'
-                        }
-                    ]
-                },
-                {
-                    text: '<i class="fa fa-th"></i>大数据处理EMR<i class="fa icon-arrow"></i>',
-                    items: [
-                        {
-                            text: '<i class="fa fa-circle fa-1"></i>关系型数据库',
-                            link: '#db'
-                        },
-                        {
-                            text: '<i class="fa fa-circle fa-1"></i>缓存',
-                            link: '#cache'
-                        }
-                    ]
-                },
-                {
-                    text: '<i class="fa fa-cloud-upload"></i>云存储OSS<i class="fa icon-arrow"></i>',
-                    items: [
-                        {
-                            text: '<i class="fa fa-circle fa-1"></i>关系型数据库',
-                            link: '#db'
-                        },
-                        {
-                            text: '<i class="fa fa-circle fa-1"></i>缓存',
-                            link: '#cache'
-                        }
-                    ]
-                },
-                {
-                    text: '<i class="fa fa-cogs"></i>云应用引擎CAE<i class="fa icon-arrow"></i>',
+                    text: '<i class="fa fa-cogs"></i>云应用引擎<i class="fa icon-arrow"></i>',
                     items: [
                         {
                             text: '<i class="fa fa-circle fa-1"></i>应用管理',
@@ -290,7 +282,90 @@ define('commons/pub_menu', function() {
                     ]
                 },
                 {
-                    text: '<i class="fa fa-random"></i>负载均衡LBS<i class="fa icon-arrow"></i>',
+                    text: '<i class="fa fa-cogs"></i>消息队列管理<i class="fa icon-arrow"></i>',
+                    items: [
+                        {
+                            text: '<i class="fa fa-circle fa-1"></i>应用管理',
+                            link: '#cae/app'
+                        },
+                        {
+                            text: '<i class="fa fa-circle fa-1"></i>镜像管理',
+                            link: '#cae/image'
+                        }
+                    ]
+                },
+                {
+                    text: '<i class="fa fa-cogs"></i>缓存服务管理<i class="fa icon-arrow"></i>',
+                    items: [
+                        {
+                            text: '<i class="fa fa-circle fa-1"></i>应用管理',
+                            link: '#cae/app'
+                        },
+                        {
+                            text: '<i class="fa fa-circle fa-1"></i>镜像管理',
+                            link: '#cae/image'
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            title: '<i class="fa fa-jsfiddle fa-fw"></i>大数据服务',
+            current: [1,1],
+            items: [
+                {
+                    text: '<i class="fa fa-database"></i>NoSQL数据库存储<i class="fa icon-arrow"></i>',
+                    items: [
+                        {
+                            text: '<i class="fa fa-circle fa-1"></i>关系型数据库',
+                            link: '#db'
+                        },
+                        {
+                            text: '<i class="fa fa-circle fa-1"></i>缓存',
+                            link: '#cache'
+                        }
+                    ]
+                },
+                {
+                    text: '<i class="fa fa-th"></i>大数据处理<i class="fa icon-arrow"></i>',
+                    items: [
+                        {
+                            text: '<i class="fa fa-circle fa-1"></i>集群管理',
+                            link: '#emr/'
+                        },
+                        {
+                            text: '<i class="fa fa-circle fa-1"></i>任务管理',
+                            link: '#emr/'
+                        },
+                        {
+                            text: '<i class="fa fa-circle fa-1"></i>集群模板管理',
+                            link: '#emr/'
+                        },
+                        {
+                            text: '<i class="fa fa-circle fa-1"></i>镜像管理',
+                            link: '#emr/'
+                        },
+                        {
+                            text: '<i class="fa fa-circle fa-1"></i>插件管理',
+                            link: '#emr/'
+                        }
+                    ]
+                },
+                {
+                    text: '<i class="fa fa-cloud-upload"></i>流式计算管理<i class="fa icon-arrow"></i>',
+                    items: [
+                        {
+                            text: '<i class="fa fa-circle fa-1"></i>关系型数据库',
+                            link: '#db'
+                        },
+                        {
+                            text: '<i class="fa fa-circle fa-1"></i>缓存',
+                            link: '#cache'
+                        }
+                    ]
+                },
+                {
+                    text: '<i class="fa fa-cloud-upload"></i>非结构化数据存储<i class="fa icon-arrow"></i>',
                     items: [
                         {
                             text: '<i class="fa fa-circle fa-1"></i>关系型数据库',
