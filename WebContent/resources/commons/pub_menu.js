@@ -179,11 +179,11 @@ define('commons/pub_menu', function() {
                     items: [
                         {
                             text: 'VPN网关',
-                            link: ''
+                            link: '#vpn/vpn'
                         },
                         {
                             text: 'VPN链接',
-                            link: ''
+                            link: '#network/vpn'
                         }
                     ]
                 },
@@ -192,16 +192,12 @@ define('commons/pub_menu', function() {
                     link: '',
                     items: [
                         {
-                            text: '云主机规格',
-                            link: ''
-                        },
-                        {
                             text: 'VDC配额',
-                            link: ''
+                            link: '#'
                         },
                         {
                             text: 'VPC配额',
-                            link: ''
+                            link: '#'
                         }
                     ]
                 }

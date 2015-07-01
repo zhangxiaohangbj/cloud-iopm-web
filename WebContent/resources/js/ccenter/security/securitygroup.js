@@ -22,7 +22,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 		var DataIniter = {
 				//vdc列表
 				initVdcList : function(){
-					Common.xhr.ajax('/v2.0/tenants',function(data){
+					Common.xhr.ajax('/identity/v2.0/tenants',function(data){
 						var tenants = data.tenants;
 						var id = $('select.tenant_id').attr("data");
 						if(id!=null){
@@ -208,7 +208,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 			    	                	delete postData.security_group_rule["remote"];
 			    	                	delete postData.security_group_rule["port_range"];
 			    	                	postData.security_group_rule["security_group_id"] = id;
-			    	                	Common.xhr.postJSON('/v2.0/security-group-rules',postData,function(data){ //接口保存失败
+			    	                	Common.xhr.postJSON('/networking/v2.0/security-group-rules',postData,function(data){ //接口保存失败
 			    	                		if(data){
 			    	                			Dialog.success('保存成功')
 			    	                			setTimeout(function(){Dialog.closeAll()},2000);
@@ -227,7 +227,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 		    	//获取规则列表
 		    	GetRuleList :function(id){
 		    		var param = {"security_group_id":id};
-		    		Common.xhr.get('/v2.0/security-group-rules',param,function(data){  //获取规则列表接口，参数未起作用
+		    		Common.xhr.get('/networking/v2.0/security-group-rules',param,function(data){  //获取规则列表接口，参数未起作用
 		    			Common.render(true,'tpls/ccenter/security/securitygroup/rulelist.html',data,function(html){
 				    		Common.initDataTable($('#SecurityruleTable'),function($tar){
 				    			$tar.prev().find('.left-col:first').append(
@@ -265,7 +265,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 						    	var id= $(this).attr("data");
 						    	Dialog.confirm('确定要删除该规则吗?', function(result){
 						             if(result) {
-						            	 Common.xhr.del('/v2.0/security-group-rules/'+id,
+						            	 Common.xhr.del('/networking/v2.0/security-group-rules/'+id,
 						                     function(data){
 						                    	 if(data){
 						                    		 Dialog.success('删除成功')
