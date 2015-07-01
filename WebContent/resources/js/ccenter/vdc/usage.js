@@ -17,7 +17,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 	    var vdcInfo;
 	    var vdc = function (id){
 			Common.xhr.get('/identity/v2.0/tenants/'+id,function(data){///v2/images
-				vdcInfo = data.tenants;
+				vdcInfo = data.tenant;
 			});
 		}
 	    vdc(vdc_id);
