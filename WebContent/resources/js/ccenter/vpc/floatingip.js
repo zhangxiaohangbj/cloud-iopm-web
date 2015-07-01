@@ -33,9 +33,9 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 			        	"defaultContent":"<label><input type='checkbox'></label>"
 			        },
 			        {"data": "floating_ip_address"},
-			        {"data": "floating_network_id"},
-			        {"data": "tenant_id"},
-			        {"data": "router_id"},
+			        {"data": "network_name"},
+			        {"data": "vdc_name"},
+			        {"data": "router_name"},
 			        {"data": "fixed_ip_address"},
 			        {"data": "status"},
 			        {
