@@ -204,7 +204,7 @@ define('commons/pub_menu', function() {
             current: [1,1],
             items: [
                 {
-                    text: '<i class="fa fa-th"></i>弹性云主机ECS<i class="fa icon-arrow"></i>',
+                    text: '<i class="fa fa-server"></i>弹性云主机ECS<i class="fa icon-arrow"></i>',
                     items: [
                         {
                             text: '<i class="fa fa-circle fa-1"></i>防火墙',
