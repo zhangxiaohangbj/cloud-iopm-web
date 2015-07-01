@@ -37,7 +37,6 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 		       * aoData：请求参数，其中包含search 输入框中的值
 		       * */
 		      "fnServerData": function( sSource, aoData, fnCallback ) {
-		    	  debugger;
 		    	  var url = sSource + (aoData[3].value/aoData[4].value+1) +"/"+aoData[4].value
 		    	    $.ajax( {   
 		    	        "url": url, 
@@ -173,7 +172,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
     					"security_group": $(obj +" [name='security_group']").val(),
         				}
 				},
-				userJson:function(obj){
+				userJson:function(obj,vdc_id){
 					var memberList = [];
 					$(obj).find(".list-group-item").each(function(i,user){
 						var uid = $(user).find(".member").attr("data-id");
@@ -186,7 +185,12 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 								userRoleList.push({"uid":uid,"roleId":roleId,"loginName":loginName,"roleName":roleName});
 							}
 						});
-						memberList.push({"uid":uid,"userRoleList":userRoleList});
+						if(vdc_id){
+							memberList.push({"uid":uid,vdcId:vdc_id,"userRoleList":userRoleList});
+						}else{
+							memberList.push({"uid":uid,"userRoleList":userRoleList});
+						}
+						
 					});
 					return memberList;
 				}
@@ -940,7 +944,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 	    	    	                label: '保存',
 	    	    	                action: function(dialog) {
 	    	    	                	var userRolesData= {
-	    	    	                			"memberList":jsonData.userJson("#vdc-users .list-group-select")
+	    	    	                			"memberList":jsonData.userJson("#vdc-users .list-group-select",vdc_id)
 	    	    	                	}
 	    	    	                	Common.xhr.postJSON('/identity/v2.0/tenants/'+vdc_id+'/userroles',userRolesData,function(data){
 	    	    	                		if(data){

@@ -32,7 +32,7 @@ define('commons/pub_menu', function() {
     var sideBarItems = [
         null,
         {
-            title: '<i class="fa fa-codepen fa-fw"></i>基础环境',
+            title: '<i class="fa fa-soundcloud fa-fw"></i>基础环境',
             current: [3],
             items:[
                 {
@@ -66,27 +66,27 @@ define('commons/pub_menu', function() {
                     ]
                 },
                 {
-                    text: '<i class="fa fa-cloud"></i>物理区域',
+                    text: '<i class="fa fa-university"></i>物理区域',
                     link: '#region'
                 },
                 {
-                    text: '<i class="fa fa-cloud"></i>虚拟化环境',
+                    text: '<i class="fa fa-sellsy"></i>虚拟化环境',
                     link: '#env'
                 },
                 {
-                    text: '<i class="fa fa-cloud"></i>可用分区',
+                    text: '<i class="fa fa-delicious"></i>可用分区',
                     link: '#zone'
                 },
                 {
-                    text: '<i class="fa fa-th-large"></i>元数据<i class="fa icon-arrow"></i>',
+                    text: '<i class="fa fa-medium"></i>元数据<i class="fa icon-arrow"></i>',
                     link: '',
                     items:[
                         {
-                            text: '<i class="fa fa-cloud"></i>命名空间',
+                            text: '<i class="fa fa-circle fa-1"></i>命名空间',
                             link: '#metadata/namespace'
                         },
                         {
-                            text: '<i class="fa fa-cloud"></i>标签',
+                            text: '<i class="fa fa-circle fa-1"></i>标签',
                             link: '#metadata/tag'
                         }
                     ]
@@ -102,7 +102,7 @@ define('commons/pub_menu', function() {
                     link: '#vdc/'
                 },
                 {
-                    text: '<i class="fa fa-tachometer"></i>云主机管理',
+                    text: '<i class="fa fa-server"></i>云主机管理',
                     link: '#vm/'
                 },
                 {
@@ -153,7 +153,7 @@ define('commons/pub_menu', function() {
                     ]
                 },
                 {
-                    text: '<i class="fa fa-th-large"></i>安全管理<i class="fa icon-arrow"></i>',
+                    text: '<i class="fa fa-anchor"></i>安全管理<i class="fa icon-arrow"></i>',
                     items: [
                         {
                             text: '<i class="fa fa-circle fa-1"></i>安全组',
@@ -184,7 +184,7 @@ define('commons/pub_menu', function() {
                     ]
                 },
                 {
-                    text: '<i class="fa fa-1ist-alt"></i>配额设置<i class="fa icon-arrow"></i>',
+                    text: '<i class="fa fa-suitcase"></i>配额设置<i class="fa icon-arrow"></i>',
                     link: '',
                     items: [
                         {
@@ -193,18 +193,18 @@ define('commons/pub_menu', function() {
                         },
                         {
                             text: '<i class="fa fa-circle fa-1"></i>VPC配额',
-                            link: 'security/'
+                            link: '#security/'
                         }
                     ]
                 }
             ]
         },
         {
-            title: '<i class="fa fa-codepen fa-fw"></i>云服务',
+            title: '<i class="fa fa-jsfiddle fa-fw"></i>云服务',
             current: [1,1],
             items: [
                 {
-                    text: '<i class="fa fa-puzzle-piece"></i>弹性云主机ECS<i class="fa icon-arrow"></i>',
+                    text: '<i class="fa fa-server"></i>弹性云主机ECS<i class="fa icon-arrow"></i>',
                     items: [
                         {
                             text: '<i class="fa fa-circle fa-1"></i>防火墙',
@@ -217,7 +217,7 @@ define('commons/pub_menu', function() {
                     ]
                 },
                 {
-                    text: '<i class="fa fa-puzzle-piece"></i>Docker容器DCS<i class="fa icon-arrow"></i>',
+                    text: '<i class="fa fa-archive"></i>Docker容器DCS<i class="fa icon-arrow"></i>',
                     items: [
                         {
                             text: '<i class="fa fa-circle fa-1"></i>防火墙',
@@ -230,7 +230,7 @@ define('commons/pub_menu', function() {
                     ]
                 },
                 {
-                    text: '<i class="fa fa-cloud"></i>数据库RDS<i class="fa icon-arrow"></i>',
+                    text: '<i class="fa fa-database"></i>数据库RDS<i class="fa icon-arrow"></i>',
                     items: [
                         {
                             text: '<i class="fa fa-circle fa-1"></i>关系型数据库',
@@ -243,7 +243,7 @@ define('commons/pub_menu', function() {
                     ]
                 },
                 {
-                    text: '<i class="fa fa-cloud"></i>大数据处理EMR<i class="fa icon-arrow"></i>',
+                    text: '<i class="fa fa-th"></i>大数据处理EMR<i class="fa icon-arrow"></i>',
                     items: [
                         {
                             text: '<i class="fa fa-circle fa-1"></i>关系型数据库',
@@ -256,7 +256,7 @@ define('commons/pub_menu', function() {
                     ]
                 },
                 {
-                    text: '<i class="fa fa-cloud"></i>云存储OSS<i class="fa icon-arrow"></i>',
+                    text: '<i class="fa fa-cloud-upload"></i>云存储OSS<i class="fa icon-arrow"></i>',
                     items: [
                         {
                             text: '<i class="fa fa-circle fa-1"></i>关系型数据库',
@@ -286,7 +286,7 @@ define('commons/pub_menu', function() {
                     ]
                 },
                 {
-                    text: '<i class="fa fa-cloud"></i>负载均衡LBS<i class="fa icon-arrow"></i>',
+                    text: '<i class="fa fa-random"></i>负载均衡LBS<i class="fa icon-arrow"></i>',
                     items: [
                         {
                             text: '<i class="fa fa-circle fa-1"></i>关系型数据库',
@@ -301,11 +301,11 @@ define('commons/pub_menu', function() {
             ]
         },
         {
-            title: '<i class="fa fa-codepen fa-fw"></i>监控与调度',
+            title: '<i class="fa fa-eye fa-fw"></i>监控与调度',
             current: [1,1],
             items: [
                 {
-                    text: '<i class="fa fa-puzzle-piece"></i>任务调度<i class="fa icon-arrow"></i>',
+                    text: '<i class="fa fa-tasks"></i>任务调度<i class="fa icon-arrow"></i>',
                     items: [
                         {
                             text: '<i class="fa fa-circle fa-1"></i>任务管理',
@@ -332,7 +332,7 @@ define('commons/pub_menu', function() {
             ]
         },
         {
-            title: '<i class="fa fa-codepen fa-fw"></i>系统管理',
+            title: '<i class="fa fa-briefcase fa-fw"></i>系统管理',
             current: [1],
             items: [
                 {

@@ -10,7 +10,7 @@
 			<div class="detail-info">
 				<div class="tab-content">
 					<div class="clearfix">
-						<p>基本信息</p>
+						<p><b>基本信息</b></p>
 						<hr>
 						<div class="row">
 							<label class="control-label col-sm-3">名称：</label>
@@ -32,7 +32,7 @@
 							<label class="control-label col-sm-3">镜像：</label>
 							<div class="col-sm-7 col-sm">{{server.imageRef}}</div>
 						</div>
-						<p>规格</p>
+						<p><b>规格</b></p>
 						<hr>
 						<div class="row">
 							<label class="control-label col-sm-3">云主机类型：</label>
@@ -54,7 +54,7 @@
 							<label class="control-label col-sm-3">磁盘：</label>
 							<div class="col-sm-7 col-sm">{{server.flavor.rootGb}}GB</div>
 						</div>
-						<p>IP</p>
+						<p><b>IP</b></p>
 						<hr>
 						<div class="row">
 							<label class="control-label col-sm-3">静态IP:</label>
@@ -64,7 +64,7 @@
 							<label class="control-label col-sm-3">动态IP:</label>
 							<div class="col-sm-7 col-sm">{{server.floatingIps}}</div>
 						</div>
-						<p>安全组</p>
+						<p><b>安全组</b></p>
 						<hr>
 						{{each server.security_groups as item i}}
 						<div class="row">
@@ -74,7 +74,7 @@
 							{{/each}}
 						</div>
 						{{/each}}
-						<p>元数据</p>
+						<p><b>元数据</b></p>
 						<hr>
 						{{each server.metadata as item i}}
 						<div class="row">
