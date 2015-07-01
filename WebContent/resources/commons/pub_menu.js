@@ -220,12 +220,16 @@ define('commons/pub_menu', function() {
                     text: '<i class="fa fa-archive"></i>Docker容器DCS<i class="fa icon-arrow"></i>',
                     items: [
                         {
-                            text: '<i class="fa fa-circle fa-1"></i>防火墙',
-                            link: '#firewall'
+                            text: '<i class="fa fa-circle fa-1"></i>容器集群',
+                            link: '#container/'
                         },
                         {
-                            text: '<i class="fa fa-circle fa-1"></i>SSH密钥',
-                            link: '#sshkey'
+                            text: '<i class="fa fa-circle fa-1"></i>容器规格模板',
+                            link: '#container/'
+                        },
+                        {
+                            text: '<i class="fa fa-circle fa-1"></i>镜像管理',
+                            link: '#container/'
                         }
                     ]
                 },
@@ -246,12 +250,24 @@ define('commons/pub_menu', function() {
                     text: '<i class="fa fa-th"></i>大数据处理EMR<i class="fa icon-arrow"></i>',
                     items: [
                         {
-                            text: '<i class="fa fa-circle fa-1"></i>关系型数据库',
-                            link: '#db'
+                            text: '<i class="fa fa-circle fa-1"></i>集群管理',
+                            link: '#emr/'
                         },
                         {
-                            text: '<i class="fa fa-circle fa-1"></i>缓存',
-                            link: '#cache'
+                            text: '<i class="fa fa-circle fa-1"></i>任务管理',
+                            link: '#emr/'
+                        },
+                        {
+                            text: '<i class="fa fa-circle fa-1"></i>集群模板管理',
+                            link: '#emr/'
+                        },
+                        {
+                            text: '<i class="fa fa-circle fa-1"></i>镜像管理',
+                            link: '#emr/'
+                        },
+                        {
+                            text: '<i class="fa fa-circle fa-1"></i>插件管理',
+                            link: '#emr/'
                         }
                     ]
                 },
