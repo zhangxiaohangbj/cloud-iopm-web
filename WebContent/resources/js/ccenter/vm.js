@@ -191,13 +191,13 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 				},
 				//云硬盘列表
 				getDisk : function(uid){
-					Common.xhr.ajax('/v2/'+current_vdc_id+'/bootable-volumes',function(diskList){
+					Common.xhr.ajax('/block-storage/v2/'+current_vdc_id+'/bootable-volumes',function(diskList){
 						renderData.diskList = diskList;
 					});
 				},
 				//云硬盘快照列表
 				getDiskSnapShot: function(uid){
-					Common.xhr.ajax('/v2/'+current_vdc_id+'/bootable-snapshots',function(diskSnapList){
+					Common.xhr.ajax('/block-storage/v2/'+current_vdc_id+'/bootable-snapshots',function(diskSnapList){
 						renderData.diskSnapList = diskSnapList;
 					});
 				},
