@@ -5,13 +5,13 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 	var init = function(){
 		Common.$pageContent.addClass("loading");
 		Common.render(true,{
-			tpl:'tpls/ccenter/snapshot/list_volume.html',
+			tpl:'tpls/fservice/snapshot/list_vm.html',
 			callback: bindEvent
 		});
 	};
 	var bindEvent = function(){
 		//dataTables
-		Common.initDataTable($('#SnapShotVolumeTable'),{
+		Common.initDataTable($('#SnapShotVmTable'),{
 		      "processing": true,  //加载效果，默认false
 		      "serverSide": true,  //页面在加载时就请求后台，以及每次对 datatable 进行操作时也是请求后台
 		      "ordering": false,   //禁用所有排序
@@ -72,7 +72,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 					{
 					    "targets": [1],
 					    "render": function(data, type, full) {
-					      return '<a class="volume_name" href="#ccenter/snapshot/detail/volume/'+data.id+'">'+data.name+"</a>";
+					      return '<a class="volume_name" href="#fservice/snapshot/detail/vm/'+data.id+'">'+data.name+"</a>";
 					    }
 					},
 					{
