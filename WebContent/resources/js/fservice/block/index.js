@@ -1,12 +1,31 @@
 define(['Common','bs/modal','rq/text!tpls/fservice/block/volume/list-opts.html', 'jq/form/wizard','bs/tooltip','jq/form/validator-bs3'],function(Common,Modal, optsTpl){
 	Common.requestCSS('css/wizard.css');
 	var current_vdc_id = '9cc717d8047e46e5bf23804fc4400247';
-	
+	var volumeStatus = {
+			available: "可用", 
+			attaching: "挂载中", 
+			backing_up: "备份", 
+			creating: "正在创建", 
+			deleting: "正在删除", 
+			downloading: "下载中", 
+			uploading: "上传中", 
+			error: "错误", 
+			error_deleting: "删除错误", 
+			deleted: "已删除", 
+			error_restoring: "恢复错误", 
+			in_use: "使用中", 
+			restoring_backup: "恢复中", 
+			unrecognized: "未知"	
+		};
 	var wizard;
 	var init = function(){
 		Common.$pageContent.addClass("loading");
 		Common.render(true,{
 			tpl:'tpls/fservice/block/volume/list.html',
+			/*data:'',
+			beforeRender: function(data){
+				debugger
+			},*/
 			callback: bindEvent
 		});
 	};
@@ -64,23 +83,6 @@ define(['Common','bs/modal','rq/text!tpls/fservice/block/volume/list-opts.html',
 	
 	var bindEvent = function(){
 		//dataTables
-		
-		var volumeStatus = {
-			available: "可用", 
-			attaching: "挂载中", 
-			backing_up: "备份", 
-			creating: "正在创建", 
-			deleting: "正在删除", 
-			downloading: "下载中", 
-			uploading: "上传中", 
-			error: "错误", 
-			error_deleting: "删除错误", 
-			deleted: "已删除", 
-			error_restoring: "恢复错误", 
-			in_use: "使用中", 
-			restoring_backup: "恢复中", 
-			unrecognized: "未知"	
-		};
 		
 		var table = Common.initDataTable($('#VolumeTable'),{
 		      "processing": true,  //加载效果，默认false
