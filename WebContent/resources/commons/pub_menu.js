@@ -127,12 +127,12 @@ define('commons/pub_menu', function() {
                     text: '<i class="fa fa-server"></i>弹性云主机<i class="fa icon-arrow"></i>',
                     items: [
                         {
-                            text: '<i class="fa fa-dot fa-1"></i>云主机管理',
+                            text: '<i class="fa fa-dot fa-1"></i>云主机',
                             link: '#vm/'
                         },
                         {
-                            text: '<i class="fa fa-dot fa-1"></i>弹性伸缩组管理',
-                            link: '#sshkey'
+                            text: '<i class="fa fa-dot fa-1"></i>弹性伸缩组',
+                            link: '#autoscaling/'
                         }
                     ]
                 },
