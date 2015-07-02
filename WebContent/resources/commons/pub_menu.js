@@ -124,7 +124,7 @@ define('commons/pub_menu', function() {
             current: [2],
             items: [
                 {
-                    text: '<i class="fa fa-server"></i>弹性云主机ECS<i class="fa icon-arrow"></i>',
+                    text: '<i class="fa fa-server"></i>弹性云主机<i class="fa icon-arrow"></i>',
                     items: [
                         {
                             text: '<i class="fa fa-circle fa-1"></i>云主机管理',
@@ -322,7 +322,7 @@ define('commons/pub_menu', function() {
             current: [1,1],
             items: [
                 {
-                    text: '<i class="fa fa-database"></i>NoSQL数据库存储<i class="fa icon-arrow"></i>',
+                    text: '<i class="fa fa-database"></i>NoSQL存储<i class="fa icon-arrow"></i>',
                     items: [
                         {
                             text: '<i class="fa fa-circle fa-1"></i>关系型数据库',
@@ -360,7 +360,7 @@ define('commons/pub_menu', function() {
                     ]
                 },
                 {
-                    text: '<i class="fa fa-cloud-upload"></i>流式计算管理<i class="fa icon-arrow"></i>',
+                    text: '<i class="fa fa-cloud-upload"></i>流式计算<i class="fa icon-arrow"></i>',
                     items: [
                         {
                             text: '<i class="fa fa-circle fa-1"></i>关系型数据库',
@@ -373,7 +373,7 @@ define('commons/pub_menu', function() {
                     ]
                 },
                 {
-                    text: '<i class="fa fa-cloud-upload"></i>非结构化数据存储<i class="fa icon-arrow"></i>',
+                    text: '<i class="fa fa-cloud-upload"></i>非结构化存储<i class="fa icon-arrow"></i>',
                     items: [
                         {
                             text: '<i class="fa fa-circle fa-1"></i>关系型数据库',
