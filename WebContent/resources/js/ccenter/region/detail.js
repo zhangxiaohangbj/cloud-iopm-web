@@ -8,7 +8,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
         var cloudServiceId = hashArr[hashArr.length-1];
         Common.xhr.ajax("/v2/region/"+cloudServiceId,function(cloudServiceInfo){
             curCloudService = cloudServiceInfo;
-            Common.render(true,'tpls/cresource/region/detail.html',curCloudService,function(html){
+            Common.render(true,'tpls/ccenter/region/detail.html',curCloudService,function(html){
                 bindEvent();
             });
         })

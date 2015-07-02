@@ -2,14 +2,14 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
     Common.requestCSS('css/detail.css');
 
 
-    var curNamespaceInfo;
+    var curTagInfo;
     var init = function(){
         Common.$pageContent.addClass("loading");
         var hashArr = Common.hash.split('/');
-        var namespace = hashArr[hashArr.length-1];
-        Common.xhr.ajax("/v2/metadefs/namespaces/"+namespace,function(namespaceInfo){
-            curNamespaceInfo = namespaceInfo;
-            Common.render(true,'tpls/cresource/metadata/namespace/detail.html',namespaceInfo,function(html){
+        var tagId = hashArr[hashArr.length-1];
+        Common.xhr.ajax("/resource-manager/v2/tag/"+tagId,function(tagInfo){
+            curTagInfo = tagInfo;
+            Common.render(true,'tpls/ccenter/metadata/tag/detail.html',tagInfo,function(html){
                 bindEvent();
             });
         })
@@ -33,7 +33,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
             Common.showLocalLoading($tab);
             if('resources' == data){
                 //获取磁盘快照列表
-                Common.render(false,'tpls/cresource/zone/list_resources.html',curNamespaceInfo,function(html){
+                Common.render(false,'tpls/ccenter/zone/list_resources.html',curTagInfo,function(html){
                     $tab.empty().append(html);
                 });
             }else if('basic' == data){

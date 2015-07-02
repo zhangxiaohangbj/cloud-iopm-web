@@ -80,7 +80,7 @@ define(['Common','bs/modal','jq/form/wizard','jq/form/validator-bs3','bs/tooltip
         //真实请求的数据
         Common.xhr.ajax('/v2/tenant_id/region',function(data){
             var indexData = {"cloudService":data};
-            Common.render(true,'tpls/cresource/region/index.html',indexData,function(){
+            Common.render(true,'tpls/ccenter/region/index.html',indexData,function(){
                 bindEvent();
             });
         });
@@ -100,7 +100,7 @@ define(['Common','bs/modal','jq/form/wizard','jq/form/validator-bs3','bs/tooltip
         //创建按钮
         $("#regionTable_wrapper span.btn-add").on("click",function(){
             var selectData = {"data":renderData};
-            Common.render('tpls/cresource/region/add.html',selectData,function(html){
+            Common.render('tpls/ccenter/region/add.html',selectData,function(html){
 
                 Modal.show({
                     title: '新增资源区域',
@@ -186,7 +186,7 @@ define(['Common','bs/modal','jq/form/wizard','jq/form/validator-bs3','bs/tooltip
         $("a.edit").on("click",function(){
             var data = $(this).attr("data");
             Common.xhr.ajax("/v2/region/"+data,function(cloudService){
-                Common.render('tpls/cresource/region/edit.html',cloudService,function(html){
+                Common.render('tpls/ccenter/region/edit.html',cloudService,function(html){
                     Modal.show({
                         title: '修改资源区域',
                         message: html,

@@ -7,7 +7,7 @@ define(['Common','bs/modal','jq/form/wizard','jq/form/validator-bs3','bs/tooltip
         //真实请求的数据
         Common.xhr.ajax('/v2/virtual-env',function(data){
             var serverData= {"data":data};
-            Common.render(true,'tpls/cresource/env/index.html',serverData,function(){
+            Common.render(true,'tpls/ccenter/env/index.html',serverData,function(){
                 bindEvent();
             });
         });
@@ -166,7 +166,7 @@ define(['Common','bs/modal','jq/form/wizard','jq/form/validator-bs3','bs/tooltip
         //创建按钮
         $("#VirtualEnvTable_wrapper span.btn-add").on("click",function(){
             var selectData= {"data":renderData};
-            Common.render('tpls/cresource/env/add.html',selectData,function(html){
+            Common.render('tpls/ccenter/env/add.html',selectData,function(html){
                 $('body').append(html);
 
                 $.fn.wizard.logging = true;
@@ -299,7 +299,7 @@ define(['Common','bs/modal','jq/form/wizard','jq/form/validator-bs3','bs/tooltip
             var data = $(this).attr("data");
             Common.xhr.ajax("/v2/virtual-env/"+data,function(env){
                 var selectData2= {"data":renderData,"virtualEnv":env};
-                Common.render('tpls/cresource/env/loginfo.html',selectData2,function(html){
+                Common.render('tpls/ccenter/env/loginfo.html',selectData2,function(html){
                     Modal.show({
                         title: '日志信息',
                         message: html,
@@ -316,7 +316,7 @@ define(['Common','bs/modal','jq/form/wizard','jq/form/validator-bs3','bs/tooltip
             var data = $(this).attr("data");
             Common.xhr.ajax("/v2/virtual-env/"+data,function(env){
                 var selectData2= {"data":renderData,"virtualEnv":env};
-                Common.render('tpls/cresource/env/edit.html',selectData2,function(html){
+                Common.render('tpls/ccenter/env/edit.html',selectData2,function(html){
                     Modal.show({
                         title: '编辑虚拟化环境',
                         message: html,

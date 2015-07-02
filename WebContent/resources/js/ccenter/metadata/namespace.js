@@ -9,7 +9,7 @@ define(['Common','bs/modal','jq/form/wizard','jq/form/validator-bs3','bs/tooltip
         //真实请求的数据
         Common.xhr.ajax('/v2/metadefs/namespaces',function(data){
             var indexData = {"namespace":data};
-            Common.render(true,'tpls/cresource/metadata/namespace/index.html',indexData,function(){
+            Common.render(true,'tpls/ccenter/metadata/namespace/index.html',indexData,function(){
                 bindEvent();
             });
         });
@@ -101,7 +101,7 @@ define(['Common','bs/modal','jq/form/wizard','jq/form/validator-bs3','bs/tooltip
         //创建按钮
         $("#namespaceTable_wrapper span.btn-add").on("click",function(){
             var selectData = {"data":renderData};
-           Common.render('tpls/cresource/metadata/namespace/add.html',selectData,function(html) {
+           Common.render('tpls/ccenter/metadata/namespace/add.html',selectData,function(html) {
                $('body').append(html);
                $.fn.wizard.logging = true;
                wizard = $('#create-namespace-wizard').wizard({
@@ -200,7 +200,7 @@ define(['Common','bs/modal','jq/form/wizard','jq/form/validator-bs3','bs/tooltip
             var namespace = $(this).attr("data");
             Common.xhr.ajax("/v2/metadefs/namespaces/"+namespace+"/resource_types",function(relatedType){
                 var resourceTypeAssociations = relatedType.resource_type_associations;
-                Common.render('tpls/cresource/metadata/namespace/editBind.html',resourceTypeAssociations,function(html){
+                Common.render('tpls/ccenter/metadata/namespace/editBind.html',resourceTypeAssociations,function(html){
                     Modal.show({
                         title: '编辑资源绑定',
                         message: html,
@@ -239,7 +239,7 @@ define(['Common','bs/modal','jq/form/wizard','jq/form/validator-bs3','bs/tooltip
         $("a.edit").on("click",function(){
             var name = $(this).attr("data");
             Common.xhr.ajax("/v2/metadefs/namespaces/"+name,function(namespace){
-                Common.render('tpls/cresource/metadata/namespace/edit.html',namespace,function(html){
+                Common.render('tpls/ccenter/metadata/namespace/edit.html',namespace,function(html){
                     Modal.show({
                         title: '修改标签',
                         message: html,
