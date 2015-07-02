@@ -18,6 +18,7 @@ define('commons/router_table', function() {
         '^#fservice/vm/detail/(.*)$' :"js/fservice/vm/detail",
         '^#fservice/security/keypair/detail/(.*)$' :"js/fservice/security/keypair/detail",
         '^#aservice/cae/version/(.*)$' :"js/aservice/cae/version",
-        '^#aservice/cae/env/(.*)$' :"js/aservice/cae/env"
+        '^#aservice/cae/env/(.*)$' :"js/aservice/cae/env",
+        '^#aservice/cae/storage/(.*)$' :"js/aservice/cae/storage"
     };
 });
