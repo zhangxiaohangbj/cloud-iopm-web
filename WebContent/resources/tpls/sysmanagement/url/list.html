@@ -9,26 +9,26 @@
 			<table class="table table-primary table-striped" id="URLTable">
 				<thead>
 					<tr>
-						<th class="c1">
+						<th class="c2">
 							<label><input type="checkbox" class="selectAll"></label>
 						</th>
-						<th class="c3">URL名称</th>
-						<th class="c3">URL地址</th>
-						<th class="c1">method</th>
-						<th class="c3">所属端点</th>
-						<th class="c1">是否公开址</th>
-						<th class="c2 sorting_disabled">操作</th>
+						<th class="c20">URL名称</th>
+						<th class="c23">URL地址</th>
+						<th class="c10">method</th>
+						<th class="c25">所属端点</th>
+						<th class="c10">是否公开址</th>
+						<th class="c10 sorting_disabled">操作</th>
 					</tr>
 				</thead>
 				<tbody>
 				{{each list as item i}}
 					<tr>
 						<td><label><input type="checkbox"></label></td>
-						<td>{{item.name}}</td>
-						<td>{{item.name}}</td>
-						<td>{{item.name}}</td>
-						<td>{{item.name}}</td>
-						<td>{{item.name}}</td>
+						<td>{{item.urlName}}</td>
+						<td>{{item.urlAddress}}</td>
+						<td>{{item.method}}</td>
+						<td>{{item.endpoint.url}}</td>
+						<td>{{if item.isPublic=="true"}}是{{else}}否{{/if}}</td>
 						<td>
 							<a class="btn-edit" data-toggle="tooltip" title="编辑" href="javascript:void(0)" data="{{item.id}}" data-act="stop" style="margin: 0 8px;"><li class="glyphicon glyphicon-edit"></li></a>
 							<a class="btn-delete" data-toggle="tooltip" title="删除" href="javascript:void(0)" data="{{item.id}}" style="margin: 0 8px;"><i class="fa fa-trash-o fa-fw"></i></a>

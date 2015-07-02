@@ -5,7 +5,7 @@ define(['Common','bs/modal','jq/form/validator-bs3'],function(Common,Modal){
 		//先获取数据，进行加工后再去render
 		Common.render(true,{
 			tpl:'tpls/sysmanagement/url/list.html',
-			data:'/networking/v2.0/subnets/page/1/10',  //需修改接口
+			data:'/identity/v2.0/url/page/1/10',
 			beforeRender: function(data){
 				return data.result;
 			},
@@ -49,11 +49,7 @@ define(['Common','bs/modal','jq/form/validator-bs3'],function(Common,Modal){
 						var endpoint_id = obj.prev().val();
 						Common.render({
 							tpl:'tpls/sysmanagement/url/endpointlist.html',
-							data:'/identity/v2.0/tenants',    //需修改接口
-							beforeRender: function(data){
-								data.endpoint_id = endpoint_id;
-								return data;
-							},
+							data:'/identity/v2.0/endpoints/page/1/10',
 							callback: function(html){
 								Modal.show({
 				    	            title: '选择端点',
@@ -98,8 +94,14 @@ define(['Common','bs/modal','jq/form/validator-bs3'],function(Common,Modal){
     	                action: function(dialog) {
     	                	var valid = $(".form-horizontal").valid();
     	            		if(!valid) return false;
-    	                	var serverData = $(".form-horizontal").serializeArray();
-    	                	Common.xhr.postJSON('/identity/v2.0/OS-KSADM/roles',serverData,function(data){  //需修改接口
+    	                	var serverData = {
+        	                		"urlName": $(" [name='url_name']").val(),
+        	                		"isPublic": $(" [name='is_public']").val(),
+        	                		"urlAddress": $(" [name='url_address']").val(),
+        	                		"method": $(" [name='method']").val(),
+        	                		"endpointId": $(" [name='endpoint_id']").val()
+        	                	};
+    	                	Common.xhr.postJSON('/identity/v2.0/url',serverData,function(data){
     	                		if(data){
     	                			Modal.success('保存成功')
     	                			setTimeout(function(){Modal.closeAll()},2000);
@@ -125,15 +127,7 @@ define(['Common','bs/modal','jq/form/validator-bs3'],function(Common,Modal){
 		//编辑
 	    $("#URLTable_wrapper a.btn-edit").on("click",function(){
 	    	var id= $(this).attr("data");
-	    	Common.xhr.ajax('/networking/v2.0/subnets/'+id,function(data){  //需修改接口
-	    		data={
-	    				"url_name":"添加用户",
-	    				"url_address":"/sys/menuItemAdd",
-    					"method":"PUT",
-    					"is_public":"1",
-    					"endpoint_id":"d9a30d8d94d743a990d4380b04165b5e",
-    					"endpoint_name":"IOP研发中心"
-	    		}
+	    	Common.xhr.ajax('/identity/v2.0/url/'+id,function(data){  //需修改接口
 	    		Common.render('tpls/sysmanagement/url/edit.html',data,function(html){
 	    			Modal.show({
 	    	            title: '编辑URL',
@@ -145,8 +139,14 @@ define(['Common','bs/modal','jq/form/validator-bs3'],function(Common,Modal){
 	    	                	var valid = $(".form-horizontal").valid();
 	    	            		if(!valid) return false;
 	    	            		var serverData = {
-		    	                	  };
-	    	                	Common.xhr.putJSON('/v2.0/OS-KSADM/roles/'+id,serverData,function(data){ //需修改接口
+	        	                		"urlName": $(" [name='url_name']").val(),
+	        	                		"isPublic": $(" [name='is_public']").val(),
+	        	                		"urlAddress": $(" [name='url_address']").val(),
+	        	                		"method": $(" [name='method']").val(),
+	        	                		"endpointId": $(" [name='endpoint_id']").val(),
+	        	                		"id":id
+	        	                	};
+	    	                	Common.xhr.putJSON('/identity/v2.0/url',serverData,function(data){
 	    	                		if(data){
 	    	                			Modal.success('保存成功')
 	    	                			setTimeout(function(){Modal.closeAll()},2000);
@@ -175,7 +175,7 @@ define(['Common','bs/modal','jq/form/validator-bs3'],function(Common,Modal){
 	    	 var id = $(this).attr("data");
 	    	 Modal.confirm('确定要删除该URL吗?', function(result){
 	             if(result) {
-	            	 Common.xhr.del('/v2.0/OS-KSADM/roles/'+id,  //需修改接口
+	            	 Common.xhr.del('/identity/v2.0/url/'+id,  //需修改接口
 	                     function(data){
 	                    	 if(data){
 	                    		 Modal.success('删除成功')
