@@ -124,7 +124,7 @@ define('commons/pub_menu', function() {
             current: [2],
             items: [
                 {
-                    text: '<i class="fa fa-server"></i>弹性云主机ECS<i class="fa icon-arrow"></i>',
+                    text: '<i class="fa fa-server"></i>弹性云主机<i class="fa icon-arrow"></i>',
                     items: [
                         {
                             text: '<i class="fa fa-circle fa-1"></i>云主机管理',
@@ -322,7 +322,7 @@ define('commons/pub_menu', function() {
             current: [1,1],
             items: [
                 {
-                    text: '<i class="fa fa-database"></i>NoSQL数据库存储<i class="fa icon-arrow"></i>',
+                    text: '<i class="fa fa-database"></i>NoSQL存储<i class="fa icon-arrow"></i>',
                     items: [
                         {
                             text: '<i class="fa fa-circle fa-1"></i>关系型数据库',
@@ -339,28 +339,28 @@ define('commons/pub_menu', function() {
                     items: [
                         {
                             text: '<i class="fa fa-circle fa-1"></i>集群管理',
-                            link: '#emr/'
+                            link: '#emr/cluster'
                         },
                         {
                             text: '<i class="fa fa-circle fa-1"></i>任务管理',
-                            link: '#emr/'
+                            link: '#emr/job'
                         },
                         {
                             text: '<i class="fa fa-circle fa-1"></i>集群模板管理',
-                            link: '#emr/'
+                            link: '#emr/template'
                         },
                         {
                             text: '<i class="fa fa-circle fa-1"></i>镜像管理',
-                            link: '#emr/'
+                            link: '#emr/image'
                         },
                         {
                             text: '<i class="fa fa-circle fa-1"></i>插件管理',
-                            link: '#emr/'
+                            link: '#emr/plugin'
                         }
                     ]
                 },
                 {
-                    text: '<i class="fa fa-cloud-upload"></i>流式计算管理<i class="fa icon-arrow"></i>',
+                    text: '<i class="fa fa-cloud-upload"></i>流式计算<i class="fa icon-arrow"></i>',
                     items: [
                         {
                             text: '<i class="fa fa-circle fa-1"></i>关系型数据库',
@@ -373,7 +373,7 @@ define('commons/pub_menu', function() {
                     ]
                 },
                 {
-                    text: '<i class="fa fa-cloud-upload"></i>非结构化数据存储<i class="fa icon-arrow"></i>',
+                    text: '<i class="fa fa-cloud-upload"></i>非结构化存储<i class="fa icon-arrow"></i>',
                     items: [
                         {
                             text: '<i class="fa fa-circle fa-1"></i>关系型数据库',
