@@ -252,7 +252,7 @@ define('commons/pub_menu', function() {
                         },
                         {
                             text: '<i class="fa fa-dot fa-1"></i>容器规格模板',
-                            link: '#container/baymodle/index'
+                            link: '#container/baymodel/index'
                         },
                         {
                             text: '<i class="fa fa-dot fa-1"></i>镜像管理',
