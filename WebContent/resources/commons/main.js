@@ -638,19 +638,6 @@ define('commons/main',
 
                                 PubView.utils.isFunction(error) && error.apply(that, arguments);
                             };
-                        var initRequests = function(request, level) {
-                            level = level || 1;
-                            if(PubView.utils.isString(request)) {
-                                requests.push($.extend({}, {url: request}));
-                            } else if(PubView.utils.isPlainObject(request) && request.url) {
-                                requests.push(request);
-                            } else if(PubView.utils.isArray(request)) {
-                                $.each(request, function(i, req) {
-                                    if(level > 100) return;
-                                    initRequests(req, level+1);
-                                });
-                            }
-                        };
                         var requests = this._initRequests(request);
                         if(requests.length <= 0) {
                             resolve("Ajax Error: 请确定请求内容url");
