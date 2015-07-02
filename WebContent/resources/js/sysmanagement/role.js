@@ -52,9 +52,11 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
     	                	var valid = $(".form-horizontal").valid();
     	            		if(!valid) return false;
     	                	var serverData ={
-    	                			"name": $("[name='name']").val(),
-    	                			"description": $("[name='description']").val()
-        					};
+    	                			"role":{
+	    	                			"name": $("[name='name']").val(),
+	    	                			"description": $("[name='description']").val()
+    	                			}
+    	                	};
     	                	Common.xhr.postJSON('/identity/v2.0/OS-KSADM/roles',serverData,function(data){
     	                		if(data){
     	                			Modal.success('保存成功')

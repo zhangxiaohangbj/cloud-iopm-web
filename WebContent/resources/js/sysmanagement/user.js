@@ -420,15 +420,18 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
     			//创建提交数据
     			wizard.on("submit", function(wizard) {
     				var postData={
-        					"name": $(" [name='name']").val(),
-        					"password": $(" [name='password']").val(),
-        					"status": $(" [name='status']").val(),
-        					"phone": $(" [name='phone']").val(),
-        					"email": $( " [name='email']").val(),
-        					"trueName": $( " [name='trueName']").val(),
-        					"organId": $( " [name='organId']").val()
-            				};
-    				postData.userRoleList = jsonData.authorityJson("#authorityInfo");
+    						"user":{
+	        					"name": $(" [name='name']").val(),
+	        					"OS-KSADM:password": $(" [name='password']").val(),
+	        					"status": $(" [name='status']").val(),
+	        					"phone": $(" [name='phone']").val(),
+	        					"email": $( " [name='email']").val(),
+	        					"trueName": $( " [name='trueName']").val(),
+	        					"organId": $( " [name='organId']").val(),
+	        					"enabled":true
+	            				}
+    				};
+    				postData.user.userRoleList = jsonData.authorityJson("#authorityInfo");
     				Common.xhr.postJSON('/identity/v2.0/users',postData,function(data){
     					wizard._submitting = false;
     					wizard.updateProgressBar(100);
@@ -444,7 +447,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 			var rowdata = $(this).parents("tr:first").data("rowData.dt");
 			var id= rowdata.id;
 	    	Common.xhr.ajax('/identity/v2.0/users/'+id,function(data){  //需修改接口
-	    		Common.render('tpls/sysmanagement/user/edit.html',data,function(html){
+	    		Common.render('tpls/sysmanagement/user/edit.html',data.user,function(html){
 	    			Modal.show({
 	    	            title: '用户信息编辑',
 	    	            message: html,
@@ -454,15 +457,19 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 	    	                action: function(dialog) {
 	    	                	var valid = $(".form-horizontal").valid();
 	    	            		if(!valid) return false;
-	    	            		var serverData = {
-	    	        					"name": $(" [name='name']").val(),
-	    	        					"password": $(" [name='password']").val(),
-	    	        					"status": $(" [name='status']").val(),
-	    	        					"phone": $(" [name='phone']").val(),
-	    	        					"email": $( " [name='email']").val(),
-	    	        					"trueName": $( " [name='trueName']").val(),
-	    	        					"organId": $( " [name='organId']").val()
-	    	            				};
+	    	            		var serverData = 
+	    	            		{
+	    	            			"user":{
+	    	            					"id":id,
+		    	        					"name": $(" [name='name']").val(),
+		    	        					"OS-KSADM:password": $(" [name='password']").val(),
+		    	        					"status": $(" [name='status']").val(),
+		    	        					"phone": $(" [name='phone']").val(),
+		    	        					"email": $( " [name='email']").val(),
+		    	        					"trueName": $( " [name='trueName']").val(),
+		    	        					"organId": $( " [name='organId']").val()
+	    	            					}
+	    	            			};
 	    	                	Common.xhr.putJSON('/identity/v2.0/users/'+id,serverData,function(data){
 	    	                		if(data){
 	    	                			Modal.success('保存成功')
