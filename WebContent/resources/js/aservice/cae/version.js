@@ -9,7 +9,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 		Common.$pageContent.addClass("loading");
 		Common.render(true,{
 			tpl:'tpls/aservice/cae/version.html',
-			data:'resources/data/appList.txt',
+			data:'resources/data/versionList.txt',
 			beforeRender: function(data){
 				//debugger;
 				return data.data;
