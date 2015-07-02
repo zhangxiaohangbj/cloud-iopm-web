@@ -7,7 +7,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 		Common.$pageContent.addClass("loading");
 		//先获取数据，进行加工后再去render
 		Common.render(true,{
-			tpl:'tpls/ccenter/vm/list.html',
+			tpl:'tpls/fservice/vm/list.html',
 			callback: bindEvent
 		});
 	};
@@ -75,7 +75,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 					{
 					    "targets": [1],
 					    "render": function(data, type, full) {
-					      return '<a href="#ccenter/vm/detail/'+data.id+'" class="vm_name" data="'+data.id+'">'+data.name+"</a>";
+					      return '<a href="#fservice/vm/detail/'+data.id+'" class="vm_name" data="'+data.id+'">'+data.name+"</a>";
 					    }
 					},					
 					{
@@ -688,7 +688,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 		$(document).off("click","#VmTable_wrapper span.btn-add");
 	    $(document).on("click","#VmTable_wrapper span.btn-add",function(){
 	    	//需要修改为真实数据源
-			Common.render('tpls/ccenter/vm/add.html',renderData,function(html){
+			Common.render('tpls/fservice/vm/add.html',renderData,function(html){
 				
 				$('body').append(html);
 				//同步currentChosenObj
@@ -865,7 +865,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 	    var EditData = {
 	    		//编辑云主机名称弹框
 	    	EditVmName : function(id,vdcId,name){
-	    		Common.render('tpls/ccenter/vm/editvmname.html','',function(html){
+	    		Common.render('tpls/fservice/vm/editvmname.html','',function(html){
 	    			Modal.show({
 	    	            title: '修改云主机名称',
 	    	            message: html,
@@ -910,7 +910,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 					pageData.attched=data;});
 				
 		    	//生成html数据
-				Common.render('tpls/ccenter/vm/security.html',pageData,function(html){
+				Common.render('tpls/fservice/vm/security.html',pageData,function(html){
 					
 					Modal.show({
 	    	            title: '编辑安全组',
@@ -962,7 +962,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 	    	},
 	    	//编辑虚拟机大小弹框
 	    	EditVmType : function(id,vdcId,cb){
-	    		Common.render('tpls/ccenter/vm/editvmtype.html',renderData,function(html){
+	    		Common.render('tpls/fservice/vm/editvmtype.html',renderData,function(html){
 		    		Modal.show({
 	    	            title: '编辑虚拟机大小',
 	    	            message: html,
@@ -1160,7 +1160,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 	    	Common.xhr.getSync('/image/v2/'+vdcId+'/images/?owner='+vdcId,function(data){
     			imageList=data;
     		});
-	    	Common.render('tpls/ccenter/vm/rebuild.html',imageList,function(html){
+	    	Common.render('tpls/fservice/vm/rebuild.html',imageList,function(html){
 	    		Modal.show({
     	            title: '重建云主机',
     	            message: html,
@@ -1194,7 +1194,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 	    	var serverId = $(this).attr("data");
 	    	var rowData = $(this).parents('tr:first').data("rowData.dt");
 	    	var vdcId = rowData.tenant_id;
-	    	Common.render('tpls/ccenter/vm/attachip.html','',function(html){	
+	    	Common.render('tpls/fservice/vm/attachip.html','',function(html){	
 	    		Modal.show({
     	            title: '绑定浮动IP',
     	            message: html,
@@ -1252,7 +1252,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 	    	
 	    	var serverId = $(this).attr("data");
 	    	debugger
-	    	Common.render('tpls/ccenter/vm/dettachip.html',floatingIpList,function(html){	
+	    	Common.render('tpls/fservice/vm/dettachip.html',floatingIpList,function(html){	
 	    		Modal.show({
     	            title: '解除浮动IP绑定',
     	            message: html,
@@ -1298,7 +1298,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 	    	var serverId = $(this).attr("data");
 	    	var rowData = $(this).parents('tr:first').data("rowData.dt");
 	    	var vdcId = rowData.tenant_id;
-	    	Common.render('tpls/ccenter/vm/snapshot.html','',function(html){	
+	    	Common.render('tpls/fservice/vm/snapshot.html','',function(html){	
 	    		Modal.show({
     	            title: '创建快照',
     	            message: html,
@@ -1358,7 +1358,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
             }
             Common.xhr.postJSON("/compute/v2/"+vdcId+'/servers/'+serverId+'/action',info,function(data){
                 var url = data['console']['url'];
-                Common.render('tpls/ccenter/vm/vncconsole.html', {url: url}, function (html) {
+                Common.render('tpls/fservice/vm/vncconsole.html', {url: url}, function (html) {
                     Modal.show({
                         size: 'size-_console',
                         title: '控制台',

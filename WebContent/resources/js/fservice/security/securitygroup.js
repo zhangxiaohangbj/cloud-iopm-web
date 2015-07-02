@@ -3,7 +3,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 	var init = function(){
 		Common.$pageContent.addClass("loading");
 		//render获取的数据
-		Common.render(true,'tpls/ccenter/security/securitygroup/list.html','/networking/v2.0/security-groups/page/1/10',function(){
+		Common.render(true,'tpls/fservice/security/securitygroup/list.html','/networking/v2.0/security-groups/page/1/10',function(){
 			bindEvent();
 		});
 	};
@@ -118,7 +118,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 		//增加按钮
 		$("#SecuritygroupTable_wrapper span.btn-add").on("click",function(){
 	    	//需要修改为真实数据源
-			Common.render('tpls/ccenter/security/securitygroup/add.html','',function(html){
+			Common.render('tpls/fservice/security/securitygroup/add.html','',function(html){
 				Dialog.show({
     	            title: '新建安全组',
     	            message: html,
@@ -181,7 +181,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 		var EditData = {
 		    	//添加规则
 				AddSecurityRule : function(id,cb){
-		    			Common.render('tpls/ccenter/security/securitygroup/addrule.html',function(html){
+		    			Common.render('tpls/fservice/security/securitygroup/addrule.html',function(html){
 			    			Dialog.show({
 			    	            title: '添加规则',
 			    	            message: html,
@@ -228,7 +228,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 		    	GetRuleList :function(id){
 		    		var param = {"security_group_id":id};
 		    		Common.xhr.get('/networking/v2.0/security-group-rules',param,function(data){  //获取规则列表接口，参数未起作用
-		    			Common.render(true,'tpls/ccenter/security/securitygroup/rulelist.html',data,function(html){
+		    			Common.render(true,'tpls/fservice/security/securitygroup/rulelist.html',data,function(html){
 				    		Common.initDataTable($('#SecurityruleTable'),function($tar){
 				    			$tar.prev().find('.left-col:first').append(
 				    					'<span class="btn btn-add">添加规则</span>'
