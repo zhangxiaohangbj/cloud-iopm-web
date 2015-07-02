@@ -7,18 +7,19 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 	};	//缓存数据
 	var init = function(){
 		Common.$pageContent.addClass("loading");
-	/*	Common.render(true,{
-			tpl:'tpls/ccenter/vdc/list.html',
-			data:'/identity/v2.0/tenants',
+		Common.render(true,{
+			tpl:'tpls/aservice/cae/version.html',
+			data:'resources/data/appList.txt',
 			beforeRender: function(data){
-				return data.tenants;
+				//debugger;
+				return data.data;
 			},
 			callback: bindEvent
-		});*/
-		Common.render(true,{
-			tpl:'tpls/ccenter/vdc/list.html',
-			callback: bindEvent
 		});
+		/*Common.render(true,{
+			tpl:'tpls/aservice/cae/app.html',
+			callback: bindEvent
+		});*/
 	};
 	var bindEvent = function(){
 		var userIndex = 1;//用户列表的起始页码
@@ -26,28 +27,28 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 		var userTotalSize = 0;
 		//页面渲染完后进行各种事件的绑定
 		//dataTables
-		Common.initDataTable($('#VdcTable'),{
+	/*	Common.initDataTable($('#VdcTable'),{
 		      "processing": true,  //加载效果，默认false
 		      "serverSide": true,  //页面在加载时就请求后台，以及每次对 datatable 进行操作时也是请求后台
 		      "ordering": false,   //禁用所有排序
 		      "sAjaxSource":"identity/v2.0/tenants/page/", //ajax源，后端提供的分页接口
-		      /*fnServerData是与服务器端交换数据时被调用的函数
+		      fnServerData是与服务器端交换数据时被调用的函数
 		       * sSource： 就是sAjaxSource中指定的地址，接收数据的url需要拼装成 v2.0/users/page/10/1 格式
 		       *      aoData[4].value为每页显示条数，aoData[3].value/aoData[4].value+1为请求的页码数
 		       * aoData：请求参数，其中包含search 输入框中的值
-		       * */
+		       * 
 		      "fnServerData": function( sSource, aoData, fnCallback ) {
 		    	  var url = sSource + (aoData[3].value/aoData[4].value+1) +"/"+aoData[4].value
 		    	    $.ajax( {   
-		    	        "url": url, 
+		    	        "url": "resources/data/appList.txt", 
 		    	        "data":aoData,
 		    	        "dataType": "json",   
 		    	        "success": function(resp) {
-		    	        	/*渲染前预处理后端返回的数据为DataTables期望的格式,
+		    	        	渲染前预处理后端返回的数据为DataTables期望的格式,
 		    	        	 * 后端返回数据格式 {"pageNo":1,"pageSize":5,"orderBy":null,"order":null,"autoCount":true,"result":[{"id":"07da487da17b4354a4b5d8e2b2e41485","name":"wzz"}],
 		    	        	 * "totalCount":31,"first":1,"orderBySetted":false,"totalPages":7,"hasNext":true,"nextPage":2,"hasPre":false,"prePage":1}
 		    	        	 * DataTables期望的格式 {"draw": 2,"recordsTotal": 11,"recordsFiltered": 11,"data": [{"id": 1,"firstName": "Troy"}]}
-							*/
+							
 		    	        	resp.data = resp.result;
 		    	        	resp.recordsTotal = resp.totalCount;
 		    	        	resp.recordsFiltered = resp.totalCount;
@@ -55,21 +56,21 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 		    	        }   
 		    	    });   
 		      },
-	    	  /*属性 columns 用来配置具体列的属性，包括对应的数据列名,如trueName，是否支持搜索，是否显示，是否支持排序等*/
+	    	  属性 columns 用来配置具体列的属性，包括对应的数据列名,如trueName，是否支持搜索，是否显示，是否支持排序等
 		      "columns": [
-			        {"data": ""},
+		            {"data": ""},
+			        {"data": "id"},
 			        {"data": "name"},
 			        {"data": "description"},
-			        {"data": "enabled"},
 			        {"data": {}}
 		      ],
-		      /*
+		      
 		       * columnDefs 属性操作自定义列
 		       * targets ： 表示具体需要操作的目标列，下标从 0 开始
 		       * data: 表示我们需要的某一列数据对应的属性名
 		       * render: 返回需要显示的内容。在此我们可以修改列中样式，增加具体内容
 		       *  属性列表： data，之前属性定义中对应的属性值； type，未知；full,全部数据值可以通过属性列名获取 
-		       * */
+		       * 
 		      "columnDefs": [
 					{
 					    "targets": [0],
@@ -78,30 +79,14 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 					      return "<label><input type='checkbox'></label>";
 					    }
 					},
-					{
-					    "targets": [3],
-					    "data": "enabled",
-					    "render": function(data, type, full) {
-					    	if(data == "1"){
-					    		return '<span class="text-success">已激活</span>';
-					    	} else{
-					    		return '<span class="text-success">待激活</span>';
-					    	}
-					    }
-					},
                      {
                        "targets": [4],
                        "orderable": false,
                        "data": {id:"id",name:"name",virtualEnvId:"virtualEnvId"},
                        "render": function(data, type, full) {
                     	  // debugger;
-                         return '<a class="btn-opt members" href="javascript:void(0)" data="'+data.id+'" data-toggle="tooltip" title="成员管理" style="margin: 0;"><i class="fa fa-user fa-fw"></i></a>'
-                            +'<a class="btn-opt updateQuota" href="javascript:void(0)" data="'+data.id+'" data-toggle="tooltip" title="配额管理" style="margin: 0;"><i class="fa fa-suitcase fa-fw"></i></a>'
-                            +'<a class="btn-opt vdcAz" href="javascript:void(0)" data="'+data.id+'" data-env="'+data.virtualEnvId+'" data-toggle="tooltip" title="可用分区管理" style="margin: 0;"><i class="fa fa-delicious fa-fw"></i></a>'
-                            +'<a class="btn-opt usage" href="#ccenter/vdc/usage/'+data.id+'" data="'+data.id+'" data-name="'+data.name+'" data-toggle="tooltip" title="使用情况" style="margin: 0;"><i class="fa fa-file-text fa-fw"></i></a>'
-                            +'<a class="btn-opt editTenantBasic" href="javascript:void(0)" data="'+data.id+'" data-toggle="tooltip" title="编辑" style="margin: 0;"><i class="fa fa-edit fa-fw"></i></a>'
-                            +'<a class="btn-opt deleteTenant" href="javascript:void(0)" data="'+data.id+'" data-name="'+data.name+'" data-toggle="tooltip" title="删除" style="margin: 0;"><i class="fa fa-trash-o fa-fw"></i></a>';
-							/*+'<div class="dropdown">'
+                         return '<a class="btn-opt members" href="javascript:void(0)" data="'+data.id+'" data-toggle="tooltip" title="成员管理" data-act="stop" style="margin: 0;"><i class="fa fa-user fa-fw"></i></a>'
+							+'<div class="dropdown">'
 							+'<a class="btn-opt dropdown-toggle" data-toggle="dropdown" title="更多"  aria-expanded="false" ><i class="fa fa-angle-double-right"></i></a>'
 							+'<ul class="dropdown-menu" style="right: 0;left: initial;">'
 							+'<li><a href="javascript:void(0)"  data="'+data.id+'" class="updateQuota"><i class="fa fa-list-alt fa-fw"></i>配额管理</a></li>'
@@ -109,7 +94,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 							+'<li><a href="#ccenter/vdc/usage/'+data.id+'" class="usage" data="'+data.id+'" data-name="'+data.name+'"><i class="fa fa-file-text fa-fw"></i>使用情况</a></li>'
 							+'<li><a href="javascript:void(0)" data="'+data.id+'" class="editTenantBasic"><i class="fa fa-edit fa-fw"></i>编辑</a></li>'
 							+'<li><a href="javascript:void(0)" data="'+data.id+'" data-name="'+data.name+'" class="deleteTenant"><i class="fa fa-trash-o fa-fw"></i>删除</a></li>'
-							+'</ul></div>';*/
+							+'</ul></div>';
                        }
                      }
                 ]
@@ -119,14 +104,14 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 					'<span class="btn btn-add">创建</span>'
 				);
 			Common.$pageContent.removeClass("loading");
-		});
+		});*/
 		//dataTables
-		/*Common.initDataTable($('#VdcTable'),function($tar){
+		Common.initDataTable($('#VdcTable'),function($tar){
 			$tar.prev().find('.left-col:first').append(
-					'<span class="btn btn-add">创建</span>'
+					'<span class="btn btn-add">创建应用版本</span>'
 				);
 			Common.$pageContent.removeClass("loading");
-		});*/
+		});
 		//icheck
 	    $('input[type="checkbox"]').iCheck({
 	    	checkboxClass: "icheckbox-info",
@@ -612,13 +597,13 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 	    });
 	    
 	    //更新配额
-		$(document).off(".updateQuota");
-		$(document).on("click",".updateQuota",function(){
+		$(document).off("ul.dropdown-menu a.updateQuota");
+		$(document).on("click","ul.dropdown-menu a.updateQuota",function(){
 	    	more.QuotaSets($(this).attr("data"));
 	    });
 	    //可用分区
-		$(document).off(".vdcAz");
-		$(document).on("click",".vdcAz",function(){
+		$(document).off("ul.dropdown-menu a.vdcAz");
+		$(document).on("click","ul.dropdown-menu a.vdcAz",function(){
 	    	var ve_id =  $(this).attr("data-env");
 	    	var vdc_id = $(this).attr("data");
 	    	//先获取az后，再render
@@ -635,13 +620,13 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 	    	more.AZ(ve_id,vdc_id);
 	    });
 	    //删除一个vdc
-		$(document).off(".deleteTenant");
-		$(document).on("click",".deleteTenant",function(){
+		$(document).off("ul.dropdown-menu a.deleteTenant");
+		$(document).on("click","ul.dropdown-menu a.deleteTenant",function(){
 	    	more.DeleteTenant($(this).attr("data"),$(this).attr("data-name"));
 	    });
 	   //编辑vdc
-		$(document).off(".editTenantBasic");
-		$(document).on("click",".editTenantBasic",function(){
+		$(document).off("ul.dropdown-menu a.editTenantBasic");
+		$(document).on("click","ul.dropdown-menu a.editTenantBasic",function(){
 	    	more.EditTenantBasic($(this).attr("data"));
 	    });
 	    //成员管理

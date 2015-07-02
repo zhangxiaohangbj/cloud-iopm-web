@@ -1,0 +1,28 @@
+<div class="page-header">
+	<ol class="breadcrumb minus">
+		<li>快照管理</li>
+		<li><a href="{{linkUrl}}">{{linkName}}</a></li>
+	    <li class="active">{{detail.name.value}}</li>
+	    <li class="backlist"><a href="{{linkUrl}}">返回列表</a></li>
+	</ol>
+</div>
+<div class="page-body">
+	<div class="pane">
+		<div class="pane-content">
+			<div class="detail-info">
+			  <div class="tab-content">
+			    	<div class="clearfix">
+			    	{{each detail as item index}}
+					    <div class="row">
+							<label  class="control-label col-sm-3">{{item.desc}}：</label>
+							<div class="col-sm-7 col-sm query-info">
+								{{item.value}}
+							</div>
+						</div>
+					{{/each}}
+					</div>
+			  </div>
+			</div>
+		</div>
+	</div>
+</div>

@@ -22,7 +22,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 	            mount_path: '/opt/vdc',
 	            create_time: '2015-04-24 17:14:57'
     	};
-    	Common.render(true,'tpls/ccenter/block/volume/detail.html',tmpDetailData,function(html){
+    	Common.render(true,'tpls/fservice/block/volume/detail.html',tmpDetailData,function(html){
     		bindEvent();
     	});
 	};
@@ -45,7 +45,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 			Common.showLocalLoading($tab);
 			if('snapshot' == data){
 				//获取磁盘快照列表
-				Common.render(false,'tpls/ccenter/block/volume/list_snapshot.html','/resources/data/volume.txt',function(html){
+				Common.render(false,'tpls/fservice/block/volume/list_snapshot.html','/resources/data/volume.txt',function(html){
 					$tab.empty().append(html);
 				});
 			}else if('monitor' == data){

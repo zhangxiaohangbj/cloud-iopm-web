@@ -7,18 +7,19 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 	};	//缓存数据
 	var init = function(){
 		Common.$pageContent.addClass("loading");
-	/*	Common.render(true,{
-			tpl:'tpls/ccenter/vdc/list.html',
-			data:'/identity/v2.0/tenants',
-			beforeRender: function(data){
-				return data.tenants;
-			},
-			callback: bindEvent
-		});*/
 		Common.render(true,{
 			tpl:'tpls/aservice/cae/app.html',
+			data:'resources/data/appList.txt',
+			beforeRender: function(data){
+				//debugger;
+				return data.data;
+			},
 			callback: bindEvent
 		});
+		/*Common.render(true,{
+			tpl:'tpls/aservice/cae/app.html',
+			callback: bindEvent
+		});*/
 	};
 	var bindEvent = function(){
 		var userIndex = 1;//用户列表的起始页码
@@ -26,28 +27,28 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 		var userTotalSize = 0;
 		//页面渲染完后进行各种事件的绑定
 		//dataTables
-		Common.initDataTable($('#VdcTable'),{
+	/*	Common.initDataTable($('#VdcTable'),{
 		      "processing": true,  //加载效果，默认false
 		      "serverSide": true,  //页面在加载时就请求后台，以及每次对 datatable 进行操作时也是请求后台
 		      "ordering": false,   //禁用所有排序
 		      "sAjaxSource":"identity/v2.0/tenants/page/", //ajax源，后端提供的分页接口
-		      /*fnServerData是与服务器端交换数据时被调用的函数
+		      fnServerData是与服务器端交换数据时被调用的函数
 		       * sSource： 就是sAjaxSource中指定的地址，接收数据的url需要拼装成 v2.0/users/page/10/1 格式
 		       *      aoData[4].value为每页显示条数，aoData[3].value/aoData[4].value+1为请求的页码数
 		       * aoData：请求参数，其中包含search 输入框中的值
-		       * */
+		       * 
 		      "fnServerData": function( sSource, aoData, fnCallback ) {
 		    	  var url = sSource + (aoData[3].value/aoData[4].value+1) +"/"+aoData[4].value
 		    	    $.ajax( {   
-		    	        "url": url, 
+		    	        "url": "resources/data/appList.txt", 
 		    	        "data":aoData,
 		    	        "dataType": "json",   
 		    	        "success": function(resp) {
-		    	        	/*渲染前预处理后端返回的数据为DataTables期望的格式,
+		    	        	渲染前预处理后端返回的数据为DataTables期望的格式,
 		    	        	 * 后端返回数据格式 {"pageNo":1,"pageSize":5,"orderBy":null,"order":null,"autoCount":true,"result":[{"id":"07da487da17b4354a4b5d8e2b2e41485","name":"wzz"}],
 		    	        	 * "totalCount":31,"first":1,"orderBySetted":false,"totalPages":7,"hasNext":true,"nextPage":2,"hasPre":false,"prePage":1}
 		    	        	 * DataTables期望的格式 {"draw": 2,"recordsTotal": 11,"recordsFiltered": 11,"data": [{"id": 1,"firstName": "Troy"}]}
-							*/
+							
 		    	        	resp.data = resp.result;
 		    	        	resp.recordsTotal = resp.totalCount;
 		    	        	resp.recordsFiltered = resp.totalCount;
@@ -55,38 +56,27 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 		    	        }   
 		    	    });   
 		      },
-	    	  /*属性 columns 用来配置具体列的属性，包括对应的数据列名,如trueName，是否支持搜索，是否显示，是否支持排序等*/
+	    	  属性 columns 用来配置具体列的属性，包括对应的数据列名,如trueName，是否支持搜索，是否显示，是否支持排序等
 		      "columns": [
-			        {"data": ""},
+		            {"data": ""},
+			        {"data": "id"},
 			        {"data": "name"},
 			        {"data": "description"},
-			        {"data": "enabled"},
 			        {"data": {}}
 		      ],
-		      /*
+		      
 		       * columnDefs 属性操作自定义列
 		       * targets ： 表示具体需要操作的目标列，下标从 0 开始
 		       * data: 表示我们需要的某一列数据对应的属性名
 		       * render: 返回需要显示的内容。在此我们可以修改列中样式，增加具体内容
 		       *  属性列表： data，之前属性定义中对应的属性值； type，未知；full,全部数据值可以通过属性列名获取 
-		       * */
+		       * 
 		      "columnDefs": [
 					{
 					    "targets": [0],
 					    "orderable": false,
 					    "render": function() {
 					      return "<label><input type='checkbox'></label>";
-					    }
-					},
-					{
-					    "targets": [3],
-					    "data": "enabled",
-					    "render": function(data, type, full) {
-					    	if(data == "1"){
-					    		return '<span class="text-success">已激活</span>';
-					    	} else{
-					    		return '<span class="text-success">待激活</span>';
-					    	}
 					    }
 					},
                      {
@@ -114,14 +104,14 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 					'<span class="btn btn-add">创建</span>'
 				);
 			Common.$pageContent.removeClass("loading");
-		});
+		});*/
 		//dataTables
-		/*Common.initDataTable($('#VdcTable'),function($tar){
+		Common.initDataTable($('#VdcTable'),function($tar){
 			$tar.prev().find('.left-col:first').append(
-					'<span class="btn btn-add">创建</span>'
+					'<span class="btn btn-add">创建应用</span>'
 				);
 			Common.$pageContent.removeClass("loading");
-		});*/
+		});
 		//icheck
 	    $('input[type="checkbox"]').iCheck({
 	    	checkboxClass: "icheckbox-info",
