@@ -18,13 +18,13 @@
 			</tr>
 		</thead>
 		<tbody>
-			{{each tenants as item i}}
+			{{each result as item i}}
 				<tr>
 					<td><input type="radio" name="radio" {{if item.id == endpoint_id}}checked{{/if}}><input type="hidden" value="{{item.id}}"/></td>
-					<td>{{item.name}}</td>
-					<td>{{item.name}}</td>
-					<td>{{item.description}}</td>
-					<td>{{item.name}}</td>
+					<td>{{item.regionId}}</td>
+					<td>{{item.service.name}}</td>
+					<td>{{item.url}}</td>
+					<td>{{if item.enabled=='true'}}是{{else}}否{{/if}}</td>
 				</tr>
 			{{/each}}
 		</tbody>

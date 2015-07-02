@@ -248,15 +248,15 @@ define('commons/pub_menu', function() {
                     items: [
                         {
                             text: '<i class="fa fa-dot fa-1"></i>容器集群',
-                            link: '#container/'
+                            link: '#container/bay/index'
                         },
                         {
                             text: '<i class="fa fa-dot fa-1"></i>容器规格模板',
-                            link: '#container/'
+                            link: '#container/baymodle/index'
                         },
                         {
                             text: '<i class="fa fa-dot fa-1"></i>镜像管理',
-                            link: '#container/'
+                            link: '#container/docker-image/index'
                         }
                     ]
                 },
