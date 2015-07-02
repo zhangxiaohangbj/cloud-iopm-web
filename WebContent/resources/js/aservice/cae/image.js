@@ -16,7 +16,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 			callback: bindEvent
 		});*/
 		Common.render(true,{
-			tpl:'tpls/ccenter/vdc/list.html',
+			tpl:'tpls/aservice/cae/image.html',
 			callback: bindEvent
 		});
 	};
