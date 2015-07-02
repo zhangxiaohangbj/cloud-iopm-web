@@ -300,6 +300,9 @@ aside {
 .sidebar-nav > .active > a > .icon-arrow:before {
 	content: "\f105";
 }
+.nav-second-level{
+	background:#f9f9f9;
+}
 .nav-second-level > li > a:hover,
 .nav-second-level > li > a:focus {
 	color: #50c7cd;
