@@ -170,7 +170,8 @@ define(['Common','bs/modal','rq/text!tpls/fservice/block/volume/list-opts.html',
               ]
 		    },
 		    function($tar){
-		    	$('.tableMenus').empty().html($('.table-menus').html());
+		    	var $tbMenu = $tar.prev('.tableMenus');
+		    	$tbMenu.length && $tbMenu.empty().html($('.table-menus').html());
 				Common.$pageContent.removeClass("loading");
 		});
 		
