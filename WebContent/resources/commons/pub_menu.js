@@ -339,23 +339,23 @@ define('commons/pub_menu', function() {
                     items: [
                         {
                             text: '<i class="fa fa-circle fa-1"></i>集群管理',
-                            link: '#emr/'
+                            link: '#emr/cluster'
                         },
                         {
                             text: '<i class="fa fa-circle fa-1"></i>任务管理',
-                            link: '#emr/'
+                            link: '#emr/job'
                         },
                         {
                             text: '<i class="fa fa-circle fa-1"></i>集群模板管理',
-                            link: '#emr/'
+                            link: '#emr/template'
                         },
                         {
                             text: '<i class="fa fa-circle fa-1"></i>镜像管理',
-                            link: '#emr/'
+                            link: '#emr/image'
                         },
                         {
                             text: '<i class="fa fa-circle fa-1"></i>插件管理',
-                            link: '#emr/'
+                            link: '#emr/plugin'
                         }
                     ]
                 },
