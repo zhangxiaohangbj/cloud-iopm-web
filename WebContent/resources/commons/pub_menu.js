@@ -276,8 +276,16 @@ define('commons/pub_menu', function() {
                             link: '#cae/monitor'
                         },
                         {
-                            text: '<i class="fa fa-circle fa-1"></i>伸缩管理',
+                            text: '<i class="fa fa-circle fa-1"></i>伸缩组管理',
                             link: '#cae/scaling'
+                        },
+                        {
+                            text: '<i class="fa fa-circle fa-1"></i>存储管理',
+                            link: '#cae/storage'
+                        },
+                        {
+                            text: '<i class="fa fa-circle fa-1"></i>网络管理',
+                            link: '#cae/network'
                         }
                     ]
                 },
