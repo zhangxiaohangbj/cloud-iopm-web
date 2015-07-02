@@ -21,7 +21,7 @@
                 {{each keypairs as item i}}
                     <tr>
                         <td><label><input type="checkbox" myval="{{item.keypair.id}}"></label></td>
-                        <td><a href="#ccenter/security/keypair/detail/{{item.keypair.id}}" class="keypair-name" data="{{item.keypair.id}}">{{item.keypair.name}}</td>
+                        <td><a href="#fservice/security/keypair/detail/{{item.keypair.id}}" class="keypair-name" data="{{item.keypair.id}}">{{item.keypair.name}}</td>
                         <td>{{item.keypair.fingerprint}}</td>
                         <td>                        
                         <a class="btn-opt keypair-del" data-toggle="tooltip" title="删除密钥对" data="{{item.keypair.id}}" style="margin: 0;"><i class="fa fa-trash-o fa-fw"></i></a>
