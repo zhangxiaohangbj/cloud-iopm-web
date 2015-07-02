@@ -32,6 +32,8 @@
 				<value>classpath*:/application.properties</value>
 				<!-- 数据源配置 -->
 				<value>classpath*:/dataSource.properties</value>
+				<!--镜像配置 -->
+				<value>classpath*:/images.properties</value>
 			</list>
 		</property>
 	</bean>
