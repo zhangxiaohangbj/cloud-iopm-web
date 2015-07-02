@@ -1,0 +1,110 @@
+<div class="page-header">
+    <ol class="breadcrumb minus">
+        <li><a href="#cresource/env" class="reload">虚拟环境管理</a></li>
+        <li class="active">{{name}}</li>
+        <li class="backlist"><a href="#cresource/env">返回列表</a></li>
+    </ol>
+</div>
+<div class="page-body">
+    <div class="pane">
+        <div class="pane-content">
+            <div class="detail-info">
+
+                <!-- Nav tabs -->
+                <ul class="nav nav-tabs" role="tablist">
+                    <li class="active"  data-for="basic"><a href="javascript:void(0)">基本信息</a></li>
+                    <li data-for="connector"><a href="javascript:void(0)">连接器信息</a></li>
+                </ul>
+                <div class="tab-content detail-info-content">
+                    <div  class="tab-pane basic active">
+                        <div class="clearfix">
+                            <div class="row">
+                                <label  class="control-label col-sm-3">ID：</label>
+                                <div class="col-sm-7 col-sm query-info query-volume-name">
+                                    {{id}}
+                                </div>
+                            </div>
+                            <div class="row">
+                                <label  class="control-label col-sm-3">名称：</label>
+                                <div class="col-sm-7 col-sm query-info query-volume-name">
+                                    {{name}}
+                                </div>
+                            </div>
+                            <div class="row">
+                                <label  class="control-label col-sm-3">虚拟化类型：</label>
+                                <div class="col-sm-7 col-sm query-info query-volume-name">
+                                    {{type}}
+                                </div>
+                            </div>
+                            <div class="row">
+                                <label class="control-label col-sm-3">版本：</label>
+                                <div class="col-sm-7 col-sm query-info query-volume-size">
+                                    {{version}}
+                                </div>
+                            </div>
+                            <div class="row">
+                                <label class="control-label col-sm-3">提供者：</label>
+                                <div class="col-sm-7 col-sm query-info query-volume-size">
+                                    {{vendor}}
+                                </div>
+                            </div>
+                            <div class="row">
+                                <label class="control-label col-sm-3">所属区域：</label>
+                                <div class="col-sm-7 col-sm query-info query-volume-size">
+                                    {{regionName}}
+                                </div>
+                            </div>
+                            <div class="row">
+                                <label class="control-label col-sm-3">同步周期：</label>
+                                <div class="col-sm-7 col-sm query-info query-volume-size">
+                                    {{refreshCycle}}
+                                </div>
+                            </div>
+                    </div>
+
+                </div>
+                    <div class="tab-pane connector">
+                        <div class="clearfix">
+                            <div class="row">
+                                <label  class="control-label col-sm-3">ID：</label>
+                                <div class="col-sm-7 col-sm query-info query-volume-name">
+                                    {{connector.id}}
+                                </div>
+                            </div>
+                            <div class="row">
+                                <label  class="control-label col-sm-3">名称：</label>
+                                <div class="col-sm-7 col-sm query-info query-volume-name">
+                                    {{connector.name}}
+                                </div>
+                            </div>
+                            <div class="row">
+                                <label  class="control-label col-sm-3">版本：</label>
+                                <div class="col-sm-7 col-sm query-info query-volume-name">
+                                    {{connector.version}}
+                                </div>
+                            </div>
+                            <div class="row">
+                                <label class="control-label col-sm-3">IP：</label>
+                                <div class="col-sm-7 col-sm query-info query-volume-size">
+                                    {{connector.ip}}
+                                </div>
+                            </div>
+                            <div class="row">
+                                <label class="control-label col-sm-3">端口号：</label>
+                                <div class="col-sm-7 col-sm query-info query-volume-size">
+                                    {{connector.port}}
+                                </div>
+                            </div>
+                            <div class="row">
+                                <label class="control-label col-sm-3">用户名：</label>
+                                <div class="col-sm-7 col-sm query-info query-volume-size">
+                                    {{connector.username}}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+            </div>
+        </div>
+        </div>
+    </div>
+</div>

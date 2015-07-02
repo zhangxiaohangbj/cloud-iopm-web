@@ -1,0 +1,11 @@
+{{each opts as item i}}
+<a class="btn-opt" data-toggle="tooltip" data-id="{{data.id}}" title="{{item.title}}" class="{{item.clazz}}" style="margin: 0;"><i class="fa fa-camera"></i></a>
+{{/each}}
+<div class="dropdown">
+	<a class="btn-opt dropdown-toggle" data-toggle="dropdown" title="更多"  aria-expanded="false" ><i class="fa fa-angle-double-right"></i></a>
+	<ul class="dropdown-menu" style="right: 0;left: initial;">
+		{{each moreOpts as item i}}
+		<li><a class="{{item.clazz}}" data-id="{{data.id}}" href="javascript:void(0)"><i class="fa fa-file-text fa-fw"></i>{{item.title}}</a></li>
+		{{/each}}
+	</ul>
+</div>

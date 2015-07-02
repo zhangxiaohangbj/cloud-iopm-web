@@ -1,11 +1,12 @@
 define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3','jq/form'],function(Common,Modal){
 	Common.requestCSS('css/wizard.css');
+	var current_vdc_id = Common.cookies.getVdcId();
 	var init = function(){
 		Common.$pageContent.addClass("loading");
 		//先获取数据，进行加工后再去render
 		Common.render(true,{
 			tpl:'tpls/ccenter/image/list.html',
-			data:'/image/v2/9cc717d8047e46e5bf23804fc4400247/images?isDeleted=false',
+			data:'/image/v2/'+current_vdc_id+'/images?isDeleted=false',
 			beforeRender: function(data){
 				return data;
 			},
@@ -58,6 +59,31 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 		            }
 		        });
 			},
+			initSpinbox : function(){
+				require(['bs/spinbox'],function(){
+    				$('#setMinDisk').spinbox({
+    					value: 0,
+    					min: 0
+    				});
+    				$('#setMinRam').spinbox({
+    					value: 0,
+    					min: 0
+    				});
+    			})
+			},
+			initImageResource : function(){
+				$(document).off("change","#imageSource");
+				$(document).on("change","#imageSource",function(){
+					var value = $(this).val();
+					if("file" == value){
+						$("#fileDiv").removeClass("hidden");
+						$("#locationsDiv").addClass("hidden");
+					}else if("address" == value){
+						$("#locationsDiv").removeClass("hidden");
+						$("#fileDiv").addClass("hidden");
+					}
+				});
+			}
 	    }
 		
 		//弹窗初始化
@@ -113,7 +139,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 	    	            				delete pageData["locations"];
 	    	            				delete pageData["imageSource"];
 	    	            				debugger;
-	    	            				Common.xhr.postJSON('/image/v2/9cc717d8047e46e5bf23804fc4400247/images',pageData,function(data){
+	    	            				Common.xhr.postJSON('/image/v2/'+current_vdc_id+'/images',pageData,function(data){
 	    	    	                		if(data){
 	    	    	                			Modal.alert("保存成功",function(){
 		    	    	                			dialog.close();
@@ -125,7 +151,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 	    	    	                			});
 	    									}
 	    								});*/
-	    	            				$("#editImage").attr("action", "image/v2/9cc717d8047e46e5bf23804fc4400247/images/upload");
+	    	            				$("#editImage").attr("action", "image/v2/"+current_vdc_id+"/images/upload");
 	    	            				$("#editImage").ajaxSubmit(function () {
 	    	            					Modal.alert("保存成功",function(){
 //	    	    	                			dialog.close();
@@ -148,10 +174,8 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 	    	
 	    	//编辑弹框
 	    	Edit : function(id,cb){
-	    		Common.xhr.ajax('/image/v2/9cc717d8047e46e5bf23804fc4400247/images/'+id,function(data){
-	    			debugger;
-	    			Common.render('tpls/ccenter/image/add.html',data,function(html){
-	    				debugger;
+	    		Common.xhr.ajax('/image/v2/'+current_vdc_id+'/images/'+id,function(data){
+	    			Common.render('tpls/ccenter/image/edit.html',data,function(html){
 						Modal.show({
 		    	            title: '编辑镜像',
 		    	            message: html,
@@ -185,7 +209,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 		    	            				delete pageData["locations"];
 		    	            				delete pageData["imageSource"];
 		    	            				debugger;
-		    	            				Common.xhr.putJSON('/image/v2/9cc717d8047e46e5bf23804fc4400247/images/'+id,pageData,function(data){
+		    	            				Common.xhr.putJSON('/image/v2/'+current_vdc_id+'/images/'+id,pageData,function(data){
 		    	    	                		if(data){
 		    	    	                			Modal.alert("保存成功",function(){
 			    	    	                			dialog.close();
@@ -206,7 +230,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 		    	                    dialog.close();
 		    	                }
 		    	            }],
-		    	            onshown : cb(data)
+		    	            onshown : cb
 		    	        });
 					})
 	    		});
@@ -216,17 +240,22 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 		//新建
 		$("#imageTable_wrapper span.btn-add").on("click",function(){
 	    	EditData.Add(function(){
+	    		debugger;
 	    		EventsHandler.formValidator();
+	    		EventsHandler.initSpinbox();
+	    		EventsHandler.initImageResource();
 	    	});
 	    });
 		
 	    //编辑
 	    $("#imageTable_wrapper a.btn-opt").on("click",function(){
-	    	EditData.Edit($(this).attr("data"),function(data){
+	    	EditData.Edit($(this).attr("data"),function(){
+	    		debugger;
 	    		EventsHandler.formValidator();
-	    		alert(data.diskFormat+"<1>"+$("#diskFormat"));
-	    		$("#diskFormat").val(data.diskFormat);
-//	    		$("#diskFormat").find("option[text='"+data.diskFormat+"']").attr("selected",true);
+	    		EventsHandler.initSpinbox();
+//	    		$("#diskFormat").val(data.diskFormat);
+//	    		alert(data.diskFormat);
+//	    		$("#diskFormat").find("option[value='"+data.diskFormat+"']").attr("selected",true);
 	    	});
 	    });
 	    
@@ -236,7 +265,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 	    	var id = $(this).attr("data");
 	    	Modal.confirm('确定要删除吗?', function(result){
 	    		if(result) {
-	    			Common.xhr.del('/image/v2/9cc717d8047e46e5bf23804fc4400247/images/'+id,"",function(data){
+	    			Common.xhr.del('/image/v2/'+current_vdc_id+'/images/'+id,"",function(data){
     					if(data){
                 			Modal.alert("删除成功",function(){
 	                			Common.router.reload();

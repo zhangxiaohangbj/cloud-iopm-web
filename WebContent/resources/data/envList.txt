@@ -1,0 +1,25 @@
+{
+    "data": [
+        {
+            "id" : "038ad3ad5e77491da48ef00994276164",
+            "name":"appEnv1",
+            "status":"运行中",
+            "URL":"appEnv1.cae.com",
+            "description": "app应用的开发环境"
+        },
+        {
+            "id" : "038ad3ad5e77491da48ef00994276164",
+            "name":"appEnv2",
+            "status":"运行中",
+            "URL":"appEnv2.cae.com",
+            "description": "app应用的测试环境"
+        },
+         {
+            "id" : "038ad3ad5e77491da48ef00994276164",
+             "name":"appEnv3",
+            "status":"运行中",
+            "URL":"appEnv3.cae.com",
+            "description": "app应用的生产环境"
+        }
+    ]
+}

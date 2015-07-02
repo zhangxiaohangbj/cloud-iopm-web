@@ -1,0 +1,136 @@
+<style>
+#choseResource .panel-heading{
+	height:46px;
+	line-height:26px;
+}
+#choseResource .select{
+	height:28px;
+	line-height:22px;
+}
+</style>
+<div class="wizard" id="create-zone-wizard" data-title="添加可用分区">
+    <!-- 基本信息 -->
+    <div class="wizard-card" data-cardname="basci">
+        <h3>基本信息</h3>
+        <div class="wizard-card-content col-sm-8">
+            <div class="wizard-input-section">
+                <div class="form-group">
+                    <label for="zone-name" class="control-label col-sm-3"><span>* </span>分区名称：</label>
+                    <div class="col-sm-5 col-sm">
+                        <input type="text" class="form-control" id="zone-name" name="zone-name"  placeholder="可用分区名称"/>
+                    </div>
+                </div>
+            </div>
+
+            <div class="wizard-input-section">
+                <div class="form-group">
+                    <label for="select-env" class="control-label col-sm-3"><span>* </span>虚拟化环境：</label>
+                    <div class="col-sm-5 col-sm">
+                        <select name="select-env" id="select-env"  class="form-control select select-env">
+                            {{each data.virtualEnv as item i}}
+                            <option value="{{item.id}}">{{item.name}}</option>
+                            {{/each}}
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <div class="wizard-input-section">
+                <div class="form-group">
+                    <label for="select-region" class="control-label col-sm-3"><span>* </span>所属区域：</label>
+                    <div class="col-sm-5 col-sm">
+                        <select name="select-region" id="select-region"  class="form-control select select-region">
+                            {{each data.region as item i}}
+                                <option value="{{item.regionId}}">{{item.regionName}}</option>
+                            {{/each}}
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <div class="wizard-input-section">
+            <div class="form-group">
+                <label for="zone-description" class="control-label col-sm-3"><span>* </span>分区描述：</label>
+                <div class="col-sm-5 col-sm">
+                    <textarea class="form-control" cols="8" rows="8" id="zone-description" name="zone-description"></textarea>
+                </div>
+            </div>
+        </div>
+
+        </div>
+        <div class="wizard-card-desc col-sm-4">
+            <p>此处有说明，省略100字；</p>
+        </div>
+
+    </div>
+
+    <!--详细信息 -->
+    <div class="wizard-card" data-cardname="resource">
+        <h3>资源</h3>
+        <div class="wizard-card-content  col-sm-8">
+
+
+            <div class="wizard-input-section">
+                <div class="chose-resource choose-style  clearfix"  id="choseResource">
+                </div>
+            </div>
+
+        </div>
+        <div class="wizard-card-desc col-sm-4">
+            <p>一个虚拟数据中心对于一个租户：选择创建你的云主机所用的镜像。其中，从镜像创建是指从不同类型操作系统的镜像文件创建，另外可选择是否创建一个新磁盘；
+                从快照创建是指从云主机的快照创建；
+                从云硬盘创建是指从一个通过云主机创建的云硬盘来创建云主机，云硬盘会被挂载到云主机上；</p>
+        </div>
+
+    </div>
+
+    <!--选择资源 -->
+    <div class="wizard-card" data-cardname="confirm">
+        <h3>确认信息</h3>
+        <div class="wizard-card-content col-sm-8">
+            <div class="wizard-input-section">
+                <div class="form-group">
+                    <label for="zone-name-confirm" class="control-label col-sm-3">分区名称：</label>
+                    <div class="col-sm-5 col-sm">
+                        <input type="text" disabled class="form-control" id="zone-name-confirm"/>
+                    </div>
+                </div>
+            </div>
+
+            <div class="wizard-input-section">
+                <div class="form-group">
+                    <label for="select-env-confirm" class="control-label col-sm-3">虚拟化环境：</label>
+                    <div class="col-sm-5 col-sm">
+                        <input type="text" disabled class="form-control" id="select-env-confirm"  />
+                    </div>
+                </div>
+            </div>
+
+            <div class="wizard-input-section">
+                <div class="form-group">
+                    <label for="select-region-confirm" class="control-label col-sm-3">所属区域：</label>
+                    <div class="col-sm-5 col-sm">
+                        <input type="text" disabled class="form-control" id="select-region-confirm" />
+                    </div>
+                </div>
+            </div>
+
+            <div class="wizard-input-section">
+                <div class="form-group">
+                    <label for="zone-description-confirm" class="control-label col-sm-3">接入协议：</label>
+                    <div  class="col-sm-5 col-sm">
+                        <textarea class="form-control" cols="8" rows="8" id="zone-description-confirm"></textarea>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+
+        <div class="wizard-card-desc col-sm-4">
+            <p>此处有说明，省略1000字</p>
+            <p>磁盘分区：自动：全部磁盘是一个分区，自动调整大小。手动：快速创建，但是需要手动分区。</p>
+        </div>
+    </div>
+
+</div>

@@ -37,7 +37,6 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 		       * aoData：请求参数，其中包含search 输入框中的值
 		       * */
 		      "fnServerData": function( sSource, aoData, fnCallback ) {
-		    	  debugger;
 		    	  var url = sSource + (aoData[3].value/aoData[4].value+1) +"/"+aoData[4].value
 		    	    $.ajax( {   
 		    	        "url": url, 
@@ -96,8 +95,13 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
                        "data": {id:"id",name:"name",virtualEnvId:"virtualEnvId"},
                        "render": function(data, type, full) {
                     	  // debugger;
-                         return '<a class="btn-opt members" href="javascript:void(0)" data="'+data.id+'" data-toggle="tooltip" title="成员管理" data-act="stop" style="margin: 0;"><i class="fa fa-user fa-fw"></i></a>'
-							+'<div class="dropdown">'
+                         return '<a class="btn-opt members" href="javascript:void(0)" data="'+data.id+'" data-toggle="tooltip" title="成员管理" style="margin: 0;"><i class="fa fa-user fa-fw"></i></a>'
+                            +'<a class="btn-opt updateQuota" href="javascript:void(0)" data="'+data.id+'" data-toggle="tooltip" title="配额管理" style="margin: 0;"><i class="fa fa-suitcase fa-fw"></i></a>'
+                            +'<a class="btn-opt vdcAz" href="javascript:void(0)" data="'+data.id+'" data-env="'+data.virtualEnvId+'" data-toggle="tooltip" title="可用分区管理" style="margin: 0;"><i class="fa fa-delicious fa-fw"></i></a>'
+                            +'<a class="btn-opt usage" href="#ccenter/vdc/usage/'+data.id+'" data="'+data.id+'" data-name="'+data.name+'" data-toggle="tooltip" title="使用情况" style="margin: 0;"><i class="fa fa-file-text fa-fw"></i></a>'
+                            +'<a class="btn-opt editTenantBasic" href="javascript:void(0)" data="'+data.id+'" data-toggle="tooltip" title="编辑" style="margin: 0;"><i class="fa fa-edit fa-fw"></i></a>'
+                            +'<a class="btn-opt deleteTenant" href="javascript:void(0)" data="'+data.id+'" data-name="'+data.name+'" data-toggle="tooltip" title="删除" style="margin: 0;"><i class="fa fa-trash-o fa-fw"></i></a>';
+							/*+'<div class="dropdown">'
 							+'<a class="btn-opt dropdown-toggle" data-toggle="dropdown" title="更多"  aria-expanded="false" ><i class="fa fa-angle-double-right"></i></a>'
 							+'<ul class="dropdown-menu" style="right: 0;left: initial;">'
 							+'<li><a href="javascript:void(0)"  data="'+data.id+'" class="updateQuota"><i class="fa fa-list-alt fa-fw"></i>配额管理</a></li>'
@@ -105,7 +109,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 							+'<li><a href="#ccenter/vdc/usage/'+data.id+'" class="usage" data="'+data.id+'" data-name="'+data.name+'"><i class="fa fa-file-text fa-fw"></i>使用情况</a></li>'
 							+'<li><a href="javascript:void(0)" data="'+data.id+'" class="editTenantBasic"><i class="fa fa-edit fa-fw"></i>编辑</a></li>'
 							+'<li><a href="javascript:void(0)" data="'+data.id+'" data-name="'+data.name+'" class="deleteTenant"><i class="fa fa-trash-o fa-fw"></i>删除</a></li>'
-							+'</ul></div>';
+							+'</ul></div>';*/
                        }
                      }
                 ]
@@ -173,7 +177,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
     					"security_group": $(obj +" [name='security_group']").val(),
         				}
 				},
-				userJson:function(obj){
+				userJson:function(obj,vdc_id){
 					var memberList = [];
 					$(obj).find(".list-group-item").each(function(i,user){
 						var uid = $(user).find(".member").attr("data-id");
@@ -186,7 +190,12 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 								userRoleList.push({"uid":uid,"roleId":roleId,"loginName":loginName,"roleName":roleName});
 							}
 						});
-						memberList.push({"uid":uid,"userRoleList":userRoleList});
+						if(vdc_id){
+							memberList.push({"uid":uid,vdcId:vdc_id,"userRoleList":userRoleList});
+						}else{
+							memberList.push({"uid":uid,"userRoleList":userRoleList});
+						}
+						
 					});
 					return memberList;
 				}
@@ -603,13 +612,13 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 	    });
 	    
 	    //更新配额
-		$(document).off("ul.dropdown-menu a.updateQuota");
-		$(document).on("click","ul.dropdown-menu a.updateQuota",function(){
+		$(document).off(".updateQuota");
+		$(document).on("click",".updateQuota",function(){
 	    	more.QuotaSets($(this).attr("data"));
 	    });
 	    //可用分区
-		$(document).off("ul.dropdown-menu a.vdcAz");
-		$(document).on("click","ul.dropdown-menu a.vdcAz",function(){
+		$(document).off(".vdcAz");
+		$(document).on("click",".vdcAz",function(){
 	    	var ve_id =  $(this).attr("data-env");
 	    	var vdc_id = $(this).attr("data");
 	    	//先获取az后，再render
@@ -626,13 +635,13 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 	    	more.AZ(ve_id,vdc_id);
 	    });
 	    //删除一个vdc
-		$(document).off("ul.dropdown-menu a.deleteTenant");
-		$(document).on("click","ul.dropdown-menu a.deleteTenant",function(){
+		$(document).off(".deleteTenant");
+		$(document).on("click",".deleteTenant",function(){
 	    	more.DeleteTenant($(this).attr("data"),$(this).attr("data-name"));
 	    });
 	   //编辑vdc
-		$(document).off("ul.dropdown-menu a.editTenantBasic");
-		$(document).on("click","ul.dropdown-menu a.editTenantBasic",function(){
+		$(document).off(".editTenantBasic");
+		$(document).on("click",".editTenantBasic",function(){
 	    	more.EditTenantBasic($(this).attr("data"));
 	    });
 	    //成员管理
@@ -940,7 +949,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 	    	    	                label: '保存',
 	    	    	                action: function(dialog) {
 	    	    	                	var userRolesData= {
-	    	    	                			"memberList":jsonData.userJson("#vdc-users .list-group-select")
+	    	    	                			"memberList":jsonData.userJson("#vdc-users .list-group-select",vdc_id)
 	    	    	                	}
 	    	    	                	Common.xhr.postJSON('/identity/v2.0/tenants/'+vdc_id+'/userroles',userRolesData,function(data){
 	    	    	                		if(data){
