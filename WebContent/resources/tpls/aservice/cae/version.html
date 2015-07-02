@@ -1,0 +1,59 @@
+<div class="page-header clearfix">
+	<ol class="breadcrumb">
+	  <li class="active"><i class="icon-squre-d"></i>应用版本</li>
+	</ol>
+	<p class="description">
+		虚拟数据中心管理是以租户粒度的资源管理，其成员用户可在虚拟数据中心所管理的资源范围内创建不同规格的云主机。
+	</p>
+</div>
+<div class="page-body">
+	<div class="pane">
+		<div class="pane-content">
+			<table class="table table-primary table-striped" id="VdcTable">
+				<thead>
+					<tr>
+						<th class="c2">
+							<label><input type="checkbox" class="selectAll"></label>
+						</th>
+						<th class="c4">标识</th>
+						<th class="c6">状态</th>
+						<th class="c2">描述</th>
+						<th class="c6 sorting_disabled">操作</th>
+					</tr>
+				</thead>
+				<tbody>
+				{{each list as item i}}
+					<tr>
+						<td><label><input type="checkbox"></label></td>
+						<td>{{item.identify}}</td>
+						<td>{{item.status}}</td>
+						<td>
+			 			{{item.description}}
+			 			</td>
+						<td>
+						<a class="btn-opt members" href="javascript:void(0)" data="{{item.id}}" data-toggle="tooltip" title="更新版本" style="margin: 0;"><i class="fa fa-edit fa-fw"></i></a>
+						<a class="btn-opt members" href="javascript:void(0)" data="{{item.id}}" data-toggle="tooltip" title="删除版本" style="margin: 0;"><i class="fa fa-trash-o fa-fw"></i></a>
+						<a class="btn-opt members" href="javascript:void(0)" data="{{item.id}}" data-toggle="tooltip" title="目录结构" style="margin: 0;"><i class="fa fa-list-alt fa-fw"></i></a>
+						<!-- <div class="dropdown">
+						    <a class="btn-opt dropdown-toggle" data-toggle="dropdown" title="更多"  aria-expanded="false" ><i class="fa fa-angle-double-right"></i></a>
+							<ul class="dropdown-menu" style="right: 0;left: initial;">
+								<li><a href="#aservice/cae/version/?appId={{item.id}}"  data="{{item.id}}" ><i class="fa fa-list-alt fa-fw"></i>应用版本</a></li>
+								<li><a href="#aservice/cae/env/?appId={{item.id}}" data="{{item.id}}"><i class="fa fa-gear fa-fw"></i>应用环境</a></li>
+							</ul>
+						</div> -->	
+						</td>
+					</tr>
+    			{{/each}}
+				</tbody>
+				<!-- <tbody></tbody> -->
+				<tfoot>
+					<tr>
+						<td>
+							<span class="text-danger">*</span> 可通过在实例上"<span class="nums">右键</span>"来进行常用操作,"<span class="nums">双击</span>"来编辑基本属性
+						</td>
+					</tr>
+				</tfoot>
+			</table>
+		</div>
+	</div>
+</div>

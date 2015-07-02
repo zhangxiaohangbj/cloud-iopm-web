@@ -1,11 +1,11 @@
-define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3'],function(Common,Modal){
+define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3','bs/switcher'],function(Common,Modal){
 	Common.requestCSS('css/wizard.css');
 	var init = function(){
 		Common.$pageContent.addClass("loading");
 		//先获取数据，进行加工后再去render
 		Common.render(true,{
 			tpl:'tpls/sysmanagement/functiontree/list.html',
-			data:'/v2.0/subnets/page/1/10',  //需修改接口
+			data:'/identity/v2.0/functiontrees',
 			beforeRender: function(data){
 				return data.result;
 			},
@@ -26,11 +26,13 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 		var DataIniter = {
 			//已关联的url
 			getUrlList : function(id,name){
-				Common.render('tpls/sysmanagement/functiontree/relatedurllist.html','/v2.0/subnets/page/1/10',function(html){  //需修改接口
+				Common.render('tpls/sysmanagement/functiontree/relatedurllist.html','/identity/v2.0/functiontree/functionitemwithurl/'+id,
+					function(html){
+					debugger
     				$("#urllist").html(html);
     				Common.initDataTable($('#UrlTable'),function($tar){
     					$tar.prev().find('.left-col:first').append(
-							'功能项【'+name+'】关联的URL列表：<span class="btn btn-add">关联URL </span>'
+							'功能项【'+name+'】关联的URL列表：<span class="btn btn-add" data="'+id+'" name="'+name+'">关联URL </span>'
 						);
     				});
     			})
@@ -48,6 +50,13 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 			                },
 			                'tree_desc': {
 			                    maxlength:100
+			                },
+			                'item_name': {
+			                    required: true,
+			                    maxlength:50
+			                },
+			                'seq': {
+			                	digits: true
 			                }
 			            }
 			        });
@@ -57,7 +66,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 					$(document).off("click","#UrlTable_wrapper span.btn-add");
 					$(document).on("click","#UrlTable_wrapper span.btn-add",function(){
 						var obj = $(this);
-						Common.render('tpls/sysmanagement/functiontree/urllist.html','/v2.0/roles/page/10/1',function(html){ //需改接口
+						Common.render('tpls/sysmanagement/functiontree/urllist.html','/identity/v2.0/url/page/1/10',function(html){
 							Modal.show({
 			    	            title: '选择关联URL',
 			    	            message: html,
@@ -66,15 +75,19 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 			    	            buttons: [{
 			    	                label: '确定',
 			    	                action: function(dialog) {
-			    	                	var serverData = [];
+			    	                	var urlIds = "";
 			    	                	$("#chooseUrlTable input[type='checkbox']:checked").each(function(){
-			    	                		serverData.push({"id":$(this).val()});
+			    	                		urlIds += $(this).val()+",";
 			    	                	})
-			    	                	Common.xhr.putJSON('/v2.0/OS-KSADM/roles/'+id,serverData,function(data){ //需修改接口
+			    	                	serverData = {
+			    	                		"functionItemId":obj.attr("data"),
+			    	                		"urlIds":urlIds.substring(0,urlIds.length-1)
+			    	                	}
+			    	                	Common.xhr.postJSON('/identity/v2.0/functiontree/functionitem/functionitemurl',serverData,function(data){
 			    	                		if(data){
 			    	                			Modal.success('保存成功')
 			    	                			setTimeout(function(){Modal.closeAll()},2000);
-			    	                			Common.router.route();
+			    	                			DataIniter.getUrlList(obj.attr("data"), obj.attr("name"));
 											}else{
 												Modal.warning ('保存失败')
 											}
@@ -101,9 +114,14 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 					$(document).on("click","#UrlTable_wrapper a.btn-cancel",function(){
 	 			    	 var obj = $(this);
 	 			    	 var id = $(this).attr("data");
+	 			    	 var node = treeObj.getSelectedNodes()[0];
 	 			    	 Modal.confirm('确定要取消关联该URL吗?', function(result){
 	 			             if(result) {
-	 			            	 Common.xhr.del('/v2.0/OS-KSADM/roles/'+id,  //需修改接口
+	 			            	serverData = {
+		    	                		"functionItemId":node.id,
+		    	                		"urlIds":id
+		    	                	}
+	 			            	 Common.xhr.del('/identity/v2.0/functiontree/functionitem/functionitemurl',  //需修改接口
 	 			                     function(data){
 	 			                    	 if(data){
 	 			                    		 Modal.success('取消成功')
@@ -133,7 +151,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 	 			    	 }
 	 			    	 Modal.confirm('确定要'+old_text+'该URL吗?', function(result){
 	 			             if(result) {
-	 			            	 Common.xhr.del('/v2.0/OS-KSADM/roles/'+id,  //需修改接口
+	 			            	 Common.xhr.del('/identity/v2.0/OS-KSADM/roles/'+id,  //需修改接口
 	 			                     function(data){
 	 			                    	 if(data){
 	 			                    		 Modal.success(old_text+'成功')
@@ -148,6 +166,23 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 	 			             }
 	 			         });
 	 			     });
+				},
+				//开关
+				switcher:function(){
+					$("#addFunctionItem input[type=\"checkbox\"], input[type=\"radio\"]").not("[data-switch-no-init]").switcher();
+				},
+				//添加并移动节点,移动目标节点后
+				moveNode:function(treeObj,node,newNode,seq){
+					var nodes;
+					if(node == "root"){  //父节点为根节点
+						nodes = treeObj.getNodes();
+					}else
+					nodes = node.children;
+        			if(nodes && nodes.length > 0){
+        				if(seq > nodes.length) seq = nodes.length;
+            			treeObj.moveNode(nodes[seq > 0? seq-1:0], newNode, seq > 0?"next":"prev");
+        			}else
+        				treeObj.addNodes(node, newNode);
 				}
 		}
 		//增加按钮
@@ -162,8 +197,11 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
     	                action: function(dialog) {
     	                	var valid = $(".form-horizontal").valid();
     	            		if(!valid) return false;
-    	                	var serverData = $(".form-horizontal").serializeArray();
-    	                	Common.xhr.postJSON('/v2.0/OS-KSADM/roles',serverData,function(data){  //需修改接口
+    	                	var serverData = {
+    	                		"treeDesc": $(" [name='tree_desc']").val(),
+    	                		"treeName": $(" [name='tree_name']").val()
+    	                	};
+    	                	Common.xhr.postJSON('/identity/v2.0/functiontree',serverData,function(data){  //需修改接口
     	                		if(data){
     	                			Modal.success('保存成功')
     	                			setTimeout(function(){Modal.closeAll()},2000);
@@ -188,11 +226,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 		//编辑
 	    $("#FunctionTable_wrapper a.btn-edit").on("click",function(){
 	    	var id= $(this).attr("data");
-	    	Common.xhr.ajax('/v2.0/subnets/'+id,function(data){  //需修改接口
-	    		data={
-	    				"tree_name":"tree1",
-	    				"tree_desc":"tree1......."
-	    		}
+	    	Common.xhr.ajax('/identity/v2.0/functiontree/'+id,function(data){  //需修改接口
 	    		Common.render('tpls/sysmanagement/functiontree/edit.html',data,function(html){
 	    			Modal.show({
 	    	            title: '编辑功能树',
@@ -204,8 +238,11 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 	    	                	var valid = $(".form-horizontal").valid();
 	    	            		if(!valid) return false;
 	    	            		var serverData = {
-		    	                	  };
-	    	                	Common.xhr.putJSON('/v2.0/OS-KSADM/roles/'+id,serverData,function(data){ //需修改接口
+	    	            				"id": id,
+	        	                		"treeDesc": $(" [name='tree_desc']").val(),
+	        	                		"treeName": $(" [name='tree_name']").val()
+	        	                	};
+	    	                	Common.xhr.putJSON('/identity/v2.0/functiontree',serverData,function(data){ //需修改接口
 	    	                		if(data){
 	    	                			Modal.success('保存成功')
 	    	                			setTimeout(function(){Modal.closeAll()},2000);
@@ -233,7 +270,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 	    	 var id = $(this).attr("data");
 	    	 Modal.confirm('确定要删除该功能树吗?', function(result){
 	             if(result) {
-	            	 Common.xhr.del('/v2.0/OS-KSADM/roles/'+id,  //需修改接口
+	            	 Common.xhr.del('/identity/v2.0/functiontree/'+id,  //需修改接口
 	                     function(data){
 	                    	 if(data){
 	                    		 Modal.success('删除成功')
@@ -250,54 +287,265 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 	     });
 	   //管理
 	    $("#FunctionTable_wrapper a.btn-edit-authority").on("click",function(){
+	    	var id = $(this).attr("data");
 	    	Common.render(true,{
 	 			tpl:'tpls/sysmanagement/functiontree/management.html',
-	 			data:'/v2.0/subnets/page/1/10',  //需修改接口
-	 			beforeRender: function(data){
-	 				//return data.result;
-	 				return data = [
-			 				{ id:1,name:"首页", open:true,isParent:true},
-			 				{ id:2,name:"基础环境", open:true,
-			 					children: [
-			 						{ id:21,name:"设备管理"},
-			 						{ id:22,name:"物理区域"},
-			 						{ id:23,name:"虚拟化环境"}
-			 					]},
-			 				{ id:3,name:"系统管理", open:true,
-			 					children: [
-		 		 						{ id:31,name:"用户管理"},
-		 		 						{ id:32,name:"角色管理"}
-		 		 					]}
-		
-			 				];
-	 			},
-	 			callback: function(data){
-	 				require(['jq/ztree'], function() {
-	            		var setting = {
-	            				edit: {
-	            					enable: true,
-	            					editNameSelectAll: true,
-	            					showRemoveBtn: true,
-	            					showRenameBtn: true
-	            				},
-	            				callback: {
-	            					onClick: onClick
-	            				}
-	            		};
+	 			callback: function(){
+	 				var rMenu, treeObj;
+	 				Common.xhr.ajax("/identity/v2.0/functiontree/rootnodes/"+id,function(data){
+	 					require(['jq/ztree'], function() {
+		            		var setting = {
+		            				view: {
+		            					showLine: false
+		            				},
+		            				callback: {
+		            					onClick: onClick,
+		            					onRightClick: OnRightClick
+		            				},
+		            				data:{
+		            					simpleData: {
+	    	            					enable: true
+	    	            				},
+	    	            				keep:{
+	    	            					parent:true  //即使该节点的子节点被全部删除或移走，依旧保持父节点状态
+	    	            				},
+	    	            				key:{
+	    	            					name:"itemName"
+	    	            				}
+		            				}
+//		            				async: {
+//		            					enable: true,  //异步加载
+//		            					url: getUrl
+//		            				}
+		            		};
 
-	            		var zNodes =data;
-	            		var code;
-	            		$.fn.zTree.init($("#functionTree"), setting, zNodes);
-	            		var treeObj = $.fn.zTree.getZTreeObj("functionTree");
-	                	var nodes = treeObj.getNodes();
-	                	DataIniter.getUrlList(nodes[0].id, nodes[0].name);
-	                	
-	            		function onClick(event, treeId, treeNode, clickFlag) {
-	            			DataIniter.getUrlList(treeNode.id, treeNode.name)
+		            		var zNodes = data;
+		            		if(!data || data.length == 0)
+		            			zNodes = [{id:0, pid:"root", name:"根节点"}];
+		            		rMenu = $("#rMenu");
+		            		$.fn.zTree.init($("#functionTree"), setting, zNodes);
+		            		treeObj = $.fn.zTree.getZTreeObj("functionTree");
+		                	var nodes = treeObj.getNodes();
+		                	//右侧展现
+		                	if(data && data.length > 0)
+		                	DataIniter.getUrlList(nodes[0].id, nodes[0].itemName);
+		                	//左击树节点
+		            		function onClick(event, treeId, treeNode, clickFlag) {
+		            			
+		            			DataIniter.getUrlList(treeNode.id, treeNode.itemName)
+		            		}
+		            		//右击树节点
+		            		function OnRightClick(event, treeId, treeNode) {
+		            			if (!treeNode && event.target.tagName.toLowerCase() != "button" && $(event.target).parents("a").length == 0) {
+		            				treeObj.cancelSelectedNode();
+		            				showRMenu("root", event.clientX, event.clientY);
+		            			} else if (treeNode && !treeNode.noR) {
+		            				treeObj.selectNode(treeNode);
+		            				showRMenu("node", event.clientX, event.clientY);
+		            				if(data && data.length > 0)
+		            				DataIniter.getUrlList(treeNode.id, treeNode.itemName);
+		            			}
+		            		}
+	 					});
+	 				})
+	 				
+
+	            		function showRMenu(type, x, y) {
+	            			$("#rMenu ul").show();
+	            			if (type=="root") {
+	            				$("#rMenu ul").hide();
+	            			} else {
+	            				$("#m_del").show();
+	            				$("#m_check").show();
+	            				$("#m_unCheck").show();
+	            				rMenu.css({"top":y+"px", "left":x+"px", "visibility":"visible"});
+	            			}
+	            			$("body").bind("mousedown", onBodyMouseDown);
 	            		}
-	            		
+	            		function hideRMenu() {
+	            			if (rMenu) rMenu.css({"visibility": "hidden"});
+	            			$("body").unbind("mousedown", onBodyMouseDown);
+	            		}
+	            		function onBodyMouseDown(event){
+	            			if (!(event.target.id == "rMenu" || $(event.target).parents("#rMenu").length>0)) {
+	            				rMenu.css({"visibility" : "hidden"});
+	            			}
+	            		}
+	            		//添加子功能项
+	            		$("#m_add_child").on("click",function() {
+	            			hideRMenu();
+	            			if (treeObj.getSelectedNodes()[0]) {
+	            				var node = treeObj.getSelectedNodes()[0];
+		            			Common.render('tpls/sysmanagement/functiontree/addfunctionitem.html',function(html){
+		            	    		Modal.show({
+		                	            title: '添加子功能项',
+		                	            message: html,
+		                	            nl2br: false,
+		                	            buttons: [{
+		                	                label: '保存',
+		                	                action: function(dialog) {
+		                	                	var valid = $(".form-horizontal").valid();
+		                	            		if(!valid) return false;
+		                	                	var serverData ={
+		                	                			"itemName": $("[name='item_name']").val(),
+		                	                			"seq": $("[name='seq']").val(),
+		                	                			"parentItemId" : node.id,
+		                	                			"isMenu":$("[name='is_menu']:checked").length? 1:0,
+		                	                			"treeId":id
+		                    					};
+		                	                	Common.xhr.postJSON('/identity/v2.0/functiontree/functionitem',serverData,function(data){
+		                	                		if(data){
+		                	                			Modal.success('保存成功');
+		                	                			//添加并移动节点
+		                	                			var newNode = { itemName:$("[name='item_name']").val(),pId:node.id};
+		                	                			EventsHandler.moveNode(treeObj,node,newNode,$("[name='seq']").val());
+		                	                			
+		                	                			setTimeout(function(){Modal.closeAll()},1000);
+		            								}else{
+		            									Modal.warning ('保存失败')
+		            								}
+		            							})
+		                	                }
+		                	            }, {
+		                	                label: '取消',
+		                	                action: function(dialog) {
+		                	                    dialog.close();
+		                	                }
+		                	            }],
+		                	            onshown : function(){
+		                	            	EventsHandler.formValidator();
+		                	            	EventsHandler.switcher();
+		                	            }
+		                	        });
+		                		});
+	            			}
+	            		})
+	            		//添加同级功能项
+	            		$("#m_add").on("click",function() {
+	            			hideRMenu();
+	            			if (treeObj.getSelectedNodes()[0]) {
+	            				var node = treeObj.getSelectedNodes()[0];
+		            			Common.render('tpls/sysmanagement/functiontree/addfunctionitem.html',function(html){
+		            	    		Modal.show({
+		                	            title: '添加同级功能项',
+		                	            message: html,
+		                	            nl2br: false,
+		                	            buttons: [{
+		                	                label: '保存',
+		                	                action: function(dialog) {
+		                	                	var valid = $(".form-horizontal").valid();
+		                	            		if(!valid) return false;
+		                	                	var serverData ={
+		                	                			"itemName": $("[name='item_name']").val(),
+		                	                			"seq": $("[name='seq']").val(),
+		                	                			"parentItemId" : node.getParentNode()? node.getParentNode().id:"root",
+		                	                			"isMenu":$("[name='is_menu']:checked").length? 1:0,
+		                	                			"treeId":id
+		                    					};
+		                	                	Common.xhr.postJSON('/identity/v2.0/functiontree/functionitem',serverData,function(data){
+		                	                		if(data){
+		                	                			Modal.success('保存成功')
+		                	                			setTimeout(function(){Modal.closeAll()},1000);
+		                	                			//添加并移动节点
+		                	                			var newNode = { itemName:$("[name='item_name']").val(), pId:node.getParentNode()? node.getParentNode().id:"root"};
+		                	                			EventsHandler.moveNode(treeObj,node.getParentNode()? node.getParentNode():"root",newNode,$("[name='seq']").val());
+		            								}else{
+		            									Modal.warning ('保存失败')
+		            								}
+		            							})
+		                	                }
+		                	            }, {
+		                	                label: '取消',
+		                	                action: function(dialog) {
+		                	                    dialog.close();
+		                	                }
+		                	            }],
+		                	            onshown : function(){
+		                	            	EventsHandler.formValidator();
+		                	            	EventsHandler.switcher();
+		                	            }
+		                	        });
+		                		});
+	            			}
+	            		})
+	            		//编辑功能项
+	            		$("#m_edit").on("click",function() {
+	            			hideRMenu();
+	            			if (treeObj.getSelectedNodes()[0]) {
+	            				var node = treeObj.getSelectedNodes()[0];
+		            			Common.render('tpls/sysmanagement/functiontree/editfunctionitem.html','/identity/v2.0/functiontree/functionitem/'+node.id,function(html){
+		            	    		Modal.show({
+		                	            title: '编辑功能项',
+		                	            message: html,
+		                	            nl2br: false,
+		                	            buttons: [{
+		                	                label: '保存',
+		                	                action: function(dialog) {
+		                	                	var valid = $(".form-horizontal").valid();
+		                	            		if(!valid) return false;
+		                	                	var serverData ={
+		                	                			"itemName": $("[name='item_name']").val(),
+		                	                			"seq": $("[name='seq']").val(),
+		                	                			"isMenu":$("[name='is_menu']:checked").val().length? 1:0,
+		                	                			"id":node.id
+		                    					};
+		                	                	Common.xhr.postJSON('/identity/v2.0/functiontree/functionitem',serverData,function(data){
+		                	                		if(data){
+		                	                			Modal.success('保存成功')
+		                	                			setTimeout(function(){Modal.closeAll()},1000);
+		                	                			//添加并移动节点
+		                	                			treeObj.removeNode(node);
+		                	                			var newNode = { itemName:$("[name='item_name']").val(), pId:node.getParentNode()? node.getParentNode().id:"root"};
+		                	                			EventsHandler.moveNode(treeObj,node.getParentNode()? node.getParentNode():"root",newNode,$("[name='seq']").val());
+		            								}else{
+		            									Modal.warning ('保存失败')
+		            								}
+		            							})
+		                	                }
+		                	            }, {
+		                	                label: '取消',
+		                	                action: function(dialog) {
+		                	                    dialog.close();
+		                	                }
+		                	            }],
+		                	            onshown : function(){
+		                	            	EventsHandler.formValidator();
+		                	            	EventsHandler.switcher();
+		                	            }
+		                	        });
+		                		});
+	            			}
+	            		})
+	            		//删除树节点
+	            		$("#m_del").on("click",function() {
+	            			hideRMenu();
+	            			var nodes = treeObj.getSelectedNodes();
+	            			if (nodes && nodes.length>0) {
+	            				var msg = "确定要删除该节点?"
+	            				if (nodes[0].children && nodes[0].children.length > 0) {
+	            					msg = "要删除的节点是父节点，如果删除将连同子节点一起删掉。\n\n请确认！";
+	            				}
+	            				Modal.confirm(msg, function(result){
+            			            if(result) {
+            			            	 treeObj.removeNode(nodes[0]);
+            			            	 Common.xhr.del('/identity/v2.0/functiontree/functionitem/'+nodes[0].id,
+            			                     function(data){
+            			                    	 if(data){
+            			                    		 Modal.success('删除成功')
+            			                			 setTimeout(function(){Modal.closeAll()},2000);
+            			                    		 treeObj.removeNode(nodes[0]);
+            			                    	 }else{
+            			                    		 Modal.warning ('删除失败')
+            			                    	 }
+            			                     });
+            			             }else {
+            			            	 Modal.closeAll();
+            			             }
+            			         });
+	            			}
+	            		})
 
-	            	});
+//	            	});
 	 				//关联url
 	 				EventsHandler.chooseUrl();
 	 				//取消关联

@@ -1,0 +1,44 @@
+<div class="page-header clearfix">
+	<ol class="breadcrumb minus">
+		<li class="active"><h4>密钥对详情</h4></li>
+		<li class="backlist"><a href="#fservice/security/keypair/">返回列表</a></li>
+	</ol>
+</div>
+<div class="page-body">
+	<div class="pane">
+		<div class="pane-content">
+			<div class="detail-info">
+				<div class="tab-content">
+					<div class="clearfix">
+						<div class="row">
+							<label class="control-label col-sm-2">名称：</label>
+							<div class="col-sm-3 col-sm">{{keypair.name}}</div>
+						</div>
+						<div class="row">
+							<label class="control-label col-sm-2">ID:</label>
+							<div class="col-sm-3 col-sm">{{keypair.id}}</div>
+						</div>
+						<div class="row">
+							<label class="control-label col-sm-2">指纹:</label>
+							<div class="col-sm-3 col-sm">{{keypair.fingerprint}}</div>
+						</div>
+						<div class="row">
+							<label class="control-label col-sm-2">创建时间:</label>
+							<div class="col-sm-3 col-sm">{{keypair.createdAt}}</div>
+						</div>
+						<div class="row">
+							<label class="control-label col-sm-2">用户ID:</label>
+							<div class="col-sm-3 col-sm">{{keypair.userId}}</div>
+						</div>
+						<div class="row">
+							<label class="control-label col-sm-2">公钥:</label>
+							<div
+								style="vword-wrap: break-word; word-break: break-all; width: 80%"
+								class="col-sm-3 col-sm">{{keypair.public_key}}</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

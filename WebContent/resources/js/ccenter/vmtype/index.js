@@ -2,7 +2,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 	Common.requestCSS('css/wizard.css');
 	var init = function(){
 		Common.$pageContent.addClass("loading");
-        Common.xhr.ajax('/v2/123/flavors/detail', function(data){
+        Common.xhr.ajax('compute/v2/123/flavors/detail', function(data){
 
            Common.render(true,'tpls/ccenter/vmtype/list.html',data,function(){
                 bindEvent();
@@ -43,11 +43,8 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 		var DataGetter = {
 				//虚拟化环境 virtural environment
 			getVdc: function(){
-				Common.xhr.ajax('/v2.0/tenants/page/10/1',function(pageVdcList){///v2/images
-                    var vdcList = pageVdcList.result;
-                    renderData.vdcList = vdcList;
-
-
+				Common.xhr.ajax('identity/v2.0/tenants',function(vdcList){///v2/images
+                    renderData.vdcList = vdcList['tenants'];
 				});
 			},
 
@@ -83,7 +80,6 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
                         selector: '#flavorVdcAccess',
                         allData:renderData.vdcList
                     };
-                    debugger
                     choose.initChoose(options);
                 });
 
@@ -134,12 +130,11 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
                     };
 
                     var flavor_id = ''
-                    Common.xhr.postJSON('/v2/123/flavors/',flavorData,function(data){
-                        debugger
+                    Common.xhr.postJSON('compute/v2/123/flavors/',flavorData,function(data){
                         flavor_id = data['flavor']['id']
                         var chooseList = DataGetter.getChoose('#flavorVdcAccess .list-group-select');
                         if(chooseList.length !=0 ){
-                            Common.xhr.putJSON('/v2/123/flavors/'+flavor_id+'/os-flavor-access',chooseList,function(data){
+                            Common.xhr.putJSON('compute/v2/123/flavors/'+flavor_id+'/os-flavor-access',chooseList,function(data){
                                 wizard.updateProgressBar(100);
                                 closeWizard();
                                 Common.router.route();
@@ -217,7 +212,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 	    var more = {
 		    	//更新flavor
                 updateFlavor : function(id){
-		    		Common.xhr.ajax('/v2/123/flavors/'+id,function(data){
+		    		Common.xhr.ajax('compute/v2/123/flavors/'+id,function(data){
 		    			Common.render('tpls/ccenter/vmtype/edit.html',data,function(html){
 		    				Modal.show({
 			    	            title: '编辑',
@@ -236,7 +231,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
                                                 "swap": $("#editFlavor [name='swap']").val()
                                             }
 			    	        			};
-			    	                	Common.xhr.putJSON('/v2/123/flavors/',flavorData,function(data){
+			    	                	Common.xhr.putJSON('compute/v2/123/flavors/',flavorData,function(data){
 			    	                		if(data){
 			    	                			alert("保存成功");
 			    	                			
@@ -258,9 +253,8 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 
             deleteFlavor : function(id){
                     Modal.confirm('确定要删除该云主机类型吗?', function(result){
-                        debugger
                         if(result) {
-                            Common.xhr.del('/v2/123/flavors/'+id,
+                            Common.xhr.del('compute/v2/123/flavors/'+id,
                                 function(data){
                                     if(data){
                                         Modal.success('删除成功')
@@ -277,7 +271,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
                 },
 
             accessFlavor : function(id){
-                Common.xhr.ajax('/v2/123/flavors/'+id+"/os-flavor-access",function(data){
+                Common.xhr.ajax('compute/v2/123/flavors/'+id+"/os-flavor-access",function(data){
                     var unselectedList = [];
                     var selectedList = [];
                     Common.render('tpls/ccenter/vmtype/flavorAccess.html',data,function(html){
@@ -289,8 +283,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
                                 label: '保存',
                                 action: function(dialog) {
                                     var chooseList = DataGetter.getChoose('#flavorVdcAccess .list-group-select');
-                                    debugger
-                                    Common.xhr.putJSON('/v2/123/flavors/'+id+'/os-flavor-access',chooseList,function(data){
+                                    Common.xhr.putJSON('compute/v2/123/flavors/'+id+'/os-flavor-access',chooseList,function(data){
                                         if(data){
                                             alert("保存成功");
                                             dialog.close();
@@ -303,7 +296,6 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
                             onshown : function(){
                                 require(['js/common/choose'],function(choose){
                                     var flavorVdcList = data['flavor_access'];
-                                    debugger
                                     a: for(var i=0; i<renderData.vdcList.length; i++){
                                          for(var j=0; j<flavorVdcList.length; j++){
                                             if(renderData.vdcList[i]['id'] == flavorVdcList[j]['tenant_id']){
@@ -314,7 +306,6 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
                                         }
                                         unselectedList.push(renderData.vdcList[i])
                                     }
-                                    debugger
                                     var options = {
                                         selector: '#flavorVdcAccess',
                                         allData: unselectedList,
