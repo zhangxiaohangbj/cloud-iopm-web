@@ -128,7 +128,7 @@ define('commons/pub_menu', function() {
                     items: [
                         {
                             text: '<i class="fa fa-circle fa-1"></i>云主机管理',
-                            link: '#vm'
+                            link: '#vm/'
                         },
                         {
                             text: '<i class="fa fa-circle fa-1"></i>弹性伸缩组管理',
