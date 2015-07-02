@@ -80,7 +80,25 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 					    "render": function(data, type, full) {
 					      return '<a href="#fservice/vm/detail/'+data.id+'" class="vm_name" data="'+data.id+'">'+data.name+"</a>";
 					    }
-					},					
+					},	
+					{
+					    "targets": [2],
+					    "defaultContent": "",
+					    "render": function(data, type, full) {
+					    	if(data!=null){
+					    		return data.replace(new RegExp(/(,)/g),'<br>');
+					    	}
+					    }
+					},	
+					{
+					    "targets": [3],
+					    "defaultContent": "",
+					    "render": function(data, type, full) {
+					    	if(data!=null){
+					    		return data.replace(new RegExp(/(,)/g),'<br>');
+					    	}
+					    }
+					},	
 					{
 					    "targets": [7],
 					    "data": "vmState",
