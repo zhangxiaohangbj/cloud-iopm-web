@@ -118,7 +118,7 @@ define(['Common','bs/modal','rq/text!tpls/fservice/block/volume/list-opts.html',
 			        {"data": "status"},
 			        {"data": "vmId"},
 			        {"data": "volume_type"},
-			        {"data": "os-vol-tenant-attr:tenant_id"},
+			        {"data": "vdcName"},
 			        {"data": "availability_zone"},
 			        {"data": "attach_status"},//是否只读未实现
 			        {"data": "description"},
@@ -203,6 +203,7 @@ define(['Common','bs/modal','rq/text!tpls/fservice/block/volume/list-opts.html',
 		});
 		
 		Common.on('click','.dataTables_filter .btn-query',function(){
+			debugger
 			table.search($('.global-search').val()).draw();
 		});
 		
