@@ -8,7 +8,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 	var init = function(){
 		Common.$pageContent.addClass("loading");
 		Common.render(true,{
-			tpl:'tpls/aservice/cae/app.html',
+			tpl:'tpls/aservice/cae/version.html',
 			data:'resources/data/appList.txt',
 			beforeRender: function(data){
 				//debugger;
@@ -108,7 +108,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 		//dataTables
 		Common.initDataTable($('#VdcTable'),function($tar){
 			$tar.prev().find('.left-col:first').append(
-					'<span class="btn btn-add">创建应用</span>'
+					'<span class="btn btn-add">创建应用版本</span>'
 				);
 			Common.$pageContent.removeClass("loading");
 		});
