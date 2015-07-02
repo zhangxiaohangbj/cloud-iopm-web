@@ -578,7 +578,6 @@ table.dataTable > tbody > tr > td .btn-opt i {
 }
 .tableMenus .dataTables_filter label {
 	position: relative;
-	margin-left: 10px;
 	font-weight: normal;
 	margin-bottom:0;
 }
@@ -626,7 +625,17 @@ table.dataTable + .row > [class*="col-"] {
 	padding:3px 18px 3px 8px;
 	color:#938E8E;
 	height:28px;
+	border-radius:0;
+	border-color:#e2e7ea;
+	box-shadow:none;
 	vertical-align:baseline;
+}
+.row.tableMenus .right-col .global-search{
+	width:250px;
+}
+
+.row.tableMenus .right-col select.form-control{
+	padding-right:3px;
 }
 .dataTables_wrapper .tableInfos {
 	height:35px;
@@ -653,7 +662,17 @@ table.dataTable + .row > [class*="col-"] {
 .dataTables_wrapper .dropdown{
 	display:inline-block;
 }
-.dataTables_wrapper .btn-add,.dataTables_wrapper .btn-query{
+.dataTables_wrapper .btn-query{
+	height:28px;
+	display:inline-block;
+	padding:3px 10px;
+	margin-left:-40px;
+	border-left:1px solid #e2e7ea;
+}
+.dataTables_wrapper .btn-query .fa-search{
+	color:#000;
+}
+.dataTables_wrapper .btn-add{
 	background-color: #36b3df;
 }
 .dataTables_wrapper .btn-more{
@@ -662,8 +681,11 @@ table.dataTable + .row > [class*="col-"] {
 	padding: 3px 8px 3px 12px;
 	margin-right: 0;
 }
-.dataTables_wrapper .btn-add:hover,.dataTables_wrapper .btn-query:hover{
+.dataTables_wrapper .btn-add:hover{
 	background-color: #25A5D2;
+}
+.dataTables_wrapper .btn-query:hover{
+	
 }
 .dataTables_wrapper .btn-more:hover{
 	background-color: #D8D7D7;

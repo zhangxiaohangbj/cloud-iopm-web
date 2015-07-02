@@ -185,9 +185,6 @@ define(['Common','bs/modal','rq/text!tpls/fservice/block/volume/list-opts.html',
               ]
 		    },
 		    function($tar){
-		    	/*$tar.prev().find('.left-col:first').append(
-						'<span class="btn btn-add">新建</span>'
-					);*/
 		    	$('.tableMenus').empty().html($('.table-menus').html());
 		    	//icheck
 			    $('input[type="checkbox"]').iCheck({
@@ -206,7 +203,7 @@ define(['Common','bs/modal','rq/text!tpls/fservice/block/volume/list-opts.html',
 		});
 		
 		Common.on('click','.dataTables_filter .btn-query',function(){
-			table.search($('.global_filter').val()).draw();
+			table.search($('.global-search').val()).draw();
 		});
 		
 	    var renderData = {};
