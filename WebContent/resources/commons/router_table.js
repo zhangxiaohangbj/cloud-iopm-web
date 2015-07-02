@@ -15,7 +15,7 @@ define('commons/router_table', function() {
         '^#ccenter/block/detail/(.*)$' :"js/ccenter/block/detail",
         '^#ccenter/snapshot/detail/(.*)$' :"js/ccenter/snapshot/detail",
         '^#ccenter/vdc/usage/(.*)$' :"js/ccenter/vdc/usage",
-        '^#ccenter/vm/detail/(.*)$' :"js/ccenter/vm/detail",
-        '^#ccenter/security/keypair/detail/(.*)$' :"js/ccenter/security/keypair/detail"
+        '^#fservice/vm/detail/(.*)$' :"js/fservice/vm/detail",
+        '^#fservice/security/keypair/detail/(.*)$' :"js/fservice/security/keypair/detail"
     };
 });

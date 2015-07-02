@@ -5,7 +5,7 @@ define(['Common','bs/modal','bs/wizard','bs/tooltip','jq/form/validator-bs3'],fu
 		Common.$pageContent.addClass("loading");
 		//先获取数据，进行加工后再去render
 		Common.render(true,{
-			tpl:'tpls/ccenter/security/keypair/list.html',
+			tpl:'tpls/fservice/security/keypair/list.html',
 			data:'/compute/v2/'+current_vdc_id+'/os-keypairs',
 			beforeRender: function(data){
 				return data.result;
@@ -80,7 +80,7 @@ define(['Common','bs/modal','bs/wizard','bs/tooltip','jq/form/validator-bs3'],fu
 		$("#KeypairTable_wrapper span.keypair-add").on("click",function(){
 	    	
 			//需要修改为真实数据源	
-			Common.render('tpls/ccenter/security/keypair/add.html','',function(html){	
+			Common.render('tpls/fservice/security/keypair/add.html','',function(html){	
 				Modal.show({
     	            title: '创建密钥对',
     	            message: html,
@@ -99,7 +99,7 @@ define(['Common','bs/modal','bs/wizard','bs/tooltip','jq/form/validator-bs3'],fu
     	                			dialog.close();
     	                			
     	                			var data1 = data;
-    	                			Common.render('tpls/ccenter/security/keypair/download.html',data1,function(html){
+    	                			Common.render('tpls/fservice/security/keypair/download.html',data1,function(html){
     	                				Modal.show({
     	                    	            title: '下载密钥对',
     	                    	            message: html,
@@ -154,7 +154,7 @@ define(['Common','bs/modal','bs/wizard','bs/tooltip','jq/form/validator-bs3'],fu
 		$("#KeypairTable_wrapper span.keypair-import").on("click",function(){
 	    	
 			//需要修改为真实数据源	
-			Common.render('tpls/ccenter/security/keypair/import.html','',function(html){	
+			Common.render('tpls/fservice/security/keypair/import.html','',function(html){	
 				Modal.show({
     	            title: '导入密钥对',
     	            message: html,
