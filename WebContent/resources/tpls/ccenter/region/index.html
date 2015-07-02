@@ -40,12 +40,12 @@
                     {{/if}}
                     <td>
                         {{if item.adminStatus =="true" || item.adminStatus =="1"  }}
-                            <a class="btn-opt pull-left stop-service" data-toggle="tooltip" data-act="0" ttile="停止使用" style="margin: 0 5px;" data="{{item.id}}"><i class="fa fa-files-o"></i></a>
+                            <a class="btn-opt pull-left stop-service" data-toggle="tooltip" data-act="0" title="停止使用" style="margin: 0 5px;" data="{{item.id}}"><i class="fa fa-stop"></i></a>
                        {{else}}
-                            <a class="btn-opt pull-left stop-service" data-toggle="tooltip" data-act="1" title="立即启用" style="margin: 0 5px;" data="{{item.id}}"><i class="fa fa-files-o"></i></a>
+                            <a class="btn-opt pull-left stop-service" data-toggle="tooltip" data-act="1" title="立即启用" style="margin: 0 5px;" data="{{item.id}}"><i class="fa fa-play-circle"></i></a>
                         {{/if}}
-                        <a class="btn-opt pull-left edit" data-toggle="tooltip" data-act="edit" title="编辑" style="margin: 0 5px;" data="{{item.id}}"><i class="fa fa-files-o"></i></a>
-                        <a class="btn-opt pull-left delete" data-toggle="tooltip" data-act="delete" title="删除" style="margin: 0 5px;" data="{{item.id}}"><i class="fa fa-files-o"></i></a>
+                        <a class="btn-opt pull-left edit" data-toggle="tooltip" data-act="edit" title="编辑" style="margin: 0 5px;" data="{{item.id}}"><i class="fa fa-edit"></i></a>
+                        <a class="btn-opt pull-left delete" data-toggle="tooltip" data-act="delete" title="删除" style="margin: 0 5px;" data="{{item.id}}"><i class="fa fa-trash-o"></i></a>
                     </td>
                 </tr>
                 {{/each}}
