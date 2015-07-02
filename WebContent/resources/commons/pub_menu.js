@@ -44,27 +44,27 @@ define('commons/pub_menu', function() {
                     link:'#device',
                     items: [
                         {
-                            text: '<i class="fa fa-circle fa-1"></i>服务器',
+                            text: '<i class="fa fa-dot fa-1"></i>服务器',
                             link: '#vdc'
                         },
                         {
-                            text: '<i class="fa fa-circle fa-1"></i>存储设备',
+                            text: '<i class="fa fa-dot fa-1"></i>存储设备',
                             link: '#vdc'
                         },
                         {
-                            text: '<i class="fa fa-circle fa-1"></i>交换机',
+                            text: '<i class="fa fa-dot fa-1"></i>交换机',
                             link: '#vdc'
                         },
                         {
-                            text: '<i class="fa fa-circle fa-1"></i>防火墙',
+                            text: '<i class="fa fa-dot fa-1"></i>防火墙',
                             link: '#vdc'
                         },
                         {
-                            text: '<i class="fa fa-circle fa-1"></i>负载均衡设备',
+                            text: '<i class="fa fa-dot fa-1"></i>负载均衡设备',
                             link: '#vdc'
                         },
                         {
-                            text: '<i class="fa fa-circle fa-1"></i>路由器',
+                            text: '<i class="fa fa-dot fa-1"></i>路由器',
                             link: '#vdc'
                         },
                     ]
@@ -90,11 +90,11 @@ define('commons/pub_menu', function() {
                     link: '',
                     items:[
                         {
-                            text: '<i class="fa fa-circle fa-1"></i>命名空间',
+                            text: '<i class="fa fa-dot fa-1"></i>命名空间',
                             link: '#metadata/namespace'
                         },
                         {
-                            text: '<i class="fa fa-circle fa-1"></i>标签',
+                            text: '<i class="fa fa-dot fa-1"></i>标签',
                             link: '#metadata/tag'
                         }
                     ]
@@ -108,11 +108,11 @@ define('commons/pub_menu', function() {
                     link: '',
                     items: [
                         {
-                            text: '<i class="fa fa-circle fa-1"></i>VDC配额',
+                            text: '<i class="fa fa-dot fa-1"></i>VDC配额',
                             link: '#quota/'
                         },
                         {
-                            text: '<i class="fa fa-circle fa-1"></i>VPC配额',
+                            text: '<i class="fa fa-dot fa-1"></i>VPC配额',
                             link: '#security/'
                         }
                     ]
@@ -127,11 +127,11 @@ define('commons/pub_menu', function() {
                     text: '<i class="fa fa-server"></i>弹性云主机<i class="fa icon-arrow"></i>',
                     items: [
                         {
-                            text: '<i class="fa fa-circle fa-1"></i>云主机管理',
+                            text: '<i class="fa fa-dot fa-1"></i>云主机管理',
                             link: '#vm/'
                         },
                         {
-                            text: '<i class="fa fa-circle fa-1"></i>弹性伸缩组管理',
+                            text: '<i class="fa fa-dot fa-1"></i>弹性伸缩组管理',
                             link: '#sshkey'
                         }
                     ]
@@ -145,11 +145,11 @@ define('commons/pub_menu', function() {
                     link: '',
                     items: [
                         {
-                            text: '<i class="fa fa-circle fa-1"></i>磁盘快照',
+                            text: '<i class="fa fa-dot fa-1"></i>磁盘快照',
                             link: '#snapshot/volume'
                         },
                         {
-                            text: '<i class="fa fa-circle fa-1"></i>主机快照',
+                            text: '<i class="fa fa-dot fa-1"></i>主机快照',
                             link: '#snapshot/vm'
                         }
                     ]
@@ -162,19 +162,19 @@ define('commons/pub_menu', function() {
                     text: '<i class="fa fa-vimeo-square"></i>VPC管理<i class="fa icon-arrow"></i>',
                     items: [
                         {
-                            text: '<i class="fa fa-circle fa-1"></i>网络管理',
+                            text: '<i class="fa fa-dot fa-1"></i>网络管理',
                             link: '#vpc/network'
                         },
                         {
-                            text: '<i class="fa fa-circle fa-1"></i>子网管理',
+                            text: '<i class="fa fa-dot fa-1"></i>子网管理',
                             link: '#vpc/subnet'
                         },
                         {
-                            text: '<i class="fa fa-circle fa-1"></i>路由器管理',
+                            text: '<i class="fa fa-dot fa-1"></i>路由器管理',
                             link: '#vpc/router'
                         },
                         {
-                            text: '<i class="fa fa-circle fa-1"></i>浮动IP管理',
+                            text: '<i class="fa fa-dot fa-1"></i>浮动IP管理',
                             link: '#vpc/floatingip'
                         }
                     ]
@@ -183,15 +183,15 @@ define('commons/pub_menu', function() {
                     text: '<i class="fa fa-anchor"></i>安全管理<i class="fa icon-arrow"></i>',
                     items: [
                         {
-                            text: '<i class="fa fa-circle fa-1"></i>安全组',
+                            text: '<i class="fa fa-dot fa-1"></i>安全组',
                             link: '#security/securitygroup'
                         },
                         {
-                            text: '<i class="fa fa-circle fa-1"></i>密钥对',
+                            text: '<i class="fa fa-dot fa-1"></i>密钥对',
                             link: '#security/keypair/'
                         },
                         {
-                            text: '<i class="fa fa-circle fa-1"></i>防火墙',
+                            text: '<i class="fa fa-dot fa-1"></i>防火墙',
                             link: '#security/firewall'
                         }
                     ]
@@ -201,11 +201,11 @@ define('commons/pub_menu', function() {
                     link: '',
                     items: [
                         {
-                            text: '<i class="fa fa-circle fa-1"></i>VPN网关',
+                            text: '<i class="fa fa-dot fa-1"></i>VPN网关',
                             link: '#vpn/vpn'
                         },
                         {
-                            text: '<i class="fa fa-circle fa-1"></i>VPN链接',
+                            text: '<i class="fa fa-dot fa-1"></i>VPN链接',
                             link: '#network/vpn'
                         }
                     ]
@@ -215,11 +215,11 @@ define('commons/pub_menu', function() {
                     link: '',
                     items: [
                         {
-                            text: '<i class="fa fa-circle fa-1"></i>关系型数据库',
+                            text: '<i class="fa fa-dot fa-1"></i>关系型数据库',
                             link: '#db'
                         },
                         {
-                            text: '<i class="fa fa-circle fa-1"></i>缓存',
+                            text: '<i class="fa fa-dot fa-1"></i>缓存',
                             link: '#cache'
                         }
                     ]
@@ -234,11 +234,11 @@ define('commons/pub_menu', function() {
 				    text: '<i class="fa fa-database"></i>数据库RDS<i class="fa icon-arrow"></i>',
 				    items: [
 				        {
-				            text: '<i class="fa fa-circle fa-1"></i>关系型数据库',
+				            text: '<i class="fa fa-dot fa-1"></i>关系型数据库',
 				            link: '#db'
 				        },
 				        {
-				            text: '<i class="fa fa-circle fa-1"></i>缓存',
+				            text: '<i class="fa fa-dot fa-1"></i>缓存',
 				            link: '#cache'
 				        }
 				    ]
@@ -247,15 +247,15 @@ define('commons/pub_menu', function() {
                     text: '<i class="fa fa-archive"></i>Docker容器<i class="fa icon-arrow"></i>',
                     items: [
                         {
-                            text: '<i class="fa fa-circle fa-1"></i>容器集群',
+                            text: '<i class="fa fa-dot fa-1"></i>容器集群',
                             link: '#container/'
                         },
                         {
-                            text: '<i class="fa fa-circle fa-1"></i>容器规格模板',
+                            text: '<i class="fa fa-dot fa-1"></i>容器规格模板',
                             link: '#container/'
                         },
                         {
-                            text: '<i class="fa fa-circle fa-1"></i>镜像管理',
+                            text: '<i class="fa fa-dot fa-1"></i>镜像管理',
                             link: '#container/'
                         }
                     ]
@@ -264,27 +264,27 @@ define('commons/pub_menu', function() {
                     text: '<i class="fa fa-cogs"></i>云应用引擎<i class="fa icon-arrow"></i>',
                     items: [
                         {
-                            text: '<i class="fa fa-circle fa-1"></i>应用管理',
+                            text: '<i class="fa fa-dot fa-1"></i>应用管理',
                             link: '#cae/app'
                         },
                         {
-                            text: '<i class="fa fa-circle fa-1"></i>镜像管理',
+                            text: '<i class="fa fa-dot fa-1"></i>镜像管理',
                             link: '#cae/image'
                         },
                         {
-                            text: '<i class="fa fa-circle fa-1"></i>监控管理',
+                            text: '<i class="fa fa-dot fa-1"></i>监控管理',
                             link: '#cae/monitor'
                         },
                         {
-                            text: '<i class="fa fa-circle fa-1"></i>伸缩组管理',
+                            text: '<i class="fa fa-dot fa-1"></i>伸缩组管理',
                             link: '#cae/scaling'
                         },
                         {
-                            text: '<i class="fa fa-circle fa-1"></i>存储管理',
+                            text: '<i class="fa fa-dot fa-1"></i>存储管理',
                             link: '#cae/storage'
                         },
                         {
-                            text: '<i class="fa fa-circle fa-1"></i>网络管理',
+                            text: '<i class="fa fa-dot fa-1"></i>网络管理',
                             link: '#cae/network'
                         }
                     ]
@@ -293,11 +293,11 @@ define('commons/pub_menu', function() {
                     text: '<i class="fa fa-cogs"></i>消息队列管理<i class="fa icon-arrow"></i>',
                     items: [
                         {
-                            text: '<i class="fa fa-circle fa-1"></i>应用管理',
+                            text: '<i class="fa fa-dot fa-1"></i>应用管理',
                             link: '#cae/app'
                         },
                         {
-                            text: '<i class="fa fa-circle fa-1"></i>镜像管理',
+                            text: '<i class="fa fa-dot fa-1"></i>镜像管理',
                             link: '#cae/image'
                         }
                     ]
@@ -306,11 +306,11 @@ define('commons/pub_menu', function() {
                     text: '<i class="fa fa-cogs"></i>缓存服务管理<i class="fa icon-arrow"></i>',
                     items: [
                         {
-                            text: '<i class="fa fa-circle fa-1"></i>应用管理',
+                            text: '<i class="fa fa-dot fa-1"></i>应用管理',
                             link: '#cae/app'
                         },
                         {
-                            text: '<i class="fa fa-circle fa-1"></i>镜像管理',
+                            text: '<i class="fa fa-dot fa-1"></i>镜像管理',
                             link: '#cae/image'
                         }
                     ]
@@ -325,11 +325,11 @@ define('commons/pub_menu', function() {
                     text: '<i class="fa fa-database"></i>NoSQL存储<i class="fa icon-arrow"></i>',
                     items: [
                         {
-                            text: '<i class="fa fa-circle fa-1"></i>关系型数据库',
+                            text: '<i class="fa fa-dot fa-1"></i>关系型数据库',
                             link: '#db'
                         },
                         {
-                            text: '<i class="fa fa-circle fa-1"></i>缓存',
+                            text: '<i class="fa fa-dot fa-1"></i>缓存',
                             link: '#cache'
                         }
                     ]
@@ -338,23 +338,23 @@ define('commons/pub_menu', function() {
                     text: '<i class="fa fa-th"></i>大数据处理<i class="fa icon-arrow"></i>',
                     items: [
                         {
-                            text: '<i class="fa fa-circle fa-1"></i>集群管理',
+                            text: '<i class="fa fa-dot fa-1"></i>集群管理',
                             link: '#emr/cluster'
                         },
                         {
-                            text: '<i class="fa fa-circle fa-1"></i>任务管理',
+                            text: '<i class="fa fa-dot fa-1"></i>任务管理',
                             link: '#emr/job'
                         },
                         {
-                            text: '<i class="fa fa-circle fa-1"></i>集群模板管理',
+                            text: '<i class="fa fa-dot fa-1"></i>集群模板管理',
                             link: '#emr/template'
                         },
                         {
-                            text: '<i class="fa fa-circle fa-1"></i>镜像管理',
+                            text: '<i class="fa fa-dot fa-1"></i>镜像管理',
                             link: '#emr/image'
                         },
                         {
-                            text: '<i class="fa fa-circle fa-1"></i>插件管理',
+                            text: '<i class="fa fa-dot fa-1"></i>插件管理',
                             link: '#emr/plugin'
                         }
                     ]
@@ -363,11 +363,11 @@ define('commons/pub_menu', function() {
                     text: '<i class="fa fa-cloud-upload"></i>流式计算<i class="fa icon-arrow"></i>',
                     items: [
                         {
-                            text: '<i class="fa fa-circle fa-1"></i>关系型数据库',
+                            text: '<i class="fa fa-dot fa-1"></i>关系型数据库',
                             link: '#db'
                         },
                         {
-                            text: '<i class="fa fa-circle fa-1"></i>缓存',
+                            text: '<i class="fa fa-dot fa-1"></i>缓存',
                             link: '#cache'
                         }
                     ]
@@ -376,11 +376,11 @@ define('commons/pub_menu', function() {
                     text: '<i class="fa fa-cloud-upload"></i>非结构化存储<i class="fa icon-arrow"></i>',
                     items: [
                         {
-                            text: '<i class="fa fa-circle fa-1"></i>关系型数据库',
+                            text: '<i class="fa fa-dot fa-1"></i>关系型数据库',
                             link: '#db'
                         },
                         {
-                            text: '<i class="fa fa-circle fa-1"></i>缓存',
+                            text: '<i class="fa fa-dot fa-1"></i>缓存',
                             link: '#cache'
                         }
                     ]
@@ -395,15 +395,15 @@ define('commons/pub_menu', function() {
                     text: '<i class="fa fa-tasks"></i>任务调度<i class="fa icon-arrow"></i>',
                     items: [
                         {
-                            text: '<i class="fa fa-circle fa-1"></i>任务管理',
+                            text: '<i class="fa fa-dot fa-1"></i>任务管理',
                             link: '#task/task'
                         },
                         {
-                            text: '<i class="fa fa-circle fa-1"></i>策略管理',
+                            text: '<i class="fa fa-dot fa-1"></i>策略管理',
                             link: '#task/strategy'
                         },
                         {
-                            text: '<i class="fa fa-circle fa-1"></i>执行日志',
+                            text: '<i class="fa fa-dot fa-1"></i>执行日志',
                             link: '#task/monitor'
                         },
                         /*{
@@ -411,7 +411,7 @@ define('commons/pub_menu', function() {
                          link: '#task/taskGroup'
                          },*/
                         {
-                            text: '<i class="fa fa-circle fa-1"></i>策略分组',
+                            text: '<i class="fa fa-dot fa-1"></i>策略分组',
                             link: '#task/strategyGroup'
                         }
                     ]

@@ -1,4 +1,4 @@
-define(['Common','bs/modal','rq/text!tpls/ccenter/block/volume/list-opts.html', 'jq/form/wizard','bs/tooltip','jq/form/validator-bs3'],function(Common,Modal, optsTpl){
+define(['Common','bs/modal','rq/text!tpls/fservice/block/volume/list-opts.html', 'jq/form/wizard','bs/tooltip','jq/form/validator-bs3'],function(Common,Modal, optsTpl){
 	Common.requestCSS('css/wizard.css');
 	var current_vdc_id = '9cc717d8047e46e5bf23804fc4400247';
 	
@@ -6,7 +6,7 @@ define(['Common','bs/modal','rq/text!tpls/ccenter/block/volume/list-opts.html', 
 	var init = function(){
 		Common.$pageContent.addClass("loading");
 		Common.render(true,{
-			tpl:'tpls/ccenter/block/volume/list.html',
+			tpl:'tpls/fservice/block/volume/list.html',
 			callback: bindEvent
 		});
 	};
@@ -80,7 +80,8 @@ define(['Common','bs/modal','rq/text!tpls/ccenter/block/volume/list-opts.html', 
 			in_use: "使用中", 
 			restoring_backup: "恢复中", 
 			unrecognized: "未知"	
-		}
+		};
+		
 		var table = Common.initDataTable($('#VolumeTable'),{
 		      "processing": true,  //加载效果，默认false
 		      "serverSide": true,  //页面在加载时就请求后台，以及每次对 datatable 进行操作时也是请求后台
@@ -92,7 +93,7 @@ define(['Common','bs/modal','rq/text!tpls/ccenter/block/volume/list-opts.html', 
 		       * aoData：请求参数，其中包含search 输入框中的值
 		       * */
 		      "fnServerData": function( sSource, aoData, fnCallback ) {
-		    	    $.ajax( {   
+		    	    $.ajax( {
 		    	        "url": sSource + (aoData[3].value/aoData[4].value+1) +"/"+aoData[4].value, 
 		    	        "data":aoData,
 		    	        "dataType": "json",   
@@ -142,7 +143,7 @@ define(['Common','bs/modal','rq/text!tpls/ccenter/block/volume/list-opts.html', 
 					{
 					    "targets": [1],
 					    "render": function(data, type, full) {
-					      return '<a class="volume_name" href="#ccenter/block/detail/'+data.id+'">'+data.name+"</a>";
+					      return '<a class="volume_name" href="#fservice/block/detail/'+data.id+'">'+data.name+"</a>";
 					    }
 					},
 					{
@@ -184,9 +185,10 @@ define(['Common','bs/modal','rq/text!tpls/ccenter/block/volume/list-opts.html', 
               ]
 		    },
 		    function($tar){
-		    	$tar.prev().find('.left-col:first').append(
+		    	/*$tar.prev().find('.left-col:first').append(
 						'<span class="btn btn-add">新建</span>'
-					);
+					);*/
+		    	$('.tableMenus').empty().html($('.table-menus').html());
 		    	//icheck
 			    $('input[type="checkbox"]').iCheck({
 			    	checkboxClass: "icheckbox-info",
@@ -203,6 +205,9 @@ define(['Common','bs/modal','rq/text!tpls/ccenter/block/volume/list-opts.html', 
 				Common.$pageContent.removeClass("loading");
 		});
 		
+		Common.on('click','.dataTables_filter .btn-query',function(){
+			table.search($('.global_filter').val()).draw();
+		});
 		
 	    var renderData = {};
 	    var azList=[];
@@ -352,7 +357,7 @@ define(['Common','bs/modal','rq/text!tpls/ccenter/block/volume/list-opts.html', 
 		Common.on("click", "#VolumeTable_wrapper span.btn-add", function(){
 
 	    	//需要修改为真实数据源
-			Common.render('tpls/ccenter/block/volume/add.html',renderData,function(html){
+			Common.render('tpls/fservice/block/volume/add.html',renderData,function(html){
 				$('body').append(html);
 				//wizard show
     			$.fn.wizard.logging = true;
@@ -508,7 +513,7 @@ define(['Common','bs/modal','rq/text!tpls/ccenter/block/volume/list-opts.html', 
     				name = rowdata.name;
 
     				Common.render({
-    					tpl:'tpls/ccenter/block/volume/edit_mount.html',
+    					tpl:'tpls/fservice/block/volume/edit_mount.html',
 						data:'/compute/v2/' + current_vdc_id + '/servers/page/1/200',
 						beforeRender: function(data){
 							return {servers:data.result, volName:name};
@@ -581,7 +586,7 @@ define(['Common','bs/modal','rq/text!tpls/ccenter/block/volume/list-opts.html', 
     				var	name = rowData.name;
     				var extendDialog;
 	       	    	Common.render({
-    					tpl:'tpls/ccenter/block/volume/extend-size.html',
+    					tpl:'tpls/fservice/block/volume/extend-size.html',
 						data: {volName:name},
 						callback: function(html) {
 							Modal.show({
