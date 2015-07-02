@@ -3,7 +3,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 	var init = function(){
 		Common.$pageContent.addClass("loading");
 		//先获取数据，进行加工后再去render
-		Common.render(true,'tpls/ccenter/vpc/floatingip/list.html',function(){
+		Common.render(true,'tpls/fservice/vpc/floatingip/list.html',function(){
 			bindEvent();
 		});
 	};
@@ -220,7 +220,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 		$(document).off("click","#floatingipTable_wrapper span.btn-add");
 		$(document).on("click","#floatingipTable_wrapper span.btn-add",function(){
 	    	//需要修改为真实数据源
-			Common.render('tpls/ccenter/vpc/floatingip/add.html','',function(html){
+			Common.render('tpls/fservice/vpc/floatingip/add.html','',function(html){
 				Dialog.show({
     	            title: '新建私有网络',
     	            message: html,

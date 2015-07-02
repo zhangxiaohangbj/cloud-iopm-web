@@ -3,7 +3,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 	var init = function(){
 		Common.$pageContent.addClass("loading");
 		//render获取的数据
-		Common.render(true,'tpls/ccenter/vpc/router/list.html',function(){
+		Common.render(true,'tpls/fservice/vpc/router/list.html',function(){
 			bindEvent();
 		});
 	};
@@ -137,7 +137,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 		//创建路由
 		$(document).off("click","#RouterTable_wrapper span.btn-add");
 	    $(document).on("click","#RouterTable_wrapper span.btn-add",function(){
-	    	Common.render('tpls/ccenter/vpc/router/add.html','',function(html){
+	    	Common.render('tpls/fservice/vpc/router/add.html','',function(html){
 		    	Dialog.show({
 		            title: '路由创建',
 		            message: html,
@@ -181,7 +181,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 	    $(document).on("click","#RouterTable_wrapper a.editRouter",function(){
 	    	var id= $(this).parents("tr:first").data("rowData.dt").id;
 	    	Common.xhr.ajax('/networking/v2.0/routers/'+id,function(data){
-	    		Common.render('tpls/ccenter/vpc/router/edit.html',data.router,function(html){
+	    		Common.render('tpls/fservice/vpc/router/edit.html',data.router,function(html){
 		    	Dialog.show({
 		            title: '编辑路由',
 		            message: html,
@@ -265,7 +265,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 	     $(document).on("click","#RouterTable_wrapper a.setGateway",function(){
 	    	 var id= $(this).parents("tr:first").data("rowData.dt").id;
 	    	 Common.xhr.ajax('/networking/v2.0/routers/'+id,function(data){
-				    Common.render('tpls/ccenter/vpc/router/setgateway.html',data.router,function(html){
+				    Common.render('tpls/fservice/vpc/router/setgateway.html',data.router,function(html){
 			    	 Dialog.show({
 				            title: '设置网关',
 				            message: html,
@@ -306,7 +306,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 	     $(document).off("click","#RouterTable_wrapper a.router-name");
 		$(document).on("click","#RouterTable_wrapper a.router-name",function(){
 		    	Common.xhr.ajax('/networking/v2.0/routers/'+$(this).parents("tr:first").data("rowData.dt").id,function(data){
-		    		Common.render('tpls/ccenter/vpc/router/detail.html',data.router,function(html){
+		    		Common.render('tpls/fservice/vpc/router/detail.html',data.router,function(html){
 		    			$("#page-main .page-content").html(html);
 		    			//返回按钮
 		    		    $(".form-horizontal a.reload").on("click",function(){
@@ -319,7 +319,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 		var EditData = {
 		    	//添加子网连接
 		    	AddRouterSubnet : function(id,cb){
-		    			Common.render('tpls/ccenter/vpc/router/addlinksubnet.html',function(html){
+		    			Common.render('tpls/fservice/vpc/router/addlinksubnet.html',function(html){
 			    			Dialog.show({
 			    	            title: '连接子网',
 			    	            message: html,
@@ -351,7 +351,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 		    	},
 		    	//获取子网连接列表
 		    	GetSubnetList :function(id){
-		    		Common.render(true,'tpls/ccenter/vpc/router/linksubnet.html',function(html){
+		    		Common.render(true,'tpls/fservice/vpc/router/linksubnet.html',function(html){
 			    		Common.initDataTable($('#subnetTable'),{
 			  		      "processing": true,  //加载效果，默认false
 					      "serverSide": true,  //页面在加载时就请求后台，以及每次对 datatable 进行操作时也是请求后台

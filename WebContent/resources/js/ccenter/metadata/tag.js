@@ -19,7 +19,7 @@ define(['Common','bs/modal','jq/form/wizard','jq/form/validator-bs3','bs/tooltip
         //真实请求的数据
         Common.xhr.ajax("/resource-manager/v2/tag",function(data){
             var indexData = {"tag":data};
-            Common.render(true,'tpls/cresource/metadata/tag/index.html',indexData,function(){
+            Common.render(true,'tpls/ccenter/metadata/tag/index.html',indexData,function(){
                 bindEvent();
             });
         });
@@ -58,7 +58,7 @@ define(['Common','bs/modal','jq/form/wizard','jq/form/validator-bs3','bs/tooltip
         //创建按钮
         $("#tagTable_wrapper span.btn-add").on("click",function(){
             var selectData = {"data":renderData};
-            Common.render('tpls/cresource/metadata/tag/add.html',selectData,function(html) {
+            Common.render('tpls/ccenter/metadata/tag/add.html',selectData,function(html) {
 
                 Modal.show({
                     title: '创建资源标签',
@@ -108,7 +108,7 @@ define(['Common','bs/modal','jq/form/wizard','jq/form/validator-bs3','bs/tooltip
         $("a.edit").on("click",function(){
             var data = $(this).attr("data");
             Common.xhr.ajax("/resource-manager/v2/tag/"+data,function(tag){
-                Common.render('tpls/cresource/metadata/tag/edit.html',tag,function(html){
+                Common.render('tpls/ccenter/metadata/tag/edit.html',tag,function(html){
                     Modal.show({
                         title: '修改标签',
                         message: html,
