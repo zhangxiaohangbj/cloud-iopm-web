@@ -96,8 +96,8 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
                        "render": function(data, type, full) {
                     	  // debugger;
                          return '<a class="btn-opt members" href="javascript:void(0)" data="'+data.id+'" data-toggle="tooltip" title="成员管理" style="margin: 0;"><i class="fa fa-user fa-fw"></i></a>'
-                            +'<a class="btn-opt updateQuota" href="javascript:void(0)" data="'+data.id+'" data-toggle="tooltip" title="配额管理" style="margin: 0;"><i class="fa fa-list-alt fa-fw"></i></a>'
-                            +'<a class="btn-opt vdcAz" href="javascript:void(0)" data="'+data.id+'" data-env="'+data.virtualEnvId+'" data-toggle="tooltip" title="可用分区管理" style="margin: 0;"><i class="fa fa-gear fa-fw"></i></a>'
+                            +'<a class="btn-opt updateQuota" href="javascript:void(0)" data="'+data.id+'" data-toggle="tooltip" title="配额管理" style="margin: 0;"><i class="fa fa-suitcase fa-fw"></i></a>'
+                            +'<a class="btn-opt vdcAz" href="javascript:void(0)" data="'+data.id+'" data-env="'+data.virtualEnvId+'" data-toggle="tooltip" title="可用分区管理" style="margin: 0;"><i class="fa fa-delicious fa-fw"></i></a>'
                             +'<a class="btn-opt usage" href="#ccenter/vdc/usage/'+data.id+'" data="'+data.id+'" data-name="'+data.name+'" data-toggle="tooltip" title="使用情况" style="margin: 0;"><i class="fa fa-file-text fa-fw"></i></a>'
                             +'<a class="btn-opt editTenantBasic" href="javascript:void(0)" data="'+data.id+'" data-toggle="tooltip" title="编辑" style="margin: 0;"><i class="fa fa-edit fa-fw"></i></a>'
                             +'<a class="btn-opt deleteTenant" href="javascript:void(0)" data="'+data.id+'" data-name="'+data.name+'" data-toggle="tooltip" title="删除" style="margin: 0;"><i class="fa fa-trash-o fa-fw"></i></a>';
