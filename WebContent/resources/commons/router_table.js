@@ -5,6 +5,7 @@ define('commons/router_table', function() {
     return {
         '^#monitor(!.*)?$': "js/monitor/task/strategyGroup",
         '^#cresource(!.*)?$': "js/cresource/env",
+        '^#fservice(!.*)?$': "js/fservice/vm/index",
         '^#cresource/zone/detail/(.*)?$': "js/cresource/zone/detail",
         '^#cresource/region/detail/(.*)?$': "js/cresource/region/detail",
         '^#cresource/env/detail/(.*)?$': "js/cresource/env/detail",
