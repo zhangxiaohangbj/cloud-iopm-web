@@ -1103,7 +1103,6 @@ define('commons/main',
                                     }
                                 },
                                 error: function(xhr, errorText) {
-                                    debugger;
                                 }
                             });
                         }
@@ -1112,7 +1111,6 @@ define('commons/main',
                         label: '取消',
                         cssClass: 'btn-primary',
                         action: function(dialog){
-                            debugger;
                             dialog.close();
                         }
                     }

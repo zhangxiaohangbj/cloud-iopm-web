@@ -1,0 +1,117 @@
+<div class="page-header">
+	<ol class="breadcrumb minus">
+		<li><a href="#fservice/autoscaling/">弹性伸缩组</a></li>
+	    <li class="active">{{name}}</li>
+	    <li class="backlist"><a href="#fservice/autoscaling/">返回列表</a></li>
+	</ol>
+</div>
+<div class="page-body">
+	<div class="pane">
+		<div class="pane-content">
+			<div class="detail-info">
+
+			  <!-- Nav tabs -->
+			  <ul class="nav nav-tabs" role="tablist">
+			    <li class="active"  data-for="basic"><a href="javascript:void(0)">详细信息</a></li>
+			    <li data-for="conf"><a href="javascript:void(0)">伸缩配置</a></li>
+			    <li data-for="server"><a href="javascript:void(0)">云主机</a></li>
+			    <li data-for="rule"><a href="javascript:void(0)">伸缩规则</a></li>
+			    <li data-for="event"><a href="javascript:void(0)">伸缩活动</a></li>
+			    <li data-for="event"><a href="javascript:void(0)">伸缩任务</a></li>
+			  </ul>
+			  <div class="tab-content">
+			    <div  class="tab-pane basic active">
+			    	<div class="clearfix">
+						<div class="row">
+							<label  class="control-label col-sm-3">名称：</label>
+							<div class="col-sm-7 col-sm query-info query-volume-name">
+								{{name}}
+							</div>
+						</div>
+						<div class="row">
+							<label class="control-label col-sm-3">ID：</label>
+							<div class="col-sm-7 col-sm query-info query-volume-size">
+							{{id}}
+							</div>
+						</div>
+						<div class="row">
+							<label class="control-label col-sm-3">容量：</label>
+							<div class="col-sm-7 col-sm query-info query-volume-size">
+							{{size}}
+							</div>
+						</div>
+						<div class="row">
+							<label class="control-label col-sm-3">状态：</label>
+							<div class="col-sm-7 col-sm query-info query-volume-type">
+								{{if status == 'in-use'}}
+					 				<span class="text-success">使用中</span>
+					 				{{else if status == 'available'}}
+					 					<span class="text-info">可用</span>
+					 						{{else}}
+					 							<span class="text-danger">已删除</span>
+					 			{{/if}}
+							</div>
+						</div>
+						<div class="row">
+							<label class="control-label col-sm-3">虚拟数据中心：</label>
+							<div class="col-sm-7 col-sm query-info">
+								{{vdc_id}}
+							</div>
+						</div>
+						<div class="row">
+							<label class="control-label col-sm-3">挂载的主机：</label>
+							<div class="col-sm-7 col-sm query-info">
+							{{each mount_list as opt i}}
+								{{opt.name}}{{if i != mount_list.length-1}},{{/if}}
+							{{/each}}
+							</div>
+						</div>
+						<div class="row">
+							<label class="control-label col-sm-3">挂载路径：</label>
+							<div class="col-sm-7 col-sm query-info">
+							{{mount_path}}
+							</div>
+						</div>
+						<div class="row">
+							<label class="control-label col-sm-3">卷类型：</label>
+							<div class="col-sm-7 col-sm query-info">
+								{{type}}
+							</div>
+						</div>
+						<div class="row">
+							<label class="control-label col-sm-3">可用分区：</label>
+							<div class="col-sm-7 col-sm query-info">
+								{{available_zone}}
+							</div>
+						</div>
+						<div class="row">
+							<label class="control-label col-sm-3">可用分区：</label>
+							<div class="col-sm-7 col-sm query-info">
+								{{create_time}}
+							</div>
+						</div>
+					</div>
+			    </div>
+			    <div class="tab-pane conf">
+			    </div>
+			    <div class="tab-pane server">
+			    </div>			    			    
+			    <div class="tab-pane rule">
+			    </div>
+			    <div class="tab-pane event">
+			    	<div class="monitor-request-read" style="height:250px;"></div>
+			    	<div class="monitor-request-write"></div>
+			    	<div class="monitor-rate-read"></div>
+			    	<div class="monitor-rate-write"></div>
+			    </div>			    
+			    <div class="tab-pane task">
+			    	<div class="monitor-request-read" style="height:250px;"></div>
+			    	<div class="monitor-request-write"></div>
+			    	<div class="monitor-rate-read"></div>
+			    	<div class="monitor-rate-write"></div>
+			    </div>
+			  </div>
+			</div>
+		</div>
+	</div>
+</div>

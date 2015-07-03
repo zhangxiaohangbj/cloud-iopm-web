@@ -37,7 +37,7 @@ define('commons/pub_menu', function() {
         null,
         {
             title: '<i class="fa fa-soundcloud fa-fw"></i>云中心',
-            current: [3],
+            current: [1,1],
             items:[
                 {
                     text: '<i class="fa fa-th-large"></i>设备管理<i class="fa icon-arrow"></i>',
@@ -121,7 +121,7 @@ define('commons/pub_menu', function() {
         },
         {
             title: '<i class="fa fa-codepen fa-fw"></i>基础服务',
-            current: [2],
+            current: [1,1],
             items: [
                 {
                     text: '<i class="fa fa-server"></i>弹性云主机<i class="fa icon-arrow"></i>',

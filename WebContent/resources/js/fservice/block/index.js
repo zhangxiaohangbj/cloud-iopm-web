@@ -1,6 +1,8 @@
 define(['Common','bs/modal','rq/text!tpls/fservice/block/volume/list-opts.html', 'jq/form/wizard','bs/tooltip','jq/form/validator-bs3'],function(Common,Modal, optsTpl){
 	Common.requestCSS('css/wizard.css');
-	var current_vdc_id = '9cc717d8047e46e5bf23804fc4400247';
+	var current_vdc_id = Common.cookies.getVdcId();
+	var current_user_id = Common.cookies.getUid();
+	var default_vdc_id = Common.cookies.getUser().defaultVdcId;
 	var volumeStatus = {
 			available: "可用", 
 			attaching: "挂载中", 
@@ -190,10 +192,14 @@ define(['Common','bs/modal','rq/text!tpls/fservice/block/volume/list-opts.html',
 		
 		//初始化加载，不依赖其他模块
 		//管理员和普通租户的逻辑在此判断
-		Common.xhr.ajax('/identity/v2.0/tenants',function(vdcDatas){
-			renderData.vdcList = vdcDatas.tenants;
+		Common.xhr.ajax('/identity/v2.0/users/tenants/'+current_user_id,function(vdcDatas){
+			for(var i=0;i<vdcDatas.length;i++){
+				if(vdcDatas[i]["id"]==default_vdc_id){
+					vdcDatas[i]["selected"]=true;
+				}
+			}
+			renderData.vdcList = vdcDatas;
 		});
-		
 		
 		//载入默认的数据 inits
 		var DataIniter = {
