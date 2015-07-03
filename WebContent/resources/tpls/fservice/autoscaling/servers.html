@@ -1,0 +1,35 @@
+<table class="table table-primary table-striped" id="VolumeTable">
+	<thead>
+		<tr>
+			<th class="c15">名称</th>
+			<th class="c0">生命周期</th>
+			<th class="c10">配置</th>
+			<th class="c25">可用区域</th>
+			<th class="c30">运行状况</th>
+			<th class="c10">操作</th>
+		</tr>
+	</thead>
+	<tbody>
+	{{each list as item i}}
+		<tr data-id="{{item.id}}">
+			<td><a class="volume_name" href="javascript:void(0)">{{item.name}}</a></td>
+			<td>{{item.size}}</td>
+			<td>
+ 			{{if item.status == 'in-use'}}
+ 				<span class="text-success">使用中</span>
+ 				{{else if item.status == 'available'}}
+ 					<span class="text-info">可用</span>
+ 						{{else}}
+ 							<span class="text-danger">已删除</span>
+ 			{{/if}}
+ 			</td>
+			<td>2015-04-24 17:14:57</td>
+ 			<td>{{item.description}}</td>
+			<td>
+			<a class="btn-opt" data-toggle="tooltip" title="删除" ><i class="fa fa-trash-o"></i></a>
+			<a class="btn-opt" data-toggle="tooltip" title="备份"><i class="fa fa-files-o"></i></a>
+			</td>
+		</tr>
+ 			{{/each}}
+	</tbody>
+</table>
