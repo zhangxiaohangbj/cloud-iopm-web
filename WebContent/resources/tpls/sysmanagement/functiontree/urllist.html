@@ -22,10 +22,10 @@
 		{{each result as item i}}
 			<tr>
 				<td><label><input type="checkbox" value="{{item.id}}"></label></td>
-				<td>{{item.name}}</td>
-				<td>{{item.name}}</td>
-				<td>{{item.name}}</td>
-				<td>{{item.name}}</td>
+				<td>{{item.urlName}}</td>
+				<td>{{item.endpoint.url}}</td>
+				<td>{{item.urlAddress}}</td>
+				<td>{{item.method}}</td>
 			</tr>
 	 			{{/each}}
 		</tbody>

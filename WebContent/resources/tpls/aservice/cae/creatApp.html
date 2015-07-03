@@ -1,0 +1,28 @@
+<form class="form-horizontal vdc_basic" id="creatApp">
+	<div class="form-group">
+		<label class="control-label col-sm-2" for="app_name">
+	 	<span style="color: red;">* </span>名称：</label>
+	 	<div class="col-sm-7 col-sm">
+			<input type="text" class="form-control" name="app_name" value="" style="width: 350px;">
+		</div>
+	</div>
+	<div class="form-group">
+		<label class="control-label col-sm-2" for="image_name">
+	 	<span style="color: red;">* </span>镜像：</label>
+	 	<div id="select-vm" class="col-sm-7 col-sm">
+			<select name="image_name"class="form-control select select-ve" style="width: 350px;">
+		        <option index="0" id="94f101bb5c4847eebe25487c3060ec4a" value="94f101bb5c4847eebe25487c3060ec4a" selected="selected">请选择一个镜像</option>  
+		        <option index="1" id="b8755989ae2c429cb67b28037c81d848" value="b8755989ae2c429cb67b28037c81d848">java1.8 tomcat8 linux</option>
+		        <option index="1" id="b8755989ae2c429cb67b28037c81d848" value="b8755989ae2c429cb67b28037c81d848">java1.7 tomcat7 linux</option>
+		        <option index="1" id="b8755989ae2c429cb67b28037c81d848" value="b8755989ae2c429cb67b28037c81d848">java1.6 tomcat6 linux</option>
+			</select>
+		</div>
+	</div>
+	<div class="form-group">
+		<label class="control-label col-sm-2" for ="description">
+	 	</span>描述：</label>
+	 	<div class="col-sm-7 col-sm">
+			<textarea rows="5" cols="" class="form-control" name="description" value="" style="width: 350px;height:60px">{{description}}</textarea>
+		</div>
+	</div>
+</form>

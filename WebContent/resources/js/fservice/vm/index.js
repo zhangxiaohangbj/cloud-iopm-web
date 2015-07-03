@@ -27,6 +27,9 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 		       * aoData：请求参数，其中包含search 输入框中的值
 		       * */
 		      "fnServerData": function( sSource, aoData, fnCallback ) {
+		    	  debugger
+		    	  //前端处理搜索关键字的转换
+		    	  var sSearchKey = aoData[aoData.length-2].value;
 		    	    $.ajax( {   
 		    	        "url": sSource +(aoData[3].value/aoData[4].value+1)+"/"+ aoData[4].value, 
 		    	        "data":aoData,
@@ -77,7 +80,25 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 					    "render": function(data, type, full) {
 					      return '<a href="#fservice/vm/detail/'+data.id+'" class="vm_name" data="'+data.id+'">'+data.name+"</a>";
 					    }
-					},					
+					},	
+					{
+					    "targets": [2],
+					    "defaultContent": "",
+					    "render": function(data, type, full) {
+					    	if(data!=null){
+					    		return data.replace(new RegExp(/(,)/g),'<br>');
+					    	}
+					    }
+					},	
+					{
+					    "targets": [3],
+					    "defaultContent": "",
+					    "render": function(data, type, full) {
+					    	if(data!=null){
+					    		return data.replace(new RegExp(/(,)/g),'<br>');
+					    	}
+					    }
+					},	
 					{
 					    "targets": [7],
 					    "data": "vmState",

@@ -264,6 +264,57 @@ define('commons/main',
                         });
                         args.unshift($table);
                         PubView.utils.isFunction(complete) && complete.apply(this, args);
+                    },
+                    /*fnServerData是与服务器端交换数据时被调用的函数
+	  	  		       * sSource： 就是sAjaxSource中指定的地址，接收数据的url需要拼装成 v2.0/users/page/10/1 格式
+	  	  		       *      aoData[4].value为每页显示条数，aoData[3].value/aoData[4].value+1为请求的页码数
+	  	  		       * aoData：请求参数，其中包含search 输入框中的值
+	  	  		    * */
+                    'fnServerData': function( sSource, aoData, fnCallback ) {
+      		    	  	//前端处理搜索关键字的转换
+      		    	  	var $filter = $table.prev().find('.dataTables_filter'),
+      		    	  		parameter = "";
+      		    	  	var getSeparator = function(parameter){
+      		    	  		return parameter.indexOf('?') > -1 ? '&' : '?';
+      		    	  	}
+      		    	  	$filter.find('select,input').each(function(){
+      		    	  		var filterKey = $(this).attr('name'),
+      		    	  			filterVal = $(this).val();
+      		    	  		if(filterKey && filterVal){
+      		    	  			parameter += getSeparator(parameter)+filterKey+"="+filterVal;
+      		    	  		}
+      		    	  	})
+    		    	    $.ajax({
+    		    	        "url": sSource + (aoData[3].value/aoData[4].value+1) +"/"+aoData[4].value+parameter,
+    		    	        //"data":aoData,
+    		    	        "dataType": "json",
+    		    	        "success": function(resp) {
+    		    	        	/*渲染前预处理后端返回的数据为DataTables期望的格式,
+    		    	        	 * 后端返回数据格式 {"pageNo":1,"pageSize":5,"orderBy":null,"order":null,"autoCount":true,"result":[{"id":"07da487da17b4354a4b5d8e2b2e41485","name":"wzz"}],
+    		    	        	 * "totalCount":31,"first":1,"orderBySetted":false,"totalPages":7,"hasNext":true,"nextPage":2,"hasPre":false,"prePage":1}
+    		    	        	 * DataTables期望的格式 {"draw": 2,"recordsTotal": 11,"recordsFiltered": 11,"data": [{"id": 1,"firstName": "Troy"}]}
+    							*/
+    		    	        	resp.data = resp.result;
+    		    	        	resp.recordsTotal = resp.totalCount;
+    		    	        	resp.recordsFiltered = resp.totalCount;
+    		    	            fnCallback(resp);   //fnCallback：服务器返回数据后的处理函数，需要按DataTables期望的格式传入返回数据 
+    		    	        }   
+    		    	    });   
+                    },
+                    'drawCallback': function( settings ) {
+                    	//icheck
+        			    $('input[type="checkbox"]').iCheck({
+        			    	checkboxClass: "icheckbox-info",
+        			        radioClass: "iradio-info"
+        			    }).on('ifChecked',function(e){
+        			    	if(e.target.className == 'selectAll'){
+        			    		$('.table-primary').find('input[type=checkbox]').iCheck('check');
+        			    	}
+        			    }).on('ifUnchecked',function(e){
+        			    	if(e.target.className == 'selectAll'){
+        			    		$('.table-primary').find('input[type=checkbox]').iCheck('uncheck');
+        			    	}
+        			    });
                     }
                 });
                 var tableFlag = true;
@@ -1106,6 +1157,10 @@ define('commons/main',
         		$(document).off(selector);
         		$(document).on(type,selector,cb);
         	}
+        },
+        //处理搜索参数
+        handleTableParam: function(){
+        	
         }
     };
 });

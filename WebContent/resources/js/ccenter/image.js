@@ -43,7 +43,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 		                'description': {
 		                    maxlength:255
 		                },
-		                'locations': {
+		                'copyFrom': {
 		                	required: true,
 		                    maxlength:255
 		                },
@@ -77,9 +77,9 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 					var value = $(this).val();
 					if("file" == value){
 						$("#fileDiv").removeClass("hidden");
-						$("#locationsDiv").addClass("hidden");
+						$("#copyFromDiv").addClass("hidden");
 					}else if("address" == value){
-						$("#locationsDiv").removeClass("hidden");
+						$("#copyFromDiv").removeClass("hidden");
 						$("#fileDiv").addClass("hidden");
 					}
 				});
@@ -104,60 +104,70 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 	    	            		Modal.confirm('确定要保存吗?', function(result){
 	    	            			if(result) {
 	    	            				debugger;
-	    	            				if($("#isPublic_checkbox").prop("checked")){
-	    	            					$("#isPublic").attr("value",'1');
-	    	            				}else{
-	    	            					$("#isPublic").attr("value",'0');
-	    	            				}
-	    	            				if($("#isProtected_checkbox").prop("checked")){
-	    	            					$("#isProtected").attr("value",'1');
-	    	            				}else{
-	    	            					$("#isProtected").attr("value",'0');
-	    	            				}
-	    	            				/*
-	    	            				var pageData = $("#editImage").serializeObject();
-	    	            				if(pageData.isPublic){
-	    	            					pageData.isPublic = true;
-	    	            				}else{
-	    	            					pageData.isPublic = false;
-	    	            				}
-	    	            				if(pageData.isProtected){
-	    	            					pageData.isProtected = true;
-	    	            				}else{
-	    	            					pageData.isProtected = false;
-	    	            				}
-	    	            				
-	    	            				var properties = {};
-	    	            				properties["description"] = pageData.description
-	    	            				
-	    	            				pageData["properties"] = properties;
-	    	            				pageData["containerFormat"] = "BARE";
-	    	            				pageData["status"] = "queued";
-	    	            				pageData["imageType"] = "image";
-	    	            				
-	    	            				delete pageData["description"];
-	    	            				delete pageData["locations"];
-	    	            				delete pageData["imageSource"];
-	    	            				debugger;
-	    	            				Common.xhr.postJSON('/image/v2/'+current_vdc_id+'/images',pageData,function(data){
-	    	    	                		if(data){
-	    	    	                			Modal.alert("保存成功",function(){
-		    	    	                			dialog.close();
-		    	    	                			Common.router.reload();
+	    	            				var imageSource = $("#imageSource").val();
+	    	            				if("file" == imageSource){
+	    	            					$("#editImage").removeAttr("method");
+	    	            					$("#editImage").removeAttr("enctype");
+	    	            					$("#editImage").removeAttr("action");
+	    	            					
+	    	            					$("#editImage").attr("method", "post");
+	    	            					$("#editImage").attr("enctype", "multipart/form-data");
+	    	            					$("#editImage").attr("action", "image/v2/"+current_vdc_id+"/images/upload");
+	    	            					
+	    	            					if($("#isPublic_checkbox").prop("checked")){
+		    	            					$("#isPublic").attr("value",'1');
+		    	            				}else{
+		    	            					$("#isPublic").attr("value",'0');
+		    	            				}
+		    	            				if($("#isProtected_checkbox").prop("checked")){
+		    	            					$("#isProtected").attr("value",'1');
+		    	            				}else{
+		    	            					$("#isProtected").attr("value",'0');
+		    	            				}
+		    	            				
+		    	            				$("#editImage").ajaxSubmit(function () {
+		    	            					Modal.alert("保存成功",function(){
+//		    	    	                			dialog.close();
+//		    	    	                			Common.router.reload();
 	    	    	                			});
-	    									}else{
-	    										Modal.alert("保存失败",function(){
-		    	    	                			
-	    	    	                			});
-	    									}
-	    								});*/
-	    	            				$("#editImage").attr("action", "image/v2/"+current_vdc_id+"/images/upload");
-	    	            				$("#editImage").ajaxSubmit(function () {
-	    	            					Modal.alert("保存成功",function(){
-//	    	    	                			dialog.close();
-//	    	    	                			Common.router.reload();
-    	    	                			});
-	    	            				});
+		    	            				});
+	    	            				}else if("address" == imageSource){
+	    	            					$("#editImage").removeAttr("method");
+	    	            					$("#editImage").removeAttr("enctype");
+	    	            					$("#editImage").removeAttr("action");
+	    	            					
+	    	            					var pageData = $("#editImage").serializeObject();
+		    	            				if(pageData.isPublic_checkbox){
+		    	            					pageData["isPublic"] = true;
+		    	            				}else{
+		    	            					pageData["isPublic"] = false;
+		    	            				}
+		    	            				if(pageData.isPublic_checkbox){
+		    	            					pageData["isProtected"] = true;
+		    	            				}else{
+		    	            					pageData["isProtected"] = false;
+		    	            				}
+//		    	            				
+		    	            				var properties = {};
+		    	            				properties["description"] = pageData.description
+		    	            				pageData["properties"] = properties;
+//		    	            				
+		    	            				delete pageData["description"];
+		    	            				delete pageData["imageSource"];
+		    	            				debugger;
+		    	            				Common.xhr.postJSON('/image/v2/'+current_vdc_id+'/images',pageData,function(data){
+		    	    	                		if(data){
+		    	    	                			Modal.alert("保存成功",function(){
+			    	    	                			dialog.close();
+			    	    	                			Common.router.reload();
+		    	    	                			});
+		    									}else{
+		    										Modal.alert("保存失败",function(){
+			    	    	                			
+		    	    	                			});
+		    									}
+		    								});
+	    	            				}
 	    	            			}
 	    	            		});
 	    	                }
@@ -206,7 +216,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 		    	            				pageData["properties"] = properties;
 		    	            				
 		    	            				delete pageData["description"];
-		    	            				delete pageData["locations"];
+		    	            				delete pageData["copyFrom"];
 		    	            				delete pageData["imageSource"];
 		    	            				debugger;
 		    	            				Common.xhr.putJSON('/image/v2/'+current_vdc_id+'/images/'+id,pageData,function(data){
@@ -240,7 +250,6 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 		//新建
 		$("#imageTable_wrapper span.btn-add").on("click",function(){
 	    	EditData.Add(function(){
-	    		debugger;
 	    		EventsHandler.formValidator();
 	    		EventsHandler.initSpinbox();
 	    		EventsHandler.initImageResource();
@@ -250,7 +259,6 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 	    //编辑
 	    $("#imageTable_wrapper a.btn-opt").on("click",function(){
 	    	EditData.Edit($(this).attr("data"),function(){
-	    		debugger;
 	    		EventsHandler.formValidator();
 	    		EventsHandler.initSpinbox();
 //	    		$("#diskFormat").val(data.diskFormat);
@@ -261,7 +269,6 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 	    
 	    //删除
 	    $("#imageTable_wrapper a.delete").on("click",function(){
-	    	debugger;
 	    	var id = $(this).attr("data");
 	    	Modal.confirm('确定要删除吗?', function(result){
 	    		if(result) {
