@@ -1,0 +1,86 @@
+[
+        {
+        	"id" : "1",
+            "name" : "伸缩组示例",
+            "conf":"test",
+            "servers": "2",
+            "require": "2",
+            "min": "1",
+            "max" : "5",
+            "available_zone": "WDS-dec",
+            "cool_time":"300",
+            "status":"启动"
+        },
+        {
+        	"id" : "2",
+            "name" : "test1",
+            "conf":"test",
+            "servers": "1",
+            "require": "1",
+            "min": "1",
+            "max" : "1",
+            "available_zone": "WDS-dec",
+            "cool_time":"300",
+            "status":"启动"
+        },
+        {
+        	"id" : "3",
+            "name" : "伸缩组示例2",
+            "conf":"test",
+            "servers": "2",
+            "require": "2",
+            "min": "1",
+            "max" : "5",
+            "available_zone": "WDS-dec",
+            "cool_time":"300",
+            "status":"启动"
+        },
+        {
+        	"id" : "4",
+            "name" : "伸缩组示例3",
+            "conf":"test",
+            "servers": "1",
+            "require": "2",
+            "min": "1",
+            "max" : "3",
+            "available_zone": "WDS-dec",
+            "cool_time":"300",
+            "status":"启动"
+        },
+        {
+        	"id" : "5",
+            "name" : "伸缩组示例",
+            "conf":"test",
+            "servers": "2",
+            "require": "2",
+            "min": "1",
+            "max" : "5",
+            "available_zone": "WDS-dec",
+            "cool_time":"300",
+            "status":"启动"
+        },
+        {
+        	"id" : "6",
+            "name" : "伸缩组示例",
+            "conf":"test",
+            "servers": "2",
+            "require": "2",
+            "min": "1",
+            "max" : "5",
+            "available_zone": "WDS-dec",
+            "cool_time":"300",
+            "status":"启动"
+        },
+        {
+        	"id" : "7",
+            "name" : "伸缩组示例",
+            "conf":"test",
+            "servers": "2",
+            "require": "2",
+            "min": "1",
+            "max" : "5",
+            "available_zone": "WDS-dec",
+            "cool_time":"300",
+            "status":"启动"
+        }
+]

@@ -1,0 +1,35 @@
+<table class="table table-primary table-striped" id="confTable">
+	<thead>
+		<tr>
+			<th class="c15">名称</th>
+			<th class="c10">内核</th>
+			<th class="c10">内存</th>
+			<th class="c15">云主机类型</th>
+			<th class="c20">镜像</th>
+			<th class="c15">状态</th>
+			<th class="c15">操作</th>
+		</tr>
+	</thead>
+	<tbody>
+	{{each list as item i}}
+		<tr data-id="{{item.id}}">
+			<td><a class="volume_name" href="javascript:void(0)">{{item.name}}</a></td>
+			<td>{{item.cpu}}</td>
+			<td>{{item.memory}}</td>
+			<td>{{item.vmType}}</td>
+			<td>{{item.image}}</td>
+			<td>
+ 			{{if item.status == 'valid'}}
+ 				<span class="text-success">可用</span>
+ 			{{else}}
+ 				<span class="text-danger">失效</span>
+ 			{{/if}}
+ 			</td>
+			<td>
+			<a class="btn-opt" data-toggle="tooltip" title="删除" ><i class="fa fa-trash-o"></i></a>
+			<a class="btn-opt" data-toggle="tooltip" title="备份"><i class="fa fa-files-o"></i></a>
+			</td>
+		</tr>
+ 			{{/each}}
+	</tbody>
+</table>

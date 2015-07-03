@@ -12,16 +12,20 @@
 		</tr>
 	</thead>
 	<tbody>
-	{{each result as item i}}
+	{{each urlList as item i}}
 		<tr>
 			<td><label><input type="checkbox"></label></td>
-			<td>{{item.name}}</td>
-			<td>{{item.name}}</td>
-			<td>{{item.name}}</td>
-			<td>POST</td>
+			<td>{{item.urlName}}</td>
+			<td>{{item.endpoint.url}}</td>
+			<td>{{item.urlAddress}}</td>
+			<td>{{item.method}}</td>
 			<td>
 				<a class="btn-cancel" data-toggle="tooltip" title="取消关联" href="javascript:void(0)" data="{{item.id}}" data-act="stop">取消关联</a>
+				{{if defaultUrl != null && item.id == defaultUrl.id}}
+				<a class="btn-set-default" data-toggle="tooltip" title="取消默认" href="javascript:void(0)" data="{{item.id}}">取消默认</a>
+				{{else}}
 				<a class="btn-set-default" data-toggle="tooltip" title="设为默认" href="javascript:void(0)" data="{{item.id}}">设为默认</a>
+				{{/if}}
 			</td>
 		</tr>
  			{{/each}}

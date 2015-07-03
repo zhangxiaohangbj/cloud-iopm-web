@@ -1,0 +1,79 @@
+<div class="page-header clearfix">
+	<ol class="breadcrumb">
+	  <li class="active"><i class="icon-squre-d"></i>弹性伸缩组</li>
+	</ol>
+	<p class="description">
+		使用 弹性伸缩 组，您可以维持应用程序可用性，并且根据您定义的条件自动扩缩 云主机 的数量。在需求高峰期时， 弹性伸缩组 还可以自动增加 云主机 的数量，以保证性能不受影响，当需求较低时，则会减少容量以降低成本。弹性伸缩组既适合需求稳定的应用程序，同时也适合每小时、每天、每周使用量不停波动的应用程序。
+	</p>
+</div>
+<div class="page-body">
+	<div class="pane">
+		<div class="pane-content">
+			<table class="table table-primary table-striped" id="VmTable">
+				<thead>
+					<tr>
+						<th class="c2">
+							<label><input type="checkbox" class="selectAll"></label>
+						</th>
+						<th class="c12">名称</th>
+						<th class="c10">配置</th>
+						<th class="c8">云主机数</th>
+						<th class="c6">所需</th>
+						<th class="c6">最小</th>
+						<th class="c6">最大</th>
+						<th class="c6">状态</th>
+						<th class="c15">默认冷却时间（秒）</th>
+						<th class="c11">可用区域</th>
+						<th class="c18">操作</th>
+					</tr>
+				</thead>
+				<tbody>
+				{{each list as item i}}
+					<tr>
+						<td><label><input type="checkbox"></label></td>
+						<td><a class="vm_name" href="#fservice/autoscaling/detail" data="{{item.id}}">{{item.name}}</a></td>
+						<td>{{item.conf}}</td>
+						<td class="vm_floating_ips">{{item.servers}}</td>
+						<td class="vm_type">{{item.require}}</td>
+						<td>{{item.min}}</td>
+						<td>{{item.max}}</td>
+						<td class="text-success">{{item.status}}</td>
+						<td>{{item.cool_time}}</td>
+						<td>{{item.available_zone}}</td>
+						<td>
+						<a href="javascript:void(0)" class="btn-opt createSnapshot" data-toggle="tooltip" title="创建快照" data-act="stop" data="{{item.id}}" style="margin: 0;"><i class="fa fa-camera"></i></a>
+						<a class="btn-opt" data-toggle="tooltip" title="控制台" data-act="delete"><i class="glyphicon glyphicon-trash"></i></a>
+						<div class="dropdown">
+							<a class="btn-opt dropdown-toggle" data-toggle="dropdown" title="更多"  aria-expanded="false" ><i class="fa fa-angle-double-right"></i></a>
+							<ul class="dropdown-menu" style="right: 0;left: initial;">
+								<li><a href="javascript:void(0)" class="attachIp" data="{{item.id}}"><i class="fa fa-gear fa-fw"></i>绑定浮动IP</a></li>
+								<li><a href="javascript:void(0)" class="dettachIp" data="{{item.id}}"><i class="fa fa-gear fa-fw"></i>解除浮动IP绑定</a></li>
+								<li><a href="javascript:void(0)" class="editName" data="{{item.id}}"><i class="fa fa-file-text fa-fw"></i>修改云主机名称</a></li>
+								<li><a href="javascript:void(0)" class="editSecurity" data="{{item.id}}"><i class="fa fa-file-text fa-fw"></i>编辑安全组</a></li>
+								<li><a href="javascript:void(0)" class="vncConsole" data="{{item.id}}"><i class="fa fa-file-text fa-fw"></i>控制台</a></li>
+								<li><a href="javascript:void(0)" class="consoleOutput" data="{{item.id}}"><i class="fa fa-file-text fa-fw"></i>查看日志</a></li>
+								<li><a href="javascript:void(0)" class="pause" data="{{item.id}}"><i class="fa fa-file-text fa-fw"></i>暂停</a></li>
+								<li><a href="javascript:void(0)" class="suspend" data="{{item.id}}"><i class="fa fa-file-text fa-fw"></i>挂起</a></li>
+								<li><a href="javascript:void(0)" class="editVmType" data="{{item.id}}"><i class="fa fa-file-text fa-fw"></i>调整配置</a></li>
+								<li><a href="javascript:void(0)" class="rebootSoft" data="{{item.id}}"><i class="fa fa-refresh fa-fw"></i>软重启</a></li>
+								<li><a href="javascript:void(0)" class="rebootHard" data="{{item.id}}"><i class="fa fa-refresh fa-fw"></i>硬重启</a></li>
+								<li><a href="javascript:void(0)" class="osStop" data="{{item.id}}"><i class="fa fa-power-off fa-fw"></i>关闭</a></li>
+								<li><a href="javascript:void(0)" class="rebuild" data="{{item.id}}"><i class="fa fa-file-text fa-fw"></i>重建</a></li>
+								<li><a href="javascript:void(0)" class="delete" data="{{item.id}}"><i class="fa fa-file-text fa-fw"></i>终止</a></li>
+							</ul>
+						</div>	
+						</td>
+					</tr>
+    			{{/each}}
+				</tbody>
+				<tfoot>
+					<tr>
+						<td>
+							<span class="text-danger">*</span> 可通过在实例上"<span class="nums">右键</span>"来进行常用操作,"<span class="nums">双击</span>"来编辑基本属性
+						</td>
+					</tr>
+				</tfoot>
+			</table>
+		</div>
+	</div>
+</div>
