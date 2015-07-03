@@ -26,7 +26,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 		var userTotalSize = 0;
 		//页面渲染完后进行各种事件的绑定
 		//dataTables
-	/*	Common.initDataTable($('#VdcTable'),{
+	/*	Common.initDataTable($('#imageTable'),{
 		      "processing": true,  //加载效果，默认false
 		      "serverSide": true,  //页面在加载时就请求后台，以及每次对 datatable 进行操作时也是请求后台
 		      "ordering": false,   //禁用所有排序
@@ -118,7 +118,8 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 		//dataTables
 		Common.initDataTable($('#imageTable'),function($tar){
 			$tar.prev().find('.left-col:first').append(
-					'<span class="btn btn-add">创建镜像</span>'
+					'<span class="btn btn-add">创建镜像</span>'+
+					'<span class="btn btn-danger">导入镜像</span>'
 				);
 			Common.$pageContent.removeClass("loading");
 		});
@@ -242,25 +243,20 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 		//载入后的事件
 		var EventsHandler = {
 				//虚拟化环境change事件
-				veChange: function(){
-					$('select.select-ve').change(function(){
+				componentChange: function(){
+					$('#component_select').change(function(){
 						//同步
-						currentChosenObj.ve = $('select.select-ve').children('option:selected');
-						//重新载入可用分区数据
-						DataIniter.initAz();
+						var select = $(this).children('option:selected').text();
+						var text =  $("#creatImage [name='component']").val();
+						if(text == null || text== ""){
+							text = select;
+						}else{
+							text = text + "," +select;
+						}
+						$("#creatImage [name='component']").val(text);
     				});
 					
 				},
-				//网络池change事件
-				/*netChange: function(){
-					$('select.select-net').change(function(){
-						//同步
-						currentChosenObj.netId = $('select.select-net').children('option:selected');
-						//重新载入可用分区数据
-						DataIniter.initFloatIP();
-    				});
-					
-				},*/
 				//配额的表单验证
 				vdc_form:function($form){
 					if(!$form)return null;
@@ -466,144 +462,12 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 					};
 					choose.initChoose(options);
 				})
-			}/*,
-			//根据net_id获取浮动IP
-			initFloatIP : function(){
-				var net_id = currentChosenObj.netId.val() || $('select.select-net').children('option:selected').val();
-				if(net_id){
-					Common.xhr.get('/v2.0/floatingips',{'floatingNetworkId':net_id},function(ipList){
-						for(var key in ipList.floatingips ){
-							var obj = ipList.floatingips[key];
-							obj.name = obj.floating_ip_address;
-						}
-						require(['js/common/choose'],function(choose){
-							var options = {
-									selector: '#vdcFloatIP',
-									list: ipList.floatingips
-							};
-							choose.initChoose(options);
-						})
-					});
-				}else{
-					Modal.error('尚未选择所属虚拟化环境');
-				};
-			}*/
+			}
 		}
 	  //增加按钮
-		$(document).off("#VdcTable_wrapper span.btn-add");
-		$(document).on("click","#VdcTable_wrapper span.btn-add",function(){
-	    	//需要修改为真实数据源
-			Common.render('tpls/ccenter/vdc/add.html',renderData,function(html){
-				userIndex = 1;
-				$('body').append(html);
-				//wizard show
-    			$.fn.wizard.logging = true;
-    			var wizard;
-    			
-				//同步currentChosenObj
-		    	currentChosenObj.ve = $('select.select-ve').children('option:selected');
-		    	currentChosenObj.netId = $('select.select-net').find('option:selected');
-		    	//载入依赖数据
-		    	DataIniter.initAz();
-		    	DataIniter.initUsers();
-		    	//DataIniter.initFloatIP();
-		    	
-    			wizard = $('#create-vdc-wizard').wizard({
-    				keyboard : false,
-    				contentHeight : 526,
-    				contentWidth : 900,
-    				showCancel: true,
-    				backdrop: 'static',
-    				buttons: {
-    	                cancelText: "取消",
-    	                nextText: "下一步",
-    	                backText: "上一步",
-    	                submitText: "创建",
-    	                submittingText: "提交中..."
-    	            },
-    	            submitEnabled: [1,2],
-    	            validate: {
-	            		0: function(){
-	            			return this.el.find('form').valid();
-	            		},
-	            		2: function(){
-	            			return this.el.find('form').valid();
-	            		}
-    	            }
-    			});
-    			//加载时载入validate
-    			wizard.on('show',function(){
-    				wizard.form.each(function(){
-    					EventsHandler.vdc_form($(this));
-    				})
-    				//载入事件
-    				EventsHandler.userChosen();
-    				EventsHandler.veChange();
-    			});
-    			wizard.show();
-    			
-    			
-    			//wizard.disableNextButton();
-    			//重置CurrentChosenObj对象
-    			var resetCurrentChosenObj = function(){
-    				for(var key in currentChosenObj){
-    					currentChosenObj[key] = null;
-    				}
-    				currentChosenObj.nums = 1;
-    			}
-    			//关闭弹窗
-				var closeWizard = function(){
-    				$('div.wizard').remove();
-    				$('div.modal-backdrop').remove();
-    				resetCurrentChosenObj();
-    			}
-				//关闭后移出dom
-    			wizard.on('closed', function() {
-    				closeWizard();
-    				
-    			});
-    			//创建提交数据
-    			wizard.on("submit", function(wizard) {
-    				var vdc = wizard.serializeObject();//获取数据
-    				var name = vdc['vdc-name'];//$("#editVdcBasic [name='vdc-name']").val();
-    				var description = vdc['description']; //$("#editVdcBasic [name='description']").val();
-    				var enabled = vdc['enabled'] == "on" ? true:false;//$("#editVdcBasic [name='enabled']:checked").length? true:false;
-    				var virtualEnvId = vdc['select-ve'];//currentChosenObj.ve.val() || $('select.select-ve').children('option:selected').val();
-    				var available_zones = null;//jsonData.azJson("#vdcAZ .list-group-select");
-    				if(virtualEnvId){
-    					available_zones = jsonData.azJson("#vdcAZ .list-group-select");
-    				}
-    				var quota_set = null;
-    				if(vdc.metadata_items){
-    					quota_set = jsonData.quotaSetsJson("#vdcQuota");
-    				}
-    				var members = null;
-    				if(vdc['vdc-users']){
-    					members = jsonData.userJson("#vdc-users .list-group-select");
-    				}
-    				/*var float_ips = null;
-    				if(vdc['select-net']){
-    					float_ips = jsonData.floatIpJson("#vdcFloatIP .list-group-select");
-    				}*/
-    				var vdcData={
-    						"tenant":{
-    							"name":name,
-    							"description":description,
-    							"enabled":enabled,
-    							"quota_set":quota_set,
-    							"available_zones":available_zones,
-    							"members":members,
-    							"virtualEnvId":virtualEnvId
-    						}
-    				};
-    				Common.xhr.postJSON('/identity/v2.0/tenants',vdcData,function(data){
-    					wizard._submitting = false;
-    					wizard.updateProgressBar(100);
-    					closeWizard();
-    					Common.router.reload();
-    				})
-    			});
-			});
+		$(document).off("#imageTable_wrapper span.btn-add");
+		$(document).on("click","#imageTable_wrapper span.btn-add",function(){
+			more.creatImage("");
 	    });
 	    
 	    //更新配额
@@ -644,110 +508,26 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 		$(document).on("click",".members",function(){
 	    	more.Member($(this).attr("data"));
 	    });
-	  //查看使用情况
-	/*    $("ul.dropdown-menu a.usage").on("click",function(){
-	    	Common.$pageContent.addClass("loading");
-	    	var vdc_id = $(this).attr("data");
-	    	var vdc_name = $(this).attr("data-name");
-	    	Common.render(true,{
-				tpl:'tpls/ccenter/vdc/usage.html',
-				data:'/v2.0/'+Common.cookies.getVdcId()+'/os-simple-tenant-usage/' + vdc_id,
-				beforeRender: function(data){
-					
-					var usageData = {
-							vdc_name:vdc_name,
-							usageList:data.tenant_usage.server_usages
-					}
-					return usageData;
-				},
-				callback: function(){
-					Common.initDataTable($('#UsageTable'),function($tar){
-						$tar.prev().hide();
-						Common.$pageContent.removeClass("loading");
-					});
-					 $("#reload").on("click",function(){
-						 Common.router.reload();
-					 })
-					 $('#time_text').daterangepicker(null, function(start, end, label) {
-				            console.log(start.toISOString(), end.toISOString(), label);
-				      });	
-					 $("#submit_usage").on("click",function(){
-					    	var time = $.trim($("#time_text").val());
-					    	if(time == null || time == "")return;
-					    	var start =  $.trim(time.split("-")[0]);
-					    	var end = $.trim(time.split("-")[1]);
-					    	Common.xhr.get('/v2.0/'+Common.cookies.getVdcId()+'/os-simple-tenant-usage/' + vdc_id,{'start':start,'end':end},function(data){
-					    		var usageList = $("#usageList");
-					    		usageList.empty();
-					    		var list = data.tenant_usage.server_usages;
-					    		var usageData = [];
-					    		if(list){
-					    			for(var key in list){
-					    				var obj = list[key];
-					    				usageData.push("<tr>");
-					    				usageData.push("<td>",obj.name,"</td>");
-					    				usageData.push("<td>",obj.vcpus,"</td>");
-					    				usageData.push("<td>",obj.local_gb,"GB</td>");
-					    				usageData.push("<td>",obj.memory_mb,"GB</td>");
-					    				usageData.push("<td>",obj.started_at,"</td>");
-					    				usageData.push("</tr>");
-					    				usageList.html(usageData.join(""));
-					    			}
-					    		}
-					    		Common.initDataTable($('#UsageTable'),function($tar){
-									$tar.prev().hide();
-									Common.$pageContent.removeClass("loading");
-								});
-							});
-					  });
-				}
-			});
-	    });*/
-	 
-	    //外部网络管理
-	  /*  $("ul.dropdown-menu a.floatIP").on("click",function(){
-	    	var net_id =  renderData.netList[0].id
-	    	var vdc_id = $(this).attr("data");
-	    	more.FloatIP(net_id,vdc_id);
-	    });*/
     
 	    //更多
 	    var more = {
 		    	//配额管理
-		    	QuotaSets : function(id){
-		    		//先获取QuotaSets后，再render
-		    		Common.xhr.ajax('/compute/v2/'+Common.cookies.getVdcId()+'/os-quota-sets/' + id,function(data){
-		    			Common.render('tpls/ccenter/vdc/quota.html',data.quota_set,function(html){
-		    				Modal.show({
-			    	            title: '配额',
-			    	            message: html,
-			    	            nl2br: false,
-			    	            buttons: [{
-			    	                label: '保存',
-			    	                action: function(dialog) {
-			    	                	var valid = $(".form-horizontal").valid();
-			    	            		if(!valid) return false;
-			    	                	var serverData = {
-				    	            			"quota_set":jsonData.quotaSetsJson("#vdcQuota")
-			    	        				};
-			    	                	Common.xhr.putJSON('/compute/v2/'+Common.cookies.getVdcId()+'/os-quota-sets/'+id,serverData,function(data){
-			    	                		if(data){
-					                    		 Modal.success('保存成功')
-				 	                			 setTimeout(function(){Modal.closeAll()},2000);
-					                    		 Common.router.route();//重新载入
-					                    	 }else{
-					                    		 Modal.warning ('保存失败')
-					                    	 }
-										});
-			    	                }
-			    	            }],
-			    	            onshown : function(){
-			    	            	EventsHandler.vdc_form($(".vdc_quota"));	
-			    	            }
-			    	        });
-			    		});
-		    		})	
-		    	},
+	    		creatImage : function(id){
+	    			Common.render('tpls/aservice/cae/createImage.html',null,function(html){
+	    				Modal.show({
+		    	            title: '创建镜像',
+		    	            message: html,
+		    	            nl2br: false,
+		    	            buttons: [{
+		    	                label: '创建',
+		    	                action: function(dialog) {}
+		    	            }],
+		    	            onshown : function(){
+		    	            	EventsHandler.componentChange();
+		    	            }
+		    	        });
+		    		});
+	    	},
 	  //可用分区管理
     	AZ : function(ve_id,vdc_id){
     		Common.xhr.ajax('/v2/os-availability-zone/virtualEnv/' + ve_id,function(eaz){
