@@ -1,0 +1,47 @@
+<form class="form-horizontal vdc_basic" id="creatImage">
+	<div class="form-group">
+		<label class="control-label col-sm-2" for="image_name">
+	 	<span style="color: red;">* </span>名称：</label>
+	 	<div class="col-sm-7 col-sm">
+			<input type="text" class="form-control" name="image_name" value="" style="width: 350px;">
+		</div>
+	</div>
+	<div class="form-group">
+		<label class="control-label col-sm-2" for="system_name">
+	 	<span style="color: red;">* </span>系统镜像：</label>
+	 	<div id="select-vm" class="col-sm-7 col-sm">
+			<select name="system_name"class="form-control select select-ve" style="width: 350px;">
+		        <option index="0" id="94f101bb5c4847eebe25487c3060ec4a" value="94f101bb5c4847eebe25487c3060ec4a" selected="selected">请选择一个系统镜像</option>  
+		        <option index="1" id="b8755989ae2c429cb67b28037c81d848" value="b8755989ae2c429cb67b28037c81d848">centos6.5</option>
+		        <option index="1" id="b8755989ae2c429cb67b28037c81d848" value="b8755989ae2c429cb67b28037c81d848">Ubuntu12.04</option>
+		        <option index="1" id="b8755989ae2c429cb67b28037c81d848" value="b8755989ae2c429cb67b28037c81d848">windows server2008</option>
+			</select>
+		</div>
+	</div>
+	<div class="form-group">
+		<label class="control-label col-sm-2" for ="component">组件：</label>
+	 	<div class="col-sm-7 col-sm">
+			 <div class="col-sm-7 col-sm">
+			    <input type="text" class="form-control" id="component_text" name="component" value="" readonly ="readonly"style="width: 350px;">
+		     </div>
+		</div>
+	</div>
+	<div class="form-group" style="margin-left:88px;">
+	 	<div id="select-vm" class="col-sm-7 col-sm">
+			<select name="system_name"class="form-control select select-ve" style="width: 350px;" id="component_select">
+		        <option index="0" id="94f101bb5c4847eebe25487c3060ec4a" value="94f101bb5c4847eebe25487c3060ec4a" selected="selected">请选择组件（可多选）</option>  
+		        <option index="1" id="b8755989ae2c429cb67b28037c81d848" value="b8755989ae2c429cb67b28037c81d848">jdk1.6</option>
+		        <option index="1" id="b8755989ae2c429cb67b28037c81d848" value="b8755989ae2c429cb67b28037c81d848">nginx</option>
+		        <option index="1" id="b8755989ae2c429cb67b28037c81d848" value="b8755989ae2c429cb67b28037c81d848">php</option>
+		        <option index="1" id="b8755989ae2c429cb67b28037c81d848" value="b8755989ae2c429cb67b28037c81d848">tomcat7</option>
+		         <option index="1" id="b8755989ae2c429cb67b28037c81d848" value="b8755989ae2c429cb67b28037c81d848">nodejs</option>
+			</select>
+		</div>
+	</div>
+	<div class="form-group">
+		<label class="control-label col-sm-2" for ="description">描述：</label>
+	 	<div class="col-sm-7 col-sm">
+			<textarea rows="5" cols="" class="form-control" name="description" value="" style="width: 350px;height:60px">{{description}}</textarea>
+		</div>
+	</div>
+</form>
