@@ -1,6 +1,6 @@
 <div class="page-header clearfix">
     <ol class="breadcrumb">
-        <li class="active">资源标签列表</li>
+        <li class="active"><i class="icon-squre-d"></i>资源标签</li>
     </ol>
     <p class="description">
         可以给不同的资源打上不同的标签，这样在进行资源分配的时候，可以利用标签进行策略选择，在不同的资源上创建不同类型的服务，比如给某个物理机打上一个磁盘类型为SSD的标签，那么在有用户创建具有SSD磁盘的虚拟机时，就可以在该物理机上创建虚拟机，来满足用户的需求，一般标签可以与虚拟机类型等进行联合使用。
@@ -24,7 +24,7 @@
                 {{each tag as item i}}
                 <tr>
                     <td><label><input type="checkbox"></label></td>
-                    <td><a class="tag-name" href="#cresource/metadata/tag/detail/{{item.id}}">{{item.name}}</a></td>
+                    <td><a class="tag-name" href="#ccenter/metadata/tag/detail/{{item.id}}">{{item.name}}</a></td>
                     <td>{{item.namespace}}</td>
                     <td>{{item.value}}</td>
                     <td>10</td>
@@ -35,7 +35,13 @@
                 </tr>
                 {{/each}}
                 </tbody>
-
+                <tfoot>
+                <tr>
+                    <td>
+                        <span class="text-danger">*</span> 可通过在实例上"<span class="nums">右键</span>"来进行常用操作,"<span class="nums">双击</span>"来编辑基本属性
+                    </td>
+                </tr>
+                </tfoot>
             </table>
         </div>
     </div>

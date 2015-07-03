@@ -37,7 +37,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 					$tab.empty().append(html);
 				});
 			}
-			Common.hideLoclLoading($tab);
+			Common.hideLocalLoading($tab);
 		}
 
 	}

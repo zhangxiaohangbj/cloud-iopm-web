@@ -1,6 +1,6 @@
 <div class="page-header clearfix">
     <ol class="breadcrumb">
-        <li class="active">虚拟化环境列表</li>
+        <li class="active"><i class="icon-squre-d"></i>虚拟化环境</li>
     </ol>
     <p class="description">
         虚拟化环境就是一个独立的OpenStack或者vmware环境，能够独立提供底层的计算、存储、网络等基础资源服务。这里主要是进行虚拟化环境的接入，接入后，可以进行统一的资源管理和分配。
@@ -29,7 +29,7 @@
                 {{each data as item i}}
                 <tr>
                     <td><label><input type="checkbox"></label></td>
-                    <td><a class="env-name" href="#cresource/env/detail/{{item.id}}">{{item.name}}</a></td>
+                    <td><a class="env-name" href="#ccenter/env/detail/{{item.id}}">{{item.name}}</a></td>
                     <td>{{item.type}}</td>
                     <td>{{item.version}}</td>
                     <td>{{item.regionName}}</td>
@@ -57,6 +57,13 @@
                 </tr>
                 {{/each}}
                 </tbody>
+                <tfoot>
+                <tr>
+                    <td>
+                        <span class="text-danger">*</span> 可通过在实例上"<span class="nums">右键</span>"来进行常用操作,"<span class="nums">双击</span>"来编辑基本属性
+                    </td>
+                </tr>
+                </tfoot>
             </table>
         </div>
     </div>
