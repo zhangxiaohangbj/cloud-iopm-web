@@ -322,17 +322,8 @@ define('commons/pub_menu', function() {
             current: [1,1],
             items: [
                 {
-                    text: '<i class="fa fa-database"></i>NoSQL存储<i class="fa icon-arrow"></i>',
-                    items: [
-                        {
-                            text: '<i class="fa fa-dot fa-1"></i>关系型数据库',
-                            link: '#db'
-                        },
-                        {
-                            text: '<i class="fa fa-dot fa-1"></i>缓存',
-                            link: '#cache'
-                        }
-                    ]
+                    text: '<i class="fa fa-database"></i>海量结构化存储',
+                    link: '#nosql/index'
                 },
                 {
                     text: '<i class="fa fa-th"></i>大数据处理<i class="fa icon-arrow"></i>',
