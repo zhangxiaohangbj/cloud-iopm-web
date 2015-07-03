@@ -19,6 +19,14 @@ define(['Common','bs/modal','jq/form/wizard','jq/form/validator-bs3','bs/tooltip
         return this.optional(element) || /^((\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.){3}(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])$/.test(value);
     }, "请填写正确的网关IP");
 
+    $.validator.addMethod("nameDulplicateCheck", function(value, element) {
+        var flag = false;
+        Common.xhr.ajax(""+element,function(data){
+            flag = data;
+        });
+        return flag;
+    }, "名称重复");
+
     var formValidator = function($form){
         if(!$form)return null;
         return $form.validate({

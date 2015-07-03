@@ -33,7 +33,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
             Common.showLocalLoading($tab);
             if('resources' == data){
                 //获取磁盘快照列表
-                Common.render(false,'tpls/ccenter/zone/list_resources.html',curNamespaceInfo,function(html){
+                Common.render(false,'tpls/ccenter/metadata/namespace/list_tags.html',curNamespaceInfo,function(html){
                     $tab.empty().append(html);
                 });
             }else if('basic' == data){
