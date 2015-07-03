@@ -109,6 +109,9 @@ header > .container,
 #header-nav > nav > ul > li.active{
     background-color:#3E4A5A;
 }
+#header-nav > nav > ul > li[index=search-bar].active{
+    background:none;
+}
 #header-nav > nav > ul > li > a {
     display: inline-block;
     color: #E8E6E6;
