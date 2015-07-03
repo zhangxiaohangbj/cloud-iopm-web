@@ -37,7 +37,7 @@ define('commons/pub_menu', function() {
         null,
         {
             title: '<i class="fa fa-soundcloud fa-fw"></i>云中心',
-            current: [1,1],
+            current: [2],
             items:[
                 {
                     text: '<i class="fa fa-th-large"></i>设备管理<i class="fa icon-arrow"></i>',
@@ -234,12 +234,16 @@ define('commons/pub_menu', function() {
 				    text: '<i class="fa fa-database"></i>数据库RDS<i class="fa icon-arrow"></i>',
 				    items: [
 				        {
-				            text: '<i class="fa fa-dot fa-1"></i>关系型数据库',
-				            link: '#db'
+				            text: '<i class="fa fa-dot fa-1"></i>数据库实例',
+				            link: '#rds/instance'
 				        },
 				        {
-				            text: '<i class="fa fa-dot fa-1"></i>缓存',
-				            link: '#cache'
+				            text: '<i class="fa fa-dot fa-1"></i>数据库类型',
+				            link: '#rds/dbtype'
+				        },
+				        {
+				            text: '<i class="fa fa-dot fa-1"></i>镜像管理',
+				            link: '#rds/image'
 				        }
 				    ]
 				},

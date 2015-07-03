@@ -3,7 +3,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 	var init = function(){
 		Common.$pageContent.addClass("loading");
 		//先获取数据，进行加工后再去render
-		Common.render(true,'tpls/bservice/emr/cluster/list.html',function(){
+		Common.render(true,'tpls/bservice/nosql/list.html',function(){
 			bindEvent();
 		});
 	};
