@@ -165,7 +165,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 					var vdc_id = obj.prev().val();
 					Common.render({
 						tpl:'tpls/sysmanagement/user/vdclist.html',
-						data:'/identity/v2.0/tenants',    //需修改接口
+						data:'/identity/v2.0/tenants',
 						beforeRender: function(data){
 							data.vdc_id = vdc_id;
 							return data;
@@ -446,7 +446,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 		$(document).on("click","#UserTable_wrapper a.btn-edit",function(){
 			var rowdata = $(this).parents("tr:first").data("rowData.dt");
 			var id= rowdata.id;
-	    	Common.xhr.ajax('/identity/v2.0/users/'+id,function(data){  //需修改接口
+	    	Common.xhr.ajax('/identity/v2.0/users/'+id,function(data){
 	    		Common.render('tpls/sysmanagement/user/edit.html',data.user,function(html){
 	    			Modal.show({
 	    	            title: '用户信息编辑',
@@ -519,7 +519,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 			$(document).off("click","a.btn-edit-role");
 			$(document).on("click","a.btn-edit-role",function(){
 				var id = $(this).parents("tr:first").data("rowData.dt").id;
-		    	Common.xhr.ajax('/identity/v2.0/users/tenants/'+id,function(data){  //需修改接口
+		    	Common.xhr.ajax('/identity/v2.0/users/tenants/'+id,function(data){
 		    		Common.render('tpls/sysmanagement/user/editrole.html',data,function(html){
 		    			Modal.show({
 		    	            title: '用户权限设置',

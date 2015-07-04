@@ -1,6 +1,6 @@
 <div class="page-header clearfix">
     <ol class="breadcrumb">
-        <li class="active">可用分区列表</li>
+        <li class="active"><i class="icon-squre-d"></i>可用分区</li>
     </ol>
     <p class="description">
         可用分区的划分可以方便资源的分配和管理，对于最终用户是可见的，一个虚拟化环境可以划分出多个可用分区。
@@ -24,7 +24,7 @@
                 {{each zone as item i}}
                 <tr>
                     <td><label><input type="radio"></label></td>
-                    <td><a class="env-name" href="#cresource/zone/detail/{{item.id}}">{{item.name}}</a></td>
+                    <td><a class="env-name" href="#ccenter/zone/detail/{{item.id}}">{{item.name}}</a></td>
                     <td>{{item.virtualEnvName}}</td>
                     <td>{{item.regionName}}</td>
                     <td>{{item.hosts.length}}个服务器</td>
@@ -36,7 +36,13 @@
                 </tr>
                 {{/each}}
                 </tbody>
-
+                <tfoot>
+                <tr>
+                    <td>
+                        <span class="text-danger">*</span> 可通过在实例上"<span class="nums">右键</span>"来进行常用操作,"<span class="nums">双击</span>"来编辑基本属性
+                    </td>
+                </tr>
+                </tfoot>
             </table>
         </div>
     </div>

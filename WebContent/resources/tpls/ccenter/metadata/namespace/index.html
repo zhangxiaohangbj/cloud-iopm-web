@@ -1,6 +1,6 @@
 <div class="page-header clearfix">
     <ol class="breadcrumb">
-        <li class="active">命名空间列表</li>
+        <li class="active"><i class="icon-squre-d"></i>命名空间</li>
     </ol>
     <p class="description">
         命名空间，是元数据中的分组。
@@ -24,7 +24,7 @@
                 {{each namespace as item i}}
                 <tr>
                     <td><label><input type="checkbox"></label></td>
-                    <td><a class="namespace-name" href="#cresource/metadata/namespace/detail/{{item.namespace}}">{{item.namespace}}</a></td>
+                    <td><a class="namespace-name" href="#ccenter/metadata/namespace/detail/{{item.namespace}}">{{item.namespace}}</a></td>
                     <td>{{item.display_name}}</td>
                     <td>{{item.visibility}}</td>
                     <td>{{item.description}}</td>
@@ -36,7 +36,13 @@
                 </tr>
                 {{/each}}
                 </tbody>
-
+                <tfoot>
+                <tr>
+                    <td>
+                        <span class="text-danger">*</span> 可通过在实例上"<span class="nums">右键</span>"来进行常用操作,"<span class="nums">双击</span>"来编辑基本属性
+                    </td>
+                </tr>
+                </tfoot>
             </table>
         </div>
     </div>
