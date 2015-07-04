@@ -1,5 +1,6 @@
 define(['Common'],function(Common){
 	var init = function(){
+		Common.$pageContent.removeClass('loading');
 		Common.render(true, {
 			tpl: 'tpls/index.html',
 			data: '/resources/data/image.txt',
