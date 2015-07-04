@@ -3,7 +3,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 	var init = function(){
 		Common.$pageContent.addClass("loading");
 		//先获取数据，进行加工后再去render
-		Common.render(true,'tpls/bservice/emr/cluster/list.html',function(){
+		Common.render(true,'tpls/bservice/nosql/list.html',function(){
 			bindEvent();
 		});
 	};
@@ -13,7 +13,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 		      "processing": true,  //加载效果，默认false
 		      "serverSide": true,  //页面在加载时就请求后台，以及每次对 datatable 进行操作时也是请求后台
 		      "ordering": false,   //禁用所有排序
-		      "sAjaxSource":"resources/data/bservice/emr/cluster.txt?", //ajax源，后端提供的分页接口
+		      "sAjaxSource":"resources/data/bservice/nosql/nosql.txt?", //ajax源，后端提供的分页接口
 		      "fnServerData": function( sSource, aoData, fnCallback ) {
 		    	    $.ajax( {   
 		    	        "url": sSource, 
@@ -33,17 +33,16 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 			        	"orderable": false,
 			        	"defaultContent":"<label><input type='checkbox'></label>"
 			        },
-			        {"data": "name"},
+			        {"data": "instance_name"},
 			        {"data": "status"},
 			        {"data": "created_at"},
-			        {"data": "is_transient"},
-			        {"data": "plugin_name"},
-			        {"data": "vdc_name"},
-			        {"data": "node_count"},
+			        {"data": "service_endpoint"},
+			        {"data": "table_count"},
+			        {"data": "table_max_count"},
+			        {"data": "description"},
 			        {
-			        	"defaultContent":'<a class="btn-edit" data-toggle="tooltip" title="编辑集群" href="javascript:void(0)" data-act="stop">编辑集群</a>'
-			        		+'<a class="btn-delete" data-toggle="tooltip" title="扩容集群" href="javascript:void(0)" style="margin: 0 8px;">扩容集群</a>'
-							+'<a class="btn-delete" data-toggle="tooltip" title="删除集群" href="javascript:void(0)" style="margin: 0 8px;"><i class="fa fa-trash-o fa-fw"></i></a>'
+			        	"defaultContent":'<a class="btn-edit" data-toggle="tooltip" title="编辑集群" href="javascript:void(0)" data-act="stop">管理实例</a>'
+							+'<a class="btn-delete" data-toggle="tooltip" title="删除实例" href="javascript:void(0)" style="margin: 0 8px;"><i class="fa fa-trash-o fa-fw"></i></a>'
 			        }
 		      ],
 		      /*
@@ -54,18 +53,18 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 		       *  属性列表： data，之前属性定义中对应的属性值； type，未知；full,全部数据值可以通过属性列名获取 
 		       * */
 		      "columnDefs": [
-					{
+					/*{
 					    "targets": [4],
 					    "render": function(data, type, full) {
 					    	if(data == true) return "临时";
 					    	else return "永久";
 					    }
-					}
+					}*/
                 ]
 		    },
 			function($tar){
 			$tar.prev().find('.left-col:first').append(
-					'<span class="btn btn-add">创建集群</span>'
+					'<span class="btn btn-add">创建实例</span>'
 				);
 			//这个必须添加，不然就是隐藏的效果，看不到页面
 			Common.$pageContent.removeClass("loading");
