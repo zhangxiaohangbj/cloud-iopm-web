@@ -42,11 +42,6 @@ define('commons/main',
         });
     }
 
-    // init defaultOptions
-    Modal.configDefaultOptions(['processing', 'info', 'warning', 'error', 'success'], {
-        position: 'right 48'
-    });
-
     return {
         hash: function() {
             return _getHash();
@@ -61,7 +56,7 @@ define('commons/main',
             navPrimaryItems: PubMenu.navPrimaryItems,
             sideBarDataMap: PubMenu.sideBarDataMap,
             headerNavIndex: PubMenu.headerNavIndex,
-            sideBarNavIndex: null
+            sideBarNavIndex: {}
         },
         initHeaderNavIndex: function() {
             var hash = this.hash;
@@ -77,9 +72,10 @@ define('commons/main',
         },
         initSideBarNavIndex: function() {
             var hash = this.hash;
+            if(this.pub.sideBarNavIndex[hash]) return;
             var $li = $("#side-bar").find('[href$="'+hash+'"]').parents('li:first');
             if($li.length) {
-                this.pub.sideBarNavIndex = [];
+                !this.pub.sideBarNavIndex[hash] && (this.pub.sideBarNavIndex[hash] = []);
                 var indexFirst = $li.attr('index'), indexSecond = 0;
                 var $second = $li.parents(".nav-second-level:first");
                 if($second.length) {
@@ -87,12 +83,21 @@ define('commons/main',
                     indexFirst = $second.parents("li:first").attr('index');
                     indexFirst && (indexSecond = indexSecond.replace(new RegExp('^'+indexFirst), ''));
                 }
-                this.pub.sideBarNavIndex[0] = parseInt(indexFirst);
+                this.pub.sideBarNavIndex[hash][0] = parseInt(indexFirst);
                 if(indexSecond) {
-                    this.pub.sideBarNavIndex[1] = parseInt(indexSecond);
+                    this.pub.sideBarNavIndex[hash][1] = parseInt(indexSecond);
                 }
             }
         },
+        scrollbarWidth: function() {
+            var scrollDiv = document.createElement('div');
+            scrollDiv.className = 'modal-scrollbar-measure';
+            $(document.body).append(scrollDiv);
+            var scrollbarWidth = scrollDiv.offsetWidth - scrollDiv.clientWidth;
+            document.body.removeChild(scrollDiv);
+            return scrollbarWidth;
+        }(),
+        $body: $(document.body),
         $pageMain: null,
         $pageContent: null,
         init: function(){
@@ -158,7 +163,6 @@ define('commons/main',
                     mainH = winH - this.$pageMain.offset().top;
                 mainH = mainH <=0 ? 1 : mainH;
                 this.$pageMain.css('height', mainH + 'px');
-                debugger;
                 if(this.$pageContent) {
                     var $aside = $("aside"),
                         asideH = $aside.innerHeight() || 0;
@@ -175,7 +179,32 @@ define('commons/main',
                     this.adjustContentLeft();
                 }
             }
+            this.adjustModalNotesPos();
             return this;
+        },
+        adjustModalNotesPos: function() {
+            var pos = ['right', 0];
+            if(this.$pageMain && this.$pageContent) {
+                if(this.$pageContent.parent().outerHeight() > this.$pageMain.height()) {
+                    pos[0] = 'r' + this.scrollbarWidth;
+                } else {
+                    pos[0] = 'right';
+                }
+            }
+            if(this.$pageContent) {
+                pos[1] = this.$pageContent.parent().offset().top;
+            }
+            // set opened position
+            var typeNoteRegexp = new RegExp('^'+Modal.TYPE_NOTE);
+            $.each(Modal.dialogs, function(id, dialog) {
+                if(dialog.isRealized() && dialog.isOpened() && typeNoteRegexp.test(dialog.getType())) {
+                    dialog.setPosition(pos[0], null);
+                }
+            });
+            // init defaultOptions
+            Modal.configDefaultOptions(['processing', 'info', 'warning', 'error', 'success'], {
+                position: pos.join(' ')
+            });
         },
         adjustContentLeft: function() {
             var $aside = $("aside");
@@ -200,8 +229,8 @@ define('commons/main',
             if(this.pub.sideBarDataMap[index]) {
                 PubView.renderSideBar({ data: this.pub.sideBarDataMap[index] });
                 this.initSideBarNavIndex();
-                if(this.pub.sideBarNavIndex) {
-                    PubView.activeSideBar.apply(PubView, this.pub.sideBarNavIndex);
+                if(this.pub.sideBarNavIndex[this.hash]) {
+                    PubView.activeSideBar.apply(PubView, this.pub.sideBarNavIndex[this.hash]);
                 }
             } else {
                 PubView.renderSideBar(null);
@@ -411,6 +440,22 @@ define('commons/main',
                     }
                     return ctrl;
                 };
+                this.getCtrlFromTable = function(hash) {
+                    var ctrl;
+                    if(hash) {
+                        try {
+                            for(var i=0; i<this.table.path.length; i++) {
+                                var _path = this.table.path[i];
+                                if(new RegExp(_path).test(hash)) {
+                                    ctrl = this.table.ctrl[i];
+                                    break;
+                                }
+                                _path = null;
+                            }
+                        } catch (e) { }
+                    }
+                    return ctrl;
+                };
                 //重新加载当前页面
                 this.reload = function() {
                     this.route();
@@ -445,7 +490,32 @@ define('commons/main',
                 //加载控制器,并默认执行init初始化
                 this.loadctrl = function(ctrl){
                     Modal.loading();
+                    var self = this;
                     var onLoad = function() {
+                        // update page class
+                        var toPageIndex = function(hash) {
+                                var ctrl = self.getCtrlFromTable(hash);
+                                if(!ctrl) {
+                                    ctrl = self.getDefaultCtrl(hash);
+                                }
+                                var pageIndex = 'index';
+                                if(ctrl) {
+                                    pageIndex = ctrl.replace(new RegExp('^'+self.ctrlPrefix), '').replace(/\//g, '-');
+                                }
+                                return pageIndex;
+                            },
+                            pageIndexCur = toPageIndex(that.hash);
+                        var pageIndex = that.$body.attr('page-index');
+                        if(pageIndex) {
+                            if(pageIndexCur !== pageIndex) {
+                                that.$body.attr('page-index', pageIndexCur);
+                                that.$body.removeClass('page-'+pageIndex).addClass('page-'+pageIndexCur);
+                            }
+                        } else {
+                            that.$body.attr('page-index', pageIndexCur);
+                            that.$body.addClass('page-'+pageIndexCur);
+                        }
+                        // reset SideBar
                         that.resetSideBar();
                         Modal.loading('remove');
                     };
