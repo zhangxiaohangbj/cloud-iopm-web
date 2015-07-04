@@ -13,6 +13,6 @@
     <!-- scripts -->
     <script src="${pageContext.request.contextPath}/resources/lib/js/pubView.js" data-main="initializer" data-pub-root="${pageContext.request.contextPath}" data-require-base="${pageContext.request.contextPath}/resources"></script>
     <script type="text/javascript">
-        PubView.setDefaults({userInfo: '${sessionScope.userInfo}', sideBar: {wrapper: '#page-main'}, footer: null});
+        PubView.setDefaults({userInfo: '${sessionScope.userInfo}', sideBar: {wrapper: '#page-main > .container'}, footer: null});
     </script>
 </head>

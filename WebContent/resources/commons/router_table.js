@@ -4,6 +4,10 @@
 define('commons/router_table', function() {
     return {
         '^#monitor(!.*)?$': "js/monitor/task/strategyGroup",
+        '^#aservice(!.*)?$' :"js/aservice/rds/instance",
+        '^#bservice(!.*)?$' :"js/bservice/nosql/index",
+        '^#fservice(!.*)?$' :"js/fservice/vm/index",
+        '^#ccenter(!.*)?$' :"js/ccenter/region",
         '^#ccenter/zone/detail/(.*)?$': "js/ccenter/zone/detail",
         '^#ccenter/region/detail/(.*)?$': "js/ccenter/region/detail",
         '^#ccenter/env/detail/(.*)?$': "js/ccenter/env/detail",
@@ -18,8 +22,9 @@ define('commons/router_table', function() {
         '^#fservice/autoscaling/detail' :"js/fservice/autoscaling/detail",
         '^#fservice/security/keypair/detail/(.*)$' :"js/fservice/security/keypair/detail",
         '^#aservice/cae/version/(.*)$' :"js/aservice/cae/version",
-        '^#aservice/cae/env/(.*)$' :"js/aservice/cae/env",
+        '^#aservice/cae/env/list/(.*)$' :"js/aservice/cae/env",
         '^#aservice/cae/storage/(.*)$' :"js/aservice/cae/storage",
+        '^#aservice/cae/env/detail/(.*)$' :"js/aservice/cae/detail",
         '^#aservice/container/docker-image/detail/(.*)$' :"js/aservice/container/docker-image/detail",
         '^#aservice/container/bay/detail/(.*)$' :"js/aservice/container/bay/detail"
     };

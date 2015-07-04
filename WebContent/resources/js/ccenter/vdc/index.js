@@ -26,7 +26,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 		var userTotalSize = 0;
 		//页面渲染完后进行各种事件的绑定
 		//dataTables
-		Common.initDataTable($('#VdcTable'),{
+		var table = Common.initDataTable($('#VdcTable'),{
 		      "processing": true,  //加载效果，默认false
 		      "serverSide": true,  //页面在加载时就请求后台，以及每次对 datatable 进行操作时也是请求后台
 		      "ordering": false,   //禁用所有排序
@@ -36,25 +36,25 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 		       *      aoData[4].value为每页显示条数，aoData[3].value/aoData[4].value+1为请求的页码数
 		       * aoData：请求参数，其中包含search 输入框中的值
 		       * */
-		      "fnServerData": function( sSource, aoData, fnCallback ) {
+		     /* "fnServerData": function( sSource, aoData, fnCallback ) {
 		    	  var url = sSource + (aoData[3].value/aoData[4].value+1) +"/"+aoData[4].value
 		    	    $.ajax( {   
 		    	        "url": url, 
 		    	        "data":aoData,
 		    	        "dataType": "json",   
 		    	        "success": function(resp) {
-		    	        	/*渲染前预处理后端返回的数据为DataTables期望的格式,
+		    	        	渲染前预处理后端返回的数据为DataTables期望的格式,
 		    	        	 * 后端返回数据格式 {"pageNo":1,"pageSize":5,"orderBy":null,"order":null,"autoCount":true,"result":[{"id":"07da487da17b4354a4b5d8e2b2e41485","name":"wzz"}],
 		    	        	 * "totalCount":31,"first":1,"orderBySetted":false,"totalPages":7,"hasNext":true,"nextPage":2,"hasPre":false,"prePage":1}
 		    	        	 * DataTables期望的格式 {"draw": 2,"recordsTotal": 11,"recordsFiltered": 11,"data": [{"id": 1,"firstName": "Troy"}]}
-							*/
+							
 		    	        	resp.data = resp.result;
 		    	        	resp.recordsTotal = resp.totalCount;
 		    	        	resp.recordsFiltered = resp.totalCount;
 		    	            fnCallback(resp);   //fnCallback：服务器返回数据后的处理函数，需要按DataTables期望的格式传入返回数据 
 		    	        }   
 		    	    });   
-		      },
+		      },*/
 	    	  /*属性 columns 用来配置具体列的属性，包括对应的数据列名,如trueName，是否支持搜索，是否显示，是否支持排序等*/
 		      "columns": [
 			        {"data": ""},
@@ -114,10 +114,16 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
                 ]
 		    },
 		    function($tar){
-			$tar.prev().find('.left-col:first').append(
-					'<span class="btn btn-add">创建虚拟数据中心</span>'
+			/*$tar.prev().find('.left-col:first').append(
+					'<span class="btn btn-add">创建</span>'
 				);
+			Common.$pageContent.removeClass("loading");*/
+	    	var $tbMenu = $tar.prev('.tableMenus');
+	    	$tbMenu.length && $tbMenu.empty().html($('.table-menus').html());
 			Common.$pageContent.removeClass("loading");
+		});
+		Common.on('click','.dataTables_filter .btn-query',function(){
+			table.search($('.global-search').val()).draw();
 		});
 		//dataTables
 		/*Common.initDataTable($('#VdcTable'),function($tar){

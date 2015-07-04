@@ -1,0 +1,304 @@
+<style>
+<!--
+.vdc_quota label{
+	width:30%;
+}
+-->
+</style>
+<div class="wizard" id="create-vdc-wizard" data-title="创建应用环境">
+	<!-- 基本信息 -->
+	<div class="wizard-card" data-cardname="basci" id="editVdcBasic">
+		<h3>环境类型</h3>
+		<div class="wizard-card-content col-sm-8">
+				<div class="wizard-input-section">
+					<div class="form-group">
+						<label for="vdc-name" class="control-label col-sm-2"><span>* </span>名称：</label>
+						<div class="col-sm-7 col-sm">
+							<input type="text" class="form-control" id="vdc-name" name="vdc-name" placeholder="vdc名称">
+						</div>
+					</div>
+				</div>
+				
+				<div class="wizard-input-section">
+					<div class="form-group">
+						<label for="description" class="control-label col-sm-2">描述：</label>
+						<div class="col-sm-9 col-sm">
+							<textarea class="form-control" rows="10" name="description"></textarea>
+						</div>
+					</div>
+				</div>
+				 <div class="wizard-input-section">
+					<div class="form-group">
+						<label for="enabled" class="control-label col-sm-2">
+							激活：</label>
+						<div class="col-sm-7 col-sm">
+							<p>
+								<input type="checkbox" name="enabled" data-size="small"
+									data-on-text="激活" data-off-text="禁用" checked>
+							</p>
+						</div>
+					</div>
+				</div>
+		</div>
+		<div class="wizard-card-desc col-sm-4">
+			<p>一个虚拟数据中心对应一个租户。</p>
+		</div>
+	</div>
+	
+	<!--可用分区 -->
+	<div class="wizard-card" data-cardname="az">
+		<h3>应用版本</h3>
+		<div class="wizard-card-content  col-sm-8">
+			<div class="wizard-input-section">
+				<div class="form-group">
+					<label for="select-ve" class="control-label col-sm-3"><span>* </span>虚拟化环境：</label>
+					<div  class="col-sm-7 col-sm">
+						<select name="select-ve"  class="form-control select select-ve">
+						    {{#uiSelectList(veList)}}
+						</select>
+					</div>
+				</div>
+			</div>
+			
+			<div class="wizard-input-section">
+				<div class="chose-az  clearfix"  id="vdcAZ">
+				</div>
+			</div>
+			
+		</div>
+		<div class="wizard-card-desc col-sm-4">
+			<p>选择在那个虚拟化环境中创建虚拟数据中心<br>选择某个虚拟化环境的可用分区</p>
+		</div>
+		
+	</div>
+	<!-- 配额信息  -->
+		<div class="wizard-card wizard-card-overlay" data-cardname="flavor" id ="vdcQuota">
+			<h3>环境信息</h3>
+			<div class="wizard-card-content col-sm-8">				
+				<div class="wizard-input-section">
+					<div class="form-group">
+						<label for="metadata_items" class="control-label col-sm-2"><span>* </span>元数据条目：</label>
+						<div class="col-sm-7 col-sm">
+							<input type="text" value="128" class="form-control" name="metadata_items" placeholder="元数据条目">
+						</div>
+					</div>
+				</div>	
+				<div class="wizard-input-section">
+					<div class="form-group">
+						<label for="cores" class="control-label col-sm-2"><span>* </span>虚拟内核：</label>
+						<div class="col-sm-7 col-sm">
+							<input type="text" value="20" class="form-control" name="cores" placeholder="虚拟内核">
+						</div>
+					</div>
+				</div>
+				<div class="wizard-input-section">
+					<div class="form-group">
+						<label for="instances" class="control-label col-sm-2"><span>* </span>实例：</label>
+						<div class="col-sm-7 col-sm">
+							<input type="text" value="10" class="form-control" name="instances" placeholder="实例">
+						</div>
+					</div>
+				</div>
+				<div class="wizard-input-section">
+					<div class="form-group">
+						<label for="injected_files" class="control-label col-sm-2"><span>* </span>注入的文件：</label>
+						<div class="col-sm-7 col-sm">
+							<input type="text" value="5" class="form-control" name="injected_files" placeholder="注入的文件">
+						</div>
+					</div>
+				</div>
+				<div class="wizard-input-section">
+					<div class="form-group">
+						<label for="injected_file_content_bytes" class="control-label col-sm-2"><span>* </span>已注入的文件内容（Bytes）：</label>
+						<div class="col-sm-7 col-sm">
+							<input type="text" value="10240" class="form-control" name="injected_file_content_bytes" placeholder="已注入的文件内容（Bytes）">
+						</div>
+					</div>
+				</div>
+				<div class="wizard-input-section">
+					<div class="form-group">
+						<label for="volumes" class="control-label col-sm-2"><span>* </span>云硬盘：</label>
+						<div class="col-sm-7 col-sm">
+							<input type="text" value="10" class="form-control" name="volumes" placeholder="云硬盘">
+						</div>
+					</div>
+				</div>
+				<div class="wizard-input-section">
+					<div class="form-group">
+						<label for="snapshots" class="control-label col-sm-2"><span>* </span>云硬盘快照：</label>
+						<div class="col-sm-7 col-sm">
+							<input type="text" value="10" class="form-control" name="snapshots" placeholder="云硬盘快照">
+						</div>
+					</div>
+				</div>
+				<div class="wizard-input-section">
+					<div class="form-group">
+						<label for="gigabytes" class="control-label col-sm-2"><span>* </span>云硬盘和快照的总大小（GB）：</label>
+						<div class="col-sm-7 col-sm">
+							<input type="text" value="1000" class="form-control" name="gigabytes" placeholder="云硬盘和快照的总大小（GB）">
+						</div>
+					</div>
+				</div>
+				<div class="wizard-input-section">
+					<div class="form-group">
+						<label for="ram" class="control-label col-sm-2"><span>* </span>内存：</label>
+						<div class="col-sm-7 col-sm">
+							<input type="text" value="51200" class="form-control" name="ram" placeholder="内存">
+						</div>
+					</div>
+				</div>
+				<div class="wizard-input-section">
+					<div class="form-group">
+						<label for="security_group" class="control-label col-sm-2"><span>* </span>安全组：</label>
+						<div class="col-sm-7 col-sm">
+							<input type="text" value="10" class="form-control" name="security_group" placeholder="安全组">
+						</div>
+					</div>
+				</div>
+				<div class="wizard-input-section">
+					<div class="form-group">
+						<label for="security_group_rule" class="control-label col-sm-2"><span>* </span>安全组规则：</label>
+						<div class="col-sm-7 col-sm">
+							<input type="text" value="100" class="form-control" name="security_group_rule" placeholder="安全组规则">
+						</div>
+					</div>
+				</div>
+				<div class="wizard-input-section">
+					<div class="form-group">
+						<label for="floatingip" class="control-label col-sm-2"><span>* </span>浮动IP：</label>
+						<div class="col-sm-7 col-sm">
+							<input type="text" value="50" class="form-control" name="floatingip" placeholder="浮动IP">
+						</div>
+					</div>
+				</div>
+				<div class="wizard-input-section">
+					<div class="form-group">
+						<label for="network" class="control-label col-sm-2"><span>* </span>网络：</label>
+						<div class="col-sm-7 col-sm">
+							<input type="text" value="80" class="form-control" name="network" placeholder="网络">
+						</div>
+					</div>
+				</div>
+				<div class="wizard-input-section">
+					<div class="form-group">
+						<label for="port" class="control-label col-sm-2"><span>* </span>端口：</label>
+						<div class="col-sm-7 col-sm">
+							<input type="text" value="52" class="form-control" name="port" placeholder="端口">
+						</div>
+					</div>
+				</div>
+				<div class="wizard-input-section">
+					<div class="form-group">
+						<label for="route" class="control-label col-sm-2"><span>* </span>路由：</label>
+						<div class="col-sm-7 col-sm">
+							<input type="text" value="20" class="form-control" name="route" placeholder="路由">
+						</div>
+					</div>
+				</div>
+				<div class="wizard-input-section">
+					<div class="form-group">
+						<label for="subnet" class="control-label col-sm-2"><span>* </span>子网：</label>
+						<div class="col-sm-7 col-sm">
+							<input type="text" value="55" class="form-control" name="subnet" placeholder="子网">
+						</div>
+					</div>
+				</div>			
+		</div>
+		
+		<div class="wizard-card-desc col-sm-4">
+			<p>配额管理包括计算资源配额、网络资源配额、存储资源配额。限定在该虚拟数据中心创建的云主机使用的资源总和的最大值</p>
+		</div>
+	</div>
+	<!-- 成员 -->
+	<div class="wizard-card wizard-card-overlay" data-cardname="members">
+		<input type="hidden" name="vdc-users" value="1"> 
+		<h3>环境配置</h3>
+		<div class="wizard-card-content none-desc col-sm-12">
+			<div class="wizard-input-section" id="vdc-users">
+			</div>
+		</div>
+		
+	</div>
+ 浮动IP
+	<div class="wizard-card" data-cardname="floatIP">
+		<h3>数据库配置</h3>
+		<div class="wizard-card-content  col-sm-8">
+			<div class="wizard-input-section">
+				<div class="form-group">
+					<label for="select-net" class="control-label col-sm-3"><span>* </span>网络池：</label>
+					<div  class="col-sm-7 col-sm">
+						<select name="select-net"  class="form-control select select-net">
+						    {{#uiSelectList(netList)}}
+						</select>
+					</div>
+				</div>
+			</div>
+			
+			<div class="wizard-input-section">
+				<div class="chose-ip  clearfix"  id="vdcFloatIP">
+				</div>
+			</div>
+			
+		</div>
+		<div class="wizard-card-desc col-sm-4">
+			<p>一个虚拟数据中心对于一个租户：选择创建你的云主机所用的镜像。其中，从镜像创建是指从不同类型操作系统的镜像文件创建，另外可选择是否创建一个新磁盘；
+				从快照创建是指从云主机的快照创建；
+				从云硬盘创建是指从一个通过云主机创建的云硬盘来创建云主机，云硬盘会被挂载到云主机上；</p>
+		</div>
+		
+	</div>
+	<div class="wizard-card" data-cardname="floatIP">
+		<h3>网络配置</h3>
+		<div class="wizard-card-content  col-sm-8">
+			<div class="wizard-input-section">
+				<div class="form-group">
+					<label for="select-net" class="control-label col-sm-3"><span>* </span>网络池：</label>
+					<div  class="col-sm-7 col-sm">
+						<select name="select-net"  class="form-control select select-net">
+						    {{#uiSelectList(netList)}}
+						</select>
+					</div>
+				</div>
+			</div>
+			
+			<div class="wizard-input-section">
+				<div class="chose-ip  clearfix"  id="vdcFloatIP">
+				</div>
+			</div>
+			
+		</div>
+		<div class="wizard-card-desc col-sm-4">
+			<p>一个虚拟数据中心对于一个租户：选择创建你的云主机所用的镜像。其中，从镜像创建是指从不同类型操作系统的镜像文件创建，另外可选择是否创建一个新磁盘；
+				从快照创建是指从云主机的快照创建；
+				从云硬盘创建是指从一个通过云主机创建的云硬盘来创建云主机，云硬盘会被挂载到云主机上；</p>
+		</div>
+		
+	</div>
+	<div class="wizard-card" data-cardname="floatIP">
+		<h3>确认信息</h3>
+		<div class="wizard-card-content  col-sm-8">
+			<div class="wizard-input-section">
+				<div class="form-group">
+					<label for="select-net" class="control-label col-sm-3"><span>* </span>网络池：</label>
+					<div  class="col-sm-7 col-sm">
+						<select name="select-net"  class="form-control select select-net">
+						    {{#uiSelectList(netList)}}
+						</select>
+					</div>
+				</div>
+			</div>
+			
+			<div class="wizard-input-section">
+				<div class="chose-ip  clearfix"  id="vdcFloatIP">
+				</div>
+			</div>
+			
+		</div>
+		<div class="wizard-card-desc col-sm-4">
+			<p>一个虚拟数据中心对于一个租户：选择创建你的云主机所用的镜像。其中，从镜像创建是指从不同类型操作系统的镜像文件创建，另外可选择是否创建一个新磁盘；
+				从快照创建是指从云主机的快照创建；
+				从云硬盘创建是指从一个通过云主机创建的云硬盘来创建云主机，云硬盘会被挂载到云主机上；</p>
+		</div>
+		
+	</div>
+</div>

@@ -147,5 +147,5 @@ require(['PubView', 'Common'], function(PubView, Common) {
 
     Common.resize();
 
-    $(window).off("resize.content").on("resize.content", Common.resize);
+    $(window).off("resize.content").on("resize.content", $.proxy(Common.resize, Common));
 });

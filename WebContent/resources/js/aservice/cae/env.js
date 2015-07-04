@@ -27,7 +27,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 		var userTotalSize = 0;
 		//页面渲染完后进行各种事件的绑定
 		//dataTables
-	/*	Common.initDataTable($('#VdcTable'),{
+	/*	Common.initDataTable($('#appEnvTable'),{
 		      "processing": true,  //加载效果，默认false
 		      "serverSide": true,  //页面在加载时就请求后台，以及每次对 datatable 进行操作时也是请求后台
 		      "ordering": false,   //禁用所有排序
@@ -106,7 +106,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 			Common.$pageContent.removeClass("loading");
 		});*/
 		//dataTables
-		Common.initDataTable($('#VdcTable'),function($tar){
+		Common.initDataTable($('#appEnvTable'),function($tar){
 			$tar.prev().find('.left-col:first').append(
 					'<span class="btn btn-add">创建应用环境</span>'
 				);
@@ -480,23 +480,15 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 			}*/
 		}
 	  //增加按钮
-		$(document).off("#VdcTable_wrapper span.btn-add");
-		$(document).on("click","#VdcTable_wrapper span.btn-add",function(){
+		$(document).off("#appEnvTable_wrapper span.btn-add");
+		$(document).on("click","#appEnvTable_wrapper span.btn-add",function(){
 	    	//需要修改为真实数据源
-			Common.render('tpls/ccenter/vdc/add.html',renderData,function(html){
+			Common.render('tpls/aservice/cae/createAppEnv.html',null,function(html){
 				userIndex = 1;
 				$('body').append(html);
 				//wizard show
     			$.fn.wizard.logging = true;
     			var wizard;
-    			
-				//同步currentChosenObj
-		    	currentChosenObj.ve = $('select.select-ve').children('option:selected');
-		    	currentChosenObj.netId = $('select.select-net').find('option:selected');
-		    	//载入依赖数据
-		    	DataIniter.initAz();
-		    	DataIniter.initUsers();
-		    	//DataIniter.initFloatIP();
 		    	
     			wizard = $('#create-vdc-wizard').wizard({
     				keyboard : false,
@@ -510,15 +502,6 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
     	                backText: "上一步",
     	                submitText: "创建",
     	                submittingText: "提交中..."
-    	            },
-    	            submitEnabled: [1,2],
-    	            validate: {
-	            		0: function(){
-	            			return this.el.find('form').valid();
-	            		},
-	            		2: function(){
-	            			return this.el.find('form').valid();
-	            		}
     	            }
     			});
     			//加载时载入validate
@@ -553,46 +536,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
     				
     			});
     			//创建提交数据
-    			wizard.on("submit", function(wizard) {
-    				var vdc = wizard.serializeObject();//获取数据
-    				var name = vdc['vdc-name'];//$("#editVdcBasic [name='vdc-name']").val();
-    				var description = vdc['description']; //$("#editVdcBasic [name='description']").val();
-    				var enabled = vdc['enabled'] == "on" ? true:false;//$("#editVdcBasic [name='enabled']:checked").length? true:false;
-    				var virtualEnvId = vdc['select-ve'];//currentChosenObj.ve.val() || $('select.select-ve').children('option:selected').val();
-    				var available_zones = null;//jsonData.azJson("#vdcAZ .list-group-select");
-    				if(virtualEnvId){
-    					available_zones = jsonData.azJson("#vdcAZ .list-group-select");
-    				}
-    				var quota_set = null;
-    				if(vdc.metadata_items){
-    					quota_set = jsonData.quotaSetsJson("#vdcQuota");
-    				}
-    				var members = null;
-    				if(vdc['vdc-users']){
-    					members = jsonData.userJson("#vdc-users .list-group-select");
-    				}
-    				/*var float_ips = null;
-    				if(vdc['select-net']){
-    					float_ips = jsonData.floatIpJson("#vdcFloatIP .list-group-select");
-    				}*/
-    				var vdcData={
-    						"tenant":{
-    							"name":name,
-    							"description":description,
-    							"enabled":enabled,
-    							"quota_set":quota_set,
-    							"available_zones":available_zones,
-    							"members":members,
-    							"virtualEnvId":virtualEnvId
-    						}
-    				};
-    				Common.xhr.postJSON('/identity/v2.0/tenants',vdcData,function(data){
-    					wizard._submitting = false;
-    					wizard.updateProgressBar(100);
-    					closeWizard();
-    					Common.router.reload();
-    				})
-    			});
+    			wizard.on("submit", function(wizard) {});
 			});
 	    });
 	    
