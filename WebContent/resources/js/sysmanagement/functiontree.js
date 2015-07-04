@@ -220,7 +220,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
     	                		"treeDesc": $(" [name='tree_desc']").val(),
     	                		"treeName": $(" [name='tree_name']").val()
     	                	};
-    	                	Common.xhr.postJSON('/identity/v2.0/functiontree',serverData,function(data){
+    	                	Common.xhr.postJSON('/identity/v2.0/functiontree',serverData,function(data){  //需修改接口
     	                		if(data){
     	                			Modal.success('保存成功')
     	                			setTimeout(function(){Modal.closeAll()},2000);
@@ -245,7 +245,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 		//编辑
 	    $("#FunctionTable_wrapper a.btn-edit").on("click",function(){
 	    	var id= $(this).attr("data");
-	    	Common.xhr.ajax('/identity/v2.0/functiontree/'+id,function(data){
+	    	Common.xhr.ajax('/identity/v2.0/functiontree/'+id,function(data){  //需修改接口
 	    		Common.render('tpls/sysmanagement/functiontree/edit.html',data,function(html){
 	    			Modal.show({
 	    	            title: '编辑功能树',
@@ -261,7 +261,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 	        	                		"treeDesc": $(" [name='tree_desc']").val(),
 	        	                		"treeName": $(" [name='tree_name']").val()
 	        	                	};
-	    	                	Common.xhr.putJSON('/identity/v2.0/functiontree',serverData,function(data){
+	    	                	Common.xhr.putJSON('/identity/v2.0/functiontree',serverData,function(data){ //需修改接口
 	    	                		if(data){
 	    	                			Modal.success('保存成功')
 	    	                			setTimeout(function(){Modal.closeAll()},2000);
@@ -289,11 +289,15 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 	    	 var id = $(this).attr("data");
 	    	 Modal.confirm('确定要删除该功能树吗?', function(result){
 	             if(result) {
-	            	 Common.xhr.del('/identity/v2.0/functiontree/'+id,
+	            	 Common.xhr.del('/identity/v2.0/functiontree/'+id,  //需修改接口
 	                     function(data){
+	                    	 if(data){
 	                    		 Modal.success('删除成功')
 	                			 setTimeout(function(){Modal.closeAll()},2000);
 	                    		 Common.router.route();
+	                    	 }else{
+	                    		 Modal.warning ('删除失败')
+	                    	 }
 	                     });
 	             }else {
 	            	 Modal.closeAll();
@@ -327,23 +331,16 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 	    	            				key:{
 	    	            					name:"itemName"
 	    	            				}
-		            				},
-		            				async: {
-		            					enable: true,  //异步加载
-		            					url: getUrl,
-		            					dataType: "json",
-		            					type:"get",
-		            					dataFilter: filter
 		            				}
+//		            				async: {
+//		            					enable: true,  //异步加载
+//		            					url: getUrl
+//		            				}
 		            		};
 
 		            		var zNodes = data;
 		            		if(!data || data.length == 0)
-		            			zNodes = [{id:0, pid:"root", itemName:"根节点"}];
-		            		//异步加载节点必须有isParent
-		            		for(var i = 0; i<zNodes.length; i++){
-		            			zNodes[i].isParent = true;
-		                	}
+		            			zNodes = [{id:0, pid:"root", name:"根节点"}];
 		            		rMenu = $("#rMenu");
 		            		$.fn.zTree.init($("#functionTree"), setting, zNodes);
 		            		treeObj = $.fn.zTree.getZTreeObj("functionTree");
@@ -353,7 +350,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 		                	DataIniter.getUrlList(nodes[0].id, nodes[0].itemName);
 		                	//左击树节点
 		            		function onClick(event, treeId, treeNode, clickFlag) {
-		            			if(data && data.length > 0)
+		            			
 		            			DataIniter.getUrlList(treeNode.id, treeNode.itemName)
 		            		}
 		            		//右击树节点
@@ -368,18 +365,9 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 		            				DataIniter.getUrlList(treeNode.id, treeNode.itemName);
 		            			}
 		            		}
-		            		function getUrl(treeId, treeNode) {
-		            			return "identity/v2.0/functiontree/childrennodes/"+treeNode.id;
-		            		}
-		            		function filter(treeId, parentNode, childNodes) {
-		            			if (!childNodes) return null;
-		            			for (var i=0, l=childNodes.length; i<l; i++) {
-		            				childNodes[i].isParent = true;
-		            			}
-		            			return childNodes;
-		            		}
 	 					});
 	 				})
+	 				
 
 	            		function showRMenu(type, x, y) {
 	            			$("#rMenu ul").show();
@@ -428,7 +416,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 		                	                		if(data){
 		                	                			Modal.success('保存成功');
 		                	                			//添加并移动节点
-		                	                			var newNode = { itemName:$("[name='item_name']").val(),pId:node.id,isParent:true};
+		                	                			var newNode = { itemName:$("[name='item_name']").val(),pId:node.id};
 		                	                			EventsHandler.moveNode(treeObj,node,newNode,$("[name='seq']").val());
 		                	                			
 		                	                			setTimeout(function(){Modal.closeAll()},1000);
@@ -478,7 +466,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 		                	                			Modal.success('保存成功')
 		                	                			setTimeout(function(){Modal.closeAll()},1000);
 		                	                			//添加并移动节点
-		                	                			var newNode = { itemName:$("[name='item_name']").val(), pId:node.getParentNode()? node.getParentNode().id:"root",isParent:true};
+		                	                			var newNode = { itemName:$("[name='item_name']").val(), pId:node.getParentNode()? node.getParentNode().id:"root"};
 		                	                			EventsHandler.moveNode(treeObj,node.getParentNode()? node.getParentNode():"root",newNode,$("[name='seq']").val());
 		            								}else{
 		            									Modal.warning ('保存失败')
@@ -526,7 +514,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 		                	                			setTimeout(function(){Modal.closeAll()},1000);
 		                	                			//添加并移动节点
 		                	                			treeObj.removeNode(node);
-		                	                			var newNode = { itemName:$("[name='item_name']").val(), pId:node.getParentNode()? node.getParentNode().id:"root",isParent:true};
+		                	                			var newNode = { itemName:$("[name='item_name']").val(), pId:node.getParentNode()? node.getParentNode().id:"root"};
 		                	                			EventsHandler.moveNode(treeObj,node.getParentNode()? node.getParentNode():"root",newNode,$("[name='seq']").val());
 		            								}else{
 		            									Modal.warning ('保存失败')

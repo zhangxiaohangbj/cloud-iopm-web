@@ -13,7 +13,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 		      "processing": true,  //加载效果，默认false
 		      "serverSide": true,  //页面在加载时就请求后台，以及每次对 datatable 进行操作时也是请求后台
 		      "ordering": false,   //禁用所有排序
-		      "sAjaxSource":"resources/data/bservice/emr/cluster.txt?", //ajax源，后端提供的分页接口
+		      "sAjaxSource":"resources/data/bservice/emr/cluster.txt", //ajax源，后端提供的分页接口
 		      "fnServerData": function( sSource, aoData, fnCallback ) {
 		    	    $.ajax( {   
 		    	        "url": sSource, 
@@ -41,8 +41,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 			        {"data": "vdc_name"},
 			        {"data": "node_count"},
 			        {
-			        	"defaultContent":'<a class="btn-edit" data-toggle="tooltip" title="编辑集群" href="javascript:void(0)" data-act="stop">编辑集群</a>'
-			        		+'<a class="btn-delete" data-toggle="tooltip" title="扩容集群" href="javascript:void(0)" style="margin: 0 8px;">扩容集群</a>'
+			        	"defaultContent":'<a class="btn-edit" data-toggle="tooltip" title="编辑集群" href="javascript:void(0)" data-act="stop"><li class="glyphicon glyphicon-edit"></li></a>'
 							+'<a class="btn-delete" data-toggle="tooltip" title="删除集群" href="javascript:void(0)" style="margin: 0 8px;"><i class="fa fa-trash-o fa-fw"></i></a>'
 			        }
 		      ],

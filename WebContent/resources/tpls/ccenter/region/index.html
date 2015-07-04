@@ -1,6 +1,6 @@
 <div class="page-header clearfix">
     <ol class="breadcrumb">
-        <li class="active"><i class="icon-squre-d"></i>物理区域</li>
+        <li class="active">物理区域列表</li>
     </ol>
     <p class="description">
         区域，一般以地域进行划分，并且一个地域一套IOPManager，不同地域之间通过顶层IOPManager的统一认证授权访问进行控制，实现级联云服务管理。
@@ -25,7 +25,7 @@
                 {{each cloudService as item i}}
                 <tr>
                     <td>{{i}}</td>
-                    <td><a class="region-name" href="#ccenter/region/detail/{{item.id}}">{{item.region.name}}</a></td>
+                    <td><a class="region-name" href="#cresource/region/detail/{{item.id}}">{{item.region.name}}</a></td>
                     <td>{{item.connector.version}}</td>
                     <td>{{item.connector.ip}}</td>
                     {{if item.serviceStatus !="false" }}
@@ -50,13 +50,7 @@
                 </tr>
                 {{/each}}
                 </tbody>
-                <tfoot>
-                <tr>
-                    <td>
-                        <span class="text-danger">*</span> 可通过在实例上"<span class="nums">右键</span>"来进行常用操作,"<span class="nums">双击</span>"来编辑基本属性
-                    </td>
-                </tr>
-                </tfoot>
+
             </table>
         </div>
     </div>

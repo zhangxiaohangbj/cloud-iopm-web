@@ -36,12 +36,11 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 				//获取磁盘快照列表
 				Common.render(false,'tpls/ccenter/zone/list_resources.html',curZoneInfo,function(html){
 					$tab.empty().append(html);
-
 				});
 			}else if('basic' == data){
 
 			}
-			Common.hideLocalLoading($tab);
+			Common.hideLoclLoading($tab);
 		}
 
 	}
