@@ -215,12 +215,16 @@ define('commons/pub_menu', function() {
                     link: '',
                     items: [
                         {
-                            text: '<i class="fa fa-dot fa-1"></i>关系型数据库',
-                            link: '#db'
+                            text: '<i class="fa fa-dot fa-1"></i>资源池',
+                            link: '#lbaas/pool'
                         },
                         {
-                            text: '<i class="fa fa-dot fa-1"></i>缓存',
-                            link: '#cache'
+                            text: '<i class="fa fa-dot fa-1"></i>成员管理',
+                            link: '#lbaas/member'
+                        },
+                        {
+                            text: '<i class="fa fa-dot fa-1"></i>监控管理',
+                            link: '#lbaas/monitor'
                         }
                     ]
                 }
@@ -294,28 +298,28 @@ define('commons/pub_menu', function() {
                     ]
                 },
                 {
-                    text: '<i class="fa fa-cogs"></i>消息队列管理<i class="fa icon-arrow"></i>',
+                    text: '<i class="fa fa-envelope-o"></i>消息队列管理<i class="fa icon-arrow"></i>',
                     items: [
                         {
-                            text: '<i class="fa fa-dot fa-1"></i>应用管理',
-                            link: '#cae/app'
+                            text: '<i class="fa fa-dot fa-1"></i>消息队列管理',
+                            link: '#mq/app'
                         },
                         {
-                            text: '<i class="fa fa-dot fa-1"></i>镜像管理',
-                            link: '#cae/image'
+                            text: '<i class="fa fa-dot fa-1"></i>使用者管理',
+                            link: '#mq/image'
                         }
                     ]
                 },
                 {
-                    text: '<i class="fa fa-cogs"></i>缓存服务管理<i class="fa icon-arrow"></i>',
+                    text: '<i class="fa fa-rocket"></i>缓存服务管理<i class="fa icon-arrow"></i>',
                     items: [
                         {
-                            text: '<i class="fa fa-dot fa-1"></i>应用管理',
-                            link: '#cae/app'
+                            text: '<i class="fa fa-dot fa-1"></i>缓存实例管理',
+                            link: '#cache/instance'
                         },
                         {
-                            text: '<i class="fa fa-dot fa-1"></i>镜像管理',
-                            link: '#cae/image'
+                            text: '<i class="fa fa-dot fa-1"></i>缓存介质管理',
+                            link: '#cache/'
                         }
                     ]
                 }
@@ -355,27 +359,27 @@ define('commons/pub_menu', function() {
                     ]
                 },
                 {
-                    text: '<i class="fa fa-cloud-upload"></i>流式计算<i class="fa icon-arrow"></i>',
+                    text: '<i class="fa fa-sliders"></i>流式计算<i class="fa icon-arrow"></i>',
                     items: [
                         {
-                            text: '<i class="fa fa-dot fa-1"></i>关系型数据库',
-                            link: '#db'
+                            text: '<i class="fa fa-dot fa-1"></i>计算实例',
+                            link: '#stream/instance'
                         },
                         {
-                            text: '<i class="fa fa-dot fa-1"></i>缓存',
-                            link: '#cache'
+                            text: '<i class="fa fa-dot fa-1"></i>任务管理',
+                            link: '#stream/task'
                         }
                     ]
                 },
                 {
-                    text: '<i class="fa fa-cloud-upload"></i>非结构化存储<i class="fa icon-arrow"></i>',
+                    text: '<i class="fa fa-cloud-upload"></i>对象存储<i class="fa icon-arrow"></i>',
                     items: [
                         {
-                            text: '<i class="fa fa-dot fa-1"></i>关系型数据库',
+                            text: '<i class="fa fa-dot fa-1"></i>容器管理',
                             link: '#db'
                         },
                         {
-                            text: '<i class="fa fa-dot fa-1"></i>缓存',
+                            text: '<i class="fa fa-dot fa-1"></i>主机管理',
                             link: '#cache'
                         }
                     ]
