@@ -116,15 +116,14 @@ define('commons/main',
             this.initSideBarNavIndex();
             // 初始化页面结构
             $(document.body).removeClass("loading").append(
-                '<div id="page-main" class="clearfix">'+
-                    '<div class="page-content clearfix"></div>'+
+                '<div id="page-main">'+
+                    '<div class="container clearfix">'+
+                        '<div class="page-content clearfix"></div>'+
+                    '</div>'+
                 '</div>'
             );
             this.$pageMain = $("#page-main");
-            this.$pageContent = $("#page-main").children('.page-content:first');
-            this.resize();
-            // resize监听
-            $(window).on('resize', this.resize);
+            this.$pageContent = $("#page-main").find('.page-content:first');
             // 初始化异步请求对象
             this._xhr();
             // 初始化路由表
@@ -154,28 +153,37 @@ define('commons/main',
             }
         },
         resize: function() {
-            var that = this;
-            if(this.$pageMain && this.$pageContent) {
-                this.$pageMain.css({minHeight: 0});
-                //dom
-                var $aside = $("aside");
-                //height
+            if(this.$pageMain) {
                 var winH = $(window).height(),
-                    asideH = $aside.innerHeight() || 0,
-                    contentH = winH - this.$pageMain.offset().top - (this.$pageMain.outerHeight() - this.$pageMain.innerHeight());
-                contentH = contentH < 1 ? 1 : contentH;
-                if(contentH < asideH){
-                    this.$pageContent.css('min-height',asideH);
-                }else{
-                    this.$pageContent.css('min-height',contentH);
+                    mainH = winH - this.$pageMain.offset().top;
+                mainH = mainH <=0 ? 1 : mainH;
+                this.$pageMain.css('height', mainH + 'px');
+                debugger;
+                if(this.$pageContent) {
+                    var $aside = $("aside"),
+                        asideH = $aside.innerHeight() || 0;
+                    var contentMinH = this.$pageMain.height(),
+                        $contentParent =  this.$pageContent.parent(),
+                        contentBorderH = $contentParent.outerHeight() - $contentParent.innerHeight();
+                    contentMinH -= contentBorderH;
+                    contentMinH = contentMinH <=0 ? 1 : contentMinH;
+                    if(contentMinH < asideH){
+                        this.$pageContent.css('min-height',asideH);
+                    }else{
+                        this.$pageContent.css('min-height',contentMinH);
+                    }
+                    this.adjustContentLeft();
                 }
-                this.adjustContentLeft();
-                return this;
             }
+            return this;
         },
         adjustContentLeft: function() {
-            var $aside = $("aside"),
-                asideW = $aside.outerWidth(true) || 0,
+            var $aside = $("aside");
+            if(!$aside || $aside.length <= 0) {
+                this.$pageContent.css('margin-left', "0px");
+                return this;
+            }
+            var asideW = $aside.outerWidth(true) || 0,
                 asideMinW = parseFloat($aside.css('min-width')) || 1,
                 contentMgL = parseFloat(this.$pageContent.css('margin-left')) || 1;
             //set margin
@@ -450,6 +458,7 @@ define('commons/main',
                     }
                     //路由后页面载入入口
                     require(ctrlList, function(o){
+                        that.clearError();
                         if(o && PubView.utils.isFunction(o.init)) {
                             var initRes = o.init();
                             if(PubView.utils.isObject(initRes) && initRes.done) {
@@ -464,6 +473,7 @@ define('commons/main',
                         }
                     }, function(e) {
                         that.resolve();
+                        that.clearError();
                         if(e.requireType) {
                             if(e.requireMap) {
                                 that.error('Script error for ' + e.requireMap.id + ': ' + e.message);
@@ -506,6 +516,7 @@ define('commons/main',
                 _beforeRender = obj.beforeRender;
                 _callback = obj.callback;
             }
+            var renderDef = $.Deferred();
             if(_tplUrl && PubView.utils.isString(_tplUrl)) {
                 try {
                     _renderToPage && (that._inRender = true);
@@ -529,16 +540,20 @@ define('commons/main',
                                     inHtml = render(data);
                                 if(_renderToPage) {
                                     that.html(that.$pageContent, inHtml);
+                                    renderDef.resolve(tplText, _data);
                                     PubView.utils.isFunction(_callback) && _callback.call(that, tplText, _data);
                                     that.resolve();
                                 } else {
+                                    renderDef.resolve(inHtml, tplText, _data);
                                     PubView.utils.isFunction(_callback) && _callback.call(that, inHtml, tplText, _data);
                                 }
                             }catch(e){
+                                renderDef.reject(e);
                                 that.resolve();
                                 that.error(e);
                             }
                         }, function(e) {
+                            renderDef.reject(e);
                             that.resolve();
                             that.error("Template load error: " + e.message.split(' ')[0]);
                         });
@@ -567,10 +582,14 @@ define('commons/main',
                         doRender(_data);
                     }
                 } catch (e) {
+                    renderDef.reject(e);
                     that.resolve();
                     that.error(e);
                 }
+            } else {
+                renderDef.resolve('');
             }
+            return renderDef;
         },
         html: function(parent, inHtml) {
             try {
@@ -1133,6 +1152,10 @@ define('commons/main',
                 Modal.error(e.message || "发生了未知错误");
             }
             console.error(e);
+        },
+        clearError: function() {
+            Modal.closeAll();
+            console.clear();
         },
         on: function(type,selector,cb){
         	if(type && selector && typeof cb === 'function'){
