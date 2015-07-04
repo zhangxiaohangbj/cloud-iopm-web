@@ -4,25 +4,12 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 		Common.$pageContent.addClass("loading");
 		var hashArr = Common.hash.split('/');
 	    var volume_id = hashArr[hashArr.length-1];
-		var tmpDetailData = {
-	            name : "Tiger Nixon",
-	            id: "di91jd9d29f9f29",
-	            size:"20GB",
-	            status: "in-use",
-	            vm_id: "private",
-	            type: "ceth(分布式)",
-	            vdc_id : "vdc1",
-	            available_zone: "WDK1",
-	            read_only:"1",
-	            description:"可用磁盘数据",
-	            mount_list: [{
-	            	name:'nexus-server',
-	            	id: 'nexus-server'
-	            }],
-	            mount_path: '/opt/vdc',
-	            create_time: '2015-04-24 17:14:57'
-    	};
-    	Common.render(true,'tpls/fservice/block/volume/detail.html',tmpDetailData,function(html){
+		var tmpDetailData = {"id":"1", "name":"k8s", "vdcId": "iop", "vdcName":"iop", "userId": "user1", 
+		    	"baymodelId":"123123", "baymodelName":"k8s", "stackId":"heat-k8s1", 
+		    	"nodeCount":10, "nodeAddresses": "10.68.25.25,10.68.25.26,10.68.25.27,10.68.25.28,10.68.25.29,10.68.25.30...",
+		    	apiAddress: "https://10.68.25.24:5334",
+		    	"status":"正常", "statusReason": "", "description":""};
+    	Common.render(true,'tpls/aservice/container/bay/detail.html',tmpDetailData,function(html){
     		bindEvent();
     	});
 	};
@@ -45,7 +32,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 			Common.showLocalLoading($tab);
 			if('snapshot' == data){
 				//获取磁盘快照列表
-				Common.render(false,'tpls/fservice/block/volume/list_snapshot.html','/resources/data/volume.txt',function(html){
+				Common.render(false,'tpls/aservice/container/bay/list_server.html','resources/data/aservice/container/servers.txt',function(html){
 					$tab.empty().append(html);
 				});
 			}else if('monitor' == data){
