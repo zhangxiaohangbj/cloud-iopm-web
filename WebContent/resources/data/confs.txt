@@ -5,15 +5,15 @@
             "memory":"1024M",
             "vmType": "mi.large",
             "image": "linux-0092",
-            "status": "valid"
+            "status": "inactive"
         },
         {
-            "name" : "配置2",
+            "name" : "test",
             "cpu": "2",
             "memory":"512M",
             "vmType": "mi.tiny",
             "image": "centos-001",
-            "status": "valid"
+            "status": "active"
         },
         {
             "name" : "配置3",
@@ -21,7 +21,7 @@
             "memory":"1024M",
             "vmType": "mi.large",
             "image": "linux-0092",
-            "status": "valid"
+            "status": "inactive"
         },
         {
             "name" : "配置4",
@@ -29,7 +29,7 @@
             "memory":"2048M",
             "vmType": "mi.large",
             "image": "linux-0092",
-            "status": "valid"
+            "status": "inactive"
         },
         {
             "name" : "配置5",
@@ -37,6 +37,6 @@
             "memory":"1024M",
             "vmType": "mi.large",
             "image": "linux-0092",
-            "status": "valid"
+            "status": "inactive"
         }
 ]

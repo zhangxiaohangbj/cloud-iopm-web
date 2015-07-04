@@ -13,21 +13,26 @@
 	{{each list as item i}}
 		<tr data-id="{{item.id}}">
 			<td><a class="volume_name" href="javascript:void(0)">{{item.name}}</a></td>
-			<td>{{item.size}}</td>
 			<td>
- 			{{if item.status == 'in-use'}}
- 				<span class="text-success">使用中</span>
- 				{{else if item.status == 'available'}}
- 					<span class="text-info">可用</span>
- 						{{else}}
- 							<span class="text-danger">已删除</span>
- 			{{/if}}
- 			</td>
-			<td>2015-04-24 17:14:57</td>
- 			<td>{{item.description}}</td>
+			{{if item.life_status == 'inservice'}}
+			<span class="text-success">服务中</span>
+			{{else if item.life_status == 'pending'}}
+			<span class="text-danger">移入中</span>
+			{{else}}
+			<span class="text-danger">移出中</span>
+			{{/if}}
+			</td>
+			<td>{{item.conf}}</td>
+ 			<td>{{item.available_zone}}</td>
 			<td>
-			<a class="btn-opt" data-toggle="tooltip" title="删除" ><i class="fa fa-trash-o"></i></a>
-			<a class="btn-opt" data-toggle="tooltip" title="备份"><i class="fa fa-files-o"></i></a>
+			{{if item.run_status == 'healthy'}}
+			<span class="text-success">健康</span>
+			{{else}}
+			<span class="text-danger">不健康</span>
+			{{/if}}
+			</td> 			
+			<td>
+			<a class="btn-opt" data-toggle="tooltip" title="移出伸缩组"><i class="fa fa-files-o"></i></a>
 			</td>
 		</tr>
  			{{/each}}
