@@ -1116,7 +1116,6 @@ define('commons/main',
                                     }
                                 },
                                 error: function(xhr, errorText) {
-                                    debugger;
                                 }
                             });
                         }
@@ -1125,7 +1124,6 @@ define('commons/main',
                         label: '取消',
                         cssClass: 'btn-primary',
                         action: function(dialog){
-                            debugger;
                             dialog.close();
                         }
                     }
@@ -1154,13 +1152,9 @@ define('commons/main',
         		if(selector instanceof jQuery){
         			selector = selector.selector;
         		}
-        		$(document).off(selector);
+        		$(document).off(type,selector);
         		$(document).on(type,selector,cb);
         	}
-        },
-        //处理搜索参数
-        handleTableParam: function(){
-        	
         }
     };
 });

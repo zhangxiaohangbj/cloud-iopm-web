@@ -71,19 +71,19 @@
                                 </div>
                             </div>
                             <div class="row">
-                                <label class="control-label col-sm-3">连接状态：</label>
+                                <label class="control-label col-sm-3">服务状态：</label>
                                 <div class="col-sm-7 col-sm query-info query-volume-type">
-                                    {{if connector_status == '1'}}
-                                    <span class="text-success">连接成功</span>
+                                    {{if serviceStatus=='true'}}
+                                    <span class="text-success">可用</span>
                                     {{else }}
-                                    <span class="text-info">连接失败</span>
+                                    <span class="text-info">不可用</span>
                                     {{/if}}
                                 </div>
                             </div>
                             <div class="row">
                                 <label class="control-label col-sm-3">管理状态：</label>
                                 <div class="col-sm-7 col-sm query-info query-volume-type">
-                                    {{if admin_status == '1'}}
+                                    {{if adminStatus == '1'}}
                                     <span class="text-success">可用</span>
                                     {{else}}
                                     <span class="text-info">不可用</span>

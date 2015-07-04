@@ -28,7 +28,6 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 			getUrlList : function(id,name){
 				Common.render('tpls/sysmanagement/functiontree/relatedurllist.html','/identity/v2.0/functiontree/functionitemwithurl/'+id,
 					function(html){
-					debugger
     				$("#urllist").html(html);
     				Common.initDataTable($('#UrlTable'),function($tar){
     					$tar.prev().find('.left-col:first').append(
@@ -114,19 +113,20 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 					$(document).on("click","#UrlTable_wrapper a.btn-cancel",function(){
 	 			    	 var obj = $(this);
 	 			    	 var id = $(this).attr("data");
+	 			    	 var treeObj = $.fn.zTree.getZTreeObj("functionTree");
 	 			    	 var node = treeObj.getSelectedNodes()[0];
 	 			    	 Modal.confirm('确定要取消关联该URL吗?', function(result){
 	 			             if(result) {
-	 			            	serverData = {
-		    	                		"functionItemId":node.id,
+	 			            	var serverData = {
+		    	                		"functionItemId":$("#UrlTable_wrapper span.btn-add").attr("data"),
 		    	                		"urlIds":id
 		    	                	}
-	 			            	 Common.xhr.del('/identity/v2.0/functiontree/functionitem/functionitemurl',  //需修改接口
+	 			            	 Common.xhr.del('/identity/v2.0/functiontree/functionitem/functionitemurl', JSON.stringify(serverData),
 	 			                     function(data){
 	 			                    	 if(data){
 	 			                    		 Modal.success('取消成功')
 	 			                			 setTimeout(function(){Modal.closeAll()},2000);
-	 			                    		 obj.parent().parent().remove();
+	 			                    		 obj.parents("tr:first").remove();
 	 			                    	 }else{
 	 			                    		 Modal.warning ('取消失败')
 	 			                    	 }
@@ -142,25 +142,44 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 					$(document).on("click","#UrlTable_wrapper a.btn-set-default",function(){
 	 			    	 var obj = $(this);
 	 			    	 var id = $(this).attr("data");
-	 			    	 var text;
+	 			    	 var text, functionItemId;
 	 			    	 var old_text = obj.html();
-	 			    	 if(obj.html() == "设为默认"){
+	 			    	 if(old_text == "设为默认"){
 	 			    		text = "取消默认";
 	 			    	 }else{
 	 			    		text = "设为默认";
 	 			    	 }
+	 			    	functionItemId = $("#UrlTable_wrapper span.btn-add").attr("data");
 	 			    	 Modal.confirm('确定要'+old_text+'该URL吗?', function(result){
 	 			             if(result) {
-	 			            	 Common.xhr.del('/identity/v2.0/OS-KSADM/roles/'+id,  //需修改接口
-	 			                     function(data){
-	 			                    	 if(data){
-	 			                    		 Modal.success(old_text+'成功')
-	 			                			 setTimeout(function(){Modal.closeAll()},2000);
-	 			                    		 obj.html(text);
-	 			                    	 }else{
-	 			                    		 Modal.warning (old_text+'失败')
-	 			                    	 }
-	 			                     });
+	 			            	if(old_text == "设为默认"){
+	 			            		var serverData = {
+			    	                		"functionItemId" : functionItemId,
+			    	                		"defaultUrlId":id
+			    	                	}
+	 			            		 Common.xhr.post('/identity/v2.0/functiontree/functionitem/defaulturl',JSON.stringify(serverData),
+ 		 			                     function(data){
+ 		 			                    	 if(data){
+ 		 			                    		 Modal.success(old_text+'成功')
+ 		 			                			 setTimeout(function(){Modal.closeAll()},2000);
+ 		 			                    		 obj.html(text);
+ 		 			                    	 }else{
+ 		 			                    		 Modal.warning (old_text+'失败')
+ 		 			                    	 }
+ 		 			                     });
+	 		 			    	 }else{
+	 		 			    		Common.xhr.del('/identity/v2.0/functiontree/functionitem/'+functionItemId+'/defaulturl',
+ 		 			                     function(data){
+ 		 			                    	 if(data){
+ 		 			                    		 Modal.success(old_text+'成功')
+ 		 			                			 setTimeout(function(){Modal.closeAll()},2000);
+ 		 			                    		 obj.html(text);
+ 		 			                    	 }else{
+ 		 			                    		 Modal.warning (old_text+'失败')
+ 		 			                    	 }
+ 		 			                     });
+	 		 			    	 }
+	 			            	 
 	 			             }else {
 	 			            	 Modal.closeAll();
 	 			             }

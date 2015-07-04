@@ -127,7 +127,7 @@ define(['Common','bs/modal','jq/form/validator-bs3'],function(Common,Modal){
 		//编辑
 	    $("#URLTable_wrapper a.btn-edit").on("click",function(){
 	    	var id= $(this).attr("data");
-	    	Common.xhr.ajax('/identity/v2.0/url/'+id,function(data){  //需修改接口
+	    	Common.xhr.ajax('/identity/v2.0/url/'+id,function(data){
 	    		Common.render('tpls/sysmanagement/url/edit.html',data,function(html){
 	    			Modal.show({
 	    	            title: '编辑URL',
@@ -175,7 +175,7 @@ define(['Common','bs/modal','jq/form/validator-bs3'],function(Common,Modal){
 	    	 var id = $(this).attr("data");
 	    	 Modal.confirm('确定要删除该URL吗?', function(result){
 	             if(result) {
-	            	 Common.xhr.del('/identity/v2.0/url/'+id,  //需修改接口
+	            	 Common.xhr.del('/identity/v2.0/url/'+id,
 	                     function(data){
 	                    	 if(data){
 	                    		 Modal.success('删除成功')

@@ -94,7 +94,6 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
                        "orderable": false,
                        "data": {id:"id",name:"name",virtualEnvId:"virtualEnvId"},
                        "render": function(data, type, full) {
-                    	  // debugger;
                          return '<a class="btn-opt members" href="javascript:void(0)" data="'+data.id+'" data-toggle="tooltip" title="成员管理" style="margin: 0;"><i class="fa fa-user fa-fw"></i></a>'
                             +'<a class="btn-opt updateQuota" href="javascript:void(0)" data="'+data.id+'" data-toggle="tooltip" title="配额管理" style="margin: 0;"><i class="fa fa-suitcase fa-fw"></i></a>'
                             +'<a class="btn-opt vdcAz" href="javascript:void(0)" data="'+data.id+'" data-env="'+data.virtualEnvId+'" data-toggle="tooltip" title="可用分区管理" style="margin: 0;"><i class="fa fa-delicious fa-fw"></i></a>'
@@ -199,14 +198,6 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 					});
 					return memberList;
 				}
-				/*floatIpJson:function(obj){
-					var floatIpList = [];
-					$(obj).find("li.member").each(function(i,element){
-						var id = $(element).attr("data-id");
-						floatIpList.push({"id":id});
-					});
-					return floatIpList;
-				}*/
 		}
         //初始化加载，不依赖其他模块
 		var DataGetter = {
@@ -218,12 +209,12 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 				},
 				//获取成员信息
 				getUsers : function(index,size){
-					///'cloud/am/user/page/'+index + '/'+size,resources/data/arrays.txt'
 					Common.xhr.ajax('/identity/v2.0/users/page/'+index + '/'+size,function(userList){
 						renderData.userList = userList.result;
 						cacheData.userList = userList.result;
 						userTotalSize = userList.totalCount;
 					});
+					
 				},
 				//获取及对应的角色
 				getRoles : function(){
@@ -232,13 +223,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 						renderData.roleList = roleList.roles;
 						cacheData.roleList = roleList.roles;
 					});
-				}/*,
-				//获取网络资源池
-				getNetPool: function(){
-					Common.xhr.get('/v2.0/networks',{'isExternalNetwork':true},function(netList){
-						renderData.netList = netList.networks;
-					});
-				}*/
+				}
 		}
 		DataGetter.getVe();//获取所有的虚拟化环境
 		DataGetter.getUsers(userIndex,userSize);//初始化用户列表
@@ -256,16 +241,6 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
     				});
 					
 				},
-				//网络池change事件
-				/*netChange: function(){
-					$('select.select-net').change(function(){
-						//同步
-						currentChosenObj.netId = $('select.select-net').children('option:selected');
-						//重新载入可用分区数据
-						DataIniter.initFloatIP();
-    				});
-					
-				},*/
 				//配额的表单验证
 				vdc_form:function($form){
 					if(!$form)return null;
@@ -372,14 +347,14 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 				userChosen: function(){
 					//选择角色
 					$(document).off("click","#vdc-users ul.dropdown-menu a");
-					$(document).on("click","#vdc-users ul.dropdown-menu a",function(event){
+					Common.on("click","#vdc-users ul.dropdown-menu a",function(event){
 						var i = $(this).find('i');
 						i.css('opacity') == 0 ? i.css('opacity',1) : i.css('opacity',0);
 						$(this).attr('in-use') == '1' ? $(this).attr('in-use','0') : $(this).attr('in-use','1');
 						return false;
 					});
 					$(document).off("click",".list-group .loadmore");
-					$(document).on("click",".list-group .loadmore",function(event){
+					Common.on("click",".list-group .loadmore",function(event){
 						Common.xhr.ajax('/identity/v2.0/users/page/'+ (userIndex + 1) + '/'+userSize,function(userList){
 							var data = {};
 							data.userList = userList.result;
@@ -401,6 +376,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 				},
 				keyup:function(obj){
 					$(obj).find(".search-query").keyup(function(event){
+						debugger;
 						var myEvent = event || window.evnet;
 						if (myEvent.stopPropagation) myEvent.stopPropagation();
 						else window.event.cancelBubble = true;
@@ -410,6 +386,22 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 							children.hide();
 							var test = $(this).val();
 							children.find(".display_name:contains("+test+")").parent().parent().show();
+						}
+						
+					});
+				},
+				searchUser:function(){
+					$("#vdc-users .show-all").find(".search-query").keyup(function(event){
+						var myEvent = event || window.evnet;
+						if (myEvent.stopPropagation) myEvent.stopPropagation();
+						else window.event.cancelBubble = true;
+						var keyCode = myEvent.keyCode;
+						if((keyCode >= 48 && keyCode <= 105) || keyCode == 8 || keyCode == 46 || keyCode==32){
+							var test = $(this).val();
+							Common.xhr.ajax('/identity/v2.0/users/page/'+1 + '/'+20 + "?loginName=" + test,function(userList){
+								var list = userList.result;
+								var count = userList.totalCount;
+							});
 						}
 						
 					});
@@ -464,39 +456,18 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 								$clone.children("li:last").remove();
 							},
 							doneCall:function(){
-								EventsHandler.keyup("#vdc-users .show-all");
+								//EventsHandler.keyup("#vdc-users .show-all");searchUser
+								EventsHandler.searchUser();
     	    	            	EventsHandler.keyup("#vdc-users .show-selected");
 							},
 							allData: cacheData.userList
 					};
 					choose.initChoose(options);
 				})
-			}/*,
-			//根据net_id获取浮动IP
-			initFloatIP : function(){
-				var net_id = currentChosenObj.netId.val() || $('select.select-net').children('option:selected').val();
-				if(net_id){
-					Common.xhr.get('/v2.0/floatingips',{'floatingNetworkId':net_id},function(ipList){
-						for(var key in ipList.floatingips ){
-							var obj = ipList.floatingips[key];
-							obj.name = obj.floating_ip_address;
-						}
-						require(['js/common/choose'],function(choose){
-							var options = {
-									selector: '#vdcFloatIP',
-									list: ipList.floatingips
-							};
-							choose.initChoose(options);
-						})
-					});
-				}else{
-					Modal.error('尚未选择所属虚拟化环境');
-				};
-			}*/
+			}
 		}
 	  //增加按钮
-		$(document).off("#VdcTable_wrapper span.btn-add");
-		$(document).on("click","#VdcTable_wrapper span.btn-add",function(){
+		Common.on("click","#VdcTable_wrapper span.btn-add",function(){
 	    	//需要修改为真实数据源
 			Common.render('tpls/ccenter/vdc/add.html',renderData,function(html){
 				userIndex = 1;
@@ -612,13 +583,11 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 	    });
 	    
 	    //更新配额
-		$(document).off(".updateQuota");
-		$(document).on("click",".updateQuota",function(){
+		Common.on("click","#VdcTable a.updateQuota",function(){
 	    	more.QuotaSets($(this).attr("data"));
 	    });
 	    //可用分区
-		$(document).off(".vdcAz");
-		$(document).on("click",".vdcAz",function(){
+		Common.on("click","#VdcTable a.vdcAz",function(){
 	    	var ve_id =  $(this).attr("data-env");
 	    	var vdc_id = $(this).attr("data");
 	    	//先获取az后，再render
@@ -635,87 +604,18 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 	    	more.AZ(ve_id,vdc_id);
 	    });
 	    //删除一个vdc
-		$(document).off(".deleteTenant");
-		$(document).on("click",".deleteTenant",function(){
+		
+		Common.on("click","#VdcTable a.deleteTenant",function(){
 	    	more.DeleteTenant($(this).attr("data"),$(this).attr("data-name"));
 	    });
 	   //编辑vdc
-		$(document).off(".editTenantBasic");
-		$(document).on("click",".editTenantBasic",function(){
+		Common.on("click","#VdcTable a.editTenantBasic",function(){
 	    	more.EditTenantBasic($(this).attr("data"));
 	    });
 	    //成员管理
-		$(document).off(".members");
-		$(document).on("click",".members",function(){
+		Common.on("click","#VdcTable a.members",function(){
 	    	more.Member($(this).attr("data"));
 	    });
-	  //查看使用情况
-	/*    $("ul.dropdown-menu a.usage").on("click",function(){
-	    	Common.$pageContent.addClass("loading");
-	    	var vdc_id = $(this).attr("data");
-	    	var vdc_name = $(this).attr("data-name");
-	    	Common.render(true,{
-				tpl:'tpls/ccenter/vdc/usage.html',
-				data:'/v2.0/'+Common.cookies.getVdcId()+'/os-simple-tenant-usage/' + vdc_id,
-				beforeRender: function(data){
-					
-					var usageData = {
-							vdc_name:vdc_name,
-							usageList:data.tenant_usage.server_usages
-					}
-					return usageData;
-				},
-				callback: function(){
-					Common.initDataTable($('#UsageTable'),function($tar){
-						$tar.prev().hide();
-						Common.$pageContent.removeClass("loading");
-					});
-					 $("#reload").on("click",function(){
-						 Common.router.reload();
-					 })
-					 $('#time_text').daterangepicker(null, function(start, end, label) {
-				            console.log(start.toISOString(), end.toISOString(), label);
-				      });	
-					 $("#submit_usage").on("click",function(){
-					    	var time = $.trim($("#time_text").val());
-					    	if(time == null || time == "")return;
-					    	var start =  $.trim(time.split("-")[0]);
-					    	var end = $.trim(time.split("-")[1]);
-					    	Common.xhr.get('/v2.0/'+Common.cookies.getVdcId()+'/os-simple-tenant-usage/' + vdc_id,{'start':start,'end':end},function(data){
-					    		var usageList = $("#usageList");
-					    		usageList.empty();
-					    		var list = data.tenant_usage.server_usages;
-					    		var usageData = [];
-					    		if(list){
-					    			for(var key in list){
-					    				var obj = list[key];
-					    				usageData.push("<tr>");
-					    				usageData.push("<td>",obj.name,"</td>");
-					    				usageData.push("<td>",obj.vcpus,"</td>");
-					    				usageData.push("<td>",obj.local_gb,"GB</td>");
-					    				usageData.push("<td>",obj.memory_mb,"GB</td>");
-					    				usageData.push("<td>",obj.started_at,"</td>");
-					    				usageData.push("</tr>");
-					    				usageList.html(usageData.join(""));
-					    			}
-					    		}
-					    		Common.initDataTable($('#UsageTable'),function($tar){
-									$tar.prev().hide();
-									Common.$pageContent.removeClass("loading");
-								});
-							});
-					  });
-				}
-			});
-	    });*/
-	 
-	    //外部网络管理
-	  /*  $("ul.dropdown-menu a.floatIP").on("click",function(){
-	    	var net_id =  renderData.netList[0].id
-	    	var vdc_id = $(this).attr("data");
-	    	more.FloatIP(net_id,vdc_id);
-	    });*/
-    
 	    //更多
 	    var more = {
 		    	//配额管理
@@ -832,7 +732,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
     	//编辑租户的基本信息
     	 EditTenantBasic : function(vdc_id){
     		 Common.xhr.ajax('/identity/v2.0/tenants/' + vdc_id,function(data){
-    			 Common.render('tpls/ccenter/vdc/edit.html',data.tenants,function(html){
+    			 Common.render('tpls/ccenter/vdc/edit.html',data.tenant,function(html){
       				Modal.show({
   	    	            title: '虚拟数据中心信息',
   	    	            message: html,
@@ -965,11 +865,13 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 	    	    	            onshown : function(){
 	    	    	            	EventsHandler.userChosen();
 	    	    	            	chooseWrapper.remove();
-	    	    	            	EventsHandler.keyup("#vdc-users .show-all");
+	    	    	            	//EventsHandler.keyup("#vdc-users .show-all");
+	    	    	            	EventsHandler.searchUser();
 	    	    	            	EventsHandler.keyup("#vdc-users .show-selected");
 	    	    	            },
 	    	    	            onhide : function(){
 	    	    	            	userIndex = 1;
+	    	    	            	Common.router.route();//重新载入
 	    	    	            }
 	    	    	        });
 	        			};
