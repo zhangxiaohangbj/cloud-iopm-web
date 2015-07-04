@@ -374,8 +374,8 @@ define('commons/pub_menu', function() {
                             link: '#oss/container'
                         },
                         {
-                            text: '<i class="fa fa-dot fa-1"></i>主机管理',
-                            link: '#oss/host'
+                            text: '<i class="fa fa-dot fa-1"></i>环境管理',
+                            link: '#oss/evn'
                         }
                     ]
                 }
