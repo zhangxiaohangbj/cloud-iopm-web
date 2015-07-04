@@ -1,0 +1,38 @@
+<div class="page-body">
+	<div class="pane">
+		<div class="pane-content">
+			<div class="detail-info">
+				<div class="tab-content">
+					<div class="clearfix">
+					{{each list as item i}}
+	<ol class="breadcrumb minus">
+		<li class="active"><h4>{{item.name}}</h4></li>
+		<li class="backlist"><a href="javascript:void(0)" class="btn-opt" data-toggle="tooltip" title="执行" ><i class="glyphicon glyphicon-play"></i></a></li>
+		<li class="backlist"><a href="javascript:void(0)" class="btn-opt" data-toggle="tooltip" title="编辑" ><i class="glyphicon glyphicon-edit"></i></a></li>
+		<li class="backlist"><a href="javascript:void(0)" class="btn-opt" data-toggle="tooltip" title="删除" ><i class="glyphicon glyphicon-trash"></i></a></li>
+		
+	</ol>
+						<hr>
+						<div class="row">
+							<label class="control-label col-sm-3">执行任务的时间：</label>
+							{{if item.type == "timeing"}}
+							<div class="col-sm-7 col-sm">{{item.timeing.period}}，{{item.timeing.start_time}}</div>
+							{{else}}
+							<div class="col-sm-7 col-sm">达到警报阈值: {{item.alarm.condition}}，持续{{item.alarm.period}}秒</div>
+							{{/if}}
+						</div>
+						<div class="row">
+							<label class="control-label col-sm-3">执行以下操作：</label>
+							<div class="col-sm-7 col-sm">{{item.rule.adjust_type}}{{item.rule.adjust_value}}个云主机</div>
+						</div>
+						<div class="row">
+							<label class="control-label col-sm-3">然后等待：</label>
+							<div class="col-sm-7 col-sm">{{item.cooltime}}秒，才能进行另一个任务</div>
+						</div>
+					{{/each}}
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

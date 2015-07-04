@@ -1,0 +1,30 @@
+<table class="table table-primary table-striped" id="VolumeTable">
+	<thead>
+		<tr>
+			<th class="c10">活动</th>
+			<th class="c10">状态</th>
+			<th class="c20">变化后的云主机总数</th>
+			<th class="c20">开始时间</th>
+			<th class="c20">结束时间</th>
+			<th class="c20">描述</th>
+		</tr>
+	</thead>
+	<tbody>
+	{{each list as item i}}
+		<tr data-id="{{item.id}}">
+			<td><a class="volume_name" href="javascript:void(0)">{{item.name}}</a></td>
+			<td>
+ 			{{if item.status == 'success'}}
+ 				<span class="text-success">成功</span>
+ 			{{else}}
+ 				<span class="text-danger">失败</span>
+ 			{{/if}}
+			</td>
+			<td>{{item.servers}}</td>
+			<td>{{item.start_time}}</td>
+			<td>{{item.end_time}}</td>
+			<td>{{item.desc}}</td>
+		</tr>
+ 	{{/each}}
+	</tbody>
+</table>

@@ -9,7 +9,7 @@
             "max" : "5",
             "available_zone": "WDS-dec",
             "cool_time":"300",
-            "status":"启动"
+            "status":"start"
         },
         {
         	"id" : "2",
@@ -21,7 +21,7 @@
             "max" : "1",
             "available_zone": "WDS-dec",
             "cool_time":"300",
-            "status":"启动"
+            "status":"start"
         },
         {
         	"id" : "3",
@@ -33,7 +33,7 @@
             "max" : "5",
             "available_zone": "WDS-dec",
             "cool_time":"300",
-            "status":"启动"
+            "status":"start"
         },
         {
         	"id" : "4",
@@ -45,7 +45,7 @@
             "max" : "3",
             "available_zone": "WDS-dec",
             "cool_time":"300",
-            "status":"启动"
+            "status":"start"
         },
         {
         	"id" : "5",
@@ -57,7 +57,7 @@
             "max" : "5",
             "available_zone": "WDS-dec",
             "cool_time":"300",
-            "status":"启动"
+            "status":"stop"
         },
         {
         	"id" : "6",
@@ -69,7 +69,7 @@
             "max" : "5",
             "available_zone": "WDS-dec",
             "cool_time":"300",
-            "status":"启动"
+            "status":"stop"
         },
         {
         	"id" : "7",
@@ -81,6 +81,6 @@
             "max" : "5",
             "available_zone": "WDS-dec",
             "cool_time":"300",
-            "status":"启动"
+            "status":"start"
         }
 ]
