@@ -4,7 +4,7 @@
 define('commons/router_table', function() {
     return {
         '^#monitor(!.*)?$': "js/monitor/task/strategyGroup",
-        '^#aservice(!.*)?$' :"js/aservice/rds/instance",
+        '^#aservice$' :"js/aservice/rds/instance",
         '^#bservice(!.*)?$' :"js/bservice/nosql/index",
         '^#fservice(!.*)?$' :"js/fservice/vm/index",
         '^#ccenter(!.*)?$' :"js/ccenter/region",
@@ -21,11 +21,10 @@ define('commons/router_table', function() {
         '^#fservice/vm/detail/(.*)$' :"js/fservice/vm/detail",
         '^#fservice/autoscaling/detail/(.*)$' :"js/fservice/autoscaling/detail",
         '^#fservice/security/keypair/detail/(.*)$' :"js/fservice/security/keypair/detail",
-        '^#aservice/cae/version/(.*)$' :"js/aservice/cae/version",
-        '^#aservice/cae/env/list/(.*)$' :"js/aservice/cae/env",
         '^#aservice/cae/storage/(.*)$' :"js/aservice/cae/storage",
-        '^#aservice/cae/env/detail/(.*)$' :"js/aservice/cae/detail",
-        '^#aservice/container/docker-image/detail/(.*)$' :"js/aservice/container/docker-image/detail",
-        '^#aservice/container/bay/detail/(.*)$' :"js/aservice/container/bay/detail"
+        '^#aservice/cae/appenv/detail' :"js/aservice/cae/appenv/detail",
+        /*'^#aservice/cae/appenv/(.*)$' :"js/aservice/cae/appenv/index",*/
+        '^#aservice/container/docker-image/detail/' :"js/aservice/container/docker-image/detail",
+        '^#aservice/container/bay/detail/' :"js/aservice/container/bay/detail"
     };
 });
