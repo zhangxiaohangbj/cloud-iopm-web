@@ -1,5 +1,5 @@
 {
-	"totalCount":6,
+    "totalCount":6,
     "result": [
         {
             "anti_affinity": [],

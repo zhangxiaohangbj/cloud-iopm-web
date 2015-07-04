@@ -1,3 +1,6 @@
+<style>
+    .edit-vm-list .icheckbox-info{margin-right:15px; }
+</style>
 <div class="page-header clearfix">
 	<ol class="breadcrumb">
 	  <li class="active"><i class="icon-squre-d"></i>云主机</li>
@@ -36,6 +39,39 @@
 					</tr>
 				</tfoot>
 			</table>
+			<div class="table-menus hide">
+                <div class="col-sm-2 left-col"><span class="btn btn-add">新建</span></div>
+                <div class="col-sm-10 right-col">
+                    <div class="dataTables_filter">
+                        <label>
+                            <select name="vdc_id" class="form-control select-vdc">
+	                            <option value="">选择一个虚拟数据中心</option>
+                            </select>
+                        </label>
+                         <label>
+                            <select name="status" class="form-control">
+                                <option value="">选择一个状态</option>
+	                            <option value="ACTIVE">运行中</option>
+	                            <option value="BUILD">创建中</option>
+	                            <option value="REBUILD">重建中</option>
+	                            <option value="SUSPENDED">已挂起</option>
+	                            <option value="PAUSED">已暂停</option>
+	                            <option value="RESIZE">重建中</option>
+	                            <option value="VERIFY_RESIZE">确认重建</option>
+	                            <option value="REVERT_RESIZE">回退重建</option>
+	                            <option value="REBOOT">重启中</option>
+	                            <option value="HARD_REBOOT">硬重启中</option>
+	                            <option value="DELETED">已删除</option>
+	                            <option value="ERROR">错误</option>
+	                            <option value="SHUTOFF">关机</option>
+                            </select>
+                        </label>
+                        <label><input type="search" name="filter" class="form-control input-sm global-search" placeholder="">
+                        <span class="btn btn-query"><i class="fa fa-search"></i></span>
+                        </label>
+                    </div>
+                </div>
+            </div>
 		</div>
 	</div>
 </div>
