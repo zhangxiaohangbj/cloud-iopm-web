@@ -1,0 +1,38 @@
+<div class="clearfix">
+<div class="row">
+	master节点：k8s-1-master/ 10.68.25.87 / 2C|2CPUs|20GB / 正常 
+</div>
+</div>
+
+<table class="table table-primary table-striped" id="VolumeTable">
+	<thead>
+		<tr>
+			<th class="c12">名称</th>
+			<th class="c12">内部IP</th>
+			<th class="c12">浮动IP</th>
+			<th class="c13">配置</th>
+			<th class="c6">可用域</th>
+			<th class="c10">虚拟数据中心</th>
+			<th class="c6">状态</th>
+			<th class="c15">创建时间</th>
+		</tr>
+	</thead>
+	<tbody>
+	{{each list as item i}}
+		<tr data-id="{{item.id}}">
+			<td><a  href="javascript:void(0)">{{item.name}}</a></td>
+			<td>{{item.fixedIps}}</td>
+			<td>{{item.floatingIps}}</td>
+			<td>{{item.flavor}}</td>
+			<td>{{item.availability_zone}}</td>
+			<td>{{item.vdcName}}</td>
+			<td>
+ 			正常
+ 			</td>
+			<td>2015-04-24 17:14:57</td>
+ 			
+			
+		</tr>
+ 			{{/each}}
+	</tbody>
+</table>

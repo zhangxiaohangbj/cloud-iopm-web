@@ -14,7 +14,7 @@ define(['Common','bs/modal', 'rq/text!tpls/fservice/block/volume/list-opts.html'
 		      "processing": true,  //加载效果，默认false
 		      "serverSide": true,  //页面在加载时就请求后台，以及每次对 datatable 进行操作时也是请求后台
 		      "ordering": false,   //禁用所有排序
-		      "sAjaxSource":"resources/data/aservice/bay.txt?", //ajax源，后端提供的分页接口
+		      "sAjaxSource":"resources/data/aservice/container/bay.txt?", //ajax源，后端提供的分页接口
 		      "fnServerData": function( sSource, aoData, fnCallback ) {
 		    	    $.ajax( {   
 		    	        "url": sSource, 
@@ -51,6 +51,12 @@ define(['Common','bs/modal', 'rq/text!tpls/fservice/block/volume/list-opts.html'
 		       *  属性列表： data，之前属性定义中对应的属性值； type，未知；full,全部数据值可以通过属性列名获取 
 		       * */
 		      "columnDefs": [
+					{
+					    "targets": [1],
+					    "render": function(data, type, full) {
+					      return '<a class="bay_name" href="#aservice/container/bay/detail/'+full.id+'">'+full.name+"</a>";
+					    }
+					},
 					{
 				    "targets": [8],
 				    "data": "id",

@@ -1,8 +1,8 @@
 <div class="page-header">
 	<ol class="breadcrumb minus">
-		<li><a href="#fservice/block/">磁盘管理</a></li>
+		<li><a href="#fservice/block/">容器集群</a></li>
 	    <li class="active">{{name}}</li>
-	    <li class="backlist"><a href="#fservice/block/">返回列表</a></li>
+	    <li class="backlist"><a href="#aservice/container/bay/index">返回列表</a></li>
 	</ol>
 </div>
 <div class="page-body">
@@ -13,7 +13,7 @@
 			  <!-- Nav tabs -->
 			  <ul class="nav nav-tabs" role="tablist">
 			    <li class="active"  data-for="basic"><a href="javascript:void(0)">基本信息</a></li>
-			    <li data-for="snapshot"><a href="javascript:void(0)">快照列表</a></li>
+			    <li data-for="snapshot"><a href="javascript:void(0)">节点</a></li>
 			    <li data-for="monitor"><a href="javascript:void(0)">监控详情</a></li>
 			  </ul>
 			  <div class="tab-content">
@@ -32,59 +32,46 @@
 							</div>
 						</div>
 						<div class="row">
-							<label class="control-label col-sm-3">容量：</label>
+							<label class="control-label col-sm-3">用户：</label>
 							<div class="col-sm-7 col-sm query-info query-volume-size">
-							{{size}}
+							{{userId}}
+							</div>
+						</div>
+						
+						<div class="row">
+							<label class="control-label col-sm-3">类型：</label>
+							<div class="col-sm-7 col-sm query-info">
+								{{baymodelName}}
+							</div>
+						</div>
+						<div class="row">
+							<label class="control-label col-sm-3">heat模板：</label>
+							<div class="col-sm-7 col-sm query-info">
+								{{stackId}}
 							</div>
 						</div>
 						<div class="row">
 							<label class="control-label col-sm-3">状态：</label>
-							<div class="col-sm-7 col-sm query-info query-volume-type">
-								{{if status == 'in-use'}}
-					 				<span class="text-success">使用中</span>
-					 				{{else if status == 'available'}}
-					 					<span class="text-info">可用</span>
-					 						{{else}}
-					 							<span class="text-danger">已删除</span>
-					 			{{/if}}
+							<div class="col-sm-7 col-sm query-info">
+								{{status}}
 							</div>
 						</div>
 						<div class="row">
-							<label class="control-label col-sm-3">虚拟数据中心：</label>
+							<label class="control-label col-sm-3">节点数：</label>
 							<div class="col-sm-7 col-sm query-info">
-								{{vdc_id}}
+								{{nodeCount}}
 							</div>
 						</div>
 						<div class="row">
-							<label class="control-label col-sm-3">挂载的主机：</label>
+							<label class="control-label col-sm-3">节点地址：</label>
 							<div class="col-sm-7 col-sm query-info">
-							{{each mount_list as opt i}}
-								{{opt.name}}{{if i != mount_list.length-1}},{{/if}}
-							{{/each}}
+								{{nodeAddresses}}
 							</div>
 						</div>
 						<div class="row">
-							<label class="control-label col-sm-3">挂载路径：</label>
+							<label class="control-label col-sm-3">api地址：</label>
 							<div class="col-sm-7 col-sm query-info">
-							{{mount_path}}
-							</div>
-						</div>
-						<div class="row">
-							<label class="control-label col-sm-3">卷类型：</label>
-							<div class="col-sm-7 col-sm query-info">
-								{{type}}
-							</div>
-						</div>
-						<div class="row">
-							<label class="control-label col-sm-3">可用分区：</label>
-							<div class="col-sm-7 col-sm query-info">
-								{{available_zone}}
-							</div>
-						</div>
-						<div class="row">
-							<label class="control-label col-sm-3">可用分区：</label>
-							<div class="col-sm-7 col-sm query-info">
-								{{create_time}}
+								{{apiAddress}}
 							</div>
 						</div>
 					</div>
