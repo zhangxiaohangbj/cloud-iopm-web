@@ -1,0 +1,25 @@
+[
+        {
+            "name" : "server1",
+            "id": "di91jd9d29f9f29",
+            "life_status":"inservice",
+            "conf": "test",
+            "available_zone": "zone1",
+            "run_status":"healthy"
+        },
+        {
+            "name" : "server2",
+            "id": "di91jd9d29f9f29",
+            "life_status":"inservice",
+            "conf": "test",
+            "available_zone": "zone1",
+            "run_status":"healthy"
+        },{
+            "name" : "server3",
+            "id": "di91jd9d29f9f29",
+            "life_status":"inservice",
+            "conf": "test",
+            "available_zone": "zone1",
+            "run_status":"healthy"
+        }
+]

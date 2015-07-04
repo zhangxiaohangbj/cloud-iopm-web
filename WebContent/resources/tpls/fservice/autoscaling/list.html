@@ -19,8 +19,8 @@
 						<th class="c10">配置</th>
 						<th class="c8">云主机数</th>
 						<th class="c6">所需</th>
-						<th class="c6">最小</th>
-						<th class="c6">最大</th>
+						<th class="c6">最少</th>
+						<th class="c6">最多</th>
 						<th class="c6">状态</th>
 						<th class="c15">默认冷却时间（秒）</th>
 						<th class="c11">可用区域</th>
@@ -31,37 +31,24 @@
 				{{each list as item i}}
 					<tr>
 						<td><label><input type="checkbox"></label></td>
-						<td><a class="vm_name" href="#fservice/autoscaling/detail" data="{{item.id}}">{{item.name}}</a></td>
+						<td><a class="vm_name" href="#fservice/autoscaling/detail/{{item.name}}" data="{{item.name}}">{{item.name}}</a></td>
 						<td>{{item.conf}}</td>
 						<td class="vm_floating_ips">{{item.servers}}</td>
 						<td class="vm_type">{{item.require}}</td>
 						<td>{{item.min}}</td>
 						<td>{{item.max}}</td>
-						<td class="text-success">{{item.status}}</td>
+			 			<td>
+			 			{{if item.status == 'start'}}
+			 				<span class="text-success">启动</span>
+			 				{{else}}
+			 				<span class="text-danger">停用</span>
+			 			{{/if}}
+			 			</td>						
 						<td>{{item.cool_time}}</td>
 						<td>{{item.available_zone}}</td>
 						<td>
-						<a href="javascript:void(0)" class="btn-opt createSnapshot" data-toggle="tooltip" title="创建快照" data-act="stop" data="{{item.id}}" style="margin: 0;"><i class="fa fa-camera"></i></a>
-						<a class="btn-opt" data-toggle="tooltip" title="控制台" data-act="delete"><i class="glyphicon glyphicon-trash"></i></a>
-						<div class="dropdown">
-							<a class="btn-opt dropdown-toggle" data-toggle="dropdown" title="更多"  aria-expanded="false" ><i class="fa fa-angle-double-right"></i></a>
-							<ul class="dropdown-menu" style="right: 0;left: initial;">
-								<li><a href="javascript:void(0)" class="attachIp" data="{{item.id}}"><i class="fa fa-gear fa-fw"></i>绑定浮动IP</a></li>
-								<li><a href="javascript:void(0)" class="dettachIp" data="{{item.id}}"><i class="fa fa-gear fa-fw"></i>解除浮动IP绑定</a></li>
-								<li><a href="javascript:void(0)" class="editName" data="{{item.id}}"><i class="fa fa-file-text fa-fw"></i>修改云主机名称</a></li>
-								<li><a href="javascript:void(0)" class="editSecurity" data="{{item.id}}"><i class="fa fa-file-text fa-fw"></i>编辑安全组</a></li>
-								<li><a href="javascript:void(0)" class="vncConsole" data="{{item.id}}"><i class="fa fa-file-text fa-fw"></i>控制台</a></li>
-								<li><a href="javascript:void(0)" class="consoleOutput" data="{{item.id}}"><i class="fa fa-file-text fa-fw"></i>查看日志</a></li>
-								<li><a href="javascript:void(0)" class="pause" data="{{item.id}}"><i class="fa fa-file-text fa-fw"></i>暂停</a></li>
-								<li><a href="javascript:void(0)" class="suspend" data="{{item.id}}"><i class="fa fa-file-text fa-fw"></i>挂起</a></li>
-								<li><a href="javascript:void(0)" class="editVmType" data="{{item.id}}"><i class="fa fa-file-text fa-fw"></i>调整配置</a></li>
-								<li><a href="javascript:void(0)" class="rebootSoft" data="{{item.id}}"><i class="fa fa-refresh fa-fw"></i>软重启</a></li>
-								<li><a href="javascript:void(0)" class="rebootHard" data="{{item.id}}"><i class="fa fa-refresh fa-fw"></i>硬重启</a></li>
-								<li><a href="javascript:void(0)" class="osStop" data="{{item.id}}"><i class="fa fa-power-off fa-fw"></i>关闭</a></li>
-								<li><a href="javascript:void(0)" class="rebuild" data="{{item.id}}"><i class="fa fa-file-text fa-fw"></i>重建</a></li>
-								<li><a href="javascript:void(0)" class="delete" data="{{item.id}}"><i class="fa fa-file-text fa-fw"></i>终止</a></li>
-							</ul>
-						</div>	
+						<a href="javascript:void(0)" class="btn-opt createSnapshot" data-toggle="tooltip" title="编辑" data-act="stop" data="{{item.id}}" style="margin: 0;"><i class="glyphicon glyphicon-edit"></i></a>
+						<a class="btn-opt" data-toggle="tooltip" title="删除" data-act="delete"><i class="glyphicon glyphicon-trash"></i></a>
 						</td>
 					</tr>
     			{{/each}}

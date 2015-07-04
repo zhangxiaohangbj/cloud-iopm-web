@@ -26,7 +26,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 		var userTotalSize = 0;
 		//页面渲染完后进行各种事件的绑定
 		//dataTables
-		Common.initDataTable($('#VdcTable'),{
+		var table = Common.initDataTable($('#VdcTable'),{
 		      "processing": true,  //加载效果，默认false
 		      "serverSide": true,  //页面在加载时就请求后台，以及每次对 datatable 进行操作时也是请求后台
 		      "ordering": false,   //禁用所有排序
@@ -36,25 +36,25 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 		       *      aoData[4].value为每页显示条数，aoData[3].value/aoData[4].value+1为请求的页码数
 		       * aoData：请求参数，其中包含search 输入框中的值
 		       * */
-		      "fnServerData": function( sSource, aoData, fnCallback ) {
+		     /* "fnServerData": function( sSource, aoData, fnCallback ) {
 		    	  var url = sSource + (aoData[3].value/aoData[4].value+1) +"/"+aoData[4].value
 		    	    $.ajax( {   
 		    	        "url": url, 
 		    	        "data":aoData,
 		    	        "dataType": "json",   
 		    	        "success": function(resp) {
-		    	        	/*渲染前预处理后端返回的数据为DataTables期望的格式,
+		    	        	渲染前预处理后端返回的数据为DataTables期望的格式,
 		    	        	 * 后端返回数据格式 {"pageNo":1,"pageSize":5,"orderBy":null,"order":null,"autoCount":true,"result":[{"id":"07da487da17b4354a4b5d8e2b2e41485","name":"wzz"}],
 		    	        	 * "totalCount":31,"first":1,"orderBySetted":false,"totalPages":7,"hasNext":true,"nextPage":2,"hasPre":false,"prePage":1}
 		    	        	 * DataTables期望的格式 {"draw": 2,"recordsTotal": 11,"recordsFiltered": 11,"data": [{"id": 1,"firstName": "Troy"}]}
-							*/
+							
 		    	        	resp.data = resp.result;
 		    	        	resp.recordsTotal = resp.totalCount;
 		    	        	resp.recordsFiltered = resp.totalCount;
 		    	            fnCallback(resp);   //fnCallback：服务器返回数据后的处理函数，需要按DataTables期望的格式传入返回数据 
 		    	        }   
 		    	    });   
-		      },
+		      },*/
 	    	  /*属性 columns 用来配置具体列的属性，包括对应的数据列名,如trueName，是否支持搜索，是否显示，是否支持排序等*/
 		      "columns": [
 			        {"data": ""},
@@ -94,7 +94,6 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
                        "orderable": false,
                        "data": {id:"id",name:"name",virtualEnvId:"virtualEnvId"},
                        "render": function(data, type, full) {
-                    	  // debugger;
                          return '<a class="btn-opt members" href="javascript:void(0)" data="'+data.id+'" data-toggle="tooltip" title="成员管理" style="margin: 0;"><i class="fa fa-user fa-fw"></i></a>'
                             +'<a class="btn-opt updateQuota" href="javascript:void(0)" data="'+data.id+'" data-toggle="tooltip" title="配额管理" style="margin: 0;"><i class="fa fa-suitcase fa-fw"></i></a>'
                             +'<a class="btn-opt vdcAz" href="javascript:void(0)" data="'+data.id+'" data-env="'+data.virtualEnvId+'" data-toggle="tooltip" title="可用分区管理" style="margin: 0;"><i class="fa fa-delicious fa-fw"></i></a>'
@@ -115,10 +114,16 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
                 ]
 		    },
 		    function($tar){
-			$tar.prev().find('.left-col:first').append(
+			/*$tar.prev().find('.left-col:first').append(
 					'<span class="btn btn-add">创建</span>'
 				);
+			Common.$pageContent.removeClass("loading");*/
+	    	var $tbMenu = $tar.prev('.tableMenus');
+	    	$tbMenu.length && $tbMenu.empty().html($('.table-menus').html());
 			Common.$pageContent.removeClass("loading");
+		});
+		Common.on('click','.dataTables_filter .btn-query',function(){
+			table.search($('.global-search').val()).draw();
 		});
 		//dataTables
 		/*Common.initDataTable($('#VdcTable'),function($tar){
@@ -199,14 +204,6 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 					});
 					return memberList;
 				}
-				/*floatIpJson:function(obj){
-					var floatIpList = [];
-					$(obj).find("li.member").each(function(i,element){
-						var id = $(element).attr("data-id");
-						floatIpList.push({"id":id});
-					});
-					return floatIpList;
-				}*/
 		}
         //初始化加载，不依赖其他模块
 		var DataGetter = {
@@ -218,12 +215,12 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 				},
 				//获取成员信息
 				getUsers : function(index,size){
-					///'cloud/am/user/page/'+index + '/'+size,resources/data/arrays.txt'
 					Common.xhr.ajax('/identity/v2.0/users/page/'+index + '/'+size,function(userList){
 						renderData.userList = userList.result;
 						cacheData.userList = userList.result;
 						userTotalSize = userList.totalCount;
 					});
+					
 				},
 				//获取及对应的角色
 				getRoles : function(){
@@ -232,13 +229,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 						renderData.roleList = roleList.roles;
 						cacheData.roleList = roleList.roles;
 					});
-				}/*,
-				//获取网络资源池
-				getNetPool: function(){
-					Common.xhr.get('/v2.0/networks',{'isExternalNetwork':true},function(netList){
-						renderData.netList = netList.networks;
-					});
-				}*/
+				}
 		}
 		DataGetter.getVe();//获取所有的虚拟化环境
 		DataGetter.getUsers(userIndex,userSize);//初始化用户列表
@@ -256,16 +247,6 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
     				});
 					
 				},
-				//网络池change事件
-				/*netChange: function(){
-					$('select.select-net').change(function(){
-						//同步
-						currentChosenObj.netId = $('select.select-net').children('option:selected');
-						//重新载入可用分区数据
-						DataIniter.initFloatIP();
-    				});
-					
-				},*/
 				//配额的表单验证
 				vdc_form:function($form){
 					if(!$form)return null;
@@ -372,14 +353,14 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 				userChosen: function(){
 					//选择角色
 					$(document).off("click","#vdc-users ul.dropdown-menu a");
-					$(document).on("click","#vdc-users ul.dropdown-menu a",function(event){
+					Common.on("click","#vdc-users ul.dropdown-menu a",function(event){
 						var i = $(this).find('i');
 						i.css('opacity') == 0 ? i.css('opacity',1) : i.css('opacity',0);
 						$(this).attr('in-use') == '1' ? $(this).attr('in-use','0') : $(this).attr('in-use','1');
 						return false;
 					});
 					$(document).off("click",".list-group .loadmore");
-					$(document).on("click",".list-group .loadmore",function(event){
+					Common.on("click",".list-group .loadmore",function(event){
 						Common.xhr.ajax('/identity/v2.0/users/page/'+ (userIndex + 1) + '/'+userSize,function(userList){
 							var data = {};
 							data.userList = userList.result;
@@ -401,6 +382,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 				},
 				keyup:function(obj){
 					$(obj).find(".search-query").keyup(function(event){
+						debugger;
 						var myEvent = event || window.evnet;
 						if (myEvent.stopPropagation) myEvent.stopPropagation();
 						else window.event.cancelBubble = true;
@@ -410,6 +392,40 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 							children.hide();
 							var test = $(this).val();
 							children.find(".display_name:contains("+test+")").parent().parent().show();
+						}
+						
+					});
+				},
+				searchUser:function(){
+					$("#vdc-users .show-all").find(".search-query").keyup(function(event){
+						var myEvent = event || window.evnet;
+						if (myEvent.stopPropagation) myEvent.stopPropagation();
+						else window.event.cancelBubble = true;
+						var keyCode = myEvent.keyCode;
+						if((keyCode >= 48 && keyCode <= 105) || keyCode == 8 || keyCode == 46 || keyCode==32){
+							userIndex = 1;
+							var test = $(this).val();
+							Common.xhr.ajax('/identity/v2.0/users/page/'+userIndex + '/'+userSize + "?loginName=" + test,function(userList){
+								debugger;
+								var list = userList.result;
+								var userTotalSize = userList.totalCount;	
+								if(list && list.length > 0){
+									var obj = $("#vdc-users").find(".list-group-all");
+									obj.empty();
+									var userArray = [];
+									for(var key in list){
+										var user = list[key];
+										userArray.push('<ul class="nav nav-pills btn-group btn-group-sm list-group-item">');
+										userArray.push('<li class="member adjust" data-id="',user.id,'" data-name="',user.name,'">');
+										userArray.push('<span class="display_name">',user.name,'</span></li>');
+										userArray.push('<li class="pull-right adjust icon"><i class="fa fa-plus-circle"></i></li></ul>')
+									}
+									if(userTotalSize > userSize * userIndex){
+										userArray.push('<a class="loadmore" href="javascript:void(0)">加载更多...</a>');
+									}
+									obj.append(userArray.join(""));
+								}								
+							});
 						}
 						
 					});
@@ -464,39 +480,18 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 								$clone.children("li:last").remove();
 							},
 							doneCall:function(){
-								EventsHandler.keyup("#vdc-users .show-all");
+								//EventsHandler.keyup("#vdc-users .show-all");searchUser
+								EventsHandler.searchUser();
     	    	            	EventsHandler.keyup("#vdc-users .show-selected");
 							},
 							allData: cacheData.userList
 					};
 					choose.initChoose(options);
 				})
-			}/*,
-			//根据net_id获取浮动IP
-			initFloatIP : function(){
-				var net_id = currentChosenObj.netId.val() || $('select.select-net').children('option:selected').val();
-				if(net_id){
-					Common.xhr.get('/v2.0/floatingips',{'floatingNetworkId':net_id},function(ipList){
-						for(var key in ipList.floatingips ){
-							var obj = ipList.floatingips[key];
-							obj.name = obj.floating_ip_address;
-						}
-						require(['js/common/choose'],function(choose){
-							var options = {
-									selector: '#vdcFloatIP',
-									list: ipList.floatingips
-							};
-							choose.initChoose(options);
-						})
-					});
-				}else{
-					Modal.error('尚未选择所属虚拟化环境');
-				};
-			}*/
+			}
 		}
 	  //增加按钮
-		$(document).off("#VdcTable_wrapper span.btn-add");
-		$(document).on("click","#VdcTable_wrapper span.btn-add",function(){
+		Common.on("click","#VdcTable_wrapper span.btn-add",function(){
 	    	//需要修改为真实数据源
 			Common.render('tpls/ccenter/vdc/add.html',renderData,function(html){
 				userIndex = 1;
@@ -612,13 +607,11 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 	    });
 	    
 	    //更新配额
-		$(document).off(".updateQuota");
-		$(document).on("click",".updateQuota",function(){
+		Common.on("click","#VdcTable a.updateQuota",function(){
 	    	more.QuotaSets($(this).attr("data"));
 	    });
 	    //可用分区
-		$(document).off(".vdcAz");
-		$(document).on("click",".vdcAz",function(){
+		Common.on("click","#VdcTable a.vdcAz",function(){
 	    	var ve_id =  $(this).attr("data-env");
 	    	var vdc_id = $(this).attr("data");
 	    	//先获取az后，再render
@@ -635,87 +628,18 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 	    	more.AZ(ve_id,vdc_id);
 	    });
 	    //删除一个vdc
-		$(document).off(".deleteTenant");
-		$(document).on("click",".deleteTenant",function(){
+		
+		Common.on("click","#VdcTable a.deleteTenant",function(){
 	    	more.DeleteTenant($(this).attr("data"),$(this).attr("data-name"));
 	    });
 	   //编辑vdc
-		$(document).off(".editTenantBasic");
-		$(document).on("click",".editTenantBasic",function(){
+		Common.on("click","#VdcTable a.editTenantBasic",function(){
 	    	more.EditTenantBasic($(this).attr("data"));
 	    });
 	    //成员管理
-		$(document).off(".members");
-		$(document).on("click",".members",function(){
+		Common.on("click","#VdcTable a.members",function(){
 	    	more.Member($(this).attr("data"));
 	    });
-	  //查看使用情况
-	/*    $("ul.dropdown-menu a.usage").on("click",function(){
-	    	Common.$pageContent.addClass("loading");
-	    	var vdc_id = $(this).attr("data");
-	    	var vdc_name = $(this).attr("data-name");
-	    	Common.render(true,{
-				tpl:'tpls/ccenter/vdc/usage.html',
-				data:'/v2.0/'+Common.cookies.getVdcId()+'/os-simple-tenant-usage/' + vdc_id,
-				beforeRender: function(data){
-					
-					var usageData = {
-							vdc_name:vdc_name,
-							usageList:data.tenant_usage.server_usages
-					}
-					return usageData;
-				},
-				callback: function(){
-					Common.initDataTable($('#UsageTable'),function($tar){
-						$tar.prev().hide();
-						Common.$pageContent.removeClass("loading");
-					});
-					 $("#reload").on("click",function(){
-						 Common.router.reload();
-					 })
-					 $('#time_text').daterangepicker(null, function(start, end, label) {
-				            console.log(start.toISOString(), end.toISOString(), label);
-				      });	
-					 $("#submit_usage").on("click",function(){
-					    	var time = $.trim($("#time_text").val());
-					    	if(time == null || time == "")return;
-					    	var start =  $.trim(time.split("-")[0]);
-					    	var end = $.trim(time.split("-")[1]);
-					    	Common.xhr.get('/v2.0/'+Common.cookies.getVdcId()+'/os-simple-tenant-usage/' + vdc_id,{'start':start,'end':end},function(data){
-					    		var usageList = $("#usageList");
-					    		usageList.empty();
-					    		var list = data.tenant_usage.server_usages;
-					    		var usageData = [];
-					    		if(list){
-					    			for(var key in list){
-					    				var obj = list[key];
-					    				usageData.push("<tr>");
-					    				usageData.push("<td>",obj.name,"</td>");
-					    				usageData.push("<td>",obj.vcpus,"</td>");
-					    				usageData.push("<td>",obj.local_gb,"GB</td>");
-					    				usageData.push("<td>",obj.memory_mb,"GB</td>");
-					    				usageData.push("<td>",obj.started_at,"</td>");
-					    				usageData.push("</tr>");
-					    				usageList.html(usageData.join(""));
-					    			}
-					    		}
-					    		Common.initDataTable($('#UsageTable'),function($tar){
-									$tar.prev().hide();
-									Common.$pageContent.removeClass("loading");
-								});
-							});
-					  });
-				}
-			});
-	    });*/
-	 
-	    //外部网络管理
-	  /*  $("ul.dropdown-menu a.floatIP").on("click",function(){
-	    	var net_id =  renderData.netList[0].id
-	    	var vdc_id = $(this).attr("data");
-	    	more.FloatIP(net_id,vdc_id);
-	    });*/
-    
 	    //更多
 	    var more = {
 		    	//配额管理
@@ -832,7 +756,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
     	//编辑租户的基本信息
     	 EditTenantBasic : function(vdc_id){
     		 Common.xhr.ajax('/identity/v2.0/tenants/' + vdc_id,function(data){
-    			 Common.render('tpls/ccenter/vdc/edit.html',data.tenants,function(html){
+    			 Common.render('tpls/ccenter/vdc/edit.html',data.tenant,function(html){
       				Modal.show({
   	    	            title: '虚拟数据中心信息',
   	    	            message: html,
@@ -965,11 +889,13 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 	    	    	            onshown : function(){
 	    	    	            	EventsHandler.userChosen();
 	    	    	            	chooseWrapper.remove();
-	    	    	            	EventsHandler.keyup("#vdc-users .show-all");
+	    	    	            	//EventsHandler.keyup("#vdc-users .show-all");
+	    	    	            	EventsHandler.searchUser();
 	    	    	            	EventsHandler.keyup("#vdc-users .show-selected");
 	    	    	            },
 	    	    	            onhide : function(){
 	    	    	            	userIndex = 1;
+	    	    	            	//Common.router.route();//重新载入
 	    	    	            }
 	    	    	        });
 	        			};

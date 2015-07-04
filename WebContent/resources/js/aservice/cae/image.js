@@ -269,6 +269,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 						
 					},"必须输入整数");
 					return $form.validate({
+						
 						errorContainer: "_form",
 						rules:{
 							'metadata_items': {

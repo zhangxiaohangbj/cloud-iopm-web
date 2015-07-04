@@ -1,34 +1,24 @@
 <table class="table table-primary table-striped" id="VolumeTable">
 	<thead>
 		<tr>
-			<th class="c15">名称</th>
-			<th class="c10">内核</th>
-			<th class="c10">内存</th>
-			<th class="c15">云主机类型</th>
-			<th class="c20">镜像</th>
-			<th class="c15">状态</th>
-			<th class="c15">操作</th>
+			<th class="c30">名称</th>
+			<th class="c20">调整类型</th>
+			<th class="c10">调整值</th>
+			<th class="c20">冷却时间</th>
+			<th class="c20">操作</th>
 		</tr>
 	</thead>
 	<tbody>
 	{{each list as item i}}
 		<tr data-id="{{item.id}}">
 			<td><a class="volume_name" href="javascript:void(0)">{{item.name}}</a></td>
-			<td>{{item.size}}</td>
+			<td>{{item.adjust_type}}</td>
+			<td>{{item.adjust_value}}</td>
+			<td>{{item.cool_time}}</td>
 			<td>
- 			{{if item.status == 'in-use'}}
- 				<span class="text-success">使用中</span>
- 				{{else if item.status == 'available'}}
- 					<span class="text-info">可用</span>
- 						{{else}}
- 							<span class="text-danger">已删除</span>
- 			{{/if}}
- 			</td>
-			<td>2015-04-24 17:14:57</td>
- 			<td>{{item.description}}</td>
-			<td>
-			<a class="btn-opt" data-toggle="tooltip" title="删除" ><i class="fa fa-trash-o"></i></a>
-			<a class="btn-opt" data-toggle="tooltip" title="备份"><i class="fa fa-files-o"></i></a>
+			<a class="btn-opt" data-toggle="tooltip" title="执行"><i class="glyphicon glyphicon-play"></i></a>
+			<a class="btn-opt" data-toggle="tooltip" title="修改"><i class="glyphicon glyphicon-edit"></i></a>
+			<a class="btn-opt" data-toggle="tooltip" title="删除" ><i class="glyphicon glyphicon-trash"></i></a>
 			</td>
 		</tr>
  			{{/each}}

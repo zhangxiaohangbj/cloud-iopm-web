@@ -54,16 +54,12 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 			        	"defaultContent":"<label><input type='checkbox'></label>"
 			        },
 			        {"data": "name"},
-			        {"data": "type"},
-			        {"data": "created_at"},
 			        {"data": "vdc_name"},
-			        {"data": "vdc_name"},
+			        {"data": "image-name"},
+			        {"data": "master_flavor"},
+			        {"data": "flavor"},
 			        {
-			        	"defaultContent":'<a class="btn-edit" data-toggle="tooltip" title="入口程序" href="javascript:void(0)" data-act="stop">任务入口</a>'
-							+'<a class="btn-edit" data-toggle="tooltip" title="依赖类库" href="javascript:void(0)" style="margin: 0 8px;">依赖类库</a>'
-							+'<a class="btn-edit" data-toggle="tooltip" title="任务实例" href="javascript:void(0)" style="margin: 0 8px;">任务实例</a>'
-							+'<a class="btn-edit" data-toggle="tooltip" title="任务实例" href="javascript:void(0)" style="margin: 0 8px;">运行任务</a>'
-							+'<a class="btn-del" data-toggle="tooltip" title="删除" href="javascript:void(0)" style="margin: 0 8px;"><i class="fa fa-trash-o fa-fw"></i></a>'
+			        	"defaultContent":'<a class="btn-del" data-toggle="tooltip" title="删除" href="javascript:void(0)" style="margin: 0 8px;"><i class="fa fa-trash-o fa-fw"></i></a>'
 			        }
 		      ],
 		      /*
@@ -85,7 +81,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 		    },
 			function($tar){
 			$tar.prev().find('.left-col:first').append(
-					'<span class="btn btn-add">创建模板</span>'
+					'<span class="btn btn-add">新建</span>'
 				);
 			//这个必须添加，不然就是隐藏的效果，看不到页面
 			Common.$pageContent.removeClass("loading");

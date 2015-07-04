@@ -1232,13 +1232,9 @@ define('commons/main',
         		if(selector instanceof jQuery){
         			selector = selector.selector;
         		}
-        		$(document).off(selector);
+        		$(document).off(type,selector);
         		$(document).on(type,selector,cb);
         	}
-        },
-        //处理搜索参数
-        handleTableParam: function(){
-        	
         }
     };
 });
