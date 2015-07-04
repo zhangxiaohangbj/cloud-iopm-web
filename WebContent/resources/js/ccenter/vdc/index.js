@@ -115,7 +115,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 		    },
 		    function($tar){
 			$tar.prev().find('.left-col:first').append(
-					'<span class="btn btn-add">创建</span>'
+					'<span class="btn btn-add">创建虚拟数据中心</span>'
 				);
 			Common.$pageContent.removeClass("loading");
 		});
@@ -397,10 +397,28 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 						else window.event.cancelBubble = true;
 						var keyCode = myEvent.keyCode;
 						if((keyCode >= 48 && keyCode <= 105) || keyCode == 8 || keyCode == 46 || keyCode==32){
+							userIndex = 1;
 							var test = $(this).val();
-							Common.xhr.ajax('/identity/v2.0/users/page/'+1 + '/'+20 + "?loginName=" + test,function(userList){
+							Common.xhr.ajax('/identity/v2.0/users/page/'+userIndex + '/'+userSize + "?loginName=" + test,function(userList){
+								debugger;
 								var list = userList.result;
-								var count = userList.totalCount;
+								var userTotalSize = userList.totalCount;	
+								if(list && list.length > 0){
+									var obj = $("#vdc-users").find(".list-group-all");
+									obj.empty();
+									var userArray = [];
+									for(var key in list){
+										var user = list[key];
+										userArray.push('<ul class="nav nav-pills btn-group btn-group-sm list-group-item">');
+										userArray.push('<li class="member adjust" data-id="',user.id,'" data-name="',user.name,'">');
+										userArray.push('<span class="display_name">',user.name,'</span></li>');
+										userArray.push('<li class="pull-right adjust icon"><i class="fa fa-plus-circle"></i></li></ul>')
+									}
+									if(userTotalSize > userSize * userIndex){
+										userArray.push('<a class="loadmore" href="javascript:void(0)">加载更多...</a>');
+									}
+									obj.append(userArray.join(""));
+								}								
 							});
 						}
 						
@@ -871,7 +889,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 	    	    	            },
 	    	    	            onhide : function(){
 	    	    	            	userIndex = 1;
-	    	    	            	Common.router.route();//重新载入
+	    	    	            	//Common.router.route();//重新载入
 	    	    	            }
 	    	    	        });
 	        			};

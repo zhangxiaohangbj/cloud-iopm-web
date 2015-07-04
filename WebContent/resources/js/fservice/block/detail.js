@@ -22,7 +22,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 	            mount_path: '/opt/vdc',
 	            create_time: '2015-04-24 17:14:57'
     	};
-    	Common.render(true,'tpls/fservice/block/volume/detail.html',tmpDetailData,function(html){
+    	Common.render(true,'tpls/aservice/container/bay/detail.html',tmpDetailData,function(html){
     		bindEvent();
     	});
 	};

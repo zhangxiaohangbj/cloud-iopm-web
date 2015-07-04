@@ -1,0 +1,28 @@
+[
+        {
+            "name" : "定时扩展伸缩组任务",
+            "type": "timeing",
+            "timeing":{
+            	"period":"每周一",
+            	"start_time":"2015-07-04 23:00:00"
+            },
+            "rule":{
+            	"adjust_type":"增加",
+            	"adjust_value":"1"
+            },
+            "cooltime":"300"
+        },
+        {
+            "name" : "报警扩展伸缩组任务",
+            "type": "alarm",
+            "alarm":{
+            	"period":"300",
+            	"condition":"CPUUtilization >= 80"
+            },
+            "rule":{
+            	"adjust_type":"增加",
+            	"adjust_value":"1"
+            },
+            "cooltime":"300"
+        }
+]

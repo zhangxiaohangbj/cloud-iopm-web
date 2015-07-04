@@ -1,0 +1,16 @@
+[
+        {
+            "name" : "增加云主机",
+            "id": "di91jd9d29f9f29",
+            "adjust_type":"增加",
+            "adjust_value": "1",
+            "cool_time": "300"
+        },
+        {
+            "name" : "减少云主机",
+            "id": "di91jd9d29f9f29",
+            "adjust_type":"减少",
+            "adjust_value": "1",
+            "cool_time": "300"
+        }
+]

@@ -1,0 +1,124 @@
+<div class="well well-light"> 
+       <div >
+            <div class="col-sm-6 col-md-6 col-lg-6">
+                <h1 class="txt-color-blueDark">
+                    <div>
+                        <i class="fa fa-fw fa-file-o"></i>
+                        <a href="javascript:void(0);" class="profile-link" ng-click="repoList()"><span ng-bind="detail.repo_ns" class="ng-binding">library</span></a>
+                        &gt; <span ng-bind="detail.repo_name" class="ng-binding">nginx</span> <span class="fa fa-unlock"></span>
+                        &nbsp;&nbsp;<!-- ngIf: detail.is_automated -->
+                    </div>
+                </h1>
+            </div>
+            
+       </div>
+       
+       <div class=" spacing-mini detail-describe">
+            <div class="col-xs-11 ng-binding" ng-bind="detail.description">Official build of Nginx.
+			</div>
+       </div>
+       <div class="spacing-large">
+            <div id="rightnav">
+                <div class="rightnav-box">
+                    <div class="spacing-mini">
+                        <div class="col-xs-2">属性</div>
+                        <div class="col-xs-3">
+                            <span ng-bind="detail.is_public ? '公共的' : '私有的'" class="ng-binding">公共的</span>
+                        </div>
+                    </div>
+                    <!-- ngIf: detail.is_automated -->
+                    <div class=" spacing-mini">
+                        <div class="col-xs-2">创建时间</div>
+                        <div class="col-xs-3"><span ng-bind="detail.created_at|date:timestampFormat" class="ng-binding">2015-05-24 09:31:06</span></div>
+                        <div class="col-xs-2">更新时间</div>
+                        <div class="col-xs-3"><span ng-bind="detail.updated_at|date:timestampFormat" class="ng-binding">2015-07-01 10:39:06</span></div>
+                    </div>
+                    
+                    <div class=" spacing-mini">
+                        <div class="col-xs-2"><a href="javascript:void(0);" ng-click="imageLaunch(detail.repo_path)">创建服务</a></div>
+                        <!-- ngIf: !is_org_namespace&&!detail.is_repo_starred --><div ng-if="!is_org_namespace&amp;&amp;!detail.is_repo_starred" class="ng-scope">
+                            <div class="col-xs-3">
+                                <a href="javascript:void(0);" ng-click="repoStar(detail.repo_ns, detail.repo_name)">
+                                    收藏
+                                </a>
+                            </div>
+                        </div>
+                        
+                    </div>
+                    
+                </div>
+            </div>
+        </div>
+        <div class=" detail-spacing-base">
+                <div justified="true" class="ng-isolate-scope">
+ 
+  <div class="tab-content">
+   <div class="tab-pane ng-scope active" ng-repeat="tab in tabs" ng-class="{active: tab.active}" tab-content-transclude="tab">
+    
+    <br><br><br><br><br><br><br>
+    <div class="tab-content ng-scope">
+        <div class="top-spacing-base word-break repo-info ng-binding" ng-bind-html="detail.full_description">
+        
+        <p>This document is from <a href="https://github.com/docker-library/docs/tree/master/nginx">https://github.com/docker-library/docs/tree/master/nginx</a>. You can pull the images in this doc by using:</p>
+<pre><code>docker pull index.alauda.cn/library/nginx:tags
+</code></pre><h1>Supported tags and respective <code>Dockerfile</code> links</h1>
+<ul>
+<li><a href="https://github.com/nginxinc/docker-nginx/blob/6ef443bc3e04a584955cbe960c70fc2e8b7a0156/Dockerfile"><code>latest</code>, <code>1</code>, <code>1.9</code>, <code>1.9.1</code> (<em>Dockerfile</em>)</a></li>
+</ul>
+<p>For more information about this image and its history, please see the <a href="https://github.com/docker-library/official-images/blob/master/library/nginx">relevant manifest file (<code>library/nginx</code>)</a> in the <a href="https://github.com/docker-library/official-images"><code>docker-library/official-images</code> GitHub repo</a>.</p>
+<h1>What is Nginx?</h1>
+<p>Nginx (pronounced "engine-x") is an open source reverse proxy server for HTTP, HTTPS, SMTP, POP3, and IMAP protocols, as well as a load balancer, HTTP cache, and a web server (origin server). The nginx project started with a strong focus on high concurrency, high performance and low memory usage. It is licensed under the 2-clause BSD-like license and it runs on Linux, BSD variants, Mac OS X, Solaris, AIX, HP-UX, as well as on other *nix flavors. It also has a proof of concept port for Microsoft Window..</p>
+<blockquote>
+<p><a href="https://en.wikipedia.org/wiki/Nginx">wikipedia.org/wiki/Nginx</a></p>
+</blockquote>
+<p><img src="https://raw.githubusercontent.com/docker-library/docs/master/nginx/logo.png" alt="logo"></p>
+<h1>How to use this image</h1>
+<h2>hosting some simple static content</h2>
+<pre><code>docker run --name some-nginx -v /some/content:/usr/share/nginx/html:ro -d nginx
+</code></pre><p>Alternatively, a simple <code>Dockerfile</code> can be used to generate a new image that includes the necessary content (which is a much cleaner solution than the bind mount above):</p>
+<pre><code>FROM nginx
+COPY static-html-directory /usr/share/nginx/html
+</code></pre><p>Place this file in the same directory as your directory of content ("static-html-directory"), run <code>docker build -t some-content-nginx .</code>, then start your container:</p>
+<pre><code>docker run --name some-nginx -d some-content-nginx
+</code></pre><h2>exposing the port</h2>
+<pre><code>docker run --name some-nginx -d -p 8080:80 some-content-nginx
+</code></pre><p>Then you can hit <code>http://localhost:8080</code> or <code>http://host-ip:8080</code> in your browser.</p>
+<h2>complex configuration</h2>
+<pre><code>docker run --name some-nginx -v /some/nginx.conf:/etc/nginx/nginx.conf:ro -d nginx
+</code></pre><p>For information on the syntax of the Nginx configuration files, see <a href="http://nginx.org/en/docs/">the official documentation</a> (specifically the <a href="http://nginx.org/en/docs/beginners_guide.html#conf_structure">Beginner's Guide</a>).</p>
+<p>Be sure to include <code>daemon off;</code> in your custom configuration to ensure that Nginx stays in the foreground so that Docker can track the process properly (otherwise your container will stop immediately after starting)!</p>
+<p>If you wish to adapt the default configuration, use something like the following to copy it from a running Nginx container:</p>
+<pre><code>docker cp some-nginx:/etc/nginx/nginx.conf /some/nginx.conf
+</code></pre><p>As above, this can also be accomplished more cleanly using a simple <code>Dockerfile</code>:</p>
+<pre><code>FROM nginx
+COPY nginx.conf /etc/nginx/nginx.conf
+</code></pre><p>Then, build with <code>docker build -t some-custom-nginx .</code> and run:</p>
+<pre><code>docker run --name some-nginx -d some-custom-nginx
+</code></pre><h1>Supported Docker versions</h1>
+<p>This image is officially supported on Docker version 1.6.2.</p>
+<p>Support for older versions (down to 1.0) is provided on a best-effort basis.</p>
+<h1>User Feedback</h1>
+<h2>Documentation</h2>
+<p>Documentation for this image is stored in the <a href="https://github.com/docker-library/docs/tree/master/nginx"><code>nginx/</code> directory</a> of the <a href="https://github.com/docker-library/docs"><code>docker-library/docs</code> GitHub repo</a>. Be sure to familiarize yourself with the <a href="https://github.com/docker-library/docs/blob/master/README.md">repository's <code>README.md</code> file</a> before attempting a pull request.</p>
+<h2>Issues</h2>
+<p>If you have any problems with or questions about this image, please contact us through a <a href="https://github.com/nginxinc/docker-nginx/issues">GitHub issue</a>.</p>
+<p>You can also reach many of the official image maintainers via the <code>#docker-library</code> IRC channel on <a href="https://freenode.net">Freenode</a>.</p>
+<h2>Contributing</h2>
+<p>You are invited to contribute new features, fixes, or updates, large or small; we are always thrilled to receive pull requests, and do our best to process them as fast as we can.</p>
+<p>Before you start to code, we recommend discussing your plans through a <a href="https://github.com/nginxinc/docker-nginx/issues">GitHub issue</a>, especially for more ambitious contributions. This gives other contributors a chance to point you in the right direction, give you feedback on your design, and help you find out if someone else is working on the same thing.</p>
+</div>
+     
+    </div>
+</div><div class="tab-pane ng-scope" ng-repeat="tab in tabs" tab-content-transclude="tab">
+    
+    
+    <div class="repo-tab top-spacing-base ng-scope">
+       
+    </div>
+</div>
+  </div>
+</div>
+                </div>
+               
+    
+</div>

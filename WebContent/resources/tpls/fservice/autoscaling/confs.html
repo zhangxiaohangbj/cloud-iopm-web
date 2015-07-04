@@ -19,15 +19,14 @@
 			<td>{{item.vmType}}</td>
 			<td>{{item.image}}</td>
 			<td>
- 			{{if item.status == 'valid'}}
- 				<span class="text-success">可用</span>
+ 			{{if item.status == 'active'}}
+ 				<span class="text-success">生效</span>
  			{{else}}
  				<span class="text-danger">失效</span>
  			{{/if}}
  			</td>
 			<td>
-			<a class="btn-opt" data-toggle="tooltip" title="删除" ><i class="fa fa-trash-o"></i></a>
-			<a class="btn-opt" data-toggle="tooltip" title="备份"><i class="fa fa-files-o"></i></a>
+			<a class="btn-opt" data-toggle="tooltip" title="删除" ><i class="glyphicon glyphicon-trash"></i></a>
 			</td>
 		</tr>
  			{{/each}}
