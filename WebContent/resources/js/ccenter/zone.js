@@ -285,6 +285,7 @@ define(['Common','bs/modal','jq/form/wizard','jq/form/validator-bs3','bs/tooltip
                         }
                     });
                     Common.xhr.postJSON('/v2/tenant_id/os-availability-zone',currentZone,function(data){
+                       debugger
                         if(data && data.error !=true){
                             wizard._submitting = false;
                             wizard.updateProgressBar(100);
@@ -305,7 +306,7 @@ define(['Common','bs/modal','jq/form/wizard','jq/form/validator-bs3','bs/tooltip
                 var selectData2= {"data":renderData,"availableZone":zone};
                 Common.render('tpls/ccenter/zone/edit.html',selectData2,function(html){
                     Modal.show({
-                        title: '编辑可用区域',
+                        title: '编辑可用分区',
                         message: html,
                         nl2br: false,
                         buttons: [{
@@ -320,8 +321,6 @@ define(['Common','bs/modal','jq/form/wizard','jq/form/validator-bs3','bs/tooltip
                                     var azone ={
                                         "id":zone.id,
                                         "name": $("#edit-zone-name").val(),
-                                        "virtualEnvId": $('#edit-env option:selected').val(),
-                                        "regionId":  $('#edit-region option:selected').val(),
                                         "description": $("#edit-zone-description").val()
                                     }
                                     Common.xhr.putJSON('/v2/tenant_id/os-availability-zone',azone,function(data){
@@ -366,15 +365,6 @@ define(['Common','bs/modal','jq/form/wizard','jq/form/validator-bs3','bs/tooltip
                                     Modal.success('保存成功');
                                     setTimeout(function(){Modal.closeAll()},2000);
                                     Common.router.route();
-                                    //Common.xhr.putJSON('/v2/virtual-env',envData,function(data){
-                                    //    if(data){
-                                    //        Modal.success('保存成功');
-                                    //        setTimeout(function(){Modal.closeAll()},2000);
-                                    //        Common.router.route();
-                                    //    }else{
-                                    //        Modal.warning ('保存失败')
-                                    //    }
-                                    //})
                                 }
                             }],
                         onshown : function(){

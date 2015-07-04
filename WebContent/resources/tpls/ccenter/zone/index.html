@@ -12,7 +12,7 @@
             <table class="table table-primary table-striped" id="ZoneTable">
                 <thead>
                 <tr>
-                    <th class="c1">选择</th>
+                    <th class="c1"> <label><input type="checkbox" class="selectAll"></label></th>
                     <th class="c2">可用分区名称</th>
                     <th class="c2">所属虚拟化环境</th>
                     <th class="c2">区域</th>
@@ -23,7 +23,7 @@
                 <tbody>
                 {{each zone as item i}}
                 <tr>
-                    <td><label><input type="radio"></label></td>
+                    <td><label><input type="checkbox"></label></td>
                     <td><a class="env-name" href="#ccenter/zone/detail/{{item.id}}">{{item.name}}</a></td>
                     <td>{{item.virtualEnvName}}</td>
                     <td>{{item.regionName}}</td>
