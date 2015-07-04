@@ -66,15 +66,11 @@
 						</div>
 						<p><b>安全组</b></p>
 						<hr>
-						{{each server.securityGroupRulesStr as item i}}
+						{{each server.security_groups as item i}}
 						<div class="row">
-						    {{each item as list key}}
-							<label class="control-label col-sm-3">{{key}}:</label>
-							    <div class="col-sm-7 col-sm">
-								{{each list as str j}}
-								允许  {{str}}<br>
-								{{/each}}
-								</div>
+							<label class="control-label col-sm-3">{{item.name}}:</label>
+							{{each item.security_group_rules as item_rules j}}
+							<div class="col-sm-7 col-sm">允许</div>
 							{{/each}}
 						</div>
 						{{/each}}
