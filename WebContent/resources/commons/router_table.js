@@ -19,7 +19,7 @@ define('commons/router_table', function() {
         '^#fservice/snapshot/detail/(.*)$' :"js/fservice/snapshot/detail",
         '^#ccenter/vdc/usage/(.*)$' :"js/ccenter/vdc/usage",
         '^#fservice/vm/detail/(.*)$' :"js/fservice/vm/detail",
-        '^#fservice/autoscaling/detail/(.*)$' :"js/fservice/autoscaling/detail",
+        '^#fservice/autoscaling/detail' :"js/fservice/autoscaling/detail",
         '^#fservice/security/keypair/detail/(.*)$' :"js/fservice/security/keypair/detail",
         '^#aservice/cae/storage/(.*)$' :"js/aservice/cae/storage",
         '^#aservice/cae/appenv/detail' :"js/aservice/cae/appenv/detail",

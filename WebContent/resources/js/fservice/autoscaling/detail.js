@@ -56,6 +56,13 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 			}else if('rule' == data){
 				Common.render(false,'tpls/fservice/autoscaling/rules.html','/resources/data/rules.txt',function(html){
 					$tab.empty().append(html);
+					Common.initDataTable($('#ruleTable'),
+						    function($tar){
+							$tar.prev().find('.left-col:first').append(
+									'<span class="btn btn-add">新 建 </span>'
+								);
+							Common.$pageContent.removeClass("loading");
+					});					
 				});	
 			}else if('activity' == data){
 				Common.render(false,'tpls/fservice/autoscaling/activities.html','/resources/data/activities.txt',function(html){
