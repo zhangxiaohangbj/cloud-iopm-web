@@ -41,32 +41,23 @@ define('commons/pub_menu', function() {
             items:[
                 {
                     text: '<i class="fa fa-th-large"></i>设备管理<i class="fa icon-arrow"></i>',
-                    link:'#device',
                     items: [
                         {
                             text: '<i class="fa fa-dot fa-1"></i>服务器',
-                            link: '#vdc'
+                            link: '#'
                         },
                         {
                             text: '<i class="fa fa-dot fa-1"></i>存储设备',
-                            link: '#vdc'
+                            link: '#'
                         },
                         {
-                            text: '<i class="fa fa-dot fa-1"></i>交换机',
-                            link: '#vdc'
+                            text: '<i class="fa fa-dot fa-1"></i>网络设备',
+                            link: '#'
                         },
                         {
-                            text: '<i class="fa fa-dot fa-1"></i>防火墙',
-                            link: '#vdc'
-                        },
-                        {
-                            text: '<i class="fa fa-dot fa-1"></i>负载均衡设备',
-                            link: '#vdc'
-                        },
-                        {
-                            text: '<i class="fa fa-dot fa-1"></i>路由器',
-                            link: '#vdc'
-                        },
+                            text: '<i class="fa fa-dot fa-1"></i>安全设备',
+                            link: '#'
+                        }
                     ]
                 },
                 {
