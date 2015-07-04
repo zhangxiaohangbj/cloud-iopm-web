@@ -21,6 +21,7 @@ define('commons/router_table', function() {
         '^#aservice/cae/version/(.*)$' :"js/aservice/cae/version",
         '^#aservice/cae/env/(.*)$' :"js/aservice/cae/env",
         '^#aservice/cae/storage/(.*)$' :"js/aservice/cae/storage",
-        '^#aservice/container/docker-image/detail/(.*)$' :"js/aservice/container/docker-image/detail"
+        '^#aservice/container/docker-image/detail/(.*)$' :"js/aservice/container/docker-image/detail",
+        '^#aservice/container/bay/detail/(.*)$' :"js/aservice/container/bay/detail"
     };
 });
