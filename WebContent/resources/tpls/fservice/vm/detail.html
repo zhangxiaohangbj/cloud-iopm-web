@@ -44,7 +44,7 @@
 						</div>
 						<div class="row">
 							<label class="control-label col-sm-3">内存：</label>
-							<div class="col-sm-7 col-sm">{{server.flavor.memoryMb}}MB</div>
+							<div class="col-sm-7 col-sm">{{server.flavor.ram}}MB</div>
 						</div>
 						<div class="row">
 							<label class="control-label col-sm-3">虚拟内核数：</label>
@@ -52,7 +52,7 @@
 						</div>
 						<div class="row">
 							<label class="control-label col-sm-3">磁盘：</label>
-							<div class="col-sm-7 col-sm">{{server.flavor.rootGb}}GB</div>
+							<div class="col-sm-7 col-sm">{{server.flavor.disk}}GB</div>
 						</div>
 						<p><b>IP</b></p>
 						<hr>
@@ -66,11 +66,16 @@
 						</div>
 						<p><b>安全组</b></p>
 						<hr>
-						{{each server.security_groups as item i}}
+						{{each server.securityGroupRulesStr as item i}}
 						<div class="row">
-							<label class="control-label col-sm-3">{{item.name}}:</label>
-							{{each item.security_group_rules as item_rules j}}
-							<div class="col-sm-7 col-sm">允许</div>
+						  {{each item as rules j}}
+							<label class="control-label col-sm-3">{{j}}:</label>
+							
+							<div class="col-sm-7 col-sm">
+                            {{each rules as rule k}}
+                                {{rule}}<br>
+                            {{/each}}
+                            </div>
 							{{/each}}
 						</div>
 						{{/each}}
