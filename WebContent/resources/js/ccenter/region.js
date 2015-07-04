@@ -102,7 +102,19 @@ define(['Common','bs/modal','jq/form/wizard','jq/form/validator-bs3','bs/tooltip
         });
         $("[data-toggle='tooltip']").tooltip();
 
-
+        //icheck
+        $('input[type="checkbox"]').iCheck({
+            checkboxClass: "icheckbox-info",
+            radioClass: "iradio-info"
+        }).on('ifChecked',function(e){
+            if(e.target.className == 'selectAll'){
+                $('.table-primary').find('input[type=checkbox]').iCheck('check');
+            }
+        }).on('ifUnchecked',function(e){
+            if(e.target.className == 'selectAll'){
+                $('.table-primary').find('input[type=checkbox]').iCheck('uncheck');
+            }
+        });
 
 
         //创建按钮
