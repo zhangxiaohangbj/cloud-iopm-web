@@ -293,11 +293,11 @@ define('commons/pub_menu', function() {
                     items: [
                         {
                             text: '<i class="fa fa-dot fa-1"></i>消息队列管理',
-                            link: '#mq/app'
+                            link: '#mq/queue'
                         },
                         {
-                            text: '<i class="fa fa-dot fa-1"></i>使用者管理',
-                            link: '#mq/image'
+                            text: '<i class="fa fa-dot fa-1"></i>规格模板管理',
+                            link: '#mq/template'
                         }
                     ]
                 },
@@ -309,8 +309,8 @@ define('commons/pub_menu', function() {
                             link: '#cache/instance'
                         },
                         {
-                            text: '<i class="fa fa-dot fa-1"></i>缓存介质管理',
-                            link: '#cache/'
+                            text: '<i class="fa fa-dot fa-1"></i>缓存规格管理',
+                            link: '#cache/type'
                         }
                     ]
                 }
@@ -359,6 +359,10 @@ define('commons/pub_menu', function() {
                         {
                             text: '<i class="fa fa-dot fa-1"></i>任务管理',
                             link: '#stream/task'
+                        },
+                        {
+                            text: '<i class="fa fa-dot fa-1"></i>规格模板管理',
+                            link: '#stream/template'
                         }
                     ]
                 },
@@ -367,11 +371,11 @@ define('commons/pub_menu', function() {
                     items: [
                         {
                             text: '<i class="fa fa-dot fa-1"></i>容器管理',
-                            link: '#db'
+                            link: '#oss/container'
                         },
                         {
-                            text: '<i class="fa fa-dot fa-1"></i>主机管理',
-                            link: '#cache'
+                            text: '<i class="fa fa-dot fa-1"></i>环境管理',
+                            link: '#oss/evn'
                         }
                     ]
                 }
