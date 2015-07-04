@@ -1,0 +1,23 @@
+{
+	"totalCount":3,
+    "result": [
+        {
+        	"id": "centos",
+            "name": "cloud/centos",
+            "description": "Centos image with SSH access",
+            "version": "7.0"
+        },
+        {
+        	"id": "nginx",
+            "name": "cloud/nginx",
+            "description": "官方版本的nginx镜像。目前最新版本为1.7.12",
+            "version": "2.0"
+        },
+        {
+        	"id": "mysql",
+            "name": "mysql",
+            "description": "Mysql 镜像。部署后，访问端口为：3306",
+            "version": "5.5"
+        }
+    ]
+}

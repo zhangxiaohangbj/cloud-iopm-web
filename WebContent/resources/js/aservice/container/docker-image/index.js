@@ -3,7 +3,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 	var init = function(){
 		Common.$pageContent.addClass("loading");
 		//先获取数据，进行加工后再去render
-		Common.render(true,'tpls/aservice/container/baymodel/index.html',function(){
+		Common.render(true,'tpls/aservice/container/image/index.html',function(){
 			bindEvent();
 		});
 	};
@@ -13,7 +13,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 		      "processing": true,  //加载效果，默认false
 		      "serverSide": true,  //页面在加载时就请求后台，以及每次对 datatable 进行操作时也是请求后台
 		      "ordering": false,   //禁用所有排序
-		      "sAjaxSource":"resources/data/aservice/baymodel.txt?", //ajax源，后端提供的分页接口
+		      "sAjaxSource":"resources/data/aservice/image.txt?", //ajax源，后端提供的分页接口
 		      "fnServerData": function( sSource, aoData, fnCallback ) {
 		    	    $.ajax( {   
 		    	        "url": sSource, 
@@ -53,11 +53,11 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 			        	"orderable": false,
 			        	"defaultContent":"<label><input type='checkbox'></label>"
 			        },
-			        {"data": "name"},
-			        {"data": "vdc_name"},
-			        {"data": "image-name"},
-			        {"data": "master_flavor"},
-			        {"data": "flavor"},
+			        {
+			        	"data": "name"
+			        },
+			        {"data": "version"},
+			        {"data": "description"},
 			        {
 			        	"defaultContent":'<a class="btn-del" data-toggle="tooltip" title="删除" href="javascript:void(0)" style="margin: 0 8px;"><i class="fa fa-trash-o fa-fw"></i></a>'
 			        }
@@ -70,6 +70,12 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 		       *  属性列表： data，之前属性定义中对应的属性值； type，未知；full,全部数据值可以通过属性列名获取 
 		       * */
 		      "columnDefs": [
+				{
+				    "targets": [1],
+				    "render": function(data, type, full) {
+				      return '<a class="volume_name" href="#aservice/container/docker-image/detail/'+full.id+'">'+full.name+"</a>";
+				    }
+				}
 				/*	{
 					    "targets": [4],
 					    "render": function(data, type, full) {
