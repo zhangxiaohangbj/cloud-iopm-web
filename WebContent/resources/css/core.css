@@ -3,6 +3,14 @@ body{
 	font-family:"Microsoft YaHei","微软雅黑","Helvetica Neue", Helvetica, Arial, sans-serif;
 	overflow: hidden;
 }
+a.link-more, .link-more a,
+a.link-more:hover, .link-more a:hover {
+	color: #37b3e0;
+	text-decoration: none;
+}
+a.link-more:hover, .link-more a:hover {
+	text-decoration: underline;
+}
 .loader {
 	width: 32px;
 	height: 32px;

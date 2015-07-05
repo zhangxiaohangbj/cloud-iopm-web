@@ -505,16 +505,22 @@ define('commons/main',
                                 return pageIndex;
                             },
                             pageIndexCur = toPageIndex(that.hash);
-                        var pageIndex = that.$body.attr('page-index');
+                        var pageIndex = that.$body.attr('page-index'),
+                            pageCssPrefix = 'page_',
+                            pageCss = pageCssPrefix + pageIndexCur,
+                            pageCssOld = pageIndex ? pageCssPrefix + pageIndex : '';
                         if(pageIndex) {
                             if(pageIndexCur !== pageIndex) {
                                 that.$body.attr('page-index', pageIndexCur);
-                                that.$body.removeClass('page-'+pageIndex).addClass('page-'+pageIndexCur);
+                                pageCssOld = pageCssPrefix + pageIndex;
+                                that.$body.removeClass(pageCssOld).addClass(pageCss);
                             }
                         } else {
                             that.$body.attr('page-index', pageIndexCur);
-                            that.$body.addClass('page-'+pageIndexCur);
+                            that.$body.addClass(pageCss);
                         }
+                        // resize
+                        that.resize();
                         // reset SideBar
                         that.resetSideBar();
                         Modal.loading('remove');
@@ -544,6 +550,7 @@ define('commons/main',
                     }, function(e) {
                         that.resolve();
                         that.clearError();
+                        that.$pageContent.empty();
                         if(e.requireType) {
                             if(e.requireMap) {
                                 that.error('Script error for ' + e.requireMap.id + ': ' + e.message);
