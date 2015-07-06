@@ -5,8 +5,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 		var hashArr = Common.hash.split('/');
 	    var id = hashArr[hashArr.length-1];
 	    var current_vdc_id = Common.cookies.getVdcId();
-	    Common.render(true,"tpls/fservice/vm/detail.html","/compute/v2/"+current_vdc_id+"/servers/"+id,function(a,b){
-	    	alert(JSON.stringify(b));
+	    Common.render(true,"tpls/fservice/vm/detail.html","/compute/v2/"+current_vdc_id+"/servers/"+id,function(){
 	    	Common.$pageContent.removeClass("loading");
 	    });
     	

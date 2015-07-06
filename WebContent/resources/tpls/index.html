@@ -5,12 +5,12 @@
             <ul class="resources-list">
                 <li class="resources-region">
                     <div class="resources-icon"><i></i></div>
-                    <em class="resources-num">237291</em>
+                    <em class="resources-num">3</em>
                     <label class="resources-label">资源区域</label>
                 </li>
                 <li class="resources-env">
                     <div class="resources-icon"><i></i></div>
-                    <em class="resources-num">7826</em>
+                    <em class="resources-num">10</em>
                     <label class="resources-label">虚拟化环境</label>
                 </li>
                 <li class="resources-zone">
@@ -20,7 +20,7 @@
                 </li>
                 <li class="resources-user">
                     <div class="resources-icon"><i></i></div>
-                    <em class="resources-num">6</em>
+                    <em class="resources-num">52</em>
                     <label class="resources-label">用户</label>
                 </li>
             </ul>
@@ -36,175 +36,177 @@
             </div>
         </div>
     </div>
-    <div class="col-2">
-        <h3 class="page-title">云服务</h3>
-        <div class="content-box">
-            <div id="services-tab" class="services-tab">
-                <ul class="nav nav-tabs" role="tablist">
-                    <li role="presentation" class="active"><a href="#base" aria-controls="base" role="tab" data-toggle="tab">基础服务</a></li>
-                    <li role="presentation"><a href="#bigdata" aria-controls="bigdata" role="tab" data-toggle="tab">大数据服务</a></li>
-                    <li role="presentation"><a href="#app" aria-controls="app" role="tab" data-toggle="tab">应用服务</a></li>
+    <div class="col-2-3">
+        <div class="col-3">
+            <h3 class="page-title">告警与监控</h3>
+            <div class="content-box">
+                <div class="charts-box">
+                    <div id="chart-monitor"></div>
+                    <div class="row chart-monitor-legend">
+                        <dl class="col-sm-6 legend-4">
+                            <dt>紧急</dt>
+                            <dd>50</dd>
+                        </dl>
+                        <dl class="col-sm-6 legend-3">
+                            <dt>重要</dt>
+                            <dd>23</dd>
+                        </dl>
+                        <dl class="col-sm-6 legend-2">
+                            <dt>次要</dt>
+                            <dd>6</dd>
+                        </dl>
+                        <dl class="col-sm-6 legend-1">
+                            <dt>一般</dt>
+                            <dd>15</dd>
+                        </dl>
+                    </div>
+                </div>
+                <ul class="monitor-list">
+                    <li>
+                        <h4 class="monitor-title">WSFAAFA文件告警</h4>
+                        <p class="monitor-text">已经开始处理SD-WSFAAFADA运维早八点消息通知页面，现在是单独页面！<a class="link-more" href="javascript:;">[查看]</a></p>
+                    </li>
+                    <li>
+                        <h4 class="monitor-title">资源状态告警</h4>
+                        <p class="monitor-text">已经开始关闭SD-WSFAAFADA，千度户籍变迁功能的修改<a class="link-more" href="javascript:;">[查看]</a></p>
+                    </li>
+                    <li>
+                        <h4 class="monitor-title">资源容量统计</h4>
+                        <p class="monitor-text">已经开始处理SD-WSFAAFADA运维早八点消息通知页面，现在是单独页面！<a class="link-more" href="javascript:;">[查看]</a></p>
+                    </li>
+                    <li>
+                        <h4 class="monitor-title">云主机的监控告警</h4>
+                        <p class="monitor-text">修改新常口户号信息接口，返回值增加来自地和迁出地<a class="link-more" href="javascript:;">[查看]</a></p>
+                    </li>
                 </ul>
-                <div class="tab-content">
-                    <div role="tabpanel" class="tab-pane active" id="base"></div>
-                    <div role="tabpanel" class="tab-pane" id="bigdata"></div>
-                    <div role="tabpanel" class="tab-pane" id="app"></div>
-                </div>
             </div>
-            <ul class="services-list">
-                <li class="services-host">
-                    <i class="services-icon"></i>
-                    <div class="services-box">
-                        <h4 class="services-title">云主机</h4>
-                        <div class="row">
-                            <dl class="col-sm-3">
-                                <dt>实例数：</dt>
-                                <dd>5</dd>
-                            </dl>
-                            <dl class="col-sm-3">
-                                <dt>用户数：</dt>
-                                <dd>30</dd>
-                            </dl>
-                            <dl class="col-sm-3">
-                                <dt>云主机ECS：</dt>
-                                <dd>45</dd>
-                            </dl>
-                            <dl class="col-sm-3">
-                                <dt>云存储OSS：</dt>
-                                <dd>60</dd>
-                            </dl>
-                            <dl class="col-sm-3">
-                                <dt>存储：</dt>
-                                <dd>128GB</dd>
-                            </dl>
-                            <dl class="col-sm-3">
-                                <dt>CPU：</dt>
-                                <dd>24</dd>
-                            </dl>
-                            <dl class="col-sm-3">
-                                <dt>内存：</dt>
-                                <dd>256GB</dd>
-                            </dl>
-                        </div>
-                    </div>
-                </li>
-                <li class="services-storage">
-                    <i class="services-icon"></i>
-                    <div class="services-box">
-                        <h4 class="services-title">云存储</h4>
-                        <div class="row">
-                            <dl class="col-sm-3">
-                                <dt>实例数：</dt>
-                                <dd>5</dd>
-                            </dl>
-                            <dl class="col-sm-3">
-                                <dt>用户数：</dt>
-                                <dd>30</dd>
-                            </dl>
-                            <dl class="col-sm-3">
-                                <dt>云主机ECS：</dt>
-                                <dd>45</dd>
-                            </dl>
-                            <dl class="col-sm-3">
-                                <dt>云存储OSS：</dt>
-                                <dd>60</dd>
-                            </dl>
-                            <dl class="col-sm-3">
-                                <dt>存储：</dt>
-                                <dd>128GB</dd>
-                            </dl>
-                            <dl class="col-sm-3">
-                                <dt>CPU：</dt>
-                                <dd>24</dd>
-                            </dl>
-                            <dl class="col-sm-3">
-                                <dt>内存：</dt>
-                                <dd>256GB</dd>
-                            </dl>
-                        </div>
-                    </div>
-                </li>
-                <li class="services-balance">
-                    <i class="services-icon"></i>
-                    <div class="services-box">
-                        <h4 class="services-title">负载均衡</h4>
-                        <div class="row">
-                            <dl class="col-sm-3">
-                                <dt>实例数：</dt>
-                                <dd>5</dd>
-                            </dl>
-                            <dl class="col-sm-3">
-                                <dt>用户数：</dt>
-                                <dd>30</dd>
-                            </dl>
-                            <dl class="col-sm-3">
-                                <dt>云主机ECS：</dt>
-                                <dd>45</dd>
-                            </dl>
-                            <dl class="col-sm-3">
-                                <dt>云存储OSS：</dt>
-                                <dd>60</dd>
-                            </dl>
-                            <dl class="col-sm-3">
-                                <dt>存储：</dt>
-                                <dd>128GB</dd>
-                            </dl>
-                            <dl class="col-sm-3">
-                                <dt>CPU：</dt>
-                                <dd>24</dd>
-                            </dl>
-                            <dl class="col-sm-3">
-                                <dt>内存：</dt>
-                                <dd>256GB</dd>
-                            </dl>
-                        </div>
-                    </div>
-                </li>
-            </ul>
         </div>
-    </div>
-    <div class="col-3">
-        <h3 class="page-title">告警与监控</h3>
-        <div class="content-box">
-            <div class="charts-box">
-                <div id="chart-monitor"></div>
-                <div class="row chart-monitor-legend">
-                    <dl class="col-sm-6 legend-4">
-                        <dt>紧急</dt>
-                        <dd>50</dd>
-                    </dl>
-                    <dl class="col-sm-6 legend-3">
-                        <dt>重要</dt>
-                        <dd>23</dd>
-                    </dl>
-                    <dl class="col-sm-6 legend-2">
-                        <dt>次要</dt>
-                        <dd>6</dd>
-                    </dl>
-                    <dl class="col-sm-6 legend-1">
-                        <dt>一般</dt>
-                        <dd>15</dd>
-                    </dl>
+        <div class="col-2">
+            <h3 class="page-title">云服务</h3>
+            <div class="content-box">
+                <div id="services-tab" class="services-tab">
+                    <ul class="nav nav-tabs" role="tablist">
+                        <li role="presentation" class="active"><a href="#base" aria-controls="base" role="tab" data-toggle="tab">基础服务</a></li>
+                        <li role="presentation"><a href="#bigdata" aria-controls="bigdata" role="tab" data-toggle="tab">大数据服务</a></li>
+                        <li role="presentation"><a href="#app" aria-controls="app" role="tab" data-toggle="tab">应用服务</a></li>
+                    </ul>
+                    <div class="tab-content">
+                        <div role="tabpanel" class="tab-pane active" id="base"></div>
+                        <div role="tabpanel" class="tab-pane" id="bigdata"></div>
+                        <div role="tabpanel" class="tab-pane" id="app"></div>
+                    </div>
                 </div>
+                <ul class="services-list">
+                    <li class="services-host">
+                        <i class="services-icon"></i>
+                        <div class="services-box">
+                            <h4 class="services-title">云主机</h4>
+                            <div class="row">
+                                <dl>
+                                    <dt>实例数：</dt>
+                                    <dd>5</dd>
+                                </dl>
+                                <dl>
+                                    <dt>用户数：</dt>
+                                    <dd>30</dd>
+                                </dl>
+                                <dl>
+                                    <dt>云主机ECS：</dt>
+                                    <dd>45</dd>
+                                </dl>
+                                <dl>
+                                    <dt>云存储OSS：</dt>
+                                    <dd>60</dd>
+                                </dl>
+                                <dl>
+                                    <dt>存储：</dt>
+                                    <dd>128GB</dd>
+                                </dl>
+                                <dl>
+                                    <dt>CPU：</dt>
+                                    <dd>24</dd>
+                                </dl>
+                                <dl>
+                                    <dt>内存：</dt>
+                                    <dd>256GB</dd>
+                                </dl>
+                            </div>
+                        </div>
+                    </li>
+                    <li class="services-storage">
+                        <i class="services-icon"></i>
+                        <div class="services-box">
+                            <h4 class="services-title">云存储</h4>
+                            <div class="row">
+                                <dl>
+                                    <dt>实例数：</dt>
+                                    <dd>5</dd>
+                                </dl>
+                                <dl>
+                                    <dt>用户数：</dt>
+                                    <dd>30</dd>
+                                </dl>
+                                <dl>
+                                    <dt>云主机ECS：</dt>
+                                    <dd>45</dd>
+                                </dl>
+                                <dl>
+                                    <dt>云存储OSS：</dt>
+                                    <dd>60</dd>
+                                </dl>
+                                <dl>
+                                    <dt>存储：</dt>
+                                    <dd>128GB</dd>
+                                </dl>
+                                <dl>
+                                    <dt>CPU：</dt>
+                                    <dd>24</dd>
+                                </dl>
+                                <dl>
+                                    <dt>内存：</dt>
+                                    <dd>256GB</dd>
+                                </dl>
+                            </div>
+                        </div>
+                    </li>
+                    <li class="services-balance">
+                        <i class="services-icon"></i>
+                        <div class="services-box">
+                            <h4 class="services-title">负载均衡</h4>
+                            <div class="row">
+                                <dl>
+                                    <dt>实例数：</dt>
+                                    <dd>5</dd>
+                                </dl>
+                                <dl>
+                                    <dt>用户数：</dt>
+                                    <dd>30</dd>
+                                </dl>
+                                <dl>
+                                    <dt>云主机ECS：</dt>
+                                    <dd>45</dd>
+                                </dl>
+                                <dl>
+                                    <dt>云存储OSS：</dt>
+                                    <dd>60</dd>
+                                </dl>
+                                <dl>
+                                    <dt>存储：</dt>
+                                    <dd>128GB</dd>
+                                </dl>
+                                <dl>
+                                    <dt>CPU：</dt>
+                                    <dd>24</dd>
+                                </dl>
+                                <dl>
+                                    <dt>内存：</dt>
+                                    <dd>256GB</dd>
+                                </dl>
+                            </div>
+                        </div>
+                    </li>
+                </ul>
             </div>
-            <ul class="monitor-list">
-                <li>
-                    <h4 class="monitor-title">WSFAAFA文件告警</h4>
-                    <p class="monitor-text">已经开始处理SD-WSFAAFADA运维早八点消息通知页面，现在是单独页面！<a class="link-more" href="javascript:;">[查看]</a></p>
-                </li>
-                <li>
-                    <h4 class="monitor-title">资源状态告警</h4>
-                    <p class="monitor-text">已经开始关闭SD-WSFAAFADA，千度户籍变迁功能的修改<a class="link-more" href="javascript:;">[查看]</a></p>
-                </li>
-                <li>
-                    <h4 class="monitor-title">资源容量统计</h4>
-                    <p class="monitor-text">已经开始处理SD-WSFAAFADA运维早八点消息通知页面，现在是单独页面！<a class="link-more" href="javascript:;">[查看]</a></p>
-                </li>
-                <li>
-                    <h4 class="monitor-title">云主机的监控告警</h4>
-                    <p class="monitor-text">修改新常口户号信息接口，返回值增加来自地和迁出地<a class="link-more" href="javascript:;">[查看]</a></p>
-                </li>
-            </ul>
         </div>
     </div>
 </div>

@@ -47,15 +47,36 @@ header > .container,
 	#page-main > .container {
 		width:100%;
 	}
-	.search-bar{
-		display:none;
-	}
 }
 @media (min-width: 1500px){
 	header > .container,
 	#page-main > .container {
 		max-width:1500px;
   	}
+}
+@media (max-width: 1341px) {
+	header [index="search-bar"] {
+		display:none;
+	}
+}
+@media (max-width: 990px) {
+	header [index="notifications"] {
+		display:none;
+	}
+}
+@media (max-width: 905px) {
+	header nav[index="1"] {
+		float: none;
+		margin-right: 98px;
+		overflow: hidden;
+	}
+	#header-nav {
+		position: relative;
+	}
+	header nav[index="2"] {
+		position: absolute;
+		right: 0;
+	}
 }
 #header-logo {
 	position: relative;
@@ -945,6 +966,15 @@ i.image-icon-default.centos {
 	margin-left: 32px;
 }
 
+.nav-tabs>li>a {
+	color: #394759;
+}
+.nav-tabs>li.active>a,
+.nav-tabs>li.active>a:focus,
+.nav-tabs>li.active>a:hover {
+	color: #37b3e0;
+}
+
 /*!
  * 首页样式
  */
@@ -954,16 +984,27 @@ i.image-icon-default.centos {
 .page_index .col-1,
 .page_index .col-2,
 .page_index .col-3 {
-	float: left;
 	margin: 0;
 	padding: 0 6px;
 }
-.page_index .col-1,
-.page_index .col-3 {
+.page_index .col-1{
 	width: 20%;
 }
+.page_index .col-1 {
+	float: left;
+}
+.page_index .col-2-3 {
+	margin-left: 20%;
+	overflow: hidden; *zoom: 1;
+}
+.page_index .col-3 {
+	float: right;
+}
+.page_index .col-3 {
+	width: 25%;
+}
 .page_index .col-2 {
-	width: 60%;
+	margin-right: 25%;
 }
 .page_index ul {
 	list-style: none;
@@ -1057,7 +1098,7 @@ i.image-icon-default.centos {
 	text-align: right;
 }
 .page_index .services-tab .tab-content .tab-pane {
-	min-height: 292px;
+	min-height: 304px;
 }
 .page_index .services-list > li {
 	position: relative;
@@ -1096,9 +1137,23 @@ i.image-icon-default.centos {
 }
 .page_index .services-title {
 	color: #37b3e0;
+	font-size: 14px;
 }
 .page_index .services-box dl {
+	width: 25%;
+	float: left;
+	padding: 0 15px;
 	margin-bottom: 10px;
+}
+@media (max-width: 1365px) {
+	.page_index .services-box dl {
+		width: 33.33333333%;
+	}
+}
+@media (max-width: 959px) {
+	.page_index .services-box dl {
+		width: 50%;
+	}
 }
 .page_index .services-box dt,
 .page_index .services-box dd {
