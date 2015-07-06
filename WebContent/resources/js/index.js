@@ -30,7 +30,10 @@ define(['Common', 'echarts', 'echarts/chart/pie', 'echarts/chart/funnel', 'echar
 			},
 			tooltip : {
 				trigger: 'item',
-				formatter: "{a} <br/>{b} : {c} ({d}%)"
+				formatter: function() {
+					var args = arguments[0];
+					return args[0] + " <br/>" + args[1] + " : " + args[2] + " (" + parseFloat(args[3]).toFixed(0) + "%)";
+				}
 			},
 			legend: {
 				x : '15%',
