@@ -64,10 +64,10 @@ define(['Common', 'echarts', 'echarts/chart/pie', 'echarts/chart/funnel', 'echar
 						},
 						emphasis : {
 							label : {
-								show : true
+								show : false
 							},
 							labelLine : {
-								show : true
+								show : false
 							}
 						}
 					},
