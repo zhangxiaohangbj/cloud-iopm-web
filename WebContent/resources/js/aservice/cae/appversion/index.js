@@ -19,7 +19,8 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 			$tar.prev().find('.left-col:first').append(
 					'<span class="btn btn-add">创建应用版本</span>'
 				);
-			Common.$pageContent.removeClass("loading");
+			Common.$pageContent.
+("loading");
 		});
 		//icheck
 	    $('input[type="checkbox"]').iCheck({
