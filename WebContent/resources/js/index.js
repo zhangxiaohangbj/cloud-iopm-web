@@ -1,4 +1,4 @@
-define(['Common', 'echarts', 'echarts/chart/pie', 'echarts/chart/funnel', 'echarts/chart/gauge', 'rq/css!css/index.css', 'bs/tab'],function(Common, echarts){
+define(['Common', 'echarts', 'echarts/chart/pie', 'echarts/chart/funnel', 'echarts/chart/gauge', 'bs/tab'],function(Common, echarts){
 	var init = function(){
 		Common.$pageContent.removeClass('loading');
 		Common.render(true, {

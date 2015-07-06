@@ -135,6 +135,8 @@ define('commons/main',
             this._router(RouterTable);
             // 注册hash监听
             this._registerHashEvent();
+            // 设置页面索引
+            this.resetPageIndex();
             // 初始化cookie工具
             this._cookies();
             // 取消加载中效果
@@ -222,6 +224,39 @@ define('commons/main',
                 this.$pageContent.css('margin-left', asideW+"px");
             }
             return this;
+        },
+        // (重)设置当前页面索引
+        resetPageIndex: function() {
+            if(this.router) {
+                var router = this.router;
+                // update page index and class
+                var toPageIndex = function(hash) {
+                        var ctrl = router.getCtrlFromTable(hash);
+                        if(!ctrl) {
+                            ctrl = router.getDefaultCtrl(hash);
+                        }
+                        var pageIndex = 'index';
+                        if(ctrl) {
+                            pageIndex = ctrl.replace(new RegExp('^'+router.ctrlPrefix), '').replace(/\//g, '-');
+                        }
+                        return pageIndex;
+                    },
+                    pageIndexCur = toPageIndex(this.hash);
+                var pageIndex = this.$body.attr('page-index'),
+                    pageCssPrefix = 'page_',
+                    pageCss = pageCssPrefix + pageIndexCur,
+                    pageCssOld = pageIndex ? pageCssPrefix + pageIndex : '';
+                if(pageIndex) {
+                    if(pageIndexCur !== pageIndex) {
+                        this.$body.attr('page-index', pageIndexCur);
+                        pageCssOld = pageCssPrefix + pageIndex;
+                        this.$body.removeClass(pageCssOld).addClass(pageCss);
+                    }
+                } else {
+                    this.$body.attr('page-index', pageIndexCur);
+                    this.$body.addClass(pageCss);
+                }
+            }
         },
         resetSideBar: function() {
             var $headerNav = $('#header-nav > [role="navigation"][index="1"]'),
@@ -492,33 +527,8 @@ define('commons/main',
                     Modal.loading();
                     var self = this;
                     var onLoad = function() {
-                        // update page class
-                        var toPageIndex = function(hash) {
-                                var ctrl = self.getCtrlFromTable(hash);
-                                if(!ctrl) {
-                                    ctrl = self.getDefaultCtrl(hash);
-                                }
-                                var pageIndex = 'index';
-                                if(ctrl) {
-                                    pageIndex = ctrl.replace(new RegExp('^'+self.ctrlPrefix), '').replace(/\//g, '-');
-                                }
-                                return pageIndex;
-                            },
-                            pageIndexCur = toPageIndex(that.hash);
-                        var pageIndex = that.$body.attr('page-index'),
-                            pageCssPrefix = 'page_',
-                            pageCss = pageCssPrefix + pageIndexCur,
-                            pageCssOld = pageIndex ? pageCssPrefix + pageIndex : '';
-                        if(pageIndex) {
-                            if(pageIndexCur !== pageIndex) {
-                                that.$body.attr('page-index', pageIndexCur);
-                                pageCssOld = pageCssPrefix + pageIndex;
-                                that.$body.removeClass(pageCssOld).addClass(pageCss);
-                            }
-                        } else {
-                            that.$body.attr('page-index', pageIndexCur);
-                            that.$body.addClass(pageCss);
-                        }
+                        // 重设页面索引
+                        that.resetPageIndex();
                         // resize
                         that.resize();
                         // reset SideBar

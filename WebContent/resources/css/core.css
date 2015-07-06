@@ -24,7 +24,7 @@ a.link-more:hover, .link-more a:hover {
 	margin-top: -32px;
 	z-index: 99999;
 }
-/*header头部分开始*/
+/*!header头部分开始*/
 header {
 	height: 48px;
 	line-height: 48px;
@@ -242,9 +242,8 @@ header > .container,
     font-size:17px;
     margin: 0.1em 0 0 0;
 }
-/*!header头部分开始结束*/
 
-/*sidebar侧边栏部分开始*/
+/*!sidebar侧边栏部分开始*/
 aside {
 	float:left;
 	min-width: 190px;
@@ -366,15 +365,14 @@ aside {
 	position: relative;
 	top: 0.11em;
 }
-/*!sidebar侧边栏部分结束*/
 
-/*page页面公共部分开始*/
+/*page页面公共部分样式*/
 #page-main{
 	padding-top: 10px;
 	overflow-x: hidden;
 	overflow-y: auto;
 }
-#page-main > .container {
+[class*="page_"] #page-main > .container {
 	background-color: #F5F5F5;
 	border: 1px solid #E5E5E5;
 }
@@ -790,12 +788,10 @@ i.image-icon-default.centos {
 	float:right;
 	margin-top:6px;
 }
-/*弹框*/
+/*!弹框样式*/
 .modal-footer{
 	border:0;
 }
- /*page页面公共部分结束*/
- /*弹框样式开始*/
 .dialog-modal.type-primary .modal-header{
 	padding: 5px 14px;
 	background-color: #F5F5F5;
@@ -839,7 +835,7 @@ i.image-icon-default.centos {
 	color: #fff;
 	border-radius: 0;
 }
-/*弹框body内容样式*/
+/*!弹框body内容样式*/
 .form-horizontal .control-label{
 	padding: 5px 0 0 0;
 	font-weight: normal;
@@ -942,4 +938,222 @@ i.image-icon-default.centos {
 .form-signin .checkbox > label + label {
 	margin-left: 32px;
 }
-/*!弹框样式结束*/
+
+/*!
+ * 首页样式
+ */
+.page_index #page-main > .container {
+	border: 0 none;
+}
+.page_index .col-1,
+.page_index .col-2,
+.page_index .col-3 {
+	float: left;
+	margin: 0;
+	padding: 0 6px;
+}
+.page_index .col-1,
+.page_index .col-3 {
+	width: 20%;
+}
+.page_index .col-2 {
+	width: 60%;
+}
+.page_index ul {
+	list-style: none;
+	padding: 0;
+}
+.page_index .page-title {
+	font-size: 18px;
+	color: #394759;
+	margin: 18px 0 14px;
+}
+.page_index .content-box {
+	padding-bottom: 55px;
+	border: 1px solid #eceaea;
+	overflow: hidden;
+}
+.page_index .col-2 .content-box {
+	padding: 15px 20px 55px;
+}
+.page_index .resources-list > li {
+	position: relative;
+	height: 33.33333333333333%;
+	padding: 12px 0 12px 9%;
+	border-bottom: 1px solid #f0f3f6;
+}
+.page_index .resources-icon {
+	position: absolute;
+	width: 50%;
+	height: 100%;
+	background-size: contain !important;
+}
+.page_index .resources-num {
+	color: #4c5e70;
+	font-size: 20px;
+	font-style: normal;
+}
+.page_index .resources-label {
+	display: block;
+	color: #888888;
+	font-size: 14px;
+	font-weight: normal;
+	margin-bottom: 0;
+	padding-left: 0.15em;
+}
+.page_index .resources-region .resources-icon {
+	height: 80%;
+	right: 9%;
+	top: 10%;
+	background: url(img/icon-resources-region.png) no-repeat right center;
+}
+.page_index .resources-env .resources-icon {
+	height: 77.77777777777778%;
+	right: 5%;
+	top: 8%;
+	background: url(img/icon-resources-env.png) no-repeat right center;
+}
+.page_index .resources-zone .resources-icon {
+	height: 75%;
+	right: 0;
+	bottom: 0;
+	background: url(img/icon-resources-zone.png) no-repeat right bottom;
+}
+.page_index .resources-user .resources-icon {
+	height: 80%;
+	right: 6.40601503759398%;
+	top: 12%;
+	background: url(img/icon-resources-user.png) no-repeat right bottom;
+}
+.page_index .charts-box {
+	position: relative;
+	width: 100%;
+}
+.page_index .charts-box .chart-affix {
+	position: absolute;
+	z-index: 500;
+}
+#chart-resources {
+	width: 100%;
+	height: 372px;
+}
+.page_index .chart-resources-affix {
+	width: auto;
+	right: 20%;
+	bottom: 5px;
+}
+.page_index .chart-resources-affix label {
+	display: block;
+	font-size: 13px;
+	font-weight: normal;
+	margin: 0;
+	padding: 3px 0;
+	text-align: right;
+}
+.page_index .services-tab .tab-content .tab-pane {
+	min-height: 292px;
+}
+.page_index .services-list > li {
+	position: relative;
+	margin-top: 10px;
+	padding-left: 16px;
+	border: 1px solid #edebeb;
+	background-color: #fafafa;
+}
+.page_index .services-icon {
+	display: block;
+	position: absolute;
+	left: 16px;
+	top: 50%;
+}
+.page_index .services-host .services-icon {
+	width: 52px;
+	height: 52px;
+	margin-top: -26px;
+	background: url("img/icon-services-host.png") no-repeat 0 0;
+}
+.page_index .services-storage .services-icon {
+	width: 56px;
+	height: 57px;
+	margin-top: -28px;
+	background: url("img/icon-services-storage.png") no-repeat 0 0;
+}
+.page_index .services-balance .services-icon {
+	width: 49px;
+	height: 49px;
+	margin-left: 4px;
+	margin-top: -26px;
+	background: url("img/icon-services-balance.png") no-repeat 0 0;
+}
+.page_index .services-box {
+	margin-left: 72px;
+}
+.page_index .services-title {
+	color: #37b3e0;
+}
+.page_index .services-box dl {
+	margin-bottom: 10px;
+}
+.page_index .services-box dt,
+.page_index .services-box dd {
+	font-size: 12px;
+	float: left;
+}
+.page_index .services-box dt {
+	font-weight: normal;
+}
+#chart-monitor {
+	width: 100%;
+	height: 220px;
+}
+.page_index .chart-monitor-legend {
+	margin-top: 5px;
+	border-bottom: 1px solid #ececec;
+}
+.page_index .chart-monitor-legend dl {
+	margin-bottom: 15px;
+}
+.page_index .chart-monitor-legend dt,
+.page_index .chart-monitor-legend dd {
+	float: left;
+	font-size: 14px;
+}
+.page_index .chart-monitor-legend dt {
+	font-weight: normal;
+	padding-left: 26%;
+}
+.page_index .chart-monitor-legend dd {
+	padding-left: 14px;
+}
+.page_index .chart-monitor-legend .legend-1 dd {
+	color: #faab02;
+}
+.page_index .chart-monitor-legend .legend-2 dd {
+	color: #6a5cac;
+}
+.page_index .chart-monitor-legend .legend-3 dd {
+	color: #2dc0e8;
+}
+.page_index .chart-monitor-legend .legend-4 dd {
+	color: #f51f03;
+}
+.page_index .monitor-list {
+	padding: 0 20px 0 18px;
+}
+.page_index .monitor-list > li {
+	margin-top: 24px;
+}
+.page_index .monitor-title {
+	margin: 0 0 5px;
+	font-size: 14px;
+}
+.page_index .monitor-text {
+	color: #555;
+	font-size: 13px;
+	line-height: 24px;
+	margin-bottom: 0;
+	overflow: hidden; *zoom: 1;
+}
+.page_index .monitor-text a {
+	float: right;
+}
