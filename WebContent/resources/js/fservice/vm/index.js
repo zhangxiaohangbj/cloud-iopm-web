@@ -374,8 +374,9 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 										Common.xhr.get('/networking/v2.0/subnets',{"networkId":netId},function(data){
 											var selectData = [{id:"default",name:"默认子网"}].concat(data.subnets);
 											var html = Common.uiSelect({list:selectData,className:'select-subnet'});
-											$clone.append('<li class="pull-right fixedip"><select class="select-fixedip"><option>DHCP</option></select></li>');
+											$clone.append('<li class="pull-right fixedip"><select class="select-fixedip" style="width:120px"><option>DHCP</option></select></li>');
 											$clone.append('<li class="pull-right subnet">'+html+'</li>');
+											$('select.select-subnet').attr('style','width:110px');
 											dtd.resolve();
 										});
 										return dtd.promise();
@@ -617,11 +618,13 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 									}
 									var html = Common.uiSelect(selectData);
 									that.parents('.list-group-item:first').find('select.select-fixedip').html(html);
+									$('select.select-fixedip').attr('style','width:120px');
 								});
 							}else{
 								var selectData = [{id:"dhcp",name:"DHCP"}];
 								var html = Common.uiSelect(selectData);
 								that.parents('.list-group-item:first').find('select.select-fixedip').html(html);
+								$('select.select-fixedip').attr('style','width:120px');
 							}
 						}
 					});
