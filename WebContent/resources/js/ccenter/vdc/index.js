@@ -29,7 +29,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 		var table = Common.initDataTable($('#VdcTable'),{
 		      "processing": true,  //加载效果，默认false
 		      "serverSide": true,  //页面在加载时就请求后台，以及每次对 datatable 进行操作时也是请求后台
-		      "ordering": false,   //禁用所有排序
+		     // "ordering": false,   //禁用所有排序
 		      "sAjaxSource":"identity/v2.0/tenants/page/", //ajax源，后端提供的分页接口
 		      /*fnServerData是与服务器端交换数据时被调用的函数
 		       * sSource： 就是sAjaxSource中指定的地址，接收数据的url需要拼装成 v2.0/users/page/10/1 格式
