@@ -174,6 +174,11 @@ define(['Common', 'echarts', 'echarts/chart/pie', 'echarts/chart/funnel', 'echar
 				chartMonitorOption.series[0].data[0].value = (Math.random()*100).toFixed(0) - 0;
 				chartMonitor.setOption(chartMonitorOption, true);
 			},2000)
+
+			$(window).on('resize', function() {
+				chartResources.resize();
+				chartMonitor.resize();
+			});
 		}, 200);
 
 		$('#services-tab').tab();
