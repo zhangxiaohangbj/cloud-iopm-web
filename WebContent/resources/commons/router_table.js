@@ -25,6 +25,9 @@ define('commons/router_table', function() {
         '^#aservice/cae/appenv/detail' :"js/aservice/cae/appenv/detail",
         /*'^#aservice/cae/appenv/(.*)$' :"js/aservice/cae/appenv/index",*/
         '^#aservice/container/docker-image/detail/' :"js/aservice/container/docker-image/detail",
-        '^#aservice/container/bay/detail/' :"js/aservice/container/bay/detail"
+        '^#aservice/container/bay/detail/' :"js/aservice/container/bay/detail",
+        '^#fservice/vpc/network/detail/(.*)$' :"js/fservice/vpc/network/detail",
+        '^#fservice/vpc/subnet/detail/(.*)$' :"js/fservice/vpc/subnet/detail",
+        '^#fservice/vpc/router/detail/(.*)$' :"js/fservice/vpc/router/detail"
     };
 });
