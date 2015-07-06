@@ -310,7 +310,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 						if(!quotas) {
 							quotas = {};
 						}
-						quotas = quotas.quota_set||{};
+						quotas = quotas.quota_set||{'cores':0,'ram':0,'instances':0};
 						//获取vdc的配额使用情况
 						Common.xhr.ajax('/compute/v2/'+vdc_id+'/limits',function(quotaUsages){
 							//当前配额 等于 当前vdc下总配额 减去  当前选中规格的额度
