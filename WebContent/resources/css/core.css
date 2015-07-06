@@ -939,6 +939,15 @@ i.image-icon-default.centos {
 	margin-left: 32px;
 }
 
+.nav-tabs>li>a {
+	color: #394759;
+}
+.nav-tabs>li.active>a,
+.nav-tabs>li.active>a:focus,
+.nav-tabs>li.active>a:hover {
+	color: #37b3e0;
+}
+
 /*!
  * 首页样式
  */
