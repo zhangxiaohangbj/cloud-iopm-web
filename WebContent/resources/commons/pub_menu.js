@@ -41,32 +41,23 @@ define('commons/pub_menu', function() {
             items:[
                 {
                     text: '<i class="fa fa-th-large"></i>设备管理<i class="fa icon-arrow"></i>',
-                    link:'#device',
                     items: [
                         {
                             text: '<i class="fa fa-dot fa-1"></i>服务器',
-                            link: '#vdc'
+                            link: '#'
                         },
                         {
                             text: '<i class="fa fa-dot fa-1"></i>存储设备',
-                            link: '#vdc'
+                            link: '#'
                         },
                         {
-                            text: '<i class="fa fa-dot fa-1"></i>交换机',
-                            link: '#vdc'
+                            text: '<i class="fa fa-dot fa-1"></i>网络设备',
+                            link: '#'
                         },
                         {
-                            text: '<i class="fa fa-dot fa-1"></i>防火墙',
-                            link: '#vdc'
-                        },
-                        {
-                            text: '<i class="fa fa-dot fa-1"></i>负载均衡设备',
-                            link: '#vdc'
-                        },
-                        {
-                            text: '<i class="fa fa-dot fa-1"></i>路由器',
-                            link: '#vdc'
-                        },
+                            text: '<i class="fa fa-dot fa-1"></i>安全设备',
+                            link: '#'
+                        }
                     ]
                 },
                 {
@@ -215,12 +206,16 @@ define('commons/pub_menu', function() {
                     link: '',
                     items: [
                         {
-                            text: '<i class="fa fa-dot fa-1"></i>关系型数据库',
-                            link: '#db'
+                            text: '<i class="fa fa-dot fa-1"></i>资源池',
+                            link: '#lbaas/pool'
                         },
                         {
-                            text: '<i class="fa fa-dot fa-1"></i>缓存',
-                            link: '#cache'
+                            text: '<i class="fa fa-dot fa-1"></i>成员管理',
+                            link: '#lbaas/member'
+                        },
+                        {
+                            text: '<i class="fa fa-dot fa-1"></i>监控管理',
+                            link: '#lbaas/monitor'
                         }
                     ]
                 }
@@ -294,28 +289,28 @@ define('commons/pub_menu', function() {
                     ]
                 },
                 {
-                    text: '<i class="fa fa-cogs"></i>消息队列管理<i class="fa icon-arrow"></i>',
+                    text: '<i class="fa fa-envelope-o"></i>消息队列管理<i class="fa icon-arrow"></i>',
                     items: [
                         {
-                            text: '<i class="fa fa-dot fa-1"></i>应用管理',
-                            link: '#cae/app'
+                            text: '<i class="fa fa-dot fa-1"></i>消息队列管理',
+                            link: '#mq/queue'
                         },
                         {
-                            text: '<i class="fa fa-dot fa-1"></i>镜像管理',
-                            link: '#cae/image'
+                            text: '<i class="fa fa-dot fa-1"></i>规格模板管理',
+                            link: '#mq/template'
                         }
                     ]
                 },
                 {
-                    text: '<i class="fa fa-cogs"></i>缓存服务管理<i class="fa icon-arrow"></i>',
+                    text: '<i class="fa fa-rocket"></i>缓存服务管理<i class="fa icon-arrow"></i>',
                     items: [
                         {
-                            text: '<i class="fa fa-dot fa-1"></i>应用管理',
-                            link: '#cae/app'
+                            text: '<i class="fa fa-dot fa-1"></i>缓存实例管理',
+                            link: '#cache/instance'
                         },
                         {
-                            text: '<i class="fa fa-dot fa-1"></i>镜像管理',
-                            link: '#cae/image'
+                            text: '<i class="fa fa-dot fa-1"></i>缓存规格管理',
+                            link: '#cache/type'
                         }
                     ]
                 }
@@ -355,28 +350,32 @@ define('commons/pub_menu', function() {
                     ]
                 },
                 {
-                    text: '<i class="fa fa-cloud-upload"></i>流式计算<i class="fa icon-arrow"></i>',
+                    text: '<i class="fa fa-sliders"></i>流式计算<i class="fa icon-arrow"></i>',
                     items: [
                         {
-                            text: '<i class="fa fa-dot fa-1"></i>关系型数据库',
-                            link: '#db'
+                            text: '<i class="fa fa-dot fa-1"></i>计算实例',
+                            link: '#stream/instance'
                         },
                         {
-                            text: '<i class="fa fa-dot fa-1"></i>缓存',
-                            link: '#cache'
+                            text: '<i class="fa fa-dot fa-1"></i>任务管理',
+                            link: '#stream/task'
+                        },
+                        {
+                            text: '<i class="fa fa-dot fa-1"></i>规格模板管理',
+                            link: '#stream/template'
                         }
                     ]
                 },
                 {
-                    text: '<i class="fa fa-cloud-upload"></i>非结构化存储<i class="fa icon-arrow"></i>',
+                    text: '<i class="fa fa-cloud-upload"></i>对象存储<i class="fa icon-arrow"></i>',
                     items: [
                         {
-                            text: '<i class="fa fa-dot fa-1"></i>关系型数据库',
-                            link: '#db'
+                            text: '<i class="fa fa-dot fa-1"></i>容器管理',
+                            link: '#oss/container'
                         },
                         {
-                            text: '<i class="fa fa-dot fa-1"></i>缓存',
-                            link: '#cache'
+                            text: '<i class="fa fa-dot fa-1"></i>环境管理',
+                            link: '#oss/evn'
                         }
                     ]
                 }
