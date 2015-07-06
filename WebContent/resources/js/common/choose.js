@@ -13,30 +13,36 @@ define(['Common','bs/modal'],function(Common,Modal){
 				groupSelectedClass: 'col-sm-6',		//已选择部分的class
 				groupAllClass: 'col-sm-6'		//全部区域部分的class
 		};
+		var listGroupAllClass = '.list-group-all',
+			listGroupSelectClass = '.list-group-select';
 		var renderOptions = $.extend({},defaults,options);
 		Common.render('tpls/common/choose.html',renderOptions,function(html){
 			//off click事件,防止多次bind
-			$(document).off("click",renderOptions.selector+" .list-group-all .list-group-item");
-			$(document).on("click",renderOptions.selector+" .list-group-all .list-group-item", function(event){
+			Common.on("click",renderOptions.selector+" "+listGroupAllClass+" .list-group-item", function(event){
 				var that = $(this),
 					clone = that.clone();
-				clone.find('.fa-plus-circle').removeClass('fa-plus-circle').addClass('fa-minus-circle');
-				if(typeof renderOptions.addCall === 'function'){
-					$.when(renderOptions.addCall(clone)).done(move(that,clone,$(renderOptions.selector+" .list-group-select")));/*.fail(Modal.error('解析出错'))*/
-				}else{
-					move(that,clone,$(renderOptions.selector+" .list-group-select"))
+				if(checkMove(that,$(listGroupSelectClass))){
+					clone.find('.fa-plus-circle').removeClass('fa-plus-circle').addClass('fa-minus-circle');
+					if(typeof renderOptions.addCall === 'function'){
+						$.when(renderOptions.addCall(clone)).done(move(that,clone,$(renderOptions.selector+" "+listGroupSelectClass)));/*.fail(Modal.error('解析出错'))*/
+					}else{
+						move(that,clone,$(renderOptions.selector+" "+listGroupSelectClass))
+					}
 				}
 			});
 			
-			$(document).off("click",renderOptions.selector+" .list-group-select .list-group-item .fa-minus-circle");
-			$(document).on("click",renderOptions.selector+" .list-group-select .list-group-item .fa-minus-circle", function(event){
+			Common.on("click",renderOptions.selector+" "+listGroupSelectClass+" .list-group-item .fa-minus-circle", function(event){
 				var that = $(this).parents('.list-group-item:first'),
 					clone = that.clone();
-				clone.find('.fa-minus-circle').removeClass('fa-minus-circle').addClass('fa-plus-circle');
-				if(typeof renderOptions.delCall === 'function'){
-					$.when(renderOptions.delCall(clone)).done(move(that,clone,$(renderOptions.selector+" .list-group-all")));/*.fail(Modal.error('解析出错'))*/
+				if(checkMove(that,$(listGroupAllClass))){
+					clone.find('.fa-minus-circle').removeClass('fa-minus-circle').addClass('fa-plus-circle');
+					if(typeof renderOptions.delCall === 'function'){
+						$.when(renderOptions.delCall(clone)).done(move(that,clone,$(renderOptions.selector+" "+listGroupAllClass)));/*.fail(Modal.error('解析出错'))*/
+					}else{
+						move(that,clone,$(renderOptions.selector+" "+listGroupAllClass));
+					}
 				}else{
-					move(that,clone,$(renderOptions.selector+" .list-group-all"));
+					that.remove();
 				}
 			});
 			if($(renderOptions.selector).length){
@@ -58,6 +64,16 @@ define(['Common','bs/modal'],function(Common,Modal){
 				wrapper.append(moveDom);
 			}
 			delDom.remove();
+		};
+		var checkMove = function($this,$wrapper){
+			var flag = true;
+			var uniqueKey = $this.find('li:first').attr('data-id');
+			$wrapper.children().each(function(){
+				if(uniqueKey === $(this).find('li:first').attr('data-id')){
+					flag = false;
+				}
+			});
+			return flag;
 		}
 	};
 	
