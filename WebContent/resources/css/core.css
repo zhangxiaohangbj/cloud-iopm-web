@@ -857,6 +857,12 @@ i.image-icon-default.centos {
 .dialog-modal .form-group label span {
 	color: red;
 }
+.dialog-modal .dataTables_wrapper {
+	margin-bottom: 0px;
+}
+.dialog-modal table.dataTable + .row {
+	margin-top: 10px;
+}
 .size-_console .modal-dialog {
     width: 800px;
 }
