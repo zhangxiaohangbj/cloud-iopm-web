@@ -13,48 +13,27 @@
 			<table class="table table-primary table-striped" id="SecuritygroupTable">
 				<thead>
 					<tr>
-						<th class="c1">
+						<th class="c5">
 							<label><input type="checkbox" class="selectAll"></label>
 						</th>
-						<th class="c3">安全组名称</th>
-						<th class="c3">描述</th>
-						<th class="c3">虚拟数据中心</th>
-						<th class="c1">状态</th>
-						<th class="c3 sorting_disabled">操作</th>
+						<th class="c15">安全组名称</th>
+						<th class="c40">描述</th>
+						<th class="c15">虚拟数据中心</th>
+						<th class="c10">状态</th>
+						<th class="c15 sorting_disabled">操作</th>
 					</tr>
 				</thead>
-				<tbody>
-				{{each result as item i}}
-					<tr>
-						<td><label><input type="checkbox"></label></td>
-						<td>{{item.name}}</td>
-						<td>{{item.description}}</td>
-						<td>{{item.vdc_name}}</td>
-						<td>启用</td>
-						<td>
-							<span class="btn btn-more securityrule" data="{{item.id}}" style="margin-right: 8px;">管理规则</span>
-							<div class="dropdown">
-								<span class="btn btn-more dropdown-toggle" data-toggle="dropdown" aria-expanded="false">更多 <i class="fa fa-angle-down fa-fw"></i></span>
-								<ul class="dropdown-menu" style="right: 0;left: initial;">
-									<!-- <li><a href="javascript:void(0)" class="editRouter" data="{{item.id}}"><i class="fa fa-pencil fa-fw"></i>编辑安全组</a></li> -->
-									<li><a href="javascript:void(0)" class="deleteSecurityGroup" data="{{item.id}}"><i class="fa fa-trash-o fa-fw"></i>删除安全组</a></li>
-								</ul>
-							</div>	
-						</td>
-					</tr>
-    			{{/each}}
-				</tbody>
-				<tfoot>
-					<tr>
-						<td></td>
-						<td></td>
-						<td></td>
-						<td></td>
-						<td></td>
-						<td></td>
-					</tr>
-				</tfoot>
 			</table>
+			<div class="table-menus hide">
+                <div class="col-sm-2 left-col"><span class="btn btn-add">新建</span></div>
+                <div class="col-sm-10 right-col">
+                    <div class="dataTables_filter">
+                        <label><input type="search" name="filter" class="form-control input-sm global-search" placeholder="">
+                        <span class="btn btn-query"><i class="fa fa-search"></i></span>
+                        </label>
+                    </div>
+                </div>
+            </div>
 		</div>
 	</div>
 </div>
