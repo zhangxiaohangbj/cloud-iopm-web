@@ -22,6 +22,50 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 				);
 			Common.$pageContent.removeClass("loading");
 		});
+		var DataIniter = {
+			initFunctionItem: function(){
+				var treeid = $("select[name='functiontree']").val();
+				Common.xhr.ajax('/identity/v2.0/functiontree/rootnodes/'+treeid,function(data){
+					var setting = {
+	            			check: {
+	            				enable: true
+	            			},
+	            			data: {
+	            				simpleData: {
+	            					enable: true
+	            				},
+	            				key:{
+	            					name:"itemName"
+	            				}
+	            			},
+	            			async: {
+            					enable: true,  //异步加载
+            					url: getUrl,
+            					dataType: "json",
+            					type:"get",
+            					dataFilter: filter
+            				}
+	            		};
+
+	            		var zNodes =data;
+	            		//异步加载节点必须有isParent
+	            		for(var i = 0; i<zNodes.length; i++){
+	            			zNodes[i].isParent = true;
+	                	}
+	            		$.fn.zTree.init($("#authorityTree"), setting, zNodes);
+	            		function getUrl(treeId, treeNode) {
+	            			return "identity/v2.0/functiontree/childrennodes/"+treeNode.id;
+	            		}
+	            		function filter(treeId, parentNode, childNodes) {
+	            			if (!childNodes) return null;
+	            			for (var i=0, l=childNodes.length; i<l; i++) {
+	            				childNodes[i].isParent = true;
+	            			}
+	            			return childNodes;
+	            		}
+				})
+			}
+		}
 		var EventsHandler = {
 				//表单校验
 				formValidator: function(){
@@ -37,6 +81,11 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 			                }
 			            }
 			        });
+				},
+				changeTree: function(){
+					$("select[name='functiontree']").on("change",function(){
+						DataIniter.initFunctionItem();
+					})
 				}
 		}
 		//增加按钮
@@ -145,72 +194,54 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 	   //权限设置
 	     $("#RoleTable_wrapper a.btn-edit-authority").on("click",function(){
 		    	var id= $(this).attr("data");
-		    	Common.xhr.ajax('/identity/v2.0/OS-KSADM/roles/'+id,function(data){  //需修改接口
-		    		data =[
-	    					{ id:1, pId:0, name:"首页", checked:true},
-	    					{ id:2, pId:0, name:"资源管理"},
-	    					{ id:3, pId:0, name:"安全管理", open:true},
-	    					{ id:31, pId:3, name:"用户管理"},
-	    					{ id:32, pId:3, name:"角色管理"},
-	    					{ id:33, pId:3, name:"菜单管理", open:true},
-	    					{ id:321, pId:33, name:"/sysmgr/menuItemAdd.htm"},
-	    					{ id:322, pId:33, name:"/sysmgr/menuItemDelete.htm"}
-	    				];
-		    		//功能权限树
-	    			Modal.show({
-	    	            title: '角色功能权限设置',
-	    	            message: '<div><ul id="authorityTree" class="ztree"></ul></div>',
-	    	            nl2br: false,
-	    	            buttons: [{
-	    	                label: '保存',
-	    	                action: function(dialog) {
-	    	                	var treeObj = $.fn.zTree.getZTreeObj("authorityTree");
-	    	                	var nodes = treeObj.getCheckedNodes(true);
-	    	                	if(nodes.length == 0){
-	    	                		Modal.warning ('请选择权限');
-	    	                		return;
-	    	                	}
-	    	                	var serverData = [];
-	    	                	for(var i = 0; i< nodes.length; i++){
-	    	                		serverData.push({"id":nodes[i].id});
-	    	                	}
-	    	            		
-	    	                	Common.xhr.putJSON('/identity/v2.0/users/'+id,serverData,function(data){  //需修改接口
-	    	                		if(data){
-	    	                			Modal.success('保存成功')
-	    	                			setTimeout(function(){Modal.closeAll()},2000);
-	    	                			Common.router.route();
-									}else{
-										Modal.warning ('保存失败')
-									}
-								})
-	    	                }
-	    	            }, {
-	    	                label: '取消',
-	    	                action: function(dialog) {
-	    	                    dialog.close();
-	    	                }
-	    	            }],
-	    	            onshown : function(){
-	    	            	require(['jq/ztree'], function() {
-	    	            		var setting = {
-	    	            			check: {
-	    	            				enable: true
-	    	            			},
-	    	            			data: {
-	    	            				simpleData: {
-	    	            					enable: true
-	    	            				}
-	    	            			}
-	    	            		};
-
-	    	            		var zNodes =data;
-	    	            		$.fn.zTree.init($("#authorityTree"), setting, zNodes);
-
-	    	            	});
-	    	            }
-	    	        });
-	    		});
+		    	//查询角色权限，判断功能项是否勾选
+		    	
+		    	Common.render('tpls/sysmanagement/role/addfunctionitem.html','/identity/v2.0/functiontrees', function(html){
+			    		//功能权限树
+		    			Modal.show({
+		    	            title: '角色功能权限设置',
+		    	            message: html,
+		    	            nl2br: false,
+		    	            buttons: [{
+		    	                label: '保存',
+		    	                action: function(dialog) {
+		    	                	var treeObj = $.fn.zTree.getZTreeObj("authorityTree");
+		    	                	var nodes = treeObj.getCheckedNodes(true);
+		    	                	if(nodes.length == 0){
+		    	                		Modal.warning ('请选择权限');
+		    	                		return;
+		    	                	}
+		    	                	var serverData = [];
+		    	                	for(var i = 0; i< nodes.length; i++){
+		    	                		serverData.push({"id":nodes[i].id});
+		    	                	}
+		    	            		
+		    	                	Common.xhr.putJSON('/identity/v2.0/users/'+id,serverData,function(data){  //需修改接口
+		    	                		if(data){
+		    	                			Modal.success('保存成功')
+		    	                			setTimeout(function(){Modal.closeAll()},2000);
+		    	                			Common.router.route();
+										}else{
+											Modal.warning ('保存失败')
+										}
+									})
+		    	                }
+		    	            }, {
+		    	                label: '取消',
+		    	                action: function(dialog) {
+		    	                    dialog.close();
+		    	                }
+		    	            }],
+		    	            onshown : function(){
+		    	            	require(['jq/ztree'], function() {
+		    	            		DataIniter.initFunctionItem();
+		    	            	});
+		    	            	EventsHandler.changeTree();
+		    	            }
+		    	        });
+					}
+				);
+		    	
 		    });
 	}
 	return {
