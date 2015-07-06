@@ -11,6 +11,18 @@ define(['Common', 'echarts', 'echarts/chart/pie', 'echarts/chart/funnel', 'echar
 		});
 	};
 	var doRender = function(tplText, data) {
+		var resetColWidth = function() {
+			var $col1 = Common.$pageContent.find('.col-1:first'),
+				$col2 = Common.$pageContent.find('.col-2:first'),
+				$col3 = Common.$pageContent.find('.col-3:first'),
+				$col23 = Common.$pageContent.find('.col-2-3:first');
+			var col1W = $col1.outerWidth(), colWpx = col1W + 'px';
+			$col1.css('width', colWpx);
+			$col3.css('width', colWpx);
+			$col2.css('margin-right', colWpx);
+			$col23.css('margin-left', colWpx);
+		};
+		resetColWidth();
 		var chartResourcesOption = {
 			title : {
 				show: false,
