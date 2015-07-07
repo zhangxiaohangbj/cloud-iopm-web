@@ -149,7 +149,11 @@ header > .container,
 } */
 #header-nav > nav > ul > li.hover,
 #header-nav > nav > ul > li.active{
-    background-color:#3E4A5A;
+    background-color: #3E4A5A;
+}
+#header-nav > nav > ul > li[index="search-bar"].hover,
+#header-nav > nav > ul > li[index="search-bar"].active {
+	background: none;
 }
 #header-nav > nav > ul > li > a {
     display: inline-block;
@@ -899,6 +903,16 @@ i.image-icon-default.centos {
 }
 .modal-login .modal-dialog {
 	width: 400px;
+}
+.modal-login .modal-header .help-block {
+	display: inline-block;
+	color: #8a6d3b;
+	font-family: simsun;
+	margin: 0 0 0 1.5em;
+}
+.modal-login .modal-header .help-block i {
+	margin-right: .35em;
+	top: 2px;
 }
 .modal-login .modal-body {
 	padding: 0 25px;
