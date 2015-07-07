@@ -41,6 +41,7 @@ require(['PubView', 'Common'], function(PubView, Common) {
                                 text: '消息 <span class="badge">5</span>'
                             },
                             {
+                                index: "user",
                                 dropMenu: {
                                     text: 'admin<i class="fa fa-angle-down fa-fw"></i>',
                                     items: [
@@ -51,7 +52,8 @@ require(['PubView', 'Common'], function(PubView, Common) {
                                             text: '<i class="fa fa-gear fa-fw"></i>账号设置'
                                         },
                                         {
-                                            text: '<i class="fa fa-sign-out fa-fw"></i>退出'
+                                            text: '<i class="fa fa-sign-out fa-fw"></i>退出',
+                                            link: '#logout'
                                         }
                                     ]
                                 }

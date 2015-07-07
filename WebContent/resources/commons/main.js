@@ -543,11 +543,22 @@ define('commons/main',
                 };
                 //加载控制器,并默认执行init初始化
                 this.loadctrl = function(ctrl){
-                    Modal.loading();
                     var self = this;
+                    // 校验登录
+                    if(typeof that.cookies.getUser() === "undefined") {
+                        var args = [];
+                        $.each(arguments, function(i,arg) {
+                            args.push(arg);
+                        });
+                        that.login('登录已失效，请重新登录！', function() {
+                            self.loadctrl.apply(self, args);
+                        });
+                        return false;
+                    }
+                    Modal.loading();
                     var onLoad = function() {
                         // 重设页面索引
-                        that.resetPageIndex();
+                        that._inRender && that.resetPageIndex();
                         // resize
                         that.resize();
                         // reset SideBar
@@ -602,8 +613,8 @@ define('commons/main',
             !that.router && (that.router = new Router(RouterTable));
         },
         render: function(renderToPage, tplUrl, data, callback) {
-            var that = this,
-                _renderToPage, _tplUrl, _data, _beforeRender, _callback;
+            var that = this, renderDef = $.Deferred();
+            var _renderToPage, _tplUrl, _data, _beforeRender, _callback;
             if(typeof renderToPage !== "boolean") {
                 _renderToPage = false;
                 _tplUrl = renderToPage;
@@ -622,7 +633,6 @@ define('commons/main',
                 _beforeRender = obj.beforeRender;
                 _callback = obj.callback;
             }
-            var renderDef = $.Deferred();
             if(_tplUrl && PubView.utils.isString(_tplUrl)) {
                 try {
                     _renderToPage && (that._inRender = true);
@@ -828,6 +838,7 @@ define('commons/main',
                         var deferredsHandler = $.when.apply(that, deferreds);
                         return deferredsHandler.then(
                             function() {
+                                debugger;
                                 var results = [], errors = [];
                                 if(requests.length > 1) {
                                     $.each(arguments, function(i, arg) {
@@ -859,6 +870,7 @@ define('commons/main',
                             },
                             function() {
                                 // failure
+                                debugger;
                                 failureCallback.apply(that, arguments);
                             }
                         );

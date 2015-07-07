@@ -3,6 +3,7 @@
  */
 define('commons/router_table', function() {
     return {
+        '^#logout$': 'js/logout',
         '^#monitor(!.*)?$': "js/monitor/task/strategyGroup",
         '^#aservice$' :"js/aservice/rds/instance",
         '^#bservice(!.*)?$' :"js/bservice/nosql/index",
