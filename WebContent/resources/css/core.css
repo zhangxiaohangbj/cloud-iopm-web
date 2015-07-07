@@ -1098,7 +1098,7 @@ i.image-icon-default.centos {
 	text-align: right;
 }
 .page_index .services-tab .tab-content .tab-pane {
-	padding:25px 0;
+	min-height: 304px;
 }
 .page_index .services-tab .tab-content .tab-pane img{
 	width:100%;

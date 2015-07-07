@@ -24,7 +24,6 @@ define(['Common','PubView','echarts', 'echarts/chart/pie', 'echarts/chart/funnel
 			$col2.css('margin-right', colWpx);
 			$col23.css('margin-left', colWpx);
 		};
-		resetColWidth();
 		var chartResourcesOption = {
 			title : {
 				show: false,
@@ -179,6 +178,8 @@ define(['Common','PubView','echarts', 'echarts/chart/pie', 'echarts/chart/funnel
 		};
 		var chartResources, chartMonitor;
 		setTimeout(function() {
+			resetColWidth();
+
 			chartResources = echarts.init($('#chart-resources')[0]);
 			chartResources.setOption(chartResourcesOption);
 

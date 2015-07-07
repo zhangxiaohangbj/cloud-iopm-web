@@ -154,7 +154,7 @@ define('commons/pub_menu', function() {
                     items: [
                         {
                             text: '<i class="fa fa-dot fa-1"></i>网络管理',
-                            link: '#vpc/network'
+                            link: '#vpc/network/'
                         },
                         {
                             text: '<i class="fa fa-dot fa-1"></i>子网管理',

@@ -199,7 +199,8 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 					nodes = node.children;
         			if(nodes && nodes.length > 0){
         				if(seq > nodes.length) seq = nodes.length;
-            			treeObj.moveNode(nodes[seq > 0? seq-1:0], newNode, seq > 0?"next":"prev");
+        				newNode = treeObj.addNodes(node, newNode);
+            			treeObj.moveNode(nodes[seq > 0? seq-1:0], newNode[0], seq > 0?"next":"prev");
         			}else
         				treeObj.addNodes(node, newNode);
 				}
@@ -428,8 +429,8 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 		                	                		if(data){
 		                	                			Modal.success('保存成功');
 		                	                			//添加并移动节点
-		                	                			var newNode = { itemName:$("[name='item_name']").val(),pId:node.id,isParent:true};
-		                	                			EventsHandler.moveNode(treeObj,node,newNode,$("[name='seq']").val());
+		                	                			var newNode = {id:data.id, itemName:data.itemName,pId:data.parentItemId,isParent:true};
+		                	                			EventsHandler.moveNode(treeObj,node,newNode,data.seq);
 		                	                			
 		                	                			setTimeout(function(){Modal.closeAll()},1000);
 		            								}else{
@@ -478,8 +479,8 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 		                	                			Modal.success('保存成功')
 		                	                			setTimeout(function(){Modal.closeAll()},1000);
 		                	                			//添加并移动节点
-		                	                			var newNode = { itemName:$("[name='item_name']").val(), pId:node.getParentNode()? node.getParentNode().id:"root",isParent:true};
-		                	                			EventsHandler.moveNode(treeObj,node.getParentNode()? node.getParentNode():"root",newNode,$("[name='seq']").val());
+		                	                			var newNode = {id:data.id, itemName:data.itemName,pId:data.parentItemId,isParent:true};
+		                	                			EventsHandler.moveNode(treeObj,node.getParentNode()? node.getParentNode():"root",newNode,data.seq);
 		            								}else{
 		            									Modal.warning ('保存失败')
 		            								}
@@ -525,9 +526,10 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 		                	                			Modal.success('保存成功')
 		                	                			setTimeout(function(){Modal.closeAll()},1000);
 		                	                			//添加并移动节点
+		                	                			var newNode = { id:data.id, itemName:data.itemName,pId:data.parentItemId,isParent:true};
+		                	                			EventsHandler.moveNode(treeObj,node.getParentNode()? node.getParentNode():"root",
+		                	                					newNode,data.seq);
 		                	                			treeObj.removeNode(node);
-		                	                			var newNode = { itemName:$("[name='item_name']").val(), pId:node.getParentNode()? node.getParentNode().id:"root",isParent:true};
-		                	                			EventsHandler.moveNode(treeObj,node.getParentNode()? node.getParentNode():"root",newNode,$("[name='seq']").val());
 		            								}else{
 		            									Modal.warning ('保存失败')
 		            								}

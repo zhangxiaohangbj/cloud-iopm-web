@@ -2,19 +2,19 @@
     "data": [
         {
             "id" : "038ad3ad5e77491da48ef00994276164",
-            "status":"未部署"
+            "status":"未部署",
             "identify":"v1.3",
             "description": "更新了目录结构"
         },
         {
             "id" : "038ad3ad5e77491da48ef00994276164",
-            "status":"已部署"
+            "status":"已部署",
             "identify":"v1.2",
             "description": "更新了数据库结构"
         },
          {
             "id" : "038ad3ad5e77491da48ef00994276164",
-            "status":"已部署"
+            "status":"已部署",
             "identify":"v1.1",
             "description": "发布第一个版本"
         }

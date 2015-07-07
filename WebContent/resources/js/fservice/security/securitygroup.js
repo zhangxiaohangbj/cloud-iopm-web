@@ -3,19 +3,56 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 	var init = function(){
 		Common.$pageContent.addClass("loading");
 		//render获取的数据
-		Common.render(true,'tpls/fservice/security/securitygroup/list.html','/networking/v2.0/security-groups/page/1/10',function(){
-			bindEvent();
+		Common.render(true,{
+			tpl:'tpls/fservice/security/securitygroup/list.html',
+			callback:bindEvent
 		});
 	};
 	
 	var bindEvent = function(){
 		//页面渲染完后进行各种事件的绑定
 		//dataTables
-		Common.initDataTable($('#SecuritygroupTable'),function($tar){
-			$tar.prev().find('.left-col:first').append(
-					'<span class="btn btn-add">创 建</span>'
-				);
-			Common.$pageContent.removeClass("loading");
+		var table = Common.initDataTable($('#SecuritygroupTable'),{
+		      "processing": true,  //加载效果，默认false
+		      "serverSide": true,  //页面在加载时就请求后台，以及每次对 datatable 进行操作时也是请求后台
+		      "ordering": false,   //禁用所有排序
+		      "sAjaxSource":'networking/v2.0/security-groups/page/', //ajax源，后端提供的分页接口
+	    	  /*属性 columns 用来配置具体列的属性，包括对应的数据列名,如trueName，是否支持搜索，是否显示，是否支持排序等*/
+		      "columns": [
+			        {
+			        	"orderable": false,
+			        	"defaultContent":"<label><input type='checkbox'></label>"
+			        },
+			        {"data": "name"},
+			        {"data": "description"},
+			        {"data": "vdc_name"},
+			        {"data": "isDeleted"},
+			        {"data":"id"}
+		      ],
+		      "columnDefs": [
+					{
+					    "targets": [4],
+					    "render": function(data, type, full) {
+				 			if(data == false) return ' <span class="text-success">启用</span>';
+				 			else return ' <span class="text-warning">已删除</span>';
+					    }
+					},
+					{
+					    "targets": [5],
+					    "render": function(data, type, full) {
+				 			return '<a href="javascript:void(0)" class="securityrule" data="'+data+'" style="margin-right: 8px;">管理规则</a>'
+			        		+'<a href="javascript:void(0)" class="deleteSecurityGroup" data="'+data+'"><i class="fa fa-trash-o fa-fw"></i></a>';
+					    }
+					}
+                ]
+		    },
+			function($tar){
+		    	var $tbMenu = $tar.prev('.tableMenus');
+		    	$tbMenu.length && $tbMenu.empty().html($('.table-menus').html());
+				Common.$pageContent.removeClass("loading");
+		});
+		Common.on('click','.dataTables_filter .btn-query',function(){
+			table.search($('.global-search').val()).draw();
 		});
 		$("[data-toggle='tooltip']").tooltip();
     	//载入默认的数据 inits,创建数据载入类
@@ -116,7 +153,8 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 				}
 		}
 		//增加按钮
-		$("#SecuritygroupTable_wrapper span.btn-add").on("click",function(){
+		$(document).off("click","#SecuritygroupTable_wrapper span.btn-add");
+		$(document).on("click","#SecuritygroupTable_wrapper span.btn-add",function(){
 	    	//需要修改为真实数据源
 			Common.render('tpls/fservice/security/securitygroup/add.html','',function(html){
 				Dialog.show({
@@ -159,7 +197,8 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 			})
 		});
 		//删除安全组,接口为物理删除，非逻辑删
-		 $("#SecuritygroupTable_wrapper a.deleteSecurityGroup").on("click",function(){
+		$(document).off("click","#SecuritygroupTable_wrapper a.deleteSecurityGroup");
+		 $(document).on("click","#SecuritygroupTable_wrapper a.deleteSecurityGroup", function(){
 	    	 var id = $(this).attr("data");
 	    	 Dialog.confirm('确定要删除该安全组吗?', function(result){
 	             if(result) {
@@ -286,7 +325,8 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 		    	}
 		}
 		//连接子网
-	    $("#SecuritygroupTable_wrapper span.securityrule").on("click",function(){
+		$(document).off("click","#SecuritygroupTable_wrapper a.securityrule");
+	    $(document).on("click","#SecuritygroupTable_wrapper a.securityrule", function(){
 	    	var id = $(this).attr("data");
 	    	EditData.GetRuleList(id);
 	    })
