@@ -50,6 +50,10 @@ define(['Common','bs/modal','jq/form/validator-bs3'],function(Common,Modal){
 						Common.render({
 							tpl:'tpls/sysmanagement/url/endpointlist.html',
 							data:'/identity/v2.0/endpoints/page/1/10',
+							beforeRender: function(data){
+								data.endpoint_id=endpoint_id;
+								return data;
+							},
 							callback: function(html){
 								Modal.show({
 				    	            title: '选择端点',

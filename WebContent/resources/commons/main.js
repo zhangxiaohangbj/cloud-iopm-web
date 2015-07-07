@@ -73,21 +73,40 @@ define('commons/main',
         initSideBarNavIndex: function() {
             var hash = this.hash;
             if(this.pub.sideBarNavIndex[hash]) return;
-            var $li = $("#side-bar").find('[href$="'+hash+'"]').parents('li:first');
-            if($li.length) {
-                !this.pub.sideBarNavIndex[hash] && (this.pub.sideBarNavIndex[hash] = []);
-                var indexFirst = $li.attr('index'), indexSecond = 0;
-                var $second = $li.parents(".nav-second-level:first");
-                if($second.length) {
-                    indexSecond = indexFirst;
-                    indexFirst = $second.parents("li:first").attr('index');
-                    indexFirst && (indexSecond = indexSecond.replace(new RegExp('^'+indexFirst), ''));
+            var pageIndex = $('body').attr('page-index');
+            if(pageIndex){
+            	var pageIndexArr = ("#"+pageIndex).split('-');
+                var getCurSideBar = function(chash){
+                	var $chash = $("#side-bar").find('[href$="'+chash+'"]'),
+                		$chashDir = $("#side-bar").find('[href$="'+chash+'/"]');
+                	if($chash.length || $chashDir.length){
+                		return $chash.length ? $chash.parents('li:first') : $chashDir.parents('li:first');
+                	}else{
+                		pageIndexArr.pop();
+                		if(pageIndexArr.length <= 1){
+                			return null;
+                		}else{
+                			return getCurSideBar(pageIndexArr.join('/'));
+                		}
+                	}
                 }
-                this.pub.sideBarNavIndex[hash][0] = parseInt(indexFirst);
-                if(indexSecond) {
-                    this.pub.sideBarNavIndex[hash][1] = parseInt(indexSecond);
+                var $li = getCurSideBar(hash);
+                if($li && $li.length) {
+                    !this.pub.sideBarNavIndex[hash] && (this.pub.sideBarNavIndex[hash] = []);
+                    var indexFirst = $li.attr('index'), indexSecond = 0;
+                    var $second = $li.parents(".nav-second-level:first");
+                    if($second.length) {
+                        indexSecond = indexFirst;
+                        indexFirst = $second.parents("li:first").attr('index');
+                        indexFirst && (indexSecond = indexSecond.replace(new RegExp('^'+indexFirst), ''));
+                    }
+                    this.pub.sideBarNavIndex[hash][0] = parseInt(indexFirst);
+                    if(indexSecond) {
+                        this.pub.sideBarNavIndex[hash][1] = parseInt(indexSecond);
+                    }
                 }
             }
+            
         },
         scrollbarWidth: function() {
             var scrollDiv = document.createElement('div');
@@ -135,6 +154,8 @@ define('commons/main',
             this._router(RouterTable);
             // 注册hash监听
             this._registerHashEvent();
+            // 设置页面索引
+            this.resetPageIndex();
             // 初始化cookie工具
             this._cookies();
             // 取消加载中效果
@@ -222,6 +243,39 @@ define('commons/main',
                 this.$pageContent.css('margin-left', asideW+"px");
             }
             return this;
+        },
+        // (重)设置当前页面索引
+        resetPageIndex: function() {
+            if(this.router) {
+                var router = this.router;
+                // update page index and class
+                var toPageIndex = function(hash) {
+                        var ctrl = router.getCtrlFromTable(hash);
+                        if(!ctrl) {
+                            ctrl = router.getDefaultCtrl(hash);
+                        }
+                        var pageIndex = 'index';
+                        if(ctrl) {
+                            pageIndex = ctrl.replace(new RegExp('^'+router.ctrlPrefix), '').replace(/\//g, '-');
+                        }
+                        return pageIndex;
+                    },
+                    pageIndexCur = toPageIndex(this.hash);
+                var pageIndex = this.$body.attr('page-index'),
+                    pageCssPrefix = 'page_',
+                    pageCss = pageCssPrefix + pageIndexCur,
+                    pageCssOld = pageIndex ? pageCssPrefix + pageIndex : '';
+                if(pageIndex) {
+                    if(pageIndexCur !== pageIndex) {
+                        this.$body.attr('page-index', pageIndexCur);
+                        pageCssOld = pageCssPrefix + pageIndex;
+                        this.$body.removeClass(pageCssOld).addClass(pageCss);
+                    }
+                } else {
+                    this.$body.attr('page-index', pageIndexCur);
+                    this.$body.addClass(pageCss);
+                }
+            }
         },
         resetSideBar: function() {
             var $headerNav = $('#header-nav > [role="navigation"][index="1"]'),
@@ -492,29 +546,10 @@ define('commons/main',
                     Modal.loading();
                     var self = this;
                     var onLoad = function() {
-                        // update page class
-                        var toPageIndex = function(hash) {
-                                var ctrl = self.getCtrlFromTable(hash);
-                                if(!ctrl) {
-                                    ctrl = self.getDefaultCtrl(hash);
-                                }
-                                var pageIndex = 'index';
-                                if(ctrl) {
-                                    pageIndex = ctrl.replace(new RegExp('^'+self.ctrlPrefix), '').replace(/\//g, '-');
-                                }
-                                return pageIndex;
-                            },
-                            pageIndexCur = toPageIndex(that.hash);
-                        var pageIndex = that.$body.attr('page-index');
-                        if(pageIndex) {
-                            if(pageIndexCur !== pageIndex) {
-                                that.$body.attr('page-index', pageIndexCur);
-                                that.$body.removeClass('page-'+pageIndex).addClass('page-'+pageIndexCur);
-                            }
-                        } else {
-                            that.$body.attr('page-index', pageIndexCur);
-                            that.$body.addClass('page-'+pageIndexCur);
-                        }
+                        // 重设页面索引
+                        that.resetPageIndex();
+                        // resize
+                        that.resize();
                         // reset SideBar
                         that.resetSideBar();
                         Modal.loading('remove');
@@ -544,6 +579,7 @@ define('commons/main',
                     }, function(e) {
                         that.resolve();
                         that.clearError();
+                        that.$pageContent.empty();
                         if(e.requireType) {
                             if(e.requireMap) {
                                 that.error('Script error for ' + e.requireMap.id + ': ' + e.message);

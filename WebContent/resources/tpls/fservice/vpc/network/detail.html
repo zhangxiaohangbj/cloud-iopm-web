@@ -1,71 +1,47 @@
-<div class="page-header clearfix">
-	<ol class="breadcrumb">
-	  <li class="active">网络详情</li>
-	  <li class="active"><a href="javascript:void(0);" class="btn btn-default reload">返回</a></li>
+<div class="page-header">
+	<ol class="breadcrumb minus">
+		<li class="active"><h4>网络详情</h4></li>
+		<li class="backlist"><a href="#fservice/vpc/network/">返回列表</a></li>
 	</ol>
 </div>
 <div class="page-body">
 	<div class="pane">
 		<div class="pane-content">
-			<form id="networkdetail">
-				<div class="form-group" style="overflow: hidden;">
-					<label for="name" class="control-label col-sm-2">网络名称：</label>
-				 	<div class="col-sm-3 col-sm">
-						<input type="text" class="form-control" id="name" name="name" value="{{network.name}}" readonly="true">
+			<div class="detail-info">
+				<div class="tab-content">
+					<div class="clearfix">
+						<p><b>基本信息</b></p>
+						<hr>
+						<div class="row">
+							<label class="control-label col-sm-3">网络名称：</label>
+							<div class="col-sm-7 col-sm">{{network.name}}</div>
+						</div>
+						<div class="row">
+							<label class="control-label col-sm-3">虚拟机数据中心：</label>
+							<div class="col-sm-7 col-sm">{{network.tenant_id}}</div>
+						</div>
+						<div class="row">
+							<label class="control-label col-sm-3">网络地址范围（CIDR）：</label>
+							<div class="col-sm-7 col-sm">{{network.cidr}}</div>
+						</div>
+						<div class="row">
+							<label class="control-label col-sm-3">管理状态：</label>
+							<div class="col-sm-7 col-sm">{{if network.admin_state_up == true}}启用{{else}}禁用 {{/if}}</div>
+						</div>
+						<div class="row">
+							<label class="control-label col-sm-3">共享状态：</label>
+							<div class="col-sm-7 col-sm">{{if network.shared == true}}启用{{else}}禁用 {{/if}}</div>
+						</div>
+						<div class="row">
+							<label class="control-label col-sm-3">网络类型：</label>
+							<div class="col-sm-7 col-sm">{{if network["router:external"] == true}}外部{{else}}内部 {{/if}}</div>
+						</div>
+						<p><b>子网信息</b></p>
+						<hr>
+						<div id="subnetTableDiv" style="overflow: hidden;"></div>
 					</div>
 				</div>
-				<div class="form-group" style="overflow: hidden;">
-					<label for="tenant_id" class="control-label col-sm-2">虚拟机数据中心：</label>
-					<div class="col-sm-3 col-sm">
-						<select id="tenant_id" name="tenant_id" class="form-control select tenant_id" value="{{network.tenant_id}}" readonly="readonly"></select>
-					</div>
-				</div>
-				<div class="form-group" style="overflow: hidden;">
-					<label for="cidr" class="control-label col-sm-2">网络地址范围（CIDR）：</label>
-					<div class="col-sm-3 col-sm">
-						<input type="text" class="form-control" id="cidr" name="cidr" value="{{network.cidr}}" readonly="true">
-					</div>
-				</div>
-				<div class="form-group" style="overflow: hidden;">
-					<label for="admin_state_up" class="control-label col-sm-2">管理状态：</label>
-					<div class="col-sm-3 col-sm">
-						<p>
-					        <input type="checkbox"  name="admin_state_up" checked data-size="small" data-on-text="启用" data-off-text="禁用" readonly="true" {{if network.admin_state_up == true}}checked {{/if}} >
-					    </p>
-					</div>
-				</div>
-				<div class="form-group" style="overflow: hidden;">
-					<label for="shared" class="control-label col-sm-2">共享状态：</label>
-					<div class="col-sm-3 col-sm">
-						<p>
-					        <input type="checkbox"  name="shared" checked data-size="small" data-on-text="启用" data-off-text="禁用" readonly="true" {{if network.shared == true}}checked {{/if}} >
-					    </p>
-					</div>
-				</div>
-				<div class="form-group" style="overflow: hidden;">
-					<label for="router:external" class="control-label col-sm-2">网络类型：</label>
-					<div class="col-sm-3 col-sm">
-						<p>
-					        <input type="checkbox"  name="router:external" data-size="small" data-on-text="外部" data-off-text="内部" readonly="true" {{if network["router:external"] == true}}checked {{/if}}>
-					    </p>
-					</div>
-				</div>
-				<div class="form-group" style="overflow: hidden;">
-					
-	  					<li class="active">子网信息</li>
-					
-					<div id="subnetTableDiv" style="overflow: hidden;"></div>
-				</div>
-				
-				<div class="form-group" style="overflow: hidden;">
-					<label for="server-name" class="control-label col-sm-3"></label>
-				 	<div class="col-sm-3 col-sm">
-						<a href="javascript:void(0);" class="btn btn-default reload">返回</a>
-					</div>
-				</div>
-			</form>
-
-			
+			</div>
 		</div>
 	</div>
 </div>
