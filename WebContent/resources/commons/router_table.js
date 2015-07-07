@@ -31,5 +31,7 @@ define('commons/router_table', function() {
         '^#fservice/vpc/network/detail/(.*)$' :"js/fservice/vpc/network/detail",
         '^#fservice/vpc/subnet/detail/(.*)$' :"js/fservice/vpc/subnet/detail",
         '^#fservice/vpc/router/detail/(.*)$' :"js/fservice/vpc/router/detail"
+    	'^#fservice/vpc/firewall/rule/detail/(.*)$' :"js/fservice/vpc/firewall/rule_detail",
+		'^#fservice/vpc/firewall/tab/(.*)$' :"js/fservice/vpc/firewall/index"
     };
 });
