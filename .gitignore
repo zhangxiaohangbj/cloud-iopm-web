@@ -8,3 +8,5 @@
 /bin
 
 /WebContent/META-INF/MANIFEST.MF
+/gradle
+/.gitignore
