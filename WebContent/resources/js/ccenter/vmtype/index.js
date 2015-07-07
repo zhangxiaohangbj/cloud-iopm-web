@@ -60,10 +60,6 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 		}
         DataGetter.getVdc();
 
-
-
-
-
 	  //增加按钮
         $("#vmtypeTable_wrapper span.btn-add").on("click",function(){
             //需要修改为真实数据源
@@ -97,21 +93,71 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
                         backText: "上一步",
                         submitText: "提交",
                         submittingText: "提交中..."
-                    }
+                    },
+                    submitEnabled: [0,1],
+	                validate: {
+	            		0: function(){
+	            			return this.el.find('form').valid();
+	            		}
+		            }
+                
                 });
 
+              //加载时载入validate
+    			wizard.on('show',function(){
+    				$('input[id="name"]').focus();
+    				wizard.form.each(function(){
+    					$(this).validate({
+    						ignore: "",
+                            errorContainer: '_form',
+                            rules: {
+                            	'name': {
+                                    required: true,
+                                    minlength: 4,
+                                    maxlength:15
+                                },
+                                'vcpus': {
+                                    required: true,
+                                    digits:true
+                                },
+                                'ram': {
+                                    required: true,
+                                    digits:true
+                                },
+                                'disk': {
+                                    required: true,
+                                    digits:true
+                                },
+                                'ephemera': {
+                                    required: true,
+                                    digits:true
+                                },
+                                'swap': {
+                                    required: true,
+                                    digits:true
+                                },
+                                'rxtx_factor': {
+                                    number:true,
+                                    max:1.0,
+                                    min:0.0
+                                }
+    			            }
+    					});
+    				})
+    			});
+                
                 //展现wizard，禁用下一步按钮
                 wizard.show();
                 //wizard.disableNextButton();
 
-                EventsHandler.flavorFormValidator();
+//                EventsHandler.flavorFormValidator();
                 //关闭弹窗
                 var closeWizard = function(){
                     $('div.wizard').remove();
                     $('div.modal-backdrop').remove();
 
                 }
-
+                
                 //关闭后移出dom
                 wizard.on('closed', function() {
                     closeWizard();
@@ -146,6 +192,9 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
                             Common.router.route();
                         }
 
+                    },function(data){
+                    	wizard.submitError();
+    					wizard.reset();
                     })
 
 
