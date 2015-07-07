@@ -1110,7 +1110,7 @@ i.image-icon-default.centos {
 	text-align: right;
 }
 .page_index .services-tab .tab-content .tab-pane {
-	min-height: 304px;
+	padding: 25px 0;
 }
 .page_index .services-tab .tab-content .tab-pane img{
 	width:100%;
@@ -1233,4 +1233,14 @@ i.image-icon-default.centos {
 }
 .page_index .monitor-text a {
 	float: right;
+}
+/*vm新建虚机*/
+.page_fservice-vm-index .hidden-input-text{
+	opacity: 0;
+    -webkit-opacity: 0;
+    -moz-opacity: 0;  
+    filter:alpha(opacity=0);  
+    filter:progid:DXImageTransform.Microsoft.Alpha(Opacity=0);
+    position:absolute;
+    left:35px;padding:0;
 }

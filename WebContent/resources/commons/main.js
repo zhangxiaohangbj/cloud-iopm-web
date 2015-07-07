@@ -77,10 +77,20 @@ define('commons/main',
             if(pageIndex){
             	var pageIndexArr = ("#"+pageIndex).split('-');
                 var getCurSideBar = function(chash){
-                	var $chash = $("#side-bar").find('[href$="'+chash+'"]'),
-                		$chashDir = $("#side-bar").find('[href$="'+chash+'/"]');
-                	if($chash.length || $chashDir.length){
-                		return $chash.length ? $chash.parents('li:first') : $chashDir.parents('li:first');
+                	var chashArr = [
+                	                chash,
+                	                chash+'/index',
+                	                chash+'/'
+                	                ];
+                	var $chash;
+                	for(var i=0,l=chashArr.length;i<l;i++){
+                		if($("#side-bar").find('[href$="'+chashArr[i]+'"]').length){
+                			$chash = $("#side-bar").find('[href$="'+chashArr[i]+'"]');
+                			break;
+                		}
+                	}
+                	if($chash && $chash.length){
+                		return $chash.parents('li:first');
                 	}else{
                 		pageIndexArr.pop();
                 		if(pageIndexArr.length <= 1){

@@ -72,7 +72,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 					{
 					    "targets": [1],
 					    "render": function(data, type, full) {
-					      return '<a class="volume_name" href="#fservice/snapshot/detail/volume/'+data.id+'">'+data.name+"</a>";
+					      return '<a class="volume_name" href="#fservice/snapshot/volume/detail/'+data.id+'">'+data.name+"</a>";
 					    }
 					},
 					{

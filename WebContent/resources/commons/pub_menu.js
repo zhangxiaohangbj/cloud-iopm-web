@@ -158,11 +158,11 @@ define('commons/pub_menu', function() {
                         },
                         {
                             text: '<i class="fa fa-dot fa-1"></i>子网管理',
-                            link: '#vpc/subnet'
+                            link: '#vpc/subnet/'
                         },
                         {
                             text: '<i class="fa fa-dot fa-1"></i>路由器管理',
-                            link: '#vpc/router'
+                            link: '#vpc/router/'
                         },
                         {
                             text: '<i class="fa fa-dot fa-1"></i>浮动IP管理',
