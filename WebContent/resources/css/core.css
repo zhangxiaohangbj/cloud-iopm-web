@@ -1112,6 +1112,10 @@ i.image-icon-default.centos {
 .page_index .services-tab .tab-content .tab-pane {
 	min-height: 304px;
 }
+.page_index .services-tab .tab-content .tab-pane img{
+	width:100%;
+	max-width:100%;
+}
 .page_index .services-list > li {
 	position: relative;
 	margin-top: 10px;

@@ -73,21 +73,40 @@ define('commons/main',
         initSideBarNavIndex: function() {
             var hash = this.hash;
             if(this.pub.sideBarNavIndex[hash]) return;
-            var $li = $("#side-bar").find('[href$="'+hash+'"]').parents('li:first');
-            if($li.length) {
-                !this.pub.sideBarNavIndex[hash] && (this.pub.sideBarNavIndex[hash] = []);
-                var indexFirst = $li.attr('index'), indexSecond = 0;
-                var $second = $li.parents(".nav-second-level:first");
-                if($second.length) {
-                    indexSecond = indexFirst;
-                    indexFirst = $second.parents("li:first").attr('index');
-                    indexFirst && (indexSecond = indexSecond.replace(new RegExp('^'+indexFirst), ''));
+            var pageIndex = $('body').attr('page-index');
+            if(pageIndex){
+            	var pageIndexArr = ("#"+pageIndex).split('-');
+                var getCurSideBar = function(chash){
+                	var $chash = $("#side-bar").find('[href$="'+chash+'"]'),
+                		$chashDir = $("#side-bar").find('[href$="'+chash+'/"]');
+                	if($chash.length || $chashDir.length){
+                		return $chash.length ? $chash.parents('li:first') : $chashDir.parents('li:first');
+                	}else{
+                		pageIndexArr.pop();
+                		if(pageIndexArr.length <= 1){
+                			return null;
+                		}else{
+                			return getCurSideBar(pageIndexArr.join('/'));
+                		}
+                	}
                 }
-                this.pub.sideBarNavIndex[hash][0] = parseInt(indexFirst);
-                if(indexSecond) {
-                    this.pub.sideBarNavIndex[hash][1] = parseInt(indexSecond);
+                var $li = getCurSideBar(hash);
+                if($li && $li.length) {
+                    !this.pub.sideBarNavIndex[hash] && (this.pub.sideBarNavIndex[hash] = []);
+                    var indexFirst = $li.attr('index'), indexSecond = 0;
+                    var $second = $li.parents(".nav-second-level:first");
+                    if($second.length) {
+                        indexSecond = indexFirst;
+                        indexFirst = $second.parents("li:first").attr('index');
+                        indexFirst && (indexSecond = indexSecond.replace(new RegExp('^'+indexFirst), ''));
+                    }
+                    this.pub.sideBarNavIndex[hash][0] = parseInt(indexFirst);
+                    if(indexSecond) {
+                        this.pub.sideBarNavIndex[hash][1] = parseInt(indexSecond);
+                    }
                 }
             }
+            
         },
         scrollbarWidth: function() {
             var scrollDiv = document.createElement('div');

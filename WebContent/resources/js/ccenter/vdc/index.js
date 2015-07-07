@@ -61,6 +61,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 			        {"data": "name"},
 			        {"data": "description"},
 			        {"data": "enabled"},
+			        {"data": "virtualEnvName"},
 			        {"data": {}}
 		      ],
 		      /*
@@ -90,7 +91,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 					    }
 					},
                      {
-                       "targets": [4],
+                       "targets": [5],
                        "orderable": false,
                        "data": {id:"id",name:"name",virtualEnvId:"virtualEnvId"},
                        "render": function(data, type, full) {
