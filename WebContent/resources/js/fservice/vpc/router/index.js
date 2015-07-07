@@ -35,7 +35,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 			        	"orderable": false,
 			        	"defaultContent":"<label><input type='checkbox'></label>"
 			        },
-			        {"data": "name"},
+			        {"data": {}},
 			        {"data": "status"},
 			        {"data": "external_gateway_info.network_id"},
 			        {"data":""}
@@ -51,7 +51,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 		            {
 		            	"targets":[1],
 		            	"render":function(data, type, full){
-		            		return "<a href='javascript:void(0);' class='router-name'>"+data+"</a>";
+		            		return "<a href='#fservice/vpc/router/detail/"+data.id+"'>"+data.name+"</a>";
 		            	}
 		            },
 					{
@@ -302,19 +302,6 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 				    });
 	    	 });
 	     });
-		//路由明细
-	     $(document).off("click","#RouterTable_wrapper a.router-name");
-		$(document).on("click","#RouterTable_wrapper a.router-name",function(){
-		    	Common.xhr.ajax('/networking/v2.0/routers/'+$(this).parents("tr:first").data("rowData.dt").id,function(data){
-		    		Common.render('tpls/fservice/vpc/router/detail.html',data.router,function(html){
-		    			$("#page-main .page-content").html(html);
-		    			//返回按钮
-		    		    $(".form-horizontal a.reload").on("click",function(){
-		    		    	Common.router.route();
-		    		    })
-		    		});
-		    	});
-		});
 	   
 		var EditData = {
 		    	//添加子网连接

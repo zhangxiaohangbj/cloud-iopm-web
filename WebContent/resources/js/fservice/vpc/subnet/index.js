@@ -49,7 +49,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 					{
 					    "targets": [2],
 					    "render": function(data, type, full) {
-					    	return "<a class='subnet-name' href='#fservice/vpc/subnet/detail/"+data.id+"'>"+data.name+"</a>";
+					    	return "<a href='#fservice/vpc/subnet/detail/"+data.id+"'>"+data.name+"</a>";
 					    }
 					},
 					{
