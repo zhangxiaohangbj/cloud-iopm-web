@@ -11,7 +11,7 @@
 	<tbody>
 	{{each subnets as item i}}
 		<tr>
-			<td><a href="javascript:void(0);" class="subnet-name" data="{{item.id}}">{{item.name}}</a></td>
+			<td><a href="#fservice/vpc/subnet/detail/{{item.id}}" class="subnet-name" data="{{item.id}}">{{item.name}}</a></td>
 			<td>{{item.cidr}}</td>
 			<td>{{item.tenant_id}}</td>
 			<td>IPV{{item.ip_version}}</td>

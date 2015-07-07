@@ -93,16 +93,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 			organChoose : function(){
 				$(document).off("click","input[name='organName']");
 				$(document).on("click","input[name='organName']",function(){
-					Common.xhr.ajax('/identity/v2.0/users/page/1/10',function(data){  //需修改接口
-			    		data =[
-		    					{ id:1, pId:0, name:"浪潮集团",open:true},
-		    					{ id:2, pId:1, name:"浪潮软件"},
-		    					{ id:21,pId:2,name:"IOP研发中心"},
-		 						{ id:22,pId:2,name:"大数据事业部"},
-		 						{ id:23,pId:2,name:"技术中心"},
-		    					{ id:3, pId:1, name:"浪潮通软"},
-		    					{ id:4, pId:1, name:"浪潮通信"}
-		    				];
+					Common.xhr.ajax('/identity/v2.0/organ/rootnodes',function(data){
 			    		Modal.show({
 		    	            title: '选择部门',
 		    	            message: '<div><ul id="organTree" class="ztree"></ul></div>',
@@ -118,7 +109,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 		    	                		return;
 		    	                	}
 		    	                	$("[name='organId']").val(nodes[0].id);
-		    	                	$("[name='organName']").val(nodes[0].name);
+		    	                	$("[name='organName']").val(nodes[0].organName);
 		    	                	 dialog.close();
 		    	                }
 		    	            }, {
@@ -138,16 +129,41 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 		    	            			data: {
 		    	            				simpleData: {
 		    	            					enable: true
-		    	            				}
-		    	            			}
+		    	            				},
+		    	            				key: {
+		    	    							name:'organName'
+		    	    						}
+		    	            			},
+		    	            			async: {
+		    	        					enable: true,  //异步加载
+		    	        					url: getUrl,
+		    	        					dataType: "json",
+		    	        					type:"get",
+		    	        					dataFilter: filter
+		    	        				}
 		    	            		};
 
 		    	            		var zNodes =data;
+		    	            		//异步加载节点必须有isParent
+		    	            		for(var i = 0; i<zNodes.length; i++){
+		    	            			zNodes[i].isParent = true;
+		    	                	}
 		    	            		$.fn.zTree.init($("#organTree"), setting, zNodes);
 		    	            		var treeObj = $.fn.zTree.getZTreeObj("organTree");
 		    	            		if($("[name='organId']").val()){
 		    	            			var node = treeObj.getNodeByParam("id", $("[name='organId']").val(), null);
 			    	            		treeObj.checkNode(node, true, false); 
+		    	            		}
+		    	            		
+		    	            		function getUrl(treeId, treeNode) {
+		    	            			return "identity/v2.0/organ/"+treeNode.id+"/childrennodes";
+		    	            		}
+		    	            		function filter(treeId, parentNode, childNodes) {
+		    	            			if (!childNodes) return null;
+		    	            			for (var i=0, l=childNodes.length; i<l; i++) {
+		    	            				childNodes[i].isParent = true;
+		    	            			}
+		    	            			return childNodes;
 		    	            		}
 
 		    	            	});
@@ -217,7 +233,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 		    	                action: function(dialog) {
 		    	                	var role_text = "";
 		    	                	var role_id = "";
-		    	                	$("#chooseRoleTable input[type='checkbox']:checked").each(function(){
+		    	                	$("#chooseRoleTable div.checked").each(function(){
 		    	                		role_text += $(this).parent().next().html()+",";
 		    	                		role_id += $(this).next().val()+",";
 		    	                	})
