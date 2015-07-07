@@ -1,9 +1,11 @@
-define(['Common', 'echarts', 'echarts/chart/pie', 'echarts/chart/funnel', 'echarts/chart/gauge', 'bs/tab'],function(Common, echarts){
+define(['Common','PubView','echarts', 'echarts/chart/pie', 'echarts/chart/funnel', 'echarts/chart/gauge', 'bs/tab'],function(Common,PubView, echarts){
 	var init = function(){
 		Common.$pageContent.removeClass('loading');
 		Common.render(true, {
 			tpl: 'tpls/index.html',
-			data: [],
+			data: {
+				PubView: PubView
+			},
 			beforeRender: function(data) {
 				return data;
 			},
