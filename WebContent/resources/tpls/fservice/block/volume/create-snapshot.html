@@ -1,0 +1,19 @@
+<div class="edit-vm-list clearfix">
+	<input type="hidden" name="snapshot_size" id="snapshot_size" value="{{volume.size}}">
+		<div class="form-group">
+			<label for="snapshot_name" class="control-label col-sm-3"><span>* </span>快照名称：</label>
+			<div class="col-sm-6 col-sm">
+				<input type="text" class="form-control" name="snapshot_name" id="snapshot_name" placeholder="快照名称">
+			</div>
+		</div>
+		<br>
+		<div class="form-group">
+			<label for="snapshot_desc" class="control-label col-sm-3">描述：</label>
+			<div class="col-sm-6 col-sm">
+				<textarea rows="6" cols="36" name="snapshot_desc" id="snapshot_desc"></textarea>
+			</div>
+		</div>
+	
+	<div class="col-sm-9 snapshot-quotas">
+	</div>
+</div>
