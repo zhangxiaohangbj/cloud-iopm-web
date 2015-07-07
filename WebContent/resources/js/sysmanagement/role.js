@@ -5,10 +5,6 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 		//先获取数据，进行加工后再去render
 		Common.render(true,{
 			tpl:'tpls/sysmanagement/role/list.html',
-			data:'/identity/v2.0/roles/page/1/10',
-			beforeRender: function(data){
-				return data.result;
-			},
 			callback: bindEvent
 		});
 	};
@@ -16,11 +12,32 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 	var bindEvent = function(){
 		//页面渲染完后进行各种事件的绑定
 		//dataTables
-		Common.initDataTable($('#RoleTable'),function($tar){
-			$tar.prev().find('.left-col:first').append(
-					'<span class="btn btn-add">新建角色 </span>'
-				);
-			Common.$pageContent.removeClass("loading");
+		var table = Common.initDataTable($('#RoleTable'), {
+		      "processing": true,  //加载效果，默认false
+		      "serverSide": true,  //页面在加载时就请求后台，以及每次对 datatable 进行操作时也是请求后台
+		      "ordering": false,   //禁用所有排序
+		      "sAjaxSource":"identity/v2.0/roles/page/", //ajax源，后端提供的分页接口
+	    	  /*属性 columns 用来配置具体列的属性，包括对应的数据列名,如trueName，是否支持搜索，是否显示，是否支持排序等*/
+		      "columns": [
+			        {
+			        	"orderable": false,
+			        	"defaultContent":"<label><input type='checkbox'></label>"
+			        },
+			        {"data": "name"},
+			        {"data": "description"},
+			        {
+			        	"defaultContent":'<a class="btn-delete" data-toggle="tooltip" title="删除" href="javascript:void(0)" style="margin: 0 8px;"><i class="fa fa-trash-o fa-fw"></i></a>'
+							+'<a class="btn-edit-authority" data-toggle="tooltip" title="权限设置" href="javascript:void(0)" style="margin: 0 8px;">权限设置</a>'
+			        }
+		      ]
+		    },
+		    function($tar){
+		    	var $tbMenu = $tar.prev('.tableMenus');
+		    	$tbMenu.length && $tbMenu.empty().html($('.table-menus').html());
+				Common.$pageContent.removeClass("loading");
+		});
+		Common.on('click','.dataTables_filter .btn-query',function(){
+			table.search($('.global-search').val()).draw();
 		});
 		var DataIniter = {
 			initFunctionItem: function(){
@@ -89,7 +106,8 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 				}
 		}
 		//增加按钮
-	    $("#RoleTable_wrapper span.btn-add").on("click",function(){
+		$(document).off("click","#RoleTable_wrapper span.btn-add");
+	    $(document).on("click","#RoleTable_wrapper span.btn-add", function(){
 	    	Common.render('tpls/sysmanagement/role/add.html',function(html){
 	    		Modal.show({
     	            title: '新建角色',
@@ -172,8 +190,9 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 //	    		});
 //	    });
 	    //删除角色
-	     $("#RoleTable_wrapper a.btn-delete").on("click",function(){
-	    	 var id = $(this).attr("data");
+	    $(document).off("click","#RoleTable_wrapper a.btn-delete");
+	     $(document).on("click","#RoleTable_wrapper a.btn-delete", function(){
+	    	 var id = $(this).parents("tr:first").data("rowData.dt").id;
 	    	 Modal.confirm('确定要删除该角色吗?', function(result){
 	             if(result) {
 	            	 Common.xhr.del('/identity/v2.0/OS-KSADM/roles/'+id,
@@ -192,8 +211,9 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 	         });
 	     });
 	   //权限设置
-	     $("#RoleTable_wrapper a.btn-edit-authority").on("click",function(){
-		    	var id= $(this).attr("data");
+	     $(document).off("click", "#RoleTable_wrapper a.btn-edit-authority");
+	     $(document).on("click","#RoleTable_wrapper a.btn-edit-authority",function(){
+	    	 var id = $(this).parents("tr:first").data("rowData.dt").id;
 		    	//查询角色权限，判断功能项是否勾选
 		    	
 		    	Common.render('tpls/sysmanagement/role/addfunctionitem.html','/identity/v2.0/functiontrees', function(html){
