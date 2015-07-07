@@ -212,6 +212,9 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 				getVe: function(){
 					Common.xhr.get('/v2/virtual-env',function(veList){///v2/images
 						renderData.veList = veList;
+						for(var i=0;i<veList.length;i++){
+							$('.select-venv').append('<option value="'+veList[i]["id"]+'">'+veList[i]["name"]+'</option>');
+						}
 					});
 				},
 				//获取成员信息
