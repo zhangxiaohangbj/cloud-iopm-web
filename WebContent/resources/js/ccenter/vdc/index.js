@@ -687,6 +687,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
     				},
     				options = {
 						selector: '#vdcAZ',
+						checkRepeat: 'name',
 						allData: eaz,
 						selectData: vaz
     				};

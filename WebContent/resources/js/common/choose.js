@@ -10,6 +10,7 @@ define(['Common','bs/modal'],function(Common,Modal){
 				selectData:[],		//右侧已选择部分数据
 				doneCall: null,		//执行完成后的回调
 				doneData:null,		//执行完成后回调可能会用到的数据
+				checkRepeat: "id", //判断重复时的数据标准
 				groupSelectedClass: 'col-sm-6',		//已选择部分的class
 				groupAllClass: 'col-sm-6'		//全部区域部分的class
 		};
@@ -67,9 +68,9 @@ define(['Common','bs/modal'],function(Common,Modal){
 		};
 		var checkMove = function($this,$wrapper){
 			var flag = true;
-			var uniqueKey = $this.find('li.member').attr('data-id');
+			var uniqueKey = $this.find('li.member').attr('data-'+renderOptions.checkRepeat);
 			$wrapper.children().each(function(){
-				if(uniqueKey === $(this).find('li.member').attr('data-id')){
+				if(uniqueKey === $(this).find('li.member').attr('data-'+renderOptions.checkRepeat)){
 					flag = false;
 				}
 			});
