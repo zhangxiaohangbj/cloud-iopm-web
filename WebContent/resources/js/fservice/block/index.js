@@ -482,7 +482,83 @@ define(['Common','bs/modal','rq/text!tpls/fservice/block/volume/list-opts.html',
 	    
 		});
 	    var moreAction = {
-    		editMount: function(){
+	    		
+	    	createShapshot: function(){
+	    		Common.on('click','.snapshot-menu', function(){
+	    			var rowdata = $(this).parents("tr:first").data("rowData.dt");
+    				var id = rowdata.id;
+    				var name = rowdata.name;
+    				var snapshotDialog;
+	       	    	Common.render({
+    					tpl:'tpls/fservice/block/volume/create-snapshot.html',
+						data: {volume:rowdata},
+						callback: function(html) {
+							Modal.show({
+	    	    	            title: '创建'+name+' 的快照',
+	    	    	            message: html,
+	    	    	            closeByBackdrop: false,
+	    	    	            nl2br: false,
+	    	    	            onshow: function(dialog) {
+	    	    	            	snapshotDialog = dialog;
+	    	    	                dialog.getButton('os-snapshot-btn').disable();
+	    	    	            },
+	    	    	            buttons: [{
+	    	    	            	id: 'os-snapshot-btn',
+	    	    	                label: '确定',
+	    	    	                disabled : true,
+	    	    	                action: function(dialog) {
+	    	    	                	var url = 'block-storage/v2/' + current_vdc_id + '/snapshots';
+	    	    	                	var newSize = {
+    	    	                		    "snapshot": {
+    	    	                		    	"volume_id": id,
+    	    	                		    	"name": $("#snapshot_name").val(),
+    	    	                		    	"description": $("#snapshot_desc").val(),
+    	    	                		        "force": true
+    	    	                		    }
+    	    	                		};
+	    	    	                	Common.xhr.postJSON(url , newSize, function(data){
+		    	    	                		if(data){
+		    	    	                			dialog.close();
+		    	    	                			Modal.success('创建成功')
+		    	     	                			setTimeout(function(){Modal.closeAll()},3000);
+		    	    	                			Common.router.route();
+		    									}else{
+		    										alert("创建失败");
+		    									}
+		    	    	    				});
+	    	    	                	 }
+	    	    	            	}, {
+	    	    	            		label: '取消',
+	    	    	            		action: function(dialog) {
+	    	    	            			dialog.close();
+	    	    	                	}
+	    	    	            	}],
+    	    	            	onshown : function(){
+    	    	            		$("#snapshot_name").on("change", function(){
+    	    	            			(!!$(this).val())?snapshotDialog.getButton('os-snapshot-btn').enable()
+    	    	            					:snapshotDialog.getButton('os-snapshot-btn').disable();
+    	    	            		});
+    	    	            		renderQuatos({
+    									vdcId : current_vdc_id,
+    									valueNode : '#snapshot_size',
+    									quatos : [{name: "gigabytes", title: "容量", type: "mount"},
+    									          {name: "snapshots", title: "快照数量", type: "count"}],
+    									domNode : 'div.snapshot-quotas',
+    									callback: function(msg) {
+    										if(msg || !$("#snapshot_name").val()) {
+    											snapshotDialog.getButton('os-snapshot-btn').disable();
+    										} else {
+    											snapshotDialog.getButton('os-snapshot-btn').enable();
+    										}
+    									}
+    								})
+    	        	            }
+	    					});
+						}
+    				})
+	    		});
+	    	},
+	    	attachVolume: function(){
     			Common.on('click','.dropdown-menu a.edit_mount',function(){
     				var rowdata = $(this).parents("tr:first").data("rowData.dt");
     				var id = rowdata.id,
@@ -502,23 +578,31 @@ define(['Common','bs/modal','rq/text!tpls/fservice/block/volume/list-opts.html',
 	    	    	            nl2br: false,
 	    	    	            buttons: [{
 	    	    	                label: '确定',
-	    	    	                action: function(Modal) {
-	    	    	                	Common.xhr.postJSON('/v2.0/networks',postData,function(data){
+	    	    	                disabled: true,
+	    	    	                action: function(dialog) {
+	    	    	                	var postData = {
+	    	    	                			"volumeAttachment": {
+	    	    	                			    "volumeId": id
+	    	    	                			  }
+	    	    	                			};
+	    	    	                	var serverId = $("[name='mountServerId']:checked").val();
+	    	    	                	var url = '/compute/v2/' + current_vdc_id + '/servers/' + serverId + '/os-volume_attachments';
+	    	    	                	Common.xhr.postJSON(url, postData, function(data){
 		    	    	                		if(data){
-		    	    	                			Modal.close();
-		    	    	                			Modal.success('保存成功')
+		    	    	                			dialog.close();
+		    	    	                			Modal.success('挂载成功')
 		    	     	                			setTimeout(function(){Modal.closeAll()},3000);
 		    	    	                			Common.router.route();
 		    									}else{
-		    										alert("保存失败");
+		    										alert("挂载失败");
 		    									}
 		    	    	    				});
 	    	    	                	 }
 	    	    	            	},
 	    	    	            	{
-	    	    	                label: '取消',
-	    	    	                action: function(Modal) {
-	    	    	                    Modal.close();
+		    	    	                label: '取消',
+		    	    	                action: function(dialog) {
+		    	    	                	dialog.close();
 	    	    	                	}
 	    	    	            	}],
 	    	    	            	onshown : function(){
@@ -527,6 +611,37 @@ define(['Common','bs/modal','rq/text!tpls/fservice/block/volume/list-opts.html',
 	    					});
 						}
     				})
+    			})
+    		},
+    		detachVolume: function(){
+    			Common.on('click','.dropdown-menu a.detach_mount',function(){
+    				var rowdata = $(this).parents("tr:first").data("rowData.dt");
+    				var id = rowdata.id,
+    				name = rowdata.name;
+    				var url = '/compute/v2/' + current_vdc_id + '/volumes/'
+    					+ id + '/os-volume_attachments';
+    				Common.xhr.get(url, {}, function(data){
+                		if(data){
+                			Modal.confirm('确定要卸载"' + name + '"吗?', function(result){
+               	             if(result) {
+               	            	 var detachUrl = "/compute/v2/" + current_vdc_id + "/servers/" + data.serverId + "/os-volume_attachments/" + data.id;
+               	            	 Common.xhr.del(detachUrl, function(data){
+           	                    	 if(data){
+           	                    		 Modal.success('磁盘卸载成功')
+            	                			 setTimeout(function(){Modal.closeAll()},3000);
+           	                    		 Common.router.route();//重新载入
+           	                    	 }else{
+           	                    		 Modal.warning ('磁盘卸载失败')
+           	                    	 }
+           	                     });
+               	             }else {
+               	            	 Modal.closeAll();
+               	             }
+               	         	});
+						}else{
+							alert("获取挂载信息失败");
+						}
+    				});
     			})
     		},
     		//删除
@@ -609,7 +724,6 @@ define(['Common','bs/modal','rq/text!tpls/fservice/block/volume/list-opts.html',
 	    									domNode : 'div.quotas-size',
 	    									callback: function(msg) {
 	    										if(msg) {
-	    											Modal.warn('保存成功')
 	    											extendDialog.getButton('os-extend-btn').disable();
 	    										} else {
 	    											extendDialog.getButton('os-extend-btn').enable();

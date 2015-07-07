@@ -1,98 +1,50 @@
-<div class="page-header clearfix">
-	<ol class="breadcrumb">
-	  <li class="active">子网详情</li>
+<div class="page-header">
+	<ol class="breadcrumb minus">
+		<li class="active"><h4>子网详情</h4></li>
+		<li class="backlist"><a href="#fservice/vpc/subnet/">返回列表</a></li>
 	</ol>
 </div>
 <div class="page-body">
 	<div class="pane">
 		<div class="pane-content">
-			<form class="form-horizontal" id="addSubnet">
-				<div class="form-group" style="overflow: hidden;">
-					<label for="server-name" class="control-label col-sm-3">
-				 	网络：</label>
-				 	<div class="col-sm-5 col-sm">
-						<input type="text" class="form-control input-readonly" name="vpc_name" value="{{network_id}}" readonly="readonly">
+			<div class="detail-info">
+				<div class="tab-content">
+					<div class="clearfix">
+						<div class="row">
+							<label class="control-label col-sm-3">网络：</label>
+							<div class="col-sm-7 col-sm">{{subnet.network_id}}</div>
+						</div>
+						<div class="row">
+							<label class="control-label col-sm-3">子网名称：</label>
+							<div class="col-sm-7 col-sm">{{subnet.name}}</div>
+						</div>
+						<div class="row">
+							<label class="control-label col-sm-3">CIDR地址：</label>
+							<div class="col-sm-7 col-sm">{{subnet.cidr}}</div>
+						</div>
+						<div class="row">
+							<label class="control-label col-sm-3">IP版本：</label>
+							<div class="col-sm-7 col-sm">IPV{{subnet.ip_version }}</div>
+						</div>
+						<div class="row">
+							<label class="control-label col-sm-3">网关IP：</label>
+							<div class="col-sm-7 col-sm">{{subnet.gateway_ip}}</div>
+						</div>
+						<div class="row">
+							<label class="control-label col-sm-3">网关：</label>
+							<div class="col-sm-7 col-sm">{{if subnet.gateway_ip != null}}启用{{else}}禁用 {{/if}}</div>
+						</div>
+						<div class="row">
+							<label class="control-label col-sm-3">DHCP：</label>
+							<div class="col-sm-7 col-sm">{{if subnet.enable_dhcp == '1'}}激活{{else}}禁用 {{/if}}</div>
+						</div>
+						<div class="row">
+							<label class="control-label col-sm-3">分配地址池：</label>
+							<div class="col-sm-7 col-sm">{{subnet.allocation_pools }}</div>
+						</div>
 					</div>
 				</div>
-				<div class="form-group" style="overflow: hidden;">
-					<label for="server-name" class="control-label col-sm-3">
-				 	子网名称：</label>
-				 	<div class="col-sm-5 col-sm">
-						<input type="text" class="form-control input-readonly" name="name" value="{{name}}" readonly="readonly">
-					</div>
-				</div>
-				<div class="form-group" style="overflow: hidden;">
-					<label for="server-name" class="control-label col-sm-3">
-				 	CIDR地址：</label>
-				 	<div class="col-sm-5 col-sm">
-						<input type="text" class="form-control input-readonly" name="cidr" value="{{cidr}}" readonly="readonly">
-					</div>
-				</div>
-				<div class="form-group" style="overflow: hidden;">
-					<label for="server-name" class="control-label col-sm-3">
-				 	IP版本：</label>
-				 	<div class="col-sm-5 col-sm">
-						<select disabled="disabled" name="ip_version" class="form-control select">
-							<option value="4" {{if ip_version=='4'}}selected="selected"{{/if}}>IPV4</option>
-							<option value="6" {{if ip_version=='6'}}selected="selected"{{/if}}>IPV6</option>
-						</select>
-					</div>
-				</div>
-				<div class="form-group" style="overflow: hidden;">
-					<label for="server-name" class="control-label col-sm-3">
-				 	网关IP：</label>
-				 	<div class="col-sm-5 col-sm">
-						<input type="text" class="form-control" name="gateway_ip" value="{{gateway_ip}}" disabled="disabled">
-					</div>
-				</div>
-				<div class="form-group" style="overflow: hidden;">
-					<label for="server-name" class="control-label col-sm-3">
-				 	网关：</label>
-				 	<div class="col-sm-5 col-sm" id="enable_ip">
-				 		<p>
-					        <input type="checkbox" name="enable_ip" data-size="small" checked data-on-text="启用" data-off-text="禁用" {{if gateway_ip != null}} checked {{/if}} readonly>
-					    </p>
-					</div>
-				</div>
-				<div class="form-group" style="overflow: hidden;">
-					<label for="enable_dhcp" class="control-label col-sm-3">
-				 	DHCP：</label>
-				 	<div class="col-sm-5 col-sm">
-						<p>
-					        <input type="checkbox" name="enable_dhcp" data-size="small" data-on-text="激活" data-off-text="禁用" {{if enable_dhcp == '1'}} checked {{/if}} readonly>
-					    </p>
-					</div>
-				</div>
-				<div class="form-group" style="overflow: hidden;">
-					<label for="allocation_pools" class="control-label col-sm-3">
-				 	分配地址池：</label>
-				 	<div class="col-sm-5 col-sm">
-				 		<input type="text" class="form-control" name="start" value="" style="width: 45%;" readonly="readonly">&nbsp;-
-						<input type="text" class="form-control" name="end" value="" style="width: 45%;" readonly="readonly">
-					</div>
-				</div>
-				<!-- <div class="form-group" style="overflow: hidden;">
-					<label for="server-name" class="control-label col-sm-3">
-				 	DNS域名解析服务：</label>
-				 	<div class="col-sm-5 col-sm">
-						<input type="text" class="form-control" name="subnet-name" value="" readonly="readonly">
-					</div>
-				</div>
-				<div class="form-group" style="overflow: hidden;">
-					<label for="server-name" class="control-label col-sm-3">
-				 	主机路由：</label>
-				 	<div class="col-sm-5 col-sm">
-						<input type="text" class="form-control" name="subnet-name" value="" readonly="readonly">
-					</div>
-				</div> -->
-				<div class="form-group" style="overflow: hidden;">
-					<label for="server-name" class="control-label col-sm-3"></label>
-				 	<div class="col-sm-5 col-sm">
-						<a href="javascript:void(0);" class="btn btn-default reload">返回</a>
-					</div>
-				</div>
-			</form>
-			
+			</div>
 		</div>
 	</div>
 </div>
