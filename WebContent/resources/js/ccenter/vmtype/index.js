@@ -320,7 +320,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
                     });
                 })
 
-            },
+            }
 
 
 	    }
