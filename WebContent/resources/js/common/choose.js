@@ -67,9 +67,9 @@ define(['Common','bs/modal'],function(Common,Modal){
 		};
 		var checkMove = function($this,$wrapper){
 			var flag = true;
-			var uniqueKey = $this.find('li:first').attr('data-id');
+			var uniqueKey = $this.find('li.member').attr('data-id');
 			$wrapper.children().each(function(){
-				if(uniqueKey === $(this).find('li:first').attr('data-id')){
+				if(uniqueKey === $(this).find('li.member').attr('data-id')){
 					flag = false;
 				}
 			});
