@@ -77,10 +77,20 @@ define('commons/main',
             if(pageIndex){
             	var pageIndexArr = ("#"+pageIndex).split('-');
                 var getCurSideBar = function(chash){
-                	var $chash = $("#side-bar").find('[href$="'+chash+'"]'),
-                		$chashDir = $("#side-bar").find('[href$="'+chash+'/"]');
-                	if($chash.length || $chashDir.length){
-                		return $chash.length ? $chash.parents('li:first') : $chashDir.parents('li:first');
+                	var chashArr = [
+                	                chash,
+                	                chash+'/index',
+                	                chash+'/'
+                	                ];
+                	var $chash;
+                	for(var i=0,l=chashArr.length;i<l;i++){
+                		if($("#side-bar").find('[href$="'+chashArr[i]+'"]').length){
+                			$chash = $("#side-bar").find('[href$="'+chashArr[i]+'"]');
+                			break;
+                		}
+                	}
+                	if($chash && $chash.length){
+                		return $chash.parents('li:first');
                 	}else{
                 		pageIndexArr.pop();
                 		if(pageIndexArr.length <= 1){
@@ -339,16 +349,6 @@ define('commons/main',
                         if(firstColumn && !firstColumn.orderable) {
                             $(firstColumn.nTh).removeClass("sorting sorting_asc sorting_desc").addClass(firstColumn.sSortingClass || "sorting_disabled");
                         }
-                        var rowDataList = settings.aoData;
-                        if(rowDataList) {
-                        	$.each(rowDataList, function(i, rowData) {
-                        		if(rowData._aFilterData) {
-                        			$(rowData.nTr).data('rowData.dt', rowData._aFilterData);
-                        		} else {
-                        			$(rowData.nTr).data('rowData.dt', rowData._aData);
-                        		}
-                        	});
-                        }
                         var args = [];
                         $.each(arguments, function(i, arg) {
                             args.push(arg);
@@ -406,6 +406,17 @@ define('commons/main',
         			    		$('.table-primary').find('input[type=checkbox]').iCheck('uncheck');
         			    	}
         			    });
+        			    var settings = this.fnSettings();
+                        var rowDataList = settings.aoData;
+                        if(rowDataList) {
+                        	$.each(rowDataList, function(i, rowData) {
+                        		if(rowData._aFilterData) {
+                        			$(rowData.nTr).data('rowData.dt', rowData._aFilterData);
+                        		} else {
+                        			$(rowData.nTr).data('rowData.dt', rowData._aData);
+                        		}
+                        	});
+                        }
                     }
                 });
                 var tableFlag = true;

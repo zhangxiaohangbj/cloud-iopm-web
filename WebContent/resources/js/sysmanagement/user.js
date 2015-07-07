@@ -12,34 +12,11 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 	var bindEvent = function(){
 		//页面渲染完后进行各种事件的绑定
 		//dataTables
-		Common.initDataTable($('#UserTable'),{
+		var table = Common.initDataTable($('#UserTable'),{
 		      "processing": true,  //加载效果，默认false
 		      "serverSide": true,  //页面在加载时就请求后台，以及每次对 datatable 进行操作时也是请求后台
 		      "ordering": false,   //禁用所有排序
 		      "sAjaxSource":"identity/v2.0/users/page/", //ajax源，后端提供的分页接口
-		      /*fnServerData是与服务器端交换数据时被调用的函数
-		       * sSource： 就是sAjaxSource中指定的地址，接收数据的url需要拼装成 v2.0/users/page/10/1 格式
-		       *      aoData[4].value为每页显示条数，aoData[3].value/aoData[4].value+1为请求的页码数
-		       * aoData：请求参数，其中包含search 输入框中的值
-		       * */
-		      "fnServerData": function( sSource, aoData, fnCallback ) {
-		    	    $.ajax( {   
-		    	        "url": sSource + (aoData[3].value/aoData[4].value+1) +"/"+aoData[4].value, 
-		    	        "data":aoData,
-		    	        "dataType": "json",   
-		    	        "success": function(resp) {
-		    	        	/*渲染前预处理后端返回的数据为DataTables期望的格式,
-		    	        	 * 后端返回数据格式 {"pageNo":1,"pageSize":5,"orderBy":null,"order":null,"autoCount":true,"result":[{"id":"07da487da17b4354a4b5d8e2b2e41485","name":"wzz"}],
-		    	        	 * "totalCount":31,"first":1,"orderBySetted":false,"totalPages":7,"hasNext":true,"nextPage":2,"hasPre":false,"prePage":1}
-		    	        	 * DataTables期望的格式 {"draw": 2,"recordsTotal": 11,"recordsFiltered": 11,"data": [{"id": 1,"firstName": "Troy"}]}
-							*/
-		    	        	resp.data = resp.result;
-		    	        	resp.recordsTotal = resp.totalCount;
-		    	        	resp.recordsFiltered = resp.totalCount;
-		    	            fnCallback(resp);   //fnCallback：服务器返回数据后的处理函数，需要按DataTables期望的格式传入返回数据 
-		    	        }   
-		    	    });   
-		      },
 	    	  /*属性 columns 用来配置具体列的属性，包括对应的数据列名,如trueName，是否支持搜索，是否显示，是否支持排序等*/
 		      "columns": [
 			        {
@@ -79,10 +56,12 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
                 ]
 		    },
 		    function($tar){
-			$tar.prev().find('.left-col:first').append(
-					'<span class="btn btn-add">新建用户 </span>'
-				);
-			Common.$pageContent.removeClass("loading");
+		    	var $tbMenu = $tar.prev('.tableMenus');
+		    	$tbMenu.length && $tbMenu.empty().html($('.table-menus').html());
+				Common.$pageContent.removeClass("loading");
+		});
+		Common.on('click','.dataTables_filter .btn-query',function(){
+			table.search($('.global-search').val()).draw();
 		});
 		$.validator.addMethod("phone_rule",function(value,element){
 			return this.optional(element) || /^13[0-9]{9}$|15[0-9]{9}$|18[0-9]{9}$/.test(value);
@@ -93,16 +72,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 			organChoose : function(){
 				$(document).off("click","input[name='organName']");
 				$(document).on("click","input[name='organName']",function(){
-					Common.xhr.ajax('/identity/v2.0/users/page/1/10',function(data){  //需修改接口
-			    		data =[
-		    					{ id:1, pId:0, name:"浪潮集团",open:true},
-		    					{ id:2, pId:1, name:"浪潮软件"},
-		    					{ id:21,pId:2,name:"IOP研发中心"},
-		 						{ id:22,pId:2,name:"大数据事业部"},
-		 						{ id:23,pId:2,name:"技术中心"},
-		    					{ id:3, pId:1, name:"浪潮通软"},
-		    					{ id:4, pId:1, name:"浪潮通信"}
-		    				];
+					Common.xhr.ajax('/identity/v2.0/organ/rootnodes',function(data){
 			    		Modal.show({
 		    	            title: '选择部门',
 		    	            message: '<div><ul id="organTree" class="ztree"></ul></div>',
@@ -118,7 +88,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 		    	                		return;
 		    	                	}
 		    	                	$("[name='organId']").val(nodes[0].id);
-		    	                	$("[name='organName']").val(nodes[0].name);
+		    	                	$("[name='organName']").val(nodes[0].organName);
 		    	                	 dialog.close();
 		    	                }
 		    	            }, {
@@ -138,16 +108,41 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 		    	            			data: {
 		    	            				simpleData: {
 		    	            					enable: true
-		    	            				}
-		    	            			}
+		    	            				},
+		    	            				key: {
+		    	    							name:'organName'
+		    	    						}
+		    	            			},
+		    	            			async: {
+		    	        					enable: true,  //异步加载
+		    	        					url: getUrl,
+		    	        					dataType: "json",
+		    	        					type:"get",
+		    	        					dataFilter: filter
+		    	        				}
 		    	            		};
 
 		    	            		var zNodes =data;
+		    	            		//异步加载节点必须有isParent
+		    	            		for(var i = 0; i<zNodes.length; i++){
+		    	            			zNodes[i].isParent = true;
+		    	                	}
 		    	            		$.fn.zTree.init($("#organTree"), setting, zNodes);
 		    	            		var treeObj = $.fn.zTree.getZTreeObj("organTree");
 		    	            		if($("[name='organId']").val()){
 		    	            			var node = treeObj.getNodeByParam("id", $("[name='organId']").val(), null);
 			    	            		treeObj.checkNode(node, true, false); 
+		    	            		}
+		    	            		
+		    	            		function getUrl(treeId, treeNode) {
+		    	            			return "identity/v2.0/organ/"+treeNode.id+"/childrennodes";
+		    	            		}
+		    	            		function filter(treeId, parentNode, childNodes) {
+		    	            			if (!childNodes) return null;
+		    	            			for (var i=0, l=childNodes.length; i<l; i++) {
+		    	            				childNodes[i].isParent = true;
+		    	            			}
+		    	            			return childNodes;
 		    	            		}
 
 		    	            	});
@@ -217,7 +212,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 		    	                action: function(dialog) {
 		    	                	var role_text = "";
 		    	                	var role_id = "";
-		    	                	$("#chooseRoleTable input[type='checkbox']:checked").each(function(){
+		    	                	$("#chooseRoleTable div.checked").each(function(){
 		    	                		role_text += $(this).parent().next().html()+",";
 		    	                		role_id += $(this).next().val()+",";
 		    	                	})
