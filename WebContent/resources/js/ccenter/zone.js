@@ -159,7 +159,6 @@ define(['Common','bs/modal','jq/form/wizard','jq/form/validator-bs3','bs/tooltip
             },
             changeHandler:function(elem){
                 var curDiv = $("#"+elem);
-                debugger
                 curDiv.find("select.select-resource-type").change(function(){
                     chosenList =[];  //reInit
                     var resourceName = $(this).children('option:selected').val();
@@ -387,7 +386,8 @@ define(['Common','bs/modal','jq/form/wizard','jq/form/validator-bs3','bs/tooltip
                         Common.render('tpls/ccenter/zone/addResource.html',renderData,function(html){
                             options.doneCall = function(html,chooseWrapper) {
                                 chooseWrapper.append(html);
-                                $(options.selector).append(chooseWrapper.find('div:first'));
+                                $(options.selector).empty().append(chooseWrapper.find('div:first'));
+                               // alert(chooseWrapper.html());
                                 Modal.show({
                                     title: '添加资源',
                                     message: chooseWrapper.html(),
