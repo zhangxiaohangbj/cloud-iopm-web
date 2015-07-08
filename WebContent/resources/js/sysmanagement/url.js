@@ -5,21 +5,49 @@ define(['Common','bs/modal','jq/form/validator-bs3'],function(Common,Modal){
 		//先获取数据，进行加工后再去render
 		Common.render(true,{
 			tpl:'tpls/sysmanagement/url/list.html',
-			data:'/identity/v2.0/url/page/1/10',
-			beforeRender: function(data){
-				return data.result;
-			},
 			callback: bindEvent
 		});
 	};
 	var bindEvent = function(){
 		//页面渲染完后进行各种事件的绑定
 		//dataTables
-		Common.initDataTable($('#URLTable'),function($tar){
-			$tar.prev().find('.left-col:first').append(
-					'<span class="btn btn-add">新建URL </span>'
-				);
-			Common.$pageContent.removeClass("loading");
+		var table = Common.initDataTable($('#URLTable'),{
+		      "processing": true,  //加载效果，默认false
+		      "serverSide": true,  //页面在加载时就请求后台，以及每次对 datatable 进行操作时也是请求后台
+		      "ordering": false,   //禁用所有排序
+		      "sAjaxSource":"identity/v2.0/url/page/", //ajax源，后端提供的分页接口
+		      "columns": [
+			        {
+			        	"orderable": false,
+			        	"defaultContent":"<label><input type='checkbox'></label>"
+			        },
+			        {"data": "urlName"},
+			        {"data": "urlAddress"},
+			        {"data": "method"},
+			        {"data": "endpoint.url"},
+			        {"data": "isPublic"},
+			        {
+			        	"defaultContent":'<a class="btn-edit" data-toggle="tooltip" title="编辑" href="javascript:void(0)" data-act="stop"><li class="glyphicon glyphicon-edit"></li></a>'
+							+'<a class="btn-delete" data-toggle="tooltip" title="删除" href="javascript:void(0)" style="margin: 0 8px;"><i class="fa fa-trash-o fa-fw"></i></a>'
+			        }
+		      ],
+		      "columnDefs": [
+		            {
+		            	"targets": [5],
+		            	"render":function(data, type,full){
+		            		if(data == true) return "是";
+		            		else return "否";
+		            	}
+		            }
+		      ]
+		    },
+		    function($tar){
+		    	var $tbMenu = $tar.prev('.tableMenus');
+		    	$tbMenu.length && $tbMenu.empty().html($('.table-menus').html());
+				Common.$pageContent.removeClass("loading");
+		});
+		Common.on('click','.dataTables_filter .btn-query',function(){
+			table.search($('.global-search').val()).draw();
 		});
 		var EventsHandler = {
 				//表单校验
@@ -87,7 +115,8 @@ define(['Common','bs/modal','jq/form/validator-bs3'],function(Common,Modal){
 				}
 		}
 		//增加按钮
-	    $("#URLTable_wrapper span.btn-add").on("click",function(){
+		$(document).off("click", "#URLTable_wrapper span.btn-add");
+	    $(document).on("click","#URLTable_wrapper span.btn-add",function(){
 	    	Common.render('tpls/sysmanagement/url/add.html',function(html){
 	    		Modal.show({
     	            title: '新建URL',
@@ -109,7 +138,7 @@ define(['Common','bs/modal','jq/form/validator-bs3'],function(Common,Modal){
     	                		if(data){
     	                			Modal.success('保存成功')
     	                			setTimeout(function(){Modal.closeAll()},2000);
-    	                			Common.router.route();
+    	                			table.draw();
 								}else{
 									Modal.warning ('保存失败')
 								}
@@ -129,8 +158,9 @@ define(['Common','bs/modal','jq/form/validator-bs3'],function(Common,Modal){
     		});
 	    });
 		//编辑
-	    $("#URLTable_wrapper a.btn-edit").on("click",function(){
-	    	var id= $(this).attr("data");
+		$(document).off("click","#URLTable_wrapper a.btn-edit");
+	    $(document).on("click","#URLTable_wrapper a.btn-edit",function(){
+	    	var id= $(this).parents("tr:first").data("rowData.dt").id;
 	    	Common.xhr.ajax('/identity/v2.0/url/'+id,function(data){
 	    		Common.render('tpls/sysmanagement/url/edit.html',data,function(html){
 	    			Modal.show({
@@ -154,7 +184,7 @@ define(['Common','bs/modal','jq/form/validator-bs3'],function(Common,Modal){
 	    	                		if(data){
 	    	                			Modal.success('保存成功')
 	    	                			setTimeout(function(){Modal.closeAll()},2000);
-	    	                			Common.router.route();
+	    	                			table.draw();
 									}else{
 										Modal.warning ('保存失败')
 									}
@@ -175,8 +205,9 @@ define(['Common','bs/modal','jq/form/validator-bs3'],function(Common,Modal){
 	    		});
 	    });
 	    //删除
-	     $("#URLTable_wrapper a.btn-delete").on("click",function(){
-	    	 var id = $(this).attr("data");
+	    $(document).off("click","#URLTable_wrapper a.btn-delete");
+	     $(document).on("click","#URLTable_wrapper a.btn-delete", function(){
+	    	 var id= $(this).parents("tr:first").data("rowData.dt").id;
 	    	 Modal.confirm('确定要删除该URL吗?', function(result){
 	             if(result) {
 	            	 Common.xhr.del('/identity/v2.0/url/'+id,
@@ -184,7 +215,7 @@ define(['Common','bs/modal','jq/form/validator-bs3'],function(Common,Modal){
 	                    	 if(data){
 	                    		 Modal.success('删除成功')
 	                			 setTimeout(function(){Modal.closeAll()},2000);
-	                    		 Common.router.route();
+	                    		 table.draw();
 	                    	 }else{
 	                    		 Modal.warning ('删除失败')
 	                    	 }

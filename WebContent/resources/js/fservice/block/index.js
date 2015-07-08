@@ -374,17 +374,6 @@ define(['Common','bs/modal','rq/text!tpls/fservice/block/volume/list-opts.html',
     				wizard.form.each(function(){
     					$(this).validate({
                             errorContainer: '_form',
-                            /*errorPlacement: function(error, element) {
-                            	debugger
-                                if ( $(element).is(":radio") )
-                                	$(element).appendTo( $(element).parent().next().next() );
-                                else if ( $(element).is(":checkbox") )
-                                	$(element).appendTo ( $(element).next() );
-                                else
-                            	alert($(error).html());
-                            	//alert($(element).parent().html());
-                            	$(error).appendTo( $(element).parents('.form-group:first') );
-                            },*/
                             rules: {
     			            	'name': {
     			                    required: true,
@@ -401,7 +390,6 @@ define(['Common','bs/modal','rq/text!tpls/fservice/block/volume/list-opts.html',
     				})
     				//载入事件
     		    	EventsHandler.vdcChange();
-    				//EventsHandler.inputListener();
     			});
     			var getMountVm = function(){
     				var data = [];
@@ -447,7 +435,6 @@ define(['Common','bs/modal','rq/text!tpls/fservice/block/volume/list-opts.html',
 				});
     			
     			wizard.show();
-    			
     			wizard.on("submit", function(wizard) {
     				var volume = wizard.serializeObject();
     				if(volume.availability_zone == "") {

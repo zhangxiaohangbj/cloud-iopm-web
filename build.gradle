@@ -27,7 +27,7 @@ webAppDirName = 'WebContent' //The name of the web application source directory,
 sourceCompatibility = JavaVersion.VERSION_1_7
 targetCompatibility = JavaVersion.VERSION_1_7
 ext{
-	ext.springVersion = '4.0.5.RELEASE'
+	springVersion = '4.0.5.RELEASE'
 }
 
 configurations {

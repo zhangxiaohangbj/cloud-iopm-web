@@ -3,6 +3,7 @@
  */
 define('commons/router_table', function() {
     return {
+        '^#logout$': 'js/logout',
         '^#monitor(!.*)?$': "js/monitor/task/strategyGroup",
         '^#aservice$' :"js/aservice/rds/instance",
         '^#bservice(!.*)?$' :"js/bservice/nosql/index",
@@ -29,6 +30,8 @@ define('commons/router_table', function() {
         '^#aservice/container/bay/detail/' :"js/aservice/container/bay/detail",
         '^#fservice/vpc/network/detail/(.*)$' :"js/fservice/vpc/network/detail",
         '^#fservice/vpc/subnet/detail/(.*)$' :"js/fservice/vpc/subnet/detail",
-        '^#fservice/vpc/router/detail/(.*)$' :"js/fservice/vpc/router/detail"
+        '^#fservice/vpc/router/detail/(.*)$' :"js/fservice/vpc/router/detail",
+    	'^#fservice/vpc/firewall/rule/detail/(.*)$' :"js/fservice/vpc/firewall/rule_detail",
+		'^#fservice/vpc/firewall/tab/(.*)$' :"js/fservice/vpc/firewall/index"
     };
 });

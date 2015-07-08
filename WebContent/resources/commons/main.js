@@ -5,7 +5,7 @@ define('commons/main',
     [
         'PubView', 'bs/modal', 'json', 'template',
         'commons/pub_menu', 'commons/router_table',
-        'jq/dataTables-bs3', 'bs/popover', 'jq/cookie'
+        'jq/dataTables-bs3', 'jq/form/validator-bs3', 'bs/popover', 'jq/cookie'
     ],
     function(
         PubView, Modal, JSON, template,
@@ -40,6 +40,28 @@ define('commons/main',
                 "infoFiltered": "(总 _MAX_ 条)"
             }
         });
+    }
+
+    // init form validator rules
+    if($.validator) {
+        $.validator.addMethod('mobile', function(value, element) {
+            return this.optional(element) || /^(13[0-9]|14[5|7]|15[0|1|2|3|5|6|7|8|9]|18[0-9]|170)\d{8}$/.test(value);
+        }, "请输入正确的手机号");
+        $.validator.addMethod('telephone', function(value, element) {
+            return this.optional(element) || /^\d{3,4}-?\d{7,9}$/.test(value);
+        }, "请输入正确的电话号");
+        $.validator.addMethod('name_en', function(value, element) {
+            return this.optional(element) || /^[a-z][a-z0-9_]*$/i.test(value);
+        }, "请输入正确的英文名称");
+        $.validator.addMethod('name_cn', function(value, element) {
+            return this.optional(element) || /^[a-z\u4E00-\u9FA5][a-z0-9_\u4E00-\u9FA5]*$/i.test(value);
+        }, "请输入正确的中文名称");
+        $.validator.addMethod('IP', function(value, element) {
+            return this.optional(element) || /^(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])$/.test(value);
+        }, "请输入正确的IP(v4)地址");
+        $.validator.addMethod('IPV6', function(value, element) {
+            return this.optional(element) || (value.match(/:/g).length<=7 && /::/.test(value) ? /^([\da-f]{1,4}(:|::)){1,6}[\da-f]{1,4}$/i.test(value) : /^([\da-f]{1,4}:){7}[\da-f]{1,4}$/i.test(value));
+        }, "请输入正确的IPv6地址");
     }
 
     return {
@@ -276,7 +298,7 @@ define('commons/main',
                     pageCss = pageCssPrefix + pageIndexCur,
                     pageCssOld = pageIndex ? pageCssPrefix + pageIndex : '';
                 if(pageIndex) {
-                    if(pageIndexCur !== pageIndex) {
+                    if(pageIndexCur !== "logout" && pageIndexCur !== pageIndex) {
                         this.$body.attr('page-index', pageIndexCur);
                         pageCssOld = pageCssPrefix + pageIndex;
                         this.$body.removeClass(pageCssOld).addClass(pageCss);
@@ -554,8 +576,19 @@ define('commons/main',
                 };
                 //加载控制器,并默认执行init初始化
                 this.loadctrl = function(ctrl){
-                    Modal.loading();
                     var self = this;
+                    // 校验登录
+                    if(typeof that.cookies.getUser() === "undefined") {
+                        var args = [];
+                        $.each(arguments, function(i,arg) {
+                            args.push(arg);
+                        });
+                        that.login('登录已失效，请重新登录！', function() {
+                            self.loadctrl.apply(self, args);
+                        });
+                        return false;
+                    }
+                    Modal.loading();
                     var onLoad = function() {
                         // 重设页面索引
                         that.resetPageIndex();
@@ -613,8 +646,8 @@ define('commons/main',
             !that.router && (that.router = new Router(RouterTable));
         },
         render: function(renderToPage, tplUrl, data, callback) {
-            var that = this,
-                _renderToPage, _tplUrl, _data, _beforeRender, _callback;
+            var that = this, renderDef = $.Deferred();
+            var _renderToPage, _tplUrl, _data, _beforeRender, _callback;
             if(typeof renderToPage !== "boolean") {
                 _renderToPage = false;
                 _tplUrl = renderToPage;
@@ -633,7 +666,6 @@ define('commons/main',
                 _beforeRender = obj.beforeRender;
                 _callback = obj.callback;
             }
-            var renderDef = $.Deferred();
             if(_tplUrl && PubView.utils.isString(_tplUrl)) {
                 try {
                     _renderToPage && (that._inRender = true);
@@ -814,6 +846,16 @@ define('commons/main',
                                 dataType: 'json'
                             },
                             failureCallback = function(xhr, errorName, errorText) {
+                                if(xhr.status == 506) {
+                                    that.login();
+                                    return false;
+                                } else if(xhr.status == 507) {
+                                    that.login('无效的Token ID，请重新登录');
+                                    return false;
+                                } else if(xhr.status == 508) {
+                                    that.login('登录已失效，请重新登录');
+                                    return false;
+                                }
                                 if(errorName) {
                                     errorName = errorName.replace(/(.+)error$/, "$1 error").replace(/\b\w+\b/g,function(w) {
                                         return w.substr(0,1).toLocaleUpperCase() + w.substring(1);
@@ -1149,11 +1191,14 @@ define('commons/main',
          * @param callback
          */
         login: function(message, callback) {
+            if(this._login) return this;
             var that = this;
-            Modal.show({
+            this._login = Modal.show({
                 cssClass: 'modal-login',
                 title: '请登录',
-                closable: false,
+                closable: true,
+                closeByBackdrop: false,
+                closeByKeyboard: false,
                 message: function() {
                     return [
                         '<div class="signin-header">',
@@ -1190,6 +1235,7 @@ define('commons/main',
                         cssClass: 'btn-primary',
                         autospin: true,
                         action: function(dialog){
+                            dialog.setData('logging', true);
                             dialog.enableButtons(false);
                             var $form = dialog.getModalBody().find('.form-signin:first');
                             var formValid = true, errorTip = function($tar, msg) {
@@ -1211,10 +1257,14 @@ define('commons/main',
                                 errorTip($('#password'), "密码不能为空！");
                                 formValid = false;
                             }
-                            if(!formValid) {
+                            var submitFailure = function() {
+                                dialog.setData('logging', false);
                                 dialog.enableButtons(true);
                                 dialog.getButton('btn-signin').stopSpin();
                                 return false;
+                            };
+                            if(!formValid) {
+                                return submitFailure();
                             }
                             var data = {
                                 'auth': {
@@ -1225,20 +1275,27 @@ define('commons/main',
                                     }
                                 }
                             };
-                            that.xhr.ajax({
+                            $.ajax({
                                 type: "POST",
-                                url: '/v2.0/tokens',
+                                url: that.xhr._getFullUrl('/identity/v2.0/tokens'),
                                 data: JSON.stringify(data),
                                 contentType: "application/json",
                                 success: function(res) {
                                     if(!res || res.error_code){
-                                        alert("错误代码："+res.error_code+"\n错误描述: "+res.error_desc);
+                                        errorTip($('#loginName'), res.error_desc);
+                                        submitFailure();
                                     }else{
                                         dialog.close();
                                         dialog.getButton('btn-signin').stopSpin();
                                     }
                                 },
                                 error: function(xhr, errorText) {
+                                    if(xhr.status == 401) {
+                                        errorTip($('#loginName'), "用户名或密码错误！");
+                                    } else {
+                                        errorTip($('#loginName'), errorText);
+                                    }
+                                    submitFailure();
                                 }
                             });
                         }
@@ -1252,13 +1309,31 @@ define('commons/main',
                     }
                 ],
                 onshow: function(dialog) {
+                    var helpTip = $.proxy(function(msg) {
+                        var $help = this.getModalHeader().find(".help-block:first");
+                        if($help.length <= 0) {
+                            $help = $('<p class="help-block"/>').appendTo(this.getModalHeader());
+                        }
+                        if(msg && typeof msg === "string") {
+                            $help.html('<i class="glyphicon glyphicon-exclamation-sign"></i> '+msg);
+                        }
+                    }, dialog);
+                    dialog.setData('helpTip', helpTip);
+                    helpTip(message);
                     var $body = dialog.getModalBody();
                     $body.find('input[type="checkbox"]').iCheck({
                         checkboxClass: "icheckbox-primary"
                     });
                 },
                 onhidden: function(dialog) {
+                    delete that._login;
                     dialog.enableButtons(true);
+                    if(dialog.getData('logging')) {
+                        dialog.setData('logging', false);
+                        typeof callback === "function" && callback.apply(that);
+                    } else {
+                        window.location.assign(PubView.root + '/login');
+                    }
                 }
             });
         },

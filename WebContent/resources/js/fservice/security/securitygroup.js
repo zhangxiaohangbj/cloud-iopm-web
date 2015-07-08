@@ -27,7 +27,8 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 			        {"data": "description"},
 			        {"data": "vdc_name"},
 			        {"data": "isDeleted"},
-			        {"data":"id"}
+			        {"defaultContent":'<a href="javascript:void(0)" class="securityrule" style="margin-right: 8px;">管理规则</a>'
+		        		+'<a href="javascript:void(0)" class="deleteSecurityGroup"><i class="fa fa-trash-o fa-fw"></i></a>'}
 		      ],
 		      "columnDefs": [
 					{
@@ -35,13 +36,6 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 					    "render": function(data, type, full) {
 				 			if(data == false) return ' <span class="text-success">启用</span>';
 				 			else return ' <span class="text-warning">已删除</span>';
-					    }
-					},
-					{
-					    "targets": [5],
-					    "render": function(data, type, full) {
-				 			return '<a href="javascript:void(0)" class="securityrule" data="'+data+'" style="margin-right: 8px;">管理规则</a>'
-			        		+'<a href="javascript:void(0)" class="deleteSecurityGroup" data="'+data+'"><i class="fa fa-trash-o fa-fw"></i></a>';
 					    }
 					}
                 ]
@@ -199,7 +193,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 		//删除安全组,接口为物理删除，非逻辑删
 		$(document).off("click","#SecuritygroupTable_wrapper a.deleteSecurityGroup");
 		 $(document).on("click","#SecuritygroupTable_wrapper a.deleteSecurityGroup", function(){
-	    	 var id = $(this).attr("data");
+	    	 var id = $(this).parents("tr:first").data("rowData.dt").id;
 	    	 Dialog.confirm('确定要删除该安全组吗?', function(result){
 	             if(result) {
 	            	 Common.xhr.del('/networking/v2.0/security-groups/'+id,
@@ -327,7 +321,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 		//连接子网
 		$(document).off("click","#SecuritygroupTable_wrapper a.securityrule");
 	    $(document).on("click","#SecuritygroupTable_wrapper a.securityrule", function(){
-	    	var id = $(this).attr("data");
+	    	var id = $(this).parents("tr:first").data("rowData.dt").id;
 	    	EditData.GetRuleList(id);
 	    })
 	}
