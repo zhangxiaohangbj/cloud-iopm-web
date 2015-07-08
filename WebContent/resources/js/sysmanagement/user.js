@@ -63,9 +63,6 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 		Common.on('click','.dataTables_filter .btn-query',function(){
 			table.search($('.global-search').val()).draw();
 		});
-		$.validator.addMethod("phone_rule",function(value,element){
-			return this.optional(element) || /^13[0-9]{9}$|15[0-9]{9}$|18[0-9]{9}$/.test(value);
-		},"请填写正确的手机号");
 		//载入后的事件
 		var EventsHandler = {
 			//选择部门
@@ -275,7 +272,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 		                    equalTo:'#password'
 		                },
 		                'phone': {
-		                	phone_rule:true
+		                	mobile:true
 		                },
 		                'email': {
 		                	email:true,
@@ -286,7 +283,8 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 		                },
 		                'organId': {
 		                    required: true,
-		                    maxlength:36
+		                    maxlength:36,
+		                    ignore: ""
 		                },
 		                'organName': {
 		                    required: true

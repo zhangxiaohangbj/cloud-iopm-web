@@ -12,24 +12,28 @@ define(['Common','bs/modal','js/fservice/vpc/firewall/firewall','js/fservice/vpc
 	
 	function bindEvent(tabActive){
 		Common.$pageContent.removeClass("loading");
-		renderFirewall();
-		renderPolicy();
-		renderRule();
 		if(tabActive){
 			$('.firewall-info .nav li').removeClass('active');
 			$('.firewall-info .nav li[data-for="'+tabActive+'"]').addClass('active');
 			$('.tab-content').find('.tab-pane').removeClass('active');
 			$('.tab-content').find('div.' + tabActive).addClass('active');
+			if(tabActive == "firewall"){
+				renderFirewall();
+			}
+			if(tabActive == "policy"){
+				renderPolicy();
+			}
+			if(tabActive == "rule"){
+				renderRule();
+			}
+		}else{
+			renderFirewall();
 		}
 		$('.firewall-info .nav li').on('click',function(){
 			var $this = $(this);
 			if(!$this.hasClass('active')){
-				$('.firewall-info .nav li').removeClass('active');
-				$this.addClass('active');
 				var data = $this.attr('data-for');
-				$('.tab-content').find('.tab-pane').removeClass('active');
-				var $tab = $('.tab-content').find('div.' + data);
-				$tab.addClass('active');
+				window.location.hash='#fservice/vpc/firewall/tab/'+data;
 			}
 		});
 		function renderFirewall(){

@@ -98,18 +98,21 @@ define('js/fservice/vpc/firewall/firewall', ['Common','bs/modal','bs/tooltip','j
 			},
 			switcher:function(){
 				$(".col-sm input[type=\"checkbox\"], input[type=\"radio\"]").not("[data-switch-no-init]").switcher();
+			},
+			tabSwitch: function(){
+				$('.create-info .nav li').on('click',function(){
+					var $this = $(this);
+					if(!$this.hasClass('active')){
+						$('.create-info .nav li').removeClass('active');
+						$this.addClass('active');
+						var data = $this.attr('data-for');
+						$('.create-info .tab-content').find('.tab-pane').removeClass('active');
+						var $tab = $('.create-info .tab-content').find('div.' + data);
+						$tab.addClass('active');
+					}
+				});
 			}
 		}
-		//创建防火墙
-		$('.create-info .nav li').on('click',function(){
-			var $this = $(this);
-			if(!$this.hasClass('active')){
-				$('.detail-info .nav li').removeClass('active');
-				$this.addClass('active');
-				var data = $this.attr('data-for');
-				$('.tab-content').find('.tab-pane').removeClass('active');
-			}
-		});
 		Common.on("click","#FirewallTable_wrapper span.btn-add",function(){
 			Common.render('tpls/fservice/vpc/firewall/firewall/add.html','',function(html){
 				Dialog.show({

@@ -413,7 +413,43 @@ define('commons/pub_menu', function() {
                             link: '#task/strategyGroup'
                         }
                     ]
+
+                },
+                {
+                    text: '<i class="fa fa-monitor"></i>监控<i class="fa icon-arrow"></i>',
+                    items: [
+                        {
+                            text: '<i class="fa fa-dot fa-1"></i>在线监控',
+                            link: '#monitor/monitor'
+                        },
+                        {
+                            text: '<i class="fa fa-dot fa-1"></i>监控概览',
+                            link: '#monitor/strategy'
+                        },
+                        {
+                            text: '<i class="fa fa-dot fa-1"></i>agent管理',
+                            link: '#monitor/monitor'
+                        },
+                        {
+                            text: '<i class="fa fa-dot fa-1"></i>监控指标',
+                            link: '#monitor/meter'
+                        },
+                        {
+                            text: '<i class="fa fa-dot fa-1"></i>告警方案',
+                            link: '#monitor/strategyGroup'
+                        },
+                        {
+                            text: '<i class="fa fa-dot fa-1"></i>通知方案',
+                            link: '#monitor/strategyGroup'
+                        },
+
+                        {
+                            text: '<i class="fa fa-dot fa-1"></i>监控对象设置',
+                            link: '#monitor/strategyGroup'
+                        }
+                    ]
                 }
+
             ]
         },
         {
