@@ -428,7 +428,7 @@ define('commons/pub_menu', function() {
                         },
                         {
                             text: '<i class="fa fa-dot fa-1"></i>监控指标',
-                            link: '#monitor/monitor'
+                            link: '#monitor/meter'
                         },
                         {
                             text: '<i class="fa fa-dot fa-1"></i>告警方案',

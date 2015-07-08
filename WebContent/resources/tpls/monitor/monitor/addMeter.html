@@ -1,0 +1,67 @@
+<div class="wizard" id="create-meter-wizard" data-title="创建监控指标">
+			<!-- 基本信息 -->
+			<div class="wizard-card" data-cardname="basic">
+				<h3>基本信息</h3>
+				<div class="wizard-card-content col-sm-8">
+					<div class="wizard-input-section" id="addMeter">
+						<div class="form-group">
+							<label for="name" class="control-label col-sm-3"><span>* </span>指标名称：</label>
+							<div class="col-sm-7 col-sm">
+								<input type="text" class="form-control" id="name" name="name" placeholder="指标名称">
+							</div>
+
+						</div>
+                        <div class="form-group">
+                            <label for="type" class="control-label col-sm-3"><span>* </span>指标类型：</label>
+                            <div class="col-sm-7 col-sm">
+                                <select name="type" id="type" class="form-control select type">
+                                    <option  id='system' value='system'>系统</option>
+                                    <option  id='customer' value='customer'>自定义</option>
+                                </select>
+                            </div>
+
+                        </div>
+                        <div class="form-group">
+                            <label for="unit" class="control-label col-sm-3"><span>* </span>指标单位：</label>
+                            <div class="col-sm-7 col-sm">
+                                <input type="text" class="form-control" id="unit" name="unit" placeholder="单位">
+                            </div>
+
+                        </div>
+                        <div class="form-group">
+                            <label for="resource_type" class="control-label col-sm-3"><span>* </span>资源类型：</label>
+                            <div class="col-sm-7 col-sm">
+                                <select name="resource_type" id="resource_type" class="form-control select type">
+                                    {{each resourceTypes as item i}}
+                                        <option  id={{item.id}} value={{item.id}}>{{item.description}}</option>
+                                    {{/each}}
+                                </select>
+                            </div>
+
+                        </div>
+					</div>
+				</div>
+				<div class="wizard-card-desc col-sm-4">
+					<p><b>监控指标</b>：
+				</div>
+			
+			</div>
+
+            <div class="wizard-card" data-cardname="updateShell">
+                <h3>上传脚本</h3>
+                <div class="wizard-card-content  col-sm-8">
+                    <div class="wizard-input-section">
+                        <div class="form-group">
+                            <label  class="control-label col-sm-3">上传脚本：</label>
+                        </div>
+                    </div>
+
+
+                </div>
+                <div class="wizard-card-desc col-sm-4">
+                    <p>上传脚本</p>
+                </div>
+
+            </div>
+			
+		</div>
