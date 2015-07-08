@@ -1,8 +1,5 @@
 define('js/fservice/vpc/firewall/firewall', ['Common','bs/modal','bs/tooltip','jq/form/validator-bs3','bs/switcher'],function(Common, Dialog){
 	
-	var alertFirewall = function(){
-		alert("alertFirewall");
-	}
 	var bindEvent = function(){
 		//页面渲染完后进行各种事件的绑定
 		//dataTables
@@ -16,7 +13,7 @@ define('js/fservice/vpc/firewall/firewall', ['Common','bs/modal','bs/tooltip','j
 				        {"orderable": false,"defaultContent":"<label><input type='checkbox'></label>"},
 				        {"data": "name"},
 				        {"data": "firewallPolicyName"},
-				        {"data": "routerList"},
+				        {"data": "router_ids"},
 				        {"data": "status"},
 				        {"data": "admin_state_up"},
 				        {"data":""}
@@ -43,6 +40,19 @@ define('js/fservice/vpc/firewall/firewall', ['Common','bs/modal','bs/tooltip','j
                 	 }
                  },
                  {
+                	 "targets":[3],
+                	 "render":function(data, type, full){
+                		 var dataStr = "";
+                		 for(var i = 0; i < data.length-1; i++){
+                			 dataStr = dataStr + data[i] + ","
+                		 }
+                		 if(data.length > 0){
+                			 dataStr = dataStr + data[data.length-1];
+                		 }
+                		 return dataStr;
+                	 }
+                 },
+                 {
                 	 "targets": [6],
                 	 "data" :"id",
                 	 "render": function(data, type, full) {
@@ -61,6 +71,7 @@ define('js/fservice/vpc/firewall/firewall', ['Common','bs/modal','bs/tooltip','j
 			},
 			function($tar){
 				$tar.prev().find('.left-col:first').append('<span class="btn btn-add">创建防火墙</span>');
+				var $tab = $('.tab-content').find('div.policy');
 				Common.hideLocalLoading($tab);
 			}
 		);
@@ -100,7 +111,7 @@ define('js/fservice/vpc/firewall/firewall', ['Common','bs/modal','bs/tooltip','j
 			}
 		});
 		Common.on("click","#FirewallTable_wrapper span.btn-add",function(){
-			Common.render('tpls/fservice/vpc/firewall/add.html','',function(html){
+			Common.render('tpls/fservice/vpc/firewall/firewall/add.html','',function(html){
 				Dialog.show({
 				    title: '防火墙创建',
 				    message: html,
@@ -143,7 +154,7 @@ define('js/fservice/vpc/firewall/firewall', ['Common','bs/modal','bs/tooltip','j
 		Common.on("click","#FirewallTable_wrapper a.editFirewall", function(){
 			var id= $(this).parents("tr:first").data("rowData.dt").id;
 			Common.xhr.ajax('/networking/v2.0/fw/firewalls/'+id,function(data){
-				Common.render('tpls/fservice/vpc/firewall/edit.html', data.firewall, function(html){
+				Common.render('tpls/fservice/vpc/firewall/firewall/edit.html', data.firewall, function(html){
 					Dialog.show({
 				        title: '编辑防火墙',
 				        message: html,
@@ -202,7 +213,7 @@ define('js/fservice/vpc/firewall/firewall', ['Common','bs/modal','bs/tooltip','j
 	   //防火墙明细
 		Common.on("click","#FirewallTable_wrapper a.firewall-name",function(){
 			Common.xhr.ajax('/networking/v2.0/fw/firewalls/'+$(this).parents("tr:first").data("rowData.dt").id,function(data){
-				Common.render('tpls/fservice/vpc/firewall/detail.html',data.firewall,function(html){
+				Common.render('tpls/fservice/vpc/firewall/firewall/detail.html',data.firewall,function(html){
 					$("#page-main .page-content").html(html);
 					//返回按钮
 					$(".form-horizontal a.reload").on("click",function(){
@@ -292,7 +303,7 @@ define('js/fservice/vpc/firewall/firewall', ['Common','bs/modal','bs/tooltip','j
 		var EditData = {
 			//添加子网连接
 			AddFirewallSubnet : function(id,cb){
-				Common.render('tpls/fservice/vpc/firewall/addlinksubnet.html',function(html){
+				Common.render('tpls/fservice/vpc/firewall/firewall/addlinksubnet.html',function(html){
 					Dialog.show({
 						title: '连接子网',
 						message: html,
@@ -324,7 +335,7 @@ define('js/fservice/vpc/firewall/firewall', ['Common','bs/modal','bs/tooltip','j
 			},
 			//获取子网连接列表
 			GetSubnetList :function(id){
-				Common.render(true,'tpls/fservice/vpc/firewall/linksubnet.html',function(html){
+				Common.render(true,'tpls/fservice/vpc/firewall/firewall/linksubnet.html',function(html){
 					Common.initDataTable($('#subnetTable'),{
 						"processing": true,  //加载效果，默认false
 						"serverSide": true,  //页面在加载时就请求后台，以及每次对 datatable 进行操作时也是请求后台
@@ -442,7 +453,6 @@ define('js/fservice/vpc/firewall/firewall', ['Common','bs/modal','bs/tooltip','j
 		
 	}
 	return{
-		alertFirewall: alertFirewall,
 		bindEvent: bindEvent
 	}
 })

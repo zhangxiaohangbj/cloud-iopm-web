@@ -51,8 +51,8 @@ define(['Common','PubView','echarts', 'echarts/chart/pie', 'echarts/chart/funnel
 				{
 					name:'资源占用率',
 					type:'pie',
-					radius : [20, '65%'],
-					center: ['50%', '35%'],
+					radius : [20, '62%'],
+					center: ['50%', '38%'],
 					roseType : 'radius',
 					x: '50%',               // for funnel
 					max: 40,                // for funnel
@@ -200,9 +200,7 @@ define(['Common','PubView','echarts', 'echarts/chart/pie', 'echarts/chart/funnel
 		}, 200);
 
 		$('#services-tab').tab();
-
-
-	}
+	};
 	return {
 		init : init
 	};

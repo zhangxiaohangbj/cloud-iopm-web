@@ -1,4 +1,14 @@
 @CHARSET "UTF-8";
+@font-face {
+	font-family: 'FZZDHJW--GB1-0';
+	src: url('../fonts/fzzdhjw/fzzdhjw.eot');
+	src: url('../fonts/fzzdhjw/fzzdhjw.eot') format('embedded-opentype'),
+	url('../fonts/fzzdhjw/fzzdhjw.woff') format('woff'),
+	url('../fonts/fzzdhjw/fzzdhjw.ttf') format('truetype'),
+	url('../fonts/fzzdhjw/fzzdhjw.svg#FZZDHJW--GB1-0') format('svg');
+	font-weight: normal;
+	font-style: normal;
+}
 body{
 	font-family:"Microsoft YaHei","微软雅黑","Helvetica Neue", Helvetica, Arial, sans-serif;
 	overflow: hidden;
@@ -139,7 +149,11 @@ header > .container,
 } */
 #header-nav > nav > ul > li.hover,
 #header-nav > nav > ul > li.active{
-    background-color:#3E4A5A;
+    background-color: #3E4A5A;
+}
+#header-nav > nav > ul > li[index="search-bar"].hover,
+#header-nav > nav > ul > li[index="search-bar"].active {
+	background: none;
 }
 #header-nav > nav > ul > li > a {
     display: inline-block;
@@ -890,6 +904,16 @@ i.image-icon-default.centos {
 .modal-login .modal-dialog {
 	width: 400px;
 }
+.modal-login .modal-header .help-block {
+	display: inline-block;
+	color: #8a6d3b;
+	font-family: simsun;
+	margin: 0 0 0 1.5em;
+}
+.modal-login .modal-header .help-block i {
+	margin-right: .35em;
+	top: 2px;
+}
 .modal-login .modal-body {
 	padding: 0 25px;
 }
@@ -1009,11 +1033,14 @@ i.image-icon-default.centos {
 .page_index ul {
 	list-style: none;
 	padding: 0;
+	margin-bottom: 0;
 }
 .page_index .page-title {
-	font-size: 18px;
 	color: #394759;
-	margin: 18px 0 14px;
+	font-size: 18px;
+	font-family: "方正正大黑简体", "FZZDHJW--GB1-0";
+	padding-left: 4px;
+	margin: 16px 0 12px;
 }
 .page_index .content-box {
 	padding-bottom: 55px;
@@ -1026,7 +1053,7 @@ i.image-icon-default.centos {
 .page_index .resources-list > li {
 	position: relative;
 	height: 33.33333333333333%;
-	padding: 12px 0 12px 9%;
+	padding: 13px 0 13px 9%;
 	border-bottom: 1px solid #f0f3f6;
 }
 .page_index .resources-icon {
@@ -1082,7 +1109,7 @@ i.image-icon-default.centos {
 }
 #chart-resources {
 	width: 100%;
-	height: 372px;
+	height: 389px;
 }
 .page_index .chart-resources-affix {
 	width: auto;
@@ -1098,7 +1125,9 @@ i.image-icon-default.centos {
 	text-align: right;
 }
 .page_index .services-tab .tab-content .tab-pane {
-	padding: 25px 0;
+	position: relative;
+	height: 329px;
+	line-height: 318px;
 }
 .page_index .services-tab .tab-content .tab-pane img{
 	width:100%;
@@ -1169,7 +1198,7 @@ i.image-icon-default.centos {
 }
 #chart-monitor {
 	width: 100%;
-	height: 220px;
+	height: 241px;
 }
 .page_index .chart-monitor-legend {
 	margin-top: 5px;
@@ -1243,4 +1272,16 @@ i.image-icon-default.centos {
 	position:absolute;
 	left:35px;padding:0;
 	z-index: -1;
+}
+
+
+/*vm新建虚机*/
+.page_fservice-vm-index .hidden-input-text{
+	opacity: 0;
+	-webkit-opacity: 0;
+	-moz-opacity: 0;
+	filter:alpha(opacity=0);
+	filter:progid:DXImageTransform.Microsoft.Alpha(Opacity=0);
+	position:absolute;
+	left:35px;padding:0;
 }
