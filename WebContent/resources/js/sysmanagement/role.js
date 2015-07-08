@@ -40,12 +40,13 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 			table.search($('.global-search').val()).draw();
 		});
 		var DataIniter = {
-			initFunctionItem: function(){
+			initFunctionItem: function(roleid){
 				var treeid = $("select[name='functiontree']").val();
-				Common.xhr.ajax('/identity/v2.0/functiontree/rootnodes/'+treeid,function(data){
+				Common.xhr.ajax('identity/v2.0/functiontree/'+treeid+'/functionitem/root/childrenfunctionitemUrl/role/'+roleid,function(data){
 					var setting = {
 	            			check: {
-	            				enable: true
+	            				enable: true,
+	            				chkboxType: { "Y": "p", "N": "s" }  //Y属性定义 checkbox 被勾选后影响父节点； N 属性定义 checkbox 取消勾选后影响子节点
 	            			},
 	            			data: {
 	            				simpleData: {
@@ -64,21 +65,37 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
             				}
 	            		};
 
-	            		var zNodes =data;
-	            		//异步加载节点必须有isParent
-	            		for(var i = 0; i<zNodes.length; i++){
-	            			zNodes[i].isParent = true;
-	                	}
+	        			var dataNodes = data.functionItemNodes;
+            			for (var i=0, l = dataNodes.length; i<l; i++) {
+            				dataNodes[i].isParent = true;
+            				dataNodes[i].checked = dataNodes[i].isSelect;
+            			}
+            			var dataurlNodes = data.urlNodes;
+            			for (var i=0, l = dataurlNodes.length; i<l; i++) {
+            				dataurlNodes[i].itemName = dataurlNodes[i].urlAddress;
+            				dataurlNodes[i].checked = dataurlNodes[i].isSelect;
+            				dataNodes.push(dataurlNodes[i]);
+            			}
+            			
+	            		var zNodes =dataNodes;
 	            		$.fn.zTree.init($("#authorityTree"), setting, zNodes);
 	            		function getUrl(treeId, treeNode) {
-	            			return "identity/v2.0/functiontree/childrennodes/"+treeNode.id;
+	            			return "identity/v2.0/functiontree/"+treeid+"/functionitem/"+treeNode.id+"/childrenfunctionitemUrl/role/"+roleid;
 	            		}
 	            		function filter(treeId, parentNode, childNodes) {
 	            			if (!childNodes) return null;
-	            			for (var i=0, l=childNodes.length; i<l; i++) {
-	            				childNodes[i].isParent = true;
+	            			var treeNodes = childNodes.functionItemNodes;
+	            			for (var i=0, l = treeNodes.length; i<l; i++) {
+	            				treeNodes[i].isParent = true;
+	            				treeNodes[i].checked = treeNodes[i].isSelect;
 	            			}
-	            			return childNodes;
+	            			var urlNodes = childNodes.urlNodes;
+	            			for (var i=0, l = urlNodes.length; i<l; i++) {
+	            				urlNodes[i].itemName = urlNodes[i].urlAddress;
+	            				urlNodes[i].checked = urlNodes[i].isSelect;
+	            				treeNodes.push(urlNodes[i]);
+	            			}
+	            			return treeNodes;
 	            		}
 				})
 			}
@@ -99,9 +116,9 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 			            }
 			        });
 				},
-				changeTree: function(){
+				changeTree: function(data){
 					$("select[name='functiontree']").on("change",function(){
-						DataIniter.initFunctionItem();
+						DataIniter.initFunctionItem(data);
 					})
 				}
 		}
@@ -226,21 +243,23 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 		    	                label: '保存',
 		    	                action: function(dialog) {
 		    	                	var treeObj = $.fn.zTree.getZTreeObj("authorityTree");
-		    	                	var nodes = treeObj.getCheckedNodes(true);
+		    	                	var nodes = treeObj.transformToArray(treeObj.getNodes());
 		    	                	if(nodes.length == 0){
 		    	                		Modal.warning ('请选择权限');
 		    	                		return;
 		    	                	}
-		    	                	var serverData = [];
+		    	                	var serverData = {},functionItemNodes = [], urlNodes = [];
 		    	                	for(var i = 0; i< nodes.length; i++){
-		    	                		serverData.push({"id":nodes[i].id});
+		    	                		if(nodes[i].isParent == true) 
+		    	                			functionItemNodes.push({"id":nodes[i].id,"isSelect":nodes[i].checked});
+		    	                		else urlNodes.push({"id":nodes[i].id,"isSelect":nodes[i].checked});
 		    	                	}
-		    	            		
-		    	                	Common.xhr.putJSON('/identity/v2.0/users/'+id,serverData,function(data){  //需修改接口
+		    	                	serverData.functionItemNodes = functionItemNodes;
+		    	                	serverData.urlNodes = urlNodes;
+		    	                	Common.xhr.postJSON('/identity/v2.0/role/'+id+'/functionitemurl',serverData,function(data){  //需修改接口
 		    	                		if(data){
 		    	                			Modal.success('保存成功')
 		    	                			setTimeout(function(){Modal.closeAll()},2000);
-		    	                			Common.router.route();
 										}else{
 											Modal.warning ('保存失败')
 										}
@@ -253,10 +272,10 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 		    	                }
 		    	            }],
 		    	            onshown : function(){
-		    	            	require(['jq/ztree'], function() {
-		    	            		DataIniter.initFunctionItem();
-		    	            	});
-		    	            	EventsHandler.changeTree();
+		    	            		require(['jq/ztree'], function() {
+			    	            		DataIniter.initFunctionItem(id);
+			    	            	});
+			    	            	EventsHandler.changeTree(id);
 		    	            }
 		    	        });
 					}
