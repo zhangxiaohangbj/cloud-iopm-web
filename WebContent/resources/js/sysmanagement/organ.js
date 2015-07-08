@@ -38,7 +38,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 	
 			var zNodes =data;
 			if(!data || data.length == 0)
-    			zNodes = [{id:0, pid:"root", itemName:"根节点"}];
+    			zNodes = [{id:0, pid:"root", organName:"根节点"}];
     		//异步加载节点必须有isParent
     		for(var i = 0; i<zNodes.length; i++){
     			zNodes[i].isParent = true;
@@ -268,6 +268,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 			                    maxlength:100
 			                },
 			                'seq': {
+			                	required: true,
 			                	digits: true
 			                }
 			            }
