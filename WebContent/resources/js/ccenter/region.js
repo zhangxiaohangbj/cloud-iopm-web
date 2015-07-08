@@ -14,11 +14,6 @@ define(['Common','bs/modal','jq/form/wizard','jq/form/validator-bs3','bs/tooltip
     }
     dataGetter.versionGetter();
 
-    //ip校验
-    $.validator.addMethod("ip", function(value, element) {
-        return this.optional(element) || /^((\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.){3}(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])$/.test(value);
-    }, "请填写正确的网关IP");
-
     $.validator.addMethod("nameDulplicateCheck", function(value, element) {
         var flag = false;
         Common.xhr.ajax(""+element,function(data){
@@ -35,16 +30,18 @@ define(['Common','bs/modal','jq/form/wizard','jq/form/validator-bs3','bs/tooltip
                 'region-name': {
                     required: true,
                     maxlength:15,
-                    minlength:1
+                    minlength:1,
+                    name_cn:true
                 },
                 'service-name': {
                     required: true,
                     maxlength:15,
-                    minlength:4
+                    minlength:1,
+                    name_cn:true
                 },
                 'ip':{
                     required: true,
-                    ip: true
+                    IP: true
                 },
                 'port':{
                     required:true,
@@ -54,7 +51,8 @@ define(['Common','bs/modal','jq/form/wizard','jq/form/validator-bs3','bs/tooltip
                 'username':{
                     required:true,
                     minlength:1,
-                    maxlength:15
+                    maxlength:15,
+                    name_en:true
                 },
                 'version':{
                     required:true,
@@ -130,7 +128,8 @@ define(['Common','bs/modal','jq/form/wizard','jq/form/validator-bs3','bs/tooltip
                         action:function(){
                             if(!$(".form-horizontal").valid()){
                                 //校验不通过，什么都不做
-                                alert(1)
+                                //alert(1)
+                                Modal.warning("连接不可用，请重新检查配置信息");
                             }else{
                                 //校验通过，提示可行
                                 Modal.loading('加载中');

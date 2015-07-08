@@ -255,13 +255,13 @@ define(['Common','bs/modal','jq/form/wizard','jq/form/validator-bs3','bs/tooltip
                             username:$("#connector-username").val(),
                             password:$("#connector-password-confirm").val()
                         }
-                        debugger
-                        validators[1].resetForm();
+                        validators[1].hideErrors();
                         Modal.loading('测试连接中');
                         Common.xhr.putJSON("/cloud/v2.0/connector/test",cur,function(data){
                             Modal.loading('remove');
                             if(data){
                                 Modal.success("该连接信息可用");
+                                $("#test-connection").val("true");
                             }else{
                                 Modal.warning("连接信息不可用");
                             }
@@ -406,10 +406,12 @@ define(['Common','bs/modal','jq/form/wizard','jq/form/validator-bs3','bs/tooltip
                         function(data){
                             if(data && data.error!=true){
                                 Modal.success('删除成功')
-                                setTimeout(function(){Dialog.closeAll()},2000);
-                                Common.router.route();//重新载入
+                                setTimeout(function(){
+                                    Modal.closeAll();
+                                    Common.router.route();//重新载入
+                                },2000);
+
                             }else{
-                                Modal.warning ('删除失败')
                             }
                         });
                 }else {
