@@ -23,10 +23,6 @@ define(['Common','bs/modal','jq/form/wizard','jq/form/validator-bs3','bs/tooltip
         });
         $("[data-toggle='tooltip']").tooltip();
 
-        //ip校验
-        $.validator.addMethod("ip", function(value, element) {
-            return this.optional(element) || /^((\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.){3}(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])$/.test(value);
-        }, "请填写正确的网关IP");
 
         $.validator.addMethod("connection", function(value, element) {
             return value == "true";
@@ -203,7 +199,8 @@ define(['Common','bs/modal','jq/form/wizard','jq/form/validator-bs3','bs/tooltip
                                 'env-name': {
                                     required: true,
                                     minlength: 1,
-                                    maxlength:15
+                                    maxlength:15,
+                                    name_en:true
                                 },
                                 'env-version': {
                                     required: true
@@ -236,7 +233,7 @@ define(['Common','bs/modal','jq/form/wizard','jq/form/validator-bs3','bs/tooltip
                                 },
                                 'connector-ip':{
                                     required:true,
-                                    ip:true
+                                    IP:true
                                 },
                                 'test-connection':{
                                     required:true,
