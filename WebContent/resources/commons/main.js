@@ -5,7 +5,7 @@ define('commons/main',
     [
         'PubView', 'bs/modal', 'json', 'template',
         'commons/pub_menu', 'commons/router_table',
-        'jq/dataTables-bs3', 'bs/popover', 'jq/cookie'
+        'jq/dataTables-bs3', 'jq/form/validator-bs3', 'bs/popover', 'jq/cookie'
     ],
     function(
         PubView, Modal, JSON, template,
@@ -40,6 +40,34 @@ define('commons/main',
                 "infoFiltered": "(总 _MAX_ 条)"
             }
         });
+    }
+
+    // init form validator rules
+    if($.validator) {
+        $.validator.addMethod('mobile', function(value, element) {
+            var rule = /^(13[0-9]|14[5|7]|15[0|1|2|3|5|6|7|8|9]|18[0-9]|170)\d{8}$/;
+            return rule.test(value);
+        }, "请输入正确的手机号");
+        $.validator.addMethod('telephone', function(value, element) {
+            var rule = /^\d{3,4}-?\d{7,9}$/;
+            return rule.test(value);
+        }, "请输入正确的电话号");
+        $.validator.addMethod('name_en', function(value, element) {
+            var rule = /^[a-z][a-z0-9_]$/i;
+            return rule.test(value);
+        }, "请输入正确的英文名称");
+        $.validator.addMethod('name_cn', function(value, element) {
+            var rule = /^[a-z\u4E00-\u9FA5][a-z0-9_\u4E00-\u9FA5]$/i;
+            return rule.test(value);
+        }, "请输入正确的中文名称");
+        $.validator.addMethod('IP', function(value, element) {
+            var rule = /^(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])$/;
+            return rule.test(value);
+        }, "请输入正确的IP(v4)地址");
+        $.validator.addMethod('IPV6', function(value, element) {
+            if(!value) return true;
+            return (value.match(/:/g).length<=7 && /::/.test(value) ? /^([\da-f]{1,4}(:|::)){1,6}[\da-f]{1,4}$/i.test(value) : /^([\da-f]{1,4}:){7}[\da-f]{1,4}$/i.test(value));
+        }, "请输入正确的IPv6地址");
     }
 
     return {
