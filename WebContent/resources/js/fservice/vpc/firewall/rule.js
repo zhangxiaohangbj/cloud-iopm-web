@@ -20,7 +20,7 @@ define('js/fservice/vpc/firewall/rule', ['Common','bs/modal','bs/tooltip','jq/fo
 				        {"data": "action"},
 				        {"data": "enabled"},
 				        {"data": "firewallPolicyName"},
-				        {"data":""}
+				        {"data": {}}
 				        ],
 			  /*
 			   * columnDefs 属性操作自定义列
@@ -66,8 +66,8 @@ define('js/fservice/vpc/firewall/rule', ['Common','bs/modal','bs/tooltip','jq/fo
                 	 "targets": [10],
                 	 "data": "id",
                 	 "render": function(data, type, full) {
-                		 var html = '<a class="btn-opt editFirewallRule" href="javascript:void(0)" data="{{item.id}}" data-toggle="tooltip" title="编辑规则" style="margin: 0;"><i class="fa fa-edit fa-fw"></i></a>'
-                         		   +'<a class="btn-opt deleteFirewallRule" href="javascript:void(0)" data="{{item.id}}" data-name="{{item.name}}" data-toggle="tooltip" title="删除规则" style="margin: 0;"><i class="fa fa-trash-o fa-fw"></i></a>';
+                		 var html = '<a class="btn-opt editFirewallRule" href="javascript:void(0)" data="'+data.id+'" data-toggle="tooltip" title="编辑规则" style="margin: 0;"><i class="fa fa-edit fa-fw"></i></a>'
+                         		   +'<a class="btn-opt deleteFirewallRule" href="javascript:void(0)" data="'+data.id+'" data-name="'+data.name+'" data-toggle="tooltip" title="删除规则" style="margin: 0;"><i class="fa fa-trash-o fa-fw"></i></a>';
                 		 return html;
                 	 }
                  }
