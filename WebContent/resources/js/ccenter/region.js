@@ -121,19 +121,19 @@ define(['Common','bs/modal','jq/form/wizard','jq/form/validator-bs3','bs/tooltip
         $("#regionTable_wrapper span.btn-add").on("click",function(){
             var selectData = {"data":renderData};
             Common.render('tpls/ccenter/region/add.html',selectData,function(html){
-
                 Modal.show({
                     title: '新增资源区域',
                     message: html,
                     nl2br: false,
                     buttons: [{
                         label:'测试链接',
-                        action:function(Modal){
+                        action:function(){
                             if(!$(".form-horizontal").valid()){
                                 //校验不通过，什么都不做
                                 alert(1)
                             }else{
                                 //校验通过，提示可行
+                                Modal.loading('加载中');
                                 var connector = {
                                     "name": $("#service-name").val(),
                                     "type":"CLOUDSERVICE",
@@ -143,13 +143,16 @@ define(['Common','bs/modal','jq/form/wizard','jq/form/validator-bs3','bs/tooltip
                                     "password":$("#password").val(),
                                     "version":"v2.0",
                                 }
-                                Common.xhr.putJSON("/cloud/connector/test",connector,function(data){
+                                Common.xhr.putJSON("/cloud/v2.0/connector/test",connector,function(data){
+                                    Modal.loading('remove');
                                     if(data && data.error!=true){
-                                        Modal.success('连接成功')
-                                        setTimeout(function(){Dialog.closeAll()},2000);
-                                        Common.router.route();//重新载入
+                                        Modal.success('连接成功');
+                                        setTimeout(function(){
+                                            Modal.closeAll();
+                                            Common.router.route();//重新载入
+                                        },2000);
                                     }else{
-                                        Modal.warning ('连接失败')
+                                        //Modal.warning ('连接失败')
                                     }
                                 });
                             }
