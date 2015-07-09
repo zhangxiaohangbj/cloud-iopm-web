@@ -146,10 +146,7 @@ define(['Common','bs/modal','jq/form/wizard','jq/form/validator-bs3','bs/tooltip
                                     Modal.loading('remove');
                                     if(data && data.error!=true){
                                         Modal.success('连接成功');
-                                        setTimeout(function(){
-                                            Modal.closeAll();
-                                            Common.router.route();//重新载入
-                                        },2000);
+
                                     }else{
                                         //Modal.warning ('连接失败')
                                     }
