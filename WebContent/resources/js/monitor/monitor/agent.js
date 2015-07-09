@@ -2,10 +2,10 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 	Common.requestCSS('css/wizard.css');
 	var init = function(){
 		Common.$pageContent.addClass("loading");
-        Common.xhr.ajax('monitor/v2/meters/list', function(data){
+        Common.xhr.ajax('monitor/v2/alarm/list', function(data){
             var render_data = {}
             render_data['meters'] = data
-           Common.render(true,'tpls/monitor/monitor/meter/meter.html',render_data,function(){
+           Common.render(true,'tpls/monitor/monitor/agent/meter.html',render_data,function(){
                 bindEvent();
             });
         })
