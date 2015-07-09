@@ -63,9 +63,6 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 		Common.on('click','.dataTables_filter .btn-query',function(){
 			table.search($('.global-search').val()).draw();
 		});
-		$.validator.addMethod("phone_rule",function(value,element){
-			return this.optional(element) || /^13[0-9]{9}$|15[0-9]{9}$|18[0-9]{9}$/.test(value);
-		},"请填写正确的手机号");
 		//载入后的事件
 		var EventsHandler = {
 			//选择部门
@@ -122,10 +119,12 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 		    	        				}
 		    	            		};
 
+		    	            		var organId = $("[name='organId']").val();
 		    	            		var zNodes =data;
 		    	            		//异步加载节点必须有isParent
 		    	            		for(var i = 0; i<zNodes.length; i++){
 		    	            			zNodes[i].isParent = true;
+		    	            			if(organId && zNodes[i].id == organId) zNodes[i].checked = true;
 		    	                	}
 		    	            		$.fn.zTree.init($("#organTree"), setting, zNodes);
 		    	            		var treeObj = $.fn.zTree.getZTreeObj("organTree");
@@ -141,6 +140,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 		    	            			if (!childNodes) return null;
 		    	            			for (var i=0, l=childNodes.length; i<l; i++) {
 		    	            				childNodes[i].isParent = true;
+		    	            				if(organId && childNodes[i].id == organId) childNodes[i].checked = true;
 		    	            			}
 		    	            			return childNodes;
 		    	            		}
@@ -275,7 +275,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 		                    equalTo:'#password'
 		                },
 		                'phone': {
-		                	phone_rule:true
+		                	mobile:true
 		                },
 		                'email': {
 		                	email:true,
@@ -286,7 +286,8 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 		                },
 		                'organId': {
 		                    required: true,
-		                    maxlength:36
+		                    maxlength:36,
+		                    ignore: ""
 		                },
 		                'organName': {
 		                    required: true
@@ -416,12 +417,12 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
     			wizard.on("submit", function(wizard) {
     				var postData={
     						"user":{
-	        					"name": $(" [name='name']").val(),
+	        					"name": $("#editUserBasic [name='name']").val(),
 	        					"OS-KSADM:password": $(" [name='password']").val(),
-	        					"status": $(" [name='status']").val(),
+	        					"status": $("#editUserBasic [name='status']").val(),
 	        					"phone": $(" [name='phone']").val(),
 	        					"email": $( " [name='email']").val(),
-	        					"trueName": $( " [name='trueName']").val(),
+	        					"trueName": $( "#editUserBasic [name='trueName']").val(),
 	        					"organId": $( " [name='organId']").val(),
 	        					"enabled":true
 	            				}
@@ -455,13 +456,12 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 	    	            		var serverData = 
 	    	            		{
 	    	            			"user":{
-	    	            					"id":id,
-		    	        					"name": $(" [name='name']").val(),
+		    	        					"name": $(".form-horizontal [name='name']").val(),
 		    	        					"OS-KSADM:password": $(" [name='password']").val(),
-		    	        					"status": $(" [name='status']").val(),
+		    	        					"status": $(".form-horizontal [name='status']").val(),
 		    	        					"phone": $(" [name='phone']").val(),
 		    	        					"email": $( " [name='email']").val(),
-		    	        					"trueName": $( " [name='trueName']").val(),
+		    	        					"trueName": $( ".form-horizontal [name='trueName']").val(),
 		    	        					"organId": $( " [name='organId']").val()
 	    	            					}
 	    	            			};

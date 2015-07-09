@@ -10,8 +10,8 @@
 	background:#FBF9FA;
 	padding-top:15px;
 	padding-bottom:30px;
-	border-left:1px solid #EFEDED;
-	border-right:1px solid #EFEDED;
+	border:1px solid #EFEDED;
+	border-top:none;
 }
 .detail-info .nav-tabs>li>a{
 	color:#000;

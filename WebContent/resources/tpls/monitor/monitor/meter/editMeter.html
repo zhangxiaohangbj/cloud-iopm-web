@@ -1,0 +1,46 @@
+<form class="form-horizontal flavor_basic" id="editMeter">
+	<div class="form-group">
+		<label class="control-label col-sm-3">
+	 	<span style="color: red;">* </span>指标名称：</label>
+	 	<div class="col-sm-7 col-sm">
+			<input type="text" class="form-control" name="name" value="{{meter.name}}" style="width: 350px;">
+		</div>
+	</div>
+    <div class="form-group">
+        <label class="control-label col-sm-3">
+            </span>类型：</label>
+        <div class="col-sm-7 col-sm">
+            <select name="type" id="type" class="form-control select type">
+                {{if meter.type=='system'}}
+                    <option  id='system' value='system' selected>系统</option>
+                    <option  id='customer' value='customer'>自定义</option>
+                {{else}}
+                    <option  id='system' value='system' >系统</option>
+                    <option  id='customer' value='customer' selected>自定义</option>
+                {{/if}}
+            </select>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label class="control-label col-sm-3">
+            </span>单位：</label>
+        <div class="col-sm-7 col-sm">
+            <input type="text" class="form-control" name="unit" value="{{meter.unit}}" style="width: 350px;">
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="resource_type" class="control-label col-sm-3"><span>* </span>资源类型：</label>
+        <div class="col-sm-7 col-sm">
+            <select name="resource_type" id="resource_type" class="form-control select type">
+                {{each resourceTypes as item i}}
+                    {{if meter.resourceTypeId==item.id}}
+                        <option  id={{item.id}} value={{item.id}} selected>{{item.description}}</option>
+                    {{else}}
+                        <option  id={{item.id}}' value={{item.id}} >{{item.description}}</option>
+                    {{/if}}
+                {{/each}}
+            </select>
+        </div>
+    </div>
+</form>
