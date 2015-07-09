@@ -15,9 +15,9 @@
 						<th class="c2">
 							<label><input type="checkbox" class="selectAll"></label>
 						</th>
-						<th class="c4">ID</th>
                         <th class="c4">指标名称</th>
                         <th class="c4">指标类型</th>
+                        <th class="c4">单位</th>
                         <th class="c4">资源类型</th>
 						<th class="c6 sorting_disabled">操作</th>
 					</tr>
@@ -26,7 +26,6 @@
 				{{each meters as item i}}
 					<tr>
 						<td><label><input type="checkbox"></label></td>
-						<td>{{item.id}}</td>
 						<td>{{item.name}}</td>
 						<td>
                             {{if item['type'] == 'system'}}
@@ -35,7 +34,8 @@
                             <span class="text-success">自定义</span>
                             {{/if}}
                         </td>
-                        <td>{{item.resourceTypeId}}</td>
+                        <td>{{item.unit}}</td>
+                        <td>{{item.resourceTypeName}}</td>
                         <td>
                         <a href="javascript:void(0)" class="btn-opt updateMeter" data-toggle="tooltip" title="编辑监控指标" data-act="stop" data="{{item.id}}" style="margin: 0;"><i class="fa fa-file-text"></i></a>
 						<div class="dropdown">

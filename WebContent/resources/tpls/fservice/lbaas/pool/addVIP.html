@@ -1,23 +1,23 @@
 <form class="form-horizontal" id="addPool">
 	<div class="form-group">
-		<label for="network_id" class="control-label col-sm-3">
+		<label for="name" class="control-label col-sm-3">
 	 	<span style="color: red;">* </span>名称：</label>
 	 	<div class="col-sm-7 col-sm">
 		 	<input type="text" class="form-control" name="name" value="">
 		</div>
 	</div>
 	<div class="form-group">
-		<label for="name" class="control-label col-sm-3">
+		<label for="description" class="control-label col-sm-3">
 	 	描述：</label>
 	 	<div class="col-sm-7 col-sm">
-			<input type="text" class="form-control" name="name" value="">
+			<input type="text" class="form-control" name="description" value="">
 		</div>
 	</div>
 	<div class="form-group">
-		<label for="ip_version" class="control-label col-sm-3">
+		<label for="subnet_id" class="control-label col-sm-3">
 	 	<span style="color: red;">* </span>VIP子网：</label>
 	 	<div class="col-sm-7 col-sm">
-			<select class="form-control select" name="ip_version">
+			<select class="form-control select" name="subnet_id">
 				{{each subnets as item i}}
 			 		<option value="{{item.id}}">{{item.name}}</option>
 			 	{{/each}}
@@ -25,25 +25,25 @@
 		</div>
 	</div>
 	<div class="form-group">
-		<label for="gateway_ip" class="control-label col-sm-3">
+		<label for="address" class="control-label col-sm-3">
 	 	IP地址：</label>
 	 	<div class="col-sm-7 col-sm">
-	 		<input type="text" class="form-control" name="name" value="">
+	 		<input type="text" class="form-control" name="address" value="">
 	 		<p>从选定的子网中指定一个可用的IP地址</p>
 		</div>
 	</div>
 	<div class="form-group">
-		<label for="server-name" class="control-label col-sm-3">
+		<label for="protocol_port" class="control-label col-sm-3">
 	 	<span style="color: red;">* </span>协议端口：</label>
 	 	<div class="col-sm-7 col-sm" id="enable_ip">
-	 		<input type="text" class="form-control" name="name" value="">
+	 		<input type="text" class="form-control" name="protocol_port" value="">
 		</div>
 	</div>
 	<div class="form-group">
-		<label for="gateway_ip" class="control-label col-sm-3">
+		<label for="protocol" class="control-label col-sm-3">
 	 	<span style="color: red;">* </span>协议：</label>
 	 	<div class="col-sm-7 col-sm">
-	 		<select class="form-control select" name="">
+	 		<select class="form-control select" name="protocol">
 	 			<option value="HTTP">HTTP</option>
 	 			<option value="HTTPS">HTTPS</option>
 	 			<option value="TCP">TCP</option>
@@ -51,10 +51,10 @@
 		</div>
 	</div>
 	<div class="form-group">
-		<label for="gateway_ip" class="control-label col-sm-3">
+		<label for="session_type" class="control-label col-sm-3">
 	 	会话持久化：</label>
 	 	<div class="col-sm-7 col-sm">
-	 		<select class="form-control select" name="">
+	 		<select class="form-control select" name="session_type">
 	 			<option value="">无会话持久性</option>
 	 			<option value="SOURCE_IP">SOURCE_IP</option>
 	 			<option value="HTTP_COOKIE">HTTP_COOKIE</option>
@@ -63,18 +63,18 @@
 		</div>
 	</div>
 	<div class="form-group" id="app_cookie">
-		<label for="gateway_ip" class="control-label col-sm-3">
+		<label for="cookie_name" class="control-label col-sm-3">
 	 	APP_COOKIE：</label>
 	 	<div class="col-sm-7 col-sm">
-	 		<input name="" type="text" class="form-control"/>
+	 		<input name="cookie_name" type="text" class="form-control"/>
 		</div>
 	</div>
 	<div class="form-group">
-		<label for="gateway_ip" class="control-label col-sm-3">
+		<label for="connection_limit" class="control-label col-sm-3">
 	 	连接限制：</label>
 	 	<div class="col-sm-7 col-sm">
 	 		<div class="spinbox" id="connection_limit">
-		 		<input name="" type="text" class="form-control input-mini spinbox-input" style="height: 35px;"/>
+		 		<input name="connection_limit" type="text" class="form-control input-mini spinbox-input" style="height: 35px;"/>
 		 		<div class="spinbox-buttons btn-group btn-group-vertical">
 				    <button type="button" class="btn btn-default spinbox-up btn-xs">
 				      <span class="glyphicon glyphicon-chevron-up"></span><span class="sr-only">Increase</span>
@@ -87,10 +87,10 @@
 		</div>
 	</div>
 	<div class="form-group">
-		<label for="enable_dhcp" class="control-label col-sm-3">
+		<label for="admin_state_up" class="control-label col-sm-3">
 	 	<span style="color: red;">* </span>管理员状态：</label>
 	 	<div class="col-sm-7 col-sm">
-			<select class="form-control select" name="">
+			<select class="form-control select" name="admin_state_up">
 	 			<option value="true">上</option>
 	 			<option value="false">下</option>
 	 		</select>

@@ -1236,7 +1236,7 @@ i.image-icon-default.centos {
 	padding: 0 20px 0 18px;
 }
 .page_index .monitor-list > li {
-	margin-top: 25px;
+	margin-top: 24px;
 }
 .page_index .monitor-title {
 	margin: 0 0 5px;
@@ -1254,11 +1254,35 @@ i.image-icon-default.centos {
 }
 /*vm新建虚机*/
 .page_fservice-vm-index .hidden-input-text{
+	 opacity: 0;
+	 -webkit-opacity: 0;
+	 -moz-opacity: 0;
+	 filter:alpha(opacity=0);
+	 filter:progid:DXImageTransform.Microsoft.Alpha(Opacity=0);
+	 position:absolute;
+	 left:35px;padding:0;
+ }
+
+/** env **/
+.hidden-input-txt{
 	opacity: 0;
-    -webkit-opacity: 0;
-    -moz-opacity: 0;  
-    filter:alpha(opacity=0);  
-    filter:progid:DXImageTransform.Microsoft.Alpha(Opacity=0);
-    position:absolute;
-    left:35px;padding:0;
+	-webkit-opacity: 0;
+	-moz-opacity: 0;
+	filter:alpha(opacity=0);
+	filter:progid:DXImageTransform.Microsoft.Alpha(Opacity=0);
+	position:absolute;
+	left:35px;padding:0;
+	z-index: -1;
+}
+
+
+/*vm新建虚机*/
+.page_fservice-vm-index .hidden-input-text{
+	opacity: 0;
+	-webkit-opacity: 0;
+	-moz-opacity: 0;
+	filter:alpha(opacity=0);
+	filter:progid:DXImageTransform.Microsoft.Alpha(Opacity=0);
+	position:absolute;
+	left:35px;padding:0;
 }
