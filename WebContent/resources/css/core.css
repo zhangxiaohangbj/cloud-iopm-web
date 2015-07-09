@@ -34,6 +34,14 @@ a.link-more:hover, .link-more a:hover {
 	margin-top: -32px;
 	z-index: 99999;
 }
+.icheckbox{
+	width:14px;
+	height:14px;
+	line-height:14px;
+}
+.icheckbox:after{
+	padding-left:1px;
+}
 /*!header头部分开始*/
 header {
 	height: 48px;
@@ -183,6 +191,7 @@ header > .container,
 }
 #header-nav .dropdown-menu > li > a > .fa {
     margin-right: 0.35em;
+    color:#929090;
 }
 [index="search-bar"] {
     padding: 0 18px;
@@ -305,7 +314,7 @@ aside {
 	border-bottom: none;
 }
 .sidebar-nav > li a {
-	color: #6F6D6D;
+	color: #929090;
 	font-size: 14px;
 	line-height: 1.28571429;
 	padding: 11px 2.38% 11px 12.85714285714286%;
@@ -332,7 +341,7 @@ aside {
 }
 .sidebar-nav > li > a > .fa {
 	margin-right: 6px;
-	font-size:16px;
+	font-size:14px;
 }
 .sidebar-nav > li > a > .icon-arrow {
 	float:right;
@@ -348,7 +357,7 @@ aside {
 }
 .nav-second-level > li > a:hover,
 .nav-second-level > li > a:focus {
-	color: #50c7cd;
+	color: #36B3DF;
 	background: none;
 }
 
@@ -371,7 +380,7 @@ aside {
 .nav-second-level > li > a {
 	color:#555;
 	font-size:12px;
-	padding-left: 25.9047619047619%;
+	padding-left: 22.9047619047619%;
 }
 .nav-second-level > li {
 	margin-bottom: 5px;
@@ -549,8 +558,9 @@ aside {
 .table-primary.dataTable > thead > tr > th {
 	height:40px;
 	padding: 0;
-    background-color: #e4e9ec;
+    background-color: #f5f5f5;
     border-bottom: 0 none;
+    border-right:1px solid #e1e1e1
 }
 .table-primary > thead > tr > th,
 .table-primary > thead > tr > td,
@@ -605,6 +615,8 @@ table.dataTable > tbody > tr > td .btn-opt:hover {
 }
 table.dataTable > tbody > tr > td .btn-opt i {
 	margin:0 0.5em;
+	font-size:13px;
+	color:#227B9B;
 }
 .tableMenus .dataTables_filter label {
 	position: relative;
@@ -645,20 +657,21 @@ table.dataTable + .row > [class*="col-"] {
     margin-bottom:0;
 }
 .dataTables_wrapper > .row.tableMenus{
-	border:1px solid #e5e5e5;
-	height:42px;
-	line-height:42px;
-	background-color:#f9f9f9;
+	padding:6px 0;
 	margin:0;
+	border:1px solid #e5e5e5;
+	background-color:#f9f9f9;
+	overflow:hidden;
 }
 .row.tableMenus .right-col .form-control{
 	padding:3px 18px 3px 8px;
 	color:#938E8E;
-	height:28px;
+	height:30px;
 	border-radius:0;
 	border-color:#e2e7ea;
 	box-shadow:none;
 	vertical-align:baseline;
+	font-size:12px;
 }
 .row.tableMenus .right-col .global-search{
 	width:250px;
@@ -680,10 +693,12 @@ table.dataTable + .row > [class*="col-"] {
 	color:#36b3df;
 }
 .dataTables_wrapper .btn{
-	padding: 3px 16px;
+	display:inline-block;
+	height:30px;
+	line-height:30px;
+	padding: 0 16px;
 	color: #fff;
 	cursor:pointer;
-	display:inline;
 	border-radius:0;
 	border:0;
 	margin-right:15px;
@@ -692,14 +707,17 @@ table.dataTable + .row > [class*="col-"] {
 	display:inline-block;
 }
 .dataTables_wrapper .btn-query{
-	height:28px;
+    position:absolute;
+	top:0;
+	right:0;
 	display:inline-block;
-	padding:3px 10px;
-	margin-left:-40px;
+	height:100%;
+	margin-right:0;
+	padding:0 10px;
 	border-left:1px solid #e2e7ea;
 }
 .dataTables_wrapper .btn-query .fa-search{
-	color:#000;
+	color:#227B9B;
 }
 .dataTables_wrapper .btn-add{
 	background-color: #36b3df;
@@ -1261,3 +1279,4 @@ i.image-icon-default.centos {
     position:absolute;
     left:35px;padding:0;
 }
+
