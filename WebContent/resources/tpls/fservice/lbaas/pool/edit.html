@@ -1,23 +1,23 @@
 <form class="form-horizontal" id="addPool">
 	<div class="form-group">
-		<label for="network_id" class="control-label col-sm-3">
+		<label for="name" class="control-label col-sm-3">
 	 	<span style="color: red;">* </span>名称：</label>
 	 	<div class="col-sm-7 col-sm">
 		 	<input type="text" class="form-control" name="name" value="">
 		</div>
 	</div>
 	<div class="form-group">
-		<label for="name" class="control-label col-sm-3">
+		<label for="description" class="control-label col-sm-3">
 	 	描述：</label>
 	 	<div class="col-sm-7 col-sm">
-			<input type="text" class="form-control" name="name" value="">
+			<input type="text" class="form-control" name="description" value="">
 		</div>
 	</div>
 	<div class="form-group">
-		<label for="server-name" class="control-label col-sm-3">
+		<label for="lb_method" class="control-label col-sm-3">
 	 	<span style="color: red;">* </span>负载均衡方式：</label>
 	 	<div class="col-sm-7 col-sm" id="enable_ip">
-	 		<select class="form-control select" name="">
+	 		<select class="form-control select" name="lb_method">
 	 			<option value="ROUND_ROBIN">ROUND_ROBIN</option>
 	 			<option value="LEAST_CONNECTIONS">LEAST_CONNECTIONS</option>
 	 			<option value="SOURCE_IP">SOURCE_IP</option>
@@ -25,10 +25,10 @@
 		</div>
 	</div>
 	<div class="form-group">
-		<label for="enable_dhcp" class="control-label col-sm-3">
+		<label for="admin_state_up" class="control-label col-sm-3">
 	 	<span style="color: red;">* </span>管理员状态：</label>
 	 	<div class="col-sm-7 col-sm">
-			<select class="form-control select" name="">
+			<select class="form-control select" name="admin_state_up">
 	 			<option value="true">上</option>
 	 			<option value="false">下</option>
 	 		</select>

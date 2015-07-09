@@ -1,0 +1,75 @@
+<form class="form-horizontal" id="addMonitor">
+	<div class="form-group">
+		<label for="type" class="control-label col-sm-3">
+	 	<span style="color: red;">* </span>类型：</label>
+	 	<div class="col-sm-7 col-sm">
+			<select class="form-control select" name="type">
+			 	<option value="PING">PING</option>
+			 	<option value="TCP">TCP</option>
+			 	<option value="HTTP">HTTP</option>
+			 	<option value="HTTPS">HTTPS</option>
+			</select>
+		</div>
+	</div>
+	<div class="form-group">
+		<label for="delay" class="control-label col-sm-3">
+	 	<span style="color: red;">* </span>延迟：</label>
+	 	<div class="col-sm-7 col-sm">
+		 	<div class="spinbox" id="delay">
+		 		<input name="delay" type="text" class="form-control input-mini spinbox-input" style="height: 35px;"/>
+		 		<div class="spinbox-buttons btn-group btn-group-vertical">
+				    <button type="button" class="btn btn-default spinbox-up btn-xs">
+				      <span class="glyphicon glyphicon-chevron-up"></span><span class="sr-only">Increase</span>
+				    </button>
+				    <button type="button" class="btn btn-default spinbox-down btn-xs">
+				      <span class="glyphicon glyphicon-chevron-down"></span><span class="sr-only">Decrease</span>
+				    </button>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="form-group">
+		<label for="timeout" class="control-label col-sm-3">
+	 	<span style="color: red;">* </span>超时：</label>
+	 	<div class="col-sm-7 col-sm">
+			<div class="spinbox" id="timeout">
+		 		<input name="timeout" type="text" class="form-control input-mini spinbox-input" style="height: 35px;"/>
+		 		<div class="spinbox-buttons btn-group btn-group-vertical">
+				    <button type="button" class="btn btn-default spinbox-up btn-xs">
+				      <span class="glyphicon glyphicon-chevron-up"></span><span class="sr-only">Increase</span>
+				    </button>
+				    <button type="button" class="btn btn-default spinbox-down btn-xs">
+				      <span class="glyphicon glyphicon-chevron-down"></span><span class="sr-only">Decrease</span>
+				    </button>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="form-group">
+		<label for="max_retries" class="control-label col-sm-3">
+	 	<span style="color: red;">* </span>最大尝试次数：</label>
+	 	<div class="col-sm-7 col-sm">
+			<div class="spinbox" id="max_retries">
+		 		<input name="max_retries" type="text" class="form-control input-mini spinbox-input" style="height: 35px;"/>
+		 		<div class="spinbox-buttons btn-group btn-group-vertical">
+				    <button type="button" class="btn btn-default spinbox-up btn-xs">
+				      <span class="glyphicon glyphicon-chevron-up"></span><span class="sr-only">Increase</span>
+				    </button>
+				    <button type="button" class="btn btn-default spinbox-down btn-xs">
+				      <span class="glyphicon glyphicon-chevron-down"></span><span class="sr-only">Decrease</span>
+				    </button>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="form-group">
+		<label for="admin_state_up" class="control-label col-sm-3">
+	 	<span style="color: red;">* </span>管理员状态：</label>
+	 	<div class="col-sm-7 col-sm">
+			<select class="form-control select" name="admin_state_up">
+	 			<option value="true">上</option>
+	 			<option value="false">下</option>
+	 		</select>
+		</div>
+	</div>
+</form>
