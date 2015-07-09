@@ -54,14 +54,12 @@ define(['Common','bs/modal','jq/form/wizard','jq/form/validator-bs3','bs/tooltip
             vendor:"default"//default
         };
         var currentChosenConnector={
-            version:'v2.0',
             type:null,
             ip:null,
             port:null,
             username:null,
             password:null,
             protocol: null,	//协议
-            tenantName:"admin"
         }
         var dataGetter={
             //获取类型数据
@@ -253,7 +251,8 @@ define(['Common','bs/modal','jq/form/wizard','jq/form/validator-bs3','bs/tooltip
                             port:$("#connector-port").val(),
                             protocol:$('select.select-protocol option:selected').val(),
                             username:$("#connector-username").val(),
-                            password:$("#connector-password-confirm").val()
+                            password:$("#connector-password-confirm").val(),
+                            tenantName:Common.cookies.getVdcId()
                         }
                         validators[1].hideErrors();
                         Modal.loading('测试连接中');
@@ -298,6 +297,8 @@ define(['Common','bs/modal','jq/form/wizard','jq/form/validator-bs3','bs/tooltip
                 //提交按钮
                 wizard.on("submit", function(wizard) {
                     //合并数据
+                    currentChosenConnector.version="v2.0";
+                    currentChosenConnector.tenantName=Common.cookies.getVdcName();
                     currentChosenEnv["connector"] = currentChosenConnector;
                     Common.xhr.postJSON('/v2/virtual-env',currentChosenEnv,function(data){
                         if(data && data.error!=true){
