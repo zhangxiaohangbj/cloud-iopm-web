@@ -1,55 +1,60 @@
-<div class="page-header clearfix">
-	<ol class="breadcrumb">
-	  <li class="active">防火墙详情</li>
+<div class="page-header">
+	<ol class="breadcrumb minus">
+		<li class="active">防火墙详情</li>
+		<li class="backlist"><a href="#fservice/vpc/firewall/tab/firewall">返回列表</a></li>
 	</ol>
 </div>
 <div class="page-body">
 	<div class="pane">
 		<div class="pane-content">
-			<form class="form-horizontal" id="FirewallSubnet">
-				<div class="form-group" style="overflow: hidden;">
-					<label class="control-label col-sm-3">
-				 	防火墙名称</label>
-				 	<div class="col-sm-5 col-sm">
-						<input type="text" class="form-control input-readonly"  value="{{name}}" readonly="readonly">
+			<div class="detail-info">
+				<div class="tab-content">
+					<div class="clearfix">
+						<p><b>基本信息</b></p>
+						<hr>
+						<div class="row">
+							<label for="name" class="control-label col-sm-3">名称：</label>
+							<div class="col-sm-7 col-sm">
+								{{firewall.name}}
+							</div>
+						</div>
+						<div class="row">
+							<label for="description" class="control-label col-sm-3">描述：</label>
+							<div class="col-sm-7 col-sm">
+								{{firewall.description}}
+							</div>
+						</div>
+						<div class="row">
+							<label for="firewallPolicyName" class="control-label col-sm-3">策略：</label>
+							<div class="col-sm-7 col-sm">
+								{{firewall.firewallPolicyName}}
+							</div>
+						</div>
+						<div class="row">
+							<label for="status" class="control-label col-sm-3">状态：</label>
+							<div class="col-sm-7 col-sm">
+								{{firewall.status}} 
+							</div>
+						</div>
+						<div class="row">
+							<label for="audited" class="control-label col-sm-3">管理状态：</label>
+							<div class="col-sm-7 col-sm">
+								{{if firewall.admin_state_up}} 
+									 启用
+								{{else}}
+									禁用
+								{{/if}}
+							</div>
+						</div>
+						<div class="row">
+							<label for="routerNames" class="control-label col-sm-3">路由：</label>
+							<div class="col-sm-7 col-sm">
+								{{firewall.routerNames}}
+							</div>
+						</div>
 					</div>
 				</div>
-				<div class="form-group" style="overflow: hidden;">
-					<label class="control-label col-sm-3">
-				 	防火墙ID</label>
-				 	<div class="col-sm-5 col-sm">
-						<input type="text" class="form-control input-readonly" value="{{id}}" readonly="readonly">
-					</div>
-				</div>
-				<div class="form-group" style="overflow: hidden;">
-					<label class="control-label col-sm-3">
-				 	防火墙状态</label>
-				 	<div class="col-sm-5 col-sm">
-						<input type="text" class="form-control input-readonly" value="{{status}}" readonly="readonly">
-					</div>
-				</div>
-				<div class="form-group" style="overflow: hidden;">
-					<label class="control-label col-sm-3">
-				 	外部网关信息</label>
-				 	<div class="col-sm-5 col-sm">
-						<input type="text" class="form-control" value="{{external_gateway_info}}" disabled="disabled">
-					</div>
-				</div>
-				<div class="form-group" style="overflow: hidden;">
-					<label class="control-label col-sm-3">
-				 	已连接外部网络</label>
-				 	<div class="col-sm-5 col-sm" id="enable_ip">
-				 		<input type="text" class="form-control" value="{{gw_port_id}}" disabled="disabled">
-					</div>
-				</div>
-				<div class="form-group" style="overflow: hidden;">
-					<label for="server-name" class="control-label col-sm-3"></label>
-				 	<div class="col-sm-5 col-sm">
-						<a href="javascript:void(0);" class="btn btn-default reload">返回</a>
-					</div>
-				</div>
-			</form>
-			
+			</div>		
 		</div>
 	</div>
 </div>
