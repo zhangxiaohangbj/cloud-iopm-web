@@ -46,12 +46,12 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 		                 		   	+'<ul class="dropdown-menu" style="right: 0;left: initial;">';
 							if(data.name) html += '<li><a href="javascript:void(0)" class="editVip"><i class="fa fa-gear fa-fw"></i>编辑VIP</a></li>'
 									+'<li><a href="javascript:void(0)" class="delVip"><i class="fa fa-trash-o fa-fw"></i>删除VIP</a></li>'
-									+(data.monitor_id? '<li><a href="javascript:void(0)" class="delMonitor"><i class="fa fa-file-text fa-fw"></i>解除监控关联</a></li>':
-										'<li><a href="javascript:void(0)" class="addMonitor"><i class="fa fa-gear fa-fw"></i>关联监控</a></li>');
+									+(data.monitor_id? '<li><a href="javascript:void(0)" class="unbindMonitor"><i class="fa fa-file-text fa-fw"></i>解除监控关联</a></li>':
+										'<li><a href="javascript:void(0)" class="bindMonitor"><i class="fa fa-gear fa-fw"></i>关联监控</a></li>');
 		                 		   
 							else html += '<li><a href="javascript:void(0)" class="addVip"><i class="fa fa-gear fa-fw"></i>添加VIP</a></li>'
-		                 		   +(row.monitor_id? '<li><a href="javascript:void(0)" class="delMonitor"><i class="fa fa-file-text fa-fw"></i>解除监控关联</a></li>':
-									'<li><a href="javascript:void(0)" class="addMonitor"><i class="fa fa-gear fa-fw"></i>关联监控</a></li>')
+		                 		   +(row.monitor_id? '<li><a href="javascript:void(0)" class="unbindMonitor"><i class="fa fa-file-text fa-fw"></i>解除监控关联</a></li>':
+									'<li><a href="javascript:void(0)" class="bindMonitor"><i class="fa fa-gear fa-fw"></i>关联监控</a></li>')
 		                 		   +'<li><a href="javascript:void(0)" class="delPool"><i class="fa fa-trash-o fa-fw"></i>删除资源池</a></li>';
 		                 	return html +'</ul></div>';
 		                 		   
@@ -101,10 +101,8 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 			                }
 			            }
 			        });
-				}
-	    }
-	    var EditData = {
-	    		//添加VIP -连接限制
+				},
+				//添加VIP -连接限制
 				LimitSpinbox : function(){
 					require(['bs/spinbox'],function(){
 	    				$('#connection_limit').spinbox({
@@ -249,7 +247,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 	    	            	}
 	    	            }],
 	    	            onshown : function(){
-	    	            	EditData.LimitSpinbox();
+	    	            	EventsHandler.LimitSpinbox();
 	    		    		EventsHandler.formValidator();
 	    		    	}
 	    	        });
@@ -293,7 +291,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 	    	            	}
 	    	            }],
 	    	            onshown : function(){
-	    	            	EditData.LimitSpinbox();
+	    	            	EventsHandler.LimitSpinbox();
 	    		    		EventsHandler.formValidator();
 	    		    	}
 	    	        });
@@ -322,11 +320,11 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 	         });
 	     })
 	    //关联监控
-	    $(document).off("click","#PoolTable_wrapper a.addMonitor");
-	    $(document).on("click","#PoolTable_wrapper a.addMonitor",function(){
+	    $(document).off("click","#PoolTable_wrapper a.bindMonitor");
+	    $(document).on("click","#PoolTable_wrapper a.bindMonitor",function(){
     		//先获取monitor后，再render
     		Common.xhr.ajax('/networking/v2.0/subnets',function(data){
-    			Common.render('tpls/fservice/lbaas/pool/addMonitor.html',data,function(html){
+    			Common.render('tpls/fservice/lbaas/pool/bindMonitor.html',data,function(html){
 	    			Dialog.show({
 	    	            title: '关联监控',
 	    	            message: html,
@@ -363,8 +361,8 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
     		})
 	    });
 	    //解除关联
-	    $(document).off("click","#PoolTable_wrapper a.delMonitor");
-	    $(document).on("click","#PoolTable_wrapper a.delMonitor",function(){
+	    $(document).off("click","#PoolTable_wrapper a.unbindMonitor");
+	    $(document).on("click","#PoolTable_wrapper a.unbindMonitor",function(){
 	    	 var id = $(this).parents("tr:first").data("rowData.dt").id;
 	    	 Dialog.confirm('确定要解除绑定吗?', function(result){
 	             if(result) {
