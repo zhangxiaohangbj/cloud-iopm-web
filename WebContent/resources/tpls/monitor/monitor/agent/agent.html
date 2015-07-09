@@ -9,7 +9,7 @@
 <div class="page-body">
 	<div class="pane">
 		<div class="pane-content">
-			<table class="table table-primary table-striped" id="meterTable">
+			<table class="table table-primary table-striped" id="agentTable">
 				<thead>
 					<tr>
 						<th class="c2">
@@ -21,37 +21,10 @@
                         <th class="c4">类型</th>
                         <th class="c4">虚拟环境</th>
                         <th class="c4">创建时间</th>
-						<th class="c6 sorting_disabled">操作</th>
+						<th class="c6">操作</th>
 					</tr>
 				</thead>
 				<tbody>
-				{{each meters as item i}}
-					<tr>
-						<td><label><input type="checkbox"></label></td>
-						<td>{{item.ip}}</td>
-                        <td>{{item.port}}</td>
-						<td>
-                            {{if item['agent_status'] == 'running'}}
-                            <span class="text-success">启动</span>
-                            {{else}}
-                            <span class="text-success">停止</span>
-                            {{/if}}
-                        </td>
-                        <td>{{item.type}}</td>
-                        <td>{{item.virtualEnvId}}</td>
-                        <td>{{item.createAt}}</td>
-                        <td>
-                        <a href="javascript:void(0)" class="btn-opt updateMeter" data-toggle="tooltip" title="编辑监控指标" data-act="stop" data="{{item.id}}" style="margin: 0;"><i class="fa fa-file-text"></i></a>
-						<div class="dropdown">
-                            <a class="btn-opt dropdown-toggle" data-toggle="dropdown" title="更多"  aria-expanded="false" ><i class="fa fa-angle-double-right"></i></a>
-							<ul class="dropdown-menu" style="right: 0;left: initial;">
-								<li><a href="javascript:void(0)" data="{{item.id}}" class="removeMeter"><i class="fa fa-file-text fa-fw"></i>删除监控指标</a></li>
-                                <li><a href="javascript:void(0)" data="{{item.id}}" class="getShells"><i class="fa fa-file-text fa-fw"></i>查看脚本</a></li>
-                            </ul>
-						</div>	
-						</td>
-					</tr>
-    			{{/each}}
 				</tbody>
                 <tfoot>
                 <tr>

@@ -35,6 +35,7 @@ define('commons/router_table', function() {
 		'^#fservice/vpc/firewall/tab/(.*)$' :"js/fservice/vpc/firewall/index",
 		'^#fservice/lbaas/pool/detail/(.*)$' :"js/fservice/lbaas/pool/detail",
 		'^#fservice/lbaas/member/detail/(.*)$' :"js/fservice/lbaas/member/detail",
-		'^#fservice/lbaas/monitor/detail/(.*)$' :"js/fservice/lbaas/monitor/detail"
+		'^#fservice/lbaas/monitor/detail/(.*)$' :"js/fservice/lbaas/monitor/detail",
+        '^#monitor/monitor/agent/detail/(.*)$' :"js/monitor/monitor/agent_detail"
     };
 });

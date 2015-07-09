@@ -3,39 +3,43 @@
 	  <li class="active"><i class="icon-squre-d"></i>客户端</li>
 	</ol>
     <p class="description">
-        监控指标说明
+        客户端说明
     </p>
 </div>
 <div class="page-body">
 	<div class="pane">
 		<div class="pane-content">
-			<table class="table table-primary table-striped" id="meterTable">
+			<table class="table table-primary table-striped" id="agentTable">
 				<thead>
 					<tr>
 						<th class="c2">
 							<label><input type="checkbox" class="selectAll"></label>
 						</th>
-						<th class="c4">ID</th>
-                        <th class="c4">指标名称</th>
-                        <th class="c4">指标类型</th>
-                        <th class="c4">资源类型</th>
+                        <th class="c4">ip</th>
+                        <th class="c4">端口</th>
+                        <th class="c4">运行状态</th>
+                        <th class="c4">类型</th>
+                        <th class="c4">虚拟环境</th>
+                        <th class="c4">创建时间</th>
 						<th class="c6 sorting_disabled">操作</th>
 					</tr>
 				</thead>
 				<tbody>
-				{{each meters as item i}}
+				{{each agents as item i}}
 					<tr>
 						<td><label><input type="checkbox"></label></td>
-						<td>{{item.id}}</td>
-						<td>{{item.name}}</td>
+						<td>{{item.ip}}</td>
+                        <td>{{item.port}}</td>
 						<td>
-                            {{if item['type'] == 'system'}}
-                            <span class="text-success">系统</span>
+                            {{if item['agent_status'] == 'running'}}
+                            <span class="text-success">启动</span>
                             {{else}}
-                            <span class="text-success">自定义</span>
+                            <span class="text-success">停止</span>
                             {{/if}}
                         </td>
-                        <td>{{item.resourceTypeId}}</td>
+                        <td>{{item.type}}</td>
+                        <td>{{item.virtualEnvId}}</td>
+                        <td>{{item.createAt}}</td>
                         <td>
                         <a href="javascript:void(0)" class="btn-opt updateMeter" data-toggle="tooltip" title="编辑监控指标" data-act="stop" data="{{item.id}}" style="margin: 0;"><i class="fa fa-file-text"></i></a>
 						<div class="dropdown">
