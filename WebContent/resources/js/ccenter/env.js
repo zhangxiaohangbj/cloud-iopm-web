@@ -398,6 +398,13 @@ define(['Common','bs/modal','jq/form/wizard','jq/form/validator-bs3','bs/tooltip
             });
 
         });
+        //编辑 connector
+        //$("a.connector").on("click",function(){
+        //    var envId =  $(this).attr("data")
+        //    Common.render();
+        //});
+
+
         $("a.delete").on("click",function(){
             var id = $(this).attr("data");
             Modal.confirm('确定要删除该虚拟环境吗?',function(result){
