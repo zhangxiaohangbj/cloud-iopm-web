@@ -79,25 +79,20 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 			                    required: true,
 			                    maxlength:255
 			                },
-			                'cidr': {
-			                    required: true,
-			                    maxlength:64,
-			                    cidr: true
+			                'description': {
+			                    maxlength:255
 			                },
-			                'gateway_ip':{
+			                'address': {
+			                	IP: true
+			                }
+			                'protocol_port': {
 			                	required: true,
-			                    ip: true,
-			                    ip_rule: true
+			                	digits: true,
+			                	min: 1,
+			                	max: 65535
 			                },
-			                'end':{
-			                	ip:true,
-			                	ip_rule:true,
-			                	pools_end:true
-			                },
-			                'start':{
-			                	ip:true,
-			                	ip_rule:true,
-			                	pools_start:true
+			                'connection_limit': {
+			                	digits: true
 			                }
 			            }
 			        });
