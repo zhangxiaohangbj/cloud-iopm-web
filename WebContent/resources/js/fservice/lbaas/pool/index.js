@@ -28,18 +28,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 			        {"data": "ip_version"},
 			        {"data": "gateway_ip"},
 			        {"data": "gateway_ip"},
-			        {
-			        	"defaultContent":'<a class="btn-edit btn-opt pull-left" data-toggle="tooltip" title="编辑" data-act="stop" href="javascript:void(0)"><li class="glyphicon glyphicon-edit"></li></a>'
-							+'<div class="dropdown">'
-                 		   +'<a class="btn-opt dropdown-toggle" data-toggle="dropdown" title="更多"  aria-expanded="false" ><i class="fa fa-angle-double-right"></i></a>'
-                 		   +'<ul class="dropdown-menu" style="right: 0;left: initial;">'
-                 		   +'<li><a href="javascript:void(0)" class="attachIp"><i class="fa fa-gear fa-fw"></i>添加VIP</a></li>'
-                 		   +'<li><a href="javascript:void(0)" class="dettachIp"><i class="fa fa-gear fa-fw"></i>关联监控</a></li>'
-                 		   +'<li><a href="javascript:void(0)" class="editName"><i class="fa fa-file-text fa-fw"></i>解除监控关联</a></li>'
-                 		   +'<li><a href="javascript:void(0)" class="delPool"><i class="fa fa-trash-o fa-fw"></i>删除资源池</a></li>'
-                 		   +'</ul>'
-             		   +'</div>'
-			        }
+			        {"data": {}}
 		      ],
 		      "columnDefs": [
 					{
@@ -49,10 +38,24 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 					    }
 					},
 					{
-					    "targets": [5],
-					    "render": function(data, type, full) {
-					    	return "IPV"+data;
-					    }
+						"targets": [8],
+						"render": function(data, type, full) {
+							var html = '<a class="btn-edit btn-opt pull-left" data-toggle="tooltip" title="编辑" data-act="stop" href="javascript:void(0)"><li class="glyphicon glyphicon-edit"></li></a>'
+									+'<div class="dropdown">'
+		                 		   	+'<a class="btn-opt dropdown-toggle" data-toggle="dropdown" title="更多"  aria-expanded="false" ><i class="fa fa-angle-double-right"></i></a>'
+		                 		   	+'<ul class="dropdown-menu" style="right: 0;left: initial;">';
+							if(data.name) html += '<li><a href="javascript:void(0)" class="editVip"><i class="fa fa-gear fa-fw"></i>编辑VIP</a></li>'
+									+'<li><a href="javascript:void(0)" class="delVip"><i class="fa fa-trash-o fa-fw"></i>删除VIP</a></li>'
+									+(data.monitor_id? '<li><a href="javascript:void(0)" class="delMonitor"><i class="fa fa-file-text fa-fw"></i>解除监控关联</a></li>':
+										'<li><a href="javascript:void(0)" class="addMonitor"><i class="fa fa-gear fa-fw"></i>关联监控</a></li>');
+		                 		   
+							else html += '<li><a href="javascript:void(0)" class="addVip"><i class="fa fa-gear fa-fw"></i>添加VIP</a></li>'
+		                 		   +(row.monitor_id? '<li><a href="javascript:void(0)" class="delMonitor"><i class="fa fa-file-text fa-fw"></i>解除监控关联</a></li>':
+									'<li><a href="javascript:void(0)" class="addMonitor"><i class="fa fa-gear fa-fw"></i>关联监控</a></li>')
+		                 		   +'<li><a href="javascript:void(0)" class="delPool"><i class="fa fa-trash-o fa-fw"></i>删除资源池</a></li>';
+		                 	return html +'</ul></div>';
+		                 		   
+						}
 					}
                 ]
 		    },
@@ -66,7 +69,6 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 		})
 		$("[data-toggle='tooltip']").tooltip();
 		
-	    
 	    var EventsHandler = {
 	    		//表单校验
 				formValidator: function(){
@@ -102,6 +104,15 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 				}
 	    }
 	    var EditData = {
+	    		//添加VIP -连接限制
+				LimitSpinbox : function(){
+					require(['bs/spinbox'],function(){
+	    				$('#connection_limit').spinbox({
+		    					value: 0,
+		    					min: -1
+	    				});
+	    			})
+				},
 	    }
 	    
 	    //创建
@@ -200,7 +211,178 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 	             }
 	         });
 	     })
-	   
+	     //创建VIP
+	    $(document).off("click","#PoolTable_wrapper a.addVip");
+	    $(document).on("click","#PoolTable_wrapper a.addVip",function(){
+    		//先获取subnet后，再render
+    		Common.xhr.ajax('/networking/v2.0/subnets',function(data){
+    			Common.render('tpls/fservice/lbaas/pool/addVIP.html',data,function(html){
+	    			Dialog.show({
+	    	            title: '添加VIP',
+	    	            message: html,
+	    	            nl2br: false,
+	    	            buttons: [{
+	    	                label: '添加',
+	    	                action: function(dialog) {
+	    	                	var valid = $(".form-horizontal").valid();
+	    	            		if(!valid) return false;
+	    	        	    	
+	    	                	var serverData = {
+	    	                		"pool":{
+	    	                		}
+	    	                	  };
+	    	                	Common.xhr.postJSON('/networking/v2.0/subnets',serverData,function(data){
+	    	                		if(data){
+	    	                			Dialog.success('保存成功')
+	    	                			setTimeout(function(){Dialog.closeAll()},2000);
+	    	                			table.draw();
+									}else{
+										 Dialog.warning ('保存失败')
+									}
+								})
+	    	                }
+	    	            },
+	    	            {
+	    	            	label: '取消',
+	    	            	action: function(dialog){
+	    	            		dialog.close();
+	    	            	}
+	    	            }],
+	    	            onshown : function(){
+	    	            	EditData.LimitSpinbox();
+	    		    		EventsHandler.formValidator();
+	    		    	}
+	    	        });
+	    		});
+    		})
+	    });
+	    //编辑VIP
+	    $(document).off("click","#PoolTable_wrapper a.editVip");
+	    $(document).on("click","#PoolTable_wrapper a.editVip",function(){
+    		Common.xhr.ajax('/networking/v2.0/subnets',function(data){  //获取资源池列表
+    			Common.render('tpls/fservice/lbaas/pool/editVIP.html',data,function(html){
+	    			Dialog.show({
+	    	            title: '编辑VIP',
+	    	            message: html,
+	    	            nl2br: false,
+	    	            buttons: [{
+	    	                label: '保存',
+	    	                action: function(dialog) {
+	    	                	var valid = $(".form-horizontal").valid();
+	    	            		if(!valid) return false;
+	    	        	    	
+	    	                	var serverData = {
+	    	                		"pool":{
+	    	                		}
+	    	                	  };
+	    	                	Common.xhr.postJSON('/networking/v2.0/subnets',serverData,function(data){
+	    	                		if(data){
+	    	                			Dialog.success('保存成功')
+	    	                			setTimeout(function(){Dialog.closeAll()},2000);
+	    	                			table.draw();
+									}else{
+										 Dialog.warning ('保存失败')
+									}
+								})
+	    	                }
+	    	            },
+	    	            {
+	    	            	label: '取消',
+	    	            	action: function(dialog){
+	    	            		dialog.close();
+	    	            	}
+	    	            }],
+	    	            onshown : function(){
+	    	            	EditData.LimitSpinbox();
+	    		    		EventsHandler.formValidator();
+	    		    	}
+	    	        });
+	    		});
+    		})
+	    });
+	    //删除VIP
+	    $(document).off("click","#PoolTable_wrapper a.delVip");
+	     $(document).on("click","#PoolTable_wrapper a.delVip",function(){
+	    	 var id = $(this).parents("tr:first").data("rowData.dt").id;
+	    	 Dialog.confirm('确定要删除该VIP吗?', function(result){
+	             if(result) {
+	            	 Common.xhr.del('/networking/v2.0/subnets/'+id,
+	                     function(data){
+	                    	 if(data){
+	                    		 Dialog.success('删除成功')
+ 	                			 setTimeout(function(){Dialog.closeAll()},2000);
+	                    		 table.draw();
+	                    	 }else{
+	                    		 Dialog.warning ('删除失败')
+	                    	 }
+	                     });
+	             }else {
+	            	 Dialog.closeAll();
+	             }
+	         });
+	     })
+	    //关联监控
+	    $(document).off("click","#PoolTable_wrapper a.addMonitor");
+	    $(document).on("click","#PoolTable_wrapper a.addMonitor",function(){
+    		//先获取monitor后，再render
+    		Common.xhr.ajax('/networking/v2.0/subnets',function(data){
+    			Common.render('tpls/fservice/lbaas/pool/addMonitor.html',data,function(html){
+	    			Dialog.show({
+	    	            title: '关联监控',
+	    	            message: html,
+	    	            nl2br: false,
+	    	            buttons: [{
+	    	                label: '关联',
+	    	                action: function(dialog) {
+	    	                	var valid = $(".form-horizontal").valid();
+	    	            		if(!valid) return false;
+	    	        	    	
+	    	                	var serverData = {
+	    	                		"pool":{
+	    	                		}
+	    	                	  };
+	    	                	Common.xhr.postJSON('/networking/v2.0/subnets',serverData,function(data){
+	    	                		if(data){
+	    	                			Dialog.success('保存成功')
+	    	                			setTimeout(function(){Dialog.closeAll()},2000);
+	    	                			table.draw();
+									}else{
+										 Dialog.warning ('保存失败')
+									}
+								})
+	    	                }
+	    	            },
+	    	            {
+	    	            	label: '取消',
+	    	            	action: function(dialog){
+	    	            		dialog.close();
+	    	            	}
+	    	            }]
+	    	        });
+	    		});
+    		})
+	    });
+	    //解除关联
+	    $(document).off("click","#PoolTable_wrapper a.delMonitor");
+	    $(document).on("click","#PoolTable_wrapper a.delMonitor",function(){
+	    	 var id = $(this).parents("tr:first").data("rowData.dt").id;
+	    	 Dialog.confirm('确定要解除绑定吗?', function(result){
+	             if(result) {
+	            	 Common.xhr.del('/networking/v2.0/subnets/'+id,
+	                     function(data){
+	                    	 if(data){
+	                    		 Dialog.success('删除成功')
+ 	                			 setTimeout(function(){Dialog.closeAll()},2000);
+	                    		 table.draw();
+	                    	 }else{
+	                    		 Dialog.warning ('删除失败')
+	                    	 }
+	                     });
+	             }else {
+	            	 Dialog.closeAll();
+	             }
+	         });
+	     })
 	}
 	return {
 		init : init
