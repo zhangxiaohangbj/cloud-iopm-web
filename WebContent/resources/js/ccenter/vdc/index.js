@@ -650,6 +650,9 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 		    	QuotaSets : function(id){
 		    		//先获取QuotaSets后，再render
 		    		Common.xhr.ajax('/compute/v2/'+Common.cookies.getVdcId()+'/os-quota-sets/' + id,function(data){
+		    			if(data == null){
+		    				return Modal.warning ('Permission denied');
+		    			}
 		    			Common.render('tpls/ccenter/vdc/quota.html',data.quota_set,function(html){
 		    				Modal.show({
 			    	            title: '配额',
