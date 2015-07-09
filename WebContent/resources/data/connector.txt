@@ -1,0 +1,41 @@
+[
+        {
+            "id":"1",
+            "name": "Openstack",
+            "type":"OPENSTACK",
+            "ip":"127.0.0.1",
+            "port":3306,
+            "username":"admin",
+            "password":"123456",
+            "version":"v2.0",
+            "protocol":"http",
+            "objectId":"1",
+            "tenantName":"admin"
+        },
+        {
+            "id":"2",
+            "name": "ceilometer",
+            "type":"CEILOMETER",
+            "ip":"127.0.0.1",
+            "port":3306,
+            "username":"admin",
+            "password":"123456",
+            "version":"v2.0",
+            "protocol":"http",
+            "objectId":"1",
+            "tenantName":"admin"
+        },
+        {
+            "id":"3",
+            "name": "rabbitmq",
+            "type":"RABBITMQ",
+            "ip":"127.0.0.1",
+            "port":3306,
+            "username":"admin",
+            "password":"123456",
+            "version":"v2.0",
+            "protocol":"http",
+            "objectId":"1",
+            "tenantName":"admin"
+        }
+]
