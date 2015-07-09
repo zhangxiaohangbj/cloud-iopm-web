@@ -31,10 +31,13 @@ define('commons/router_table', function() {
         '^#fservice/vpc/network/detail/(.*)$' :"js/fservice/vpc/network/detail",
         '^#fservice/vpc/subnet/detail/(.*)$' :"js/fservice/vpc/subnet/detail",
         '^#fservice/vpc/router/detail/(.*)$' :"js/fservice/vpc/router/detail",
-    	'^#fservice/vpc/firewall/rule/detail/(.*)$' :"js/fservice/vpc/firewall/rule_detail",
+        '^#fservice/vpc/firewall/rule/detail/(.*)$' :"js/fservice/vpc/firewall/rule_detail",
+    	'^#fservice/vpc/firewall/policy/detail/(.*)$' :"js/fservice/vpc/firewall/policy_detail",
+    	'^#fservice/vpc/firewall/firewall/detail/(.*)$' :"js/fservice/vpc/firewall/firewall_detail",
 		'^#fservice/vpc/firewall/tab/(.*)$' :"js/fservice/vpc/firewall/index",
 		'^#fservice/lbaas/pool/detail/(.*)$' :"js/fservice/lbaas/pool/detail",
 		'^#fservice/lbaas/member/detail/(.*)$' :"js/fservice/lbaas/member/detail",
-		'^#fservice/lbaas/monitor/detail/(.*)$' :"js/fservice/lbaas/monitor/detail"
+		'^#fservice/lbaas/monitor/detail/(.*)$' :"js/fservice/lbaas/monitor/detail",
+        '^#monitor/monitor/agent/detail/(.*)$' :"js/monitor/monitor/agent_detail"
     };
 });

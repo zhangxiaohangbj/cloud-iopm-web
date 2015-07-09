@@ -428,7 +428,7 @@ define('commons/pub_menu', function() {
                         },
                         {
                             text: '<i class="fa fa-dot fa-1"></i>agent管理',
-                            link: '#monitor/monitor'
+                            link: '#monitor/agent'
                         },
                         {
                             text: '<i class="fa fa-dot fa-1"></i>监控指标',
