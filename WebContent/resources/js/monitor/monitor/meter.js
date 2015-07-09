@@ -5,7 +5,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
         Common.xhr.ajax('monitor/v2/meters/list', function(data){
             var render_data = {}
             render_data['meters'] = data
-           Common.render(true,'tpls/monitor/monitor/meter.html',render_data,function(){
+           Common.render(true,'tpls/monitor/monitor/meter/meter.html',render_data,function(){
                 bindEvent();
             });
         })
@@ -66,7 +66,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 	  //增加按钮
         $("#meterTable_wrapper span.btn-add").on("click",function(){
             //需要修改为真实数据源
-            Common.render('tpls/monitor/monitor/addMeter.html',renderData,function(html){
+            Common.render('tpls/monitor/monitor/meter/addMeter.html',renderData,function(html){
 
                 $('body').append(html);
                 //wizard show
@@ -91,7 +91,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
                 //wizard.disableNextButton();
 
 
-                //EventsHandler.flavorFormValidator();
+                EventsHandler.meterFormValidator();
                 //关闭弹窗
                 var closeWizard = function(){
                     $('div.wizard').remove();
@@ -131,37 +131,20 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 
 
         var EventsHandler = {
-            flavorFormValidator: function(){
+            meterFormValidator: function(){
                 return $(".form-horizontal").validate({
                     rules: {
                         'name': {
                             required: true,
                             minlength: 4,
-                            maxlength:15
+                            maxlength: 15
                         },
-                        'vcpus': {
+                        'unit': {
                             required: true,
-                            digits:true
-                        },
-                        'ram': {
-                            required: true,
-                            digits:true
-                        },
-                        'disk': {
-                            required: true,
-                            digits:true
-                        },
-                        'ephemera': {
-                            digits:true
-                        },
-                        'swap': {
-                            digits:true
-                        },
-                        'rxtx_factor': {
-                            number:true,
-                            max:1.0,
-                            min:0.0
+                            minlength: 2,
+                            maxlength: 15
                         }
+
                     }
                 });
             }
@@ -173,14 +156,9 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 	    });
 
 
-        $("ul.dropdown-menu a.removeFlavor").on("click",function(){
-            more.deleteFlavor($(this).attr("data"));
+        $("ul.dropdown-menu a.removeMeter").on("click",function(){
+            more.deleteMeter($(this).attr("data"));
         });
-
-        $("ul.dropdown-menu a.updateAccessVdc").on("click",function(){
-            more.accessFlavor($(this).attr("data"));
-        });
-
 
 	    //更多
 	    var more = {
@@ -193,7 +171,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
                             data['meter'] = meters[i]
                     }
                     data['resourceTypes'] = renderData['resourceTypes']
-		    		Common.render('tpls/monitor/monitor/editMeter.html',data,function(html){
+		    		Common.render('tpls/monitor/monitor/meter/editMeter.html',data,function(html){
 		    			Modal.show({
 			    	            title: '编辑',
 			    	            message: html,
@@ -228,10 +206,10 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 		    		
 		    	},
 
-            deleteFlavor : function(id){
-                    Modal.confirm('确定要删除该云主机类型吗?', function(result){
+            deleteMeter : function(id){
+                    Modal.confirm('确定要删除该云主机吗?', function(result){
                         if(result) {
-                            Common.xhr.del('compute/v2/123/flavors/'+id,
+                            Common.xhr.del('/monitor/v2/meters/'+id,
                                 function(data){
                                     if(data){
                                         Modal.success('删除成功')
@@ -245,61 +223,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
                         }
                     });
 
-                },
-
-            accessFlavor : function(id){
-                Common.xhr.ajax('compute/v2/123/flavors/'+id+"/os-flavor-access",function(data){
-                    var unselectedList = [];
-                    var selectedList = [];
-                    Common.render('tpls/ccenter/vmtype/flavorAccess.html',data,function(html){
-                        Modal.show({
-                            title: '访问授权',
-                            message: html,
-                            nl2br: false,
-                            buttons: [{
-                                label: '保存',
-                                action: function(dialog) {
-                                    var chooseList = DataGetter.getChoose('#flavorVdcAccess .list-group-select');
-                                    Common.xhr.putJSON('compute/v2/123/flavors/'+id+'/os-flavor-access',chooseList,function(data){
-                                        if(data){
-                                            alert("保存成功");
-                                            dialog.close();
-                                        }else{
-                                            alert("保存失败");
-                                        }
-                                    })
-                                }
-                            }],
-                            onshown : function(){
-                                require(['js/common/choose'],function(choose){
-                                    var flavorVdcList = data['flavor_access'];
-                                    a: for(var i=0; i<renderData.vdcList.length; i++){
-                                         for(var j=0; j<flavorVdcList.length; j++){
-                                            if(renderData.vdcList[i]['id'] == flavorVdcList[j]['tenant_id']){
-
-                                                selectedList.push(renderData.vdcList[i])
-                                                continue a;
-                                            }
-                                        }
-                                        unselectedList.push(renderData.vdcList[i])
-                                    }
-                                    var options = {
-                                        selector: '#flavorVdcAccess',
-                                        allData: unselectedList,
-                                        selectData: selectedList
-                                    };
-                                    choose.initChoose(options);
-                                });
-
-                            }
-                        });
-
-                    });
-                })
-
-            }
-
-
+                }
 	    }
 	}
 	return {
