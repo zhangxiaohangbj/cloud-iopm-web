@@ -23,10 +23,10 @@
 			<label for="status" class="control-label col-sm-3"><span>* </span>状态：</label>
 			<div class="col-sm-7 col-sm">
 				<select class="form-control select" name="status">
-					<option value="normal" {{if status == 'normal'}}{{/if}}>正常</option>
-					<option value="locked" {{if status == 'locked'}}{{/if}}>已锁定</option>
-					<option value="delete" {{if status == 'delete'}}{{/if}}>已删除</option>
-					<option value="disabled" {{if status == 'disabled'}}{{/if}}>已禁用</option>
+					<option value="normal" {{if status == 'normal'}}selected{{/if}}>正常</option>
+					<option value="locked" {{if status == 'locked'}}selected{{/if}}>已锁定</option>
+					<option value="delete" {{if status == 'delete'}}selected{{/if}}>已删除</option>
+					<option value="disabled" {{if status == 'disabled'}}selected{{/if}}>已禁用</option>
 				</select>
 			</div>
 		</div>
@@ -52,7 +52,7 @@
 			<label for="organName" class="control-label col-sm-3"><span>* </span>所属部门：</label>
 			<div class="col-sm-7 col-sm">
 				<input type="hidden" name="organId" value="{{organId}}">
-				<input type="text" class="form-control" name="organName" value="{{organName}}">
+				<input type="text" class="form-control" name="organName" {{if organ}} value="{{organ.organName}}"{{/if}}>
 			</div>
 		</div>
 	</div>

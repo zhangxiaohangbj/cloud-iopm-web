@@ -12,7 +12,7 @@ define('js/fservice/vpc/firewall/policy', ['Common','bs/modal','bs/tooltip','jq/
 			"columns": [
 				        {"orderable": false,"defaultContent":"<label><input type='checkbox'></label>"},
 				        {"data": {}},
-				        {"data": "firewall_rules"},
+				        {"data": "firewallRuleNames"},
 				        {"data": "audited"},
 				        {"data": {}},
 				        ],
@@ -38,19 +38,6 @@ define('js/fservice/vpc/firewall/policy', ['Common','bs/modal','bs/tooltip','jq/
 	            	 }
                  },
                  {
-                	 "targets":[2],
-                	 "render":function(data, type, full){
-                		 var dataStr = "";
-                		 for(var i = 0; i < data.length-1; i++){
-                			 dataStr = dataStr + data[i] + ","
-                		 }
-                		 if(data.length > 0){
-                			 dataStr = dataStr + data[data.length-1];
-                		 }
-                		 return dataStr;
-                	 }
-                 },
-                 {
                 	 "targets":[3],
                 	 "render":function(data, type, full){
                 		 if(data == true){
@@ -62,16 +49,11 @@ define('js/fservice/vpc/firewall/policy', ['Common','bs/modal','bs/tooltip','jq/
                  },
                  {
                 	 "targets": [4],
-                	 "data" :"id",
                 	 "render": function(data, type, full) {
-                		 var html = '<a class="editPolicy" data-toggle="tooltip" title="编辑策略" href="javascript:void(0)">编辑策略</a>';
-                		 html += '<div class="dropdown">'
-                			 +'<a class="btn-opt dropdown-toggle" data-toggle="dropdown" title="更多" aria-expanded="false"><li class="fa fa-angle-double-right"></li></a>'
-                			 +'<ul class="dropdown-menu" style="right: 0;left: initial;">'
-                			 +'<li><a href="javascript:void(0)" class="insertRule" data="'+data.id+'"><i class="fa fa-pencil fa-fw"></i>插入规则</a></li>'
-                			 +'<li><a href="javascript:void(0)" class="removeRule" data="'+data.id+'"><i class="fa fa-pencil fa-fw"></i>移除规则</a></li>'
-                			 +'<li><a href="javascript:void(0)" class="deletePolicy" data="'+data.id+'"><i class="fa fa-trash-o fa-fw"></i>删除策略</a></li>'
-                			 +'</ul></div>';
+                		 var html = '<a class="btn-opt editFirewallRule" href="javascript:void(0)" data="'+data.id+'" data-name="'+data.name+'" data-toggle="tooltip" title="编辑策略" style="margin: 0;"><i class="fa fa-edit fa-fw"></i></a>'
+                		 			+'<a class="btn-opt insertRule" href="javascript:void(0)" data="'+data.id+'" data-name="'+data.name+'" data-toggle="tooltip" title="插入规则" style="margin: 0;"><i class="fa fa-indent fa-fw"></i></a>'
+                		 			+'<a class="btn-opt removeRule" href="javascript:void(0)" data="'+data.id+'" data-name="'+data.name+'" data-toggle="tooltip" title="移除规则" style="margin: 0;"><i class="fa fa-outdent fa-fw"></i></a>'
+                         		    +'<a class="btn-opt deleteFirewallRule" href="javascript:void(0)" data="'+data.id+'" data-name="'+data.name+'" data-toggle="tooltip" title="删除策略" style="margin: 0;"><i class="fa fa-trash-o fa-fw"></i></a>';
                 		 return html;
                 	 }
                  }
@@ -118,6 +100,20 @@ define('js/fservice/vpc/firewall/policy', ['Common','bs/modal','bs/tooltip','jq/
 						$tab.addClass('active');
 					}
 				});
+			},
+			insertExclusive: function(){
+				$('#insertFirewallRule [name="insert_before"]').on('change', function(value){
+					var value = $(this).val();
+					if(value){
+						$('#insertFirewallRule [name="insert_after"]').val("");
+					}
+				})
+				$('#insertFirewallRule [name="insert_after"]').on('change', function(value){
+					var value = $(this).val();
+					if(value){
+						$('#insertFirewallRule [name="insert_before"]').val("");
+					}
+				})
 			}
 		}
 		
@@ -155,9 +151,14 @@ define('js/fservice/vpc/firewall/policy', ['Common','bs/modal','bs/tooltip','jq/
 					var insert_before = $("#insertFirewallRule [name='insert_before']")
 					var remove_firewall_rule_id = $("#removeFirewallRule [name='firewall_rule_id']")
 					if(insert_after && insert_before){
-						var html = Common.uiSelect(rules);
+						var datas = []
+						datas.push({"id":"", "name":""});
+						for(var i = 0; i < rules.length; i++){
+							datas.push(rules[i]);
+						}
+						var html = Common.uiSelect(datas);
 						insert_after.html(html);
-						insert_after.html(html);
+						insert_before.html(html);
 					}
 					if(remove_firewall_rule_id){
 						var html = Common.uiSelect(rules);
@@ -206,7 +207,7 @@ define('js/fservice/vpc/firewall/policy', ['Common','bs/modal','bs/tooltip','jq/
 				        			setTimeout(function(){Dialog.closeAll()},2000);
 			            			Common.router.route();
 								}else{
-									 Dialog.warning ('保存失败')
+									Dialog.warning ('保存失败')
 								}
 							})
 			            }
@@ -286,7 +287,7 @@ define('js/fservice/vpc/firewall/policy', ['Common','bs/modal','bs/tooltip','jq/
 		//插入规则
 		Common.on("click","#PolicyTable_wrapper a.insertRule", function(){
 			var id= $(this).parents("tr:first").data("rowData.dt").id;
-			Common.render('tpls/fservice/vpc/firewall/policy/insert_rule.html', data.firewall_policy, function(html){
+			Common.render('tpls/fservice/vpc/firewall/policy/insert_rule.html', function(html){
 				Dialog.show({
 			        title: '插入规则',
 			        message: html,
@@ -318,6 +319,7 @@ define('js/fservice/vpc/firewall/policy', ['Common','bs/modal','bs/tooltip','jq/
 			        onshown : function(){
 			        	DataIniter.initUnUseRules();
 			        	DataIniter.initUsedRules(id);
+			        	EventsHandler.insertExclusive();
 			        	EventsHandler.formValidator();
 			        }
 			    });
@@ -326,7 +328,7 @@ define('js/fservice/vpc/firewall/policy', ['Common','bs/modal','bs/tooltip','jq/
 		//移除规则
 		Common.on("click","#PolicyTable_wrapper a.removeRule", function(){
 			var id= $(this).parents("tr:first").data("rowData.dt").id;
-			Common.render('tpls/fservice/vpc/firewall/policy/remove_rule.html', data.firewall_policy, function(html){
+			Common.render('tpls/fservice/vpc/firewall/policy/remove_rule.html', function(html){
 				Dialog.show({
 			        title: '移除规则',
 			        message: html,

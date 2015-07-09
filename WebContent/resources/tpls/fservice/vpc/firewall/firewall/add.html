@@ -1,11 +1,11 @@
-<div class="create-info">
-  	<ul class="nav nav-tabs" role="tablist">
-    	<li class="active"  data-for="basic"><a href="javascript:void(0)">添加防火墙</a></li>
-    	<li data-for="routers"><a href="javascript:void(0)">路由</a></li>
-  	</ul>
-  	<div class="tab-content">
+<div class="edit-info">
+	<ul class="nav nav-tabs" role="tablist">
+		<li class="active" data-for="basic"><a href="javascript:void(0)">添加防火墙</a></li>
+		<li data-for="routers"><a href="javascript:void(0)">路由</a></li>
+	</ul>
+	<div class="tab-content">
 		<div class="tab-pane basic active">
-			<form class="form-horizontal" id="addFirewall">
+			<form class="form-horizontal" id="editFirewall">
 				<div class="form-group">
 					<label for="name" class="control-label col-sm-3"><span style="color: red;">* </span>名称：</label>
 					<div class="col-sm-7 col-sm">
@@ -13,9 +13,9 @@
 					</div>
 				</div>
 				<div class="form-group">
-					<label for="name" class="control-label col-sm-3">描述：</label>
+					<label for="description" class="control-label col-sm-3">描述：</label>
 					<div class="col-sm-7 col-sm">
-						<input type="text" class="form-control" name="name" value="">
+						<input type="text" class="form-control" name="description" value="">
 					</div>
 				</div>
 				<div class="form-group">
@@ -25,15 +25,15 @@
 					</div>
 				</div>
 				<div class="form-group">
-					<label for="shared" class="control-label col-sm-4">共享：</label>
+					<label for="shared" class="control-label col-sm-3">共享：</label>
 					<div class="col-sm-5 col-sm">
 						<p>
-							<input type="checkbox" name="shared" checked data-size="small" data-on-text="启用" data-off-text="禁用">
+							<input type="checkbox" name="shared" checked data-size="small" data-on-text="是" data-off-text="否">
 						</p>
 					</div>
 				</div>
 				<div class="form-group">
-					<label for="admin_state_up" class="control-label col-sm-4"><span style="color: red;">* </span>管理状态：</label>
+					<label for="admin_state_up" class="control-label col-sm-3"><span style="color: red;">* </span>管理状态：</label>
 					<div class="col-sm-5 col-sm">
 						<p>
 							<input type="checkbox" name="admin_state_up" checked data-size="small" data-on-text="启用" data-off-text="禁用">
@@ -44,7 +44,7 @@
 		</div>
 		<div class="tab-pane routers">
 			<div class="wizard-card-content none-desc col-sm-12">
-				<div class="wizard-input-section" id="routerIds">
+				<div class="wizard-input-section" id="routers">
 				</div>
 			</div>
 		</div>
