@@ -12,6 +12,7 @@ define('commons/router_table', function() {
         '^#ccenter/zone/detail/(.*)?$': "js/ccenter/zone/detail",
         '^#ccenter/region/detail/(.*)?$': "js/ccenter/region/detail",
         '^#ccenter/env/detail/(.*)?$': "js/ccenter/env/detail",
+        '^#ccenter/env/connector/(.*)?$': "js/ccenter/env/connector",
         '^#ccenter/metadata/namespace/detail/(.*)?$': "js/ccenter/metadata/namespace/detail",
         '^#ccenter/metadata/tag/detail/(.*)?$': "js/ccenter/metadata/tag/detail",
         '^#sysmanagement(!.*)?$': "js/sysmanagement/user",
