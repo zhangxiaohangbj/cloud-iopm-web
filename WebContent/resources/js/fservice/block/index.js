@@ -278,10 +278,10 @@ define(['Common','bs/modal','rq/text!tpls/fservice/block/volume/list-opts.html',
 					Common.xhr.ajax('/resources/data/specs.txt',function(data){
 						var dataArr = [];
 						$.each(data,function(i,item){
-							dataArr.push('<div class="col-sm-9"><label data-id="'+item.name+'"><input type="checkbox">'+item.name+'</label></div>')
+							dataArr.push('<div class="col-sm-9"><label data-id="'+item.name+'"><input name="user-vms" type="radio">'+item.name+'</label></div>')
 						})
 						$('.vm-list').html(dataArr.join(''));
-						EventsHandler.initCheckBox();
+						EventsHandler.initRadioBox();
 					});
 				}
 		};
@@ -297,9 +297,10 @@ define(['Common','bs/modal','rq/text!tpls/fservice/block/volume/list-opts.html',
 					});
 				},
 				//挂载磁盘
-				initCheckBox : function(){
+				initRadioBox : function(){
 					$('input[type="checkbox"],input[type="radio"]').iCheck({
-				    	checkboxClass: "icheckbox-info"
+				    	checkboxClass: "icheckbox-info",
+				    	radioClass: "iradio-info"
 				    })
 				},
 				checkNextWizard: function(){
@@ -578,7 +579,7 @@ define(['Common','bs/modal','rq/text!tpls/fservice/block/volume/list-opts.html',
 	    	    	                	}
 	    	    	            	}],
 	    	    	            	onshown : function(){
-	    	        	            	EventsHandler.initCheckBox();
+	    	        	            	EventsHandler.initRadioBox();
 	    	        	            }
 	    					});
 						}

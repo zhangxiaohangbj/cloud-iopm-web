@@ -73,8 +73,9 @@ input[disabled], select[disabled], textarea[disabled], input[readonly], select[r
  	overflow:hidden;
  	margin-left:18%;
  }
- .wizard-cards .icheckbox-info{
- 	margin-right:15px;
+ .wizard-cards .icheckbox-info,
+ .wizard-cards .iradio-info{
+ 	margin-right:10px;
  }
  .wizard-card-container{
  	margin-left:0;
