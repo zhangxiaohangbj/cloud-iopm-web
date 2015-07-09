@@ -347,7 +347,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 			                },
 			                'vdc-name': {
 			                    required: true,
-			                    maxlength:50,
+			                    maxlength:15,
 			                    minlength:4
 			                }
 						}
