@@ -1,7 +1,7 @@
 <div class="page-header">
 	<ol class="breadcrumb minus">
-		<li class="active">规则详情</li>
-		<li class="backlist"><a href="#fservice/vpc/firewall/tab/rule">返回列表</a></li>
+		<li class="active">策略详情</li>
+		<li class="backlist"><a href="#fservice/vpc/firewall/tab/policy">返回列表</a></li>
 	</ol>
 </div>
 <div class="page-body">
@@ -15,27 +15,25 @@
 						<div class="row">
 							<label for="name" class="control-label col-sm-3">名称：</label>
 							<div class="col-sm-7 col-sm">
-								{{name}}
+								{{firewall_policy.name}}
 							</div>
 						</div>
 						<div class="row">
 							<label for="description" class="control-label col-sm-3">描述：</label>
 							<div class="col-sm-7 col-sm">
-								{{description}}
+								{{firewall_policy.description}}
 							</div>
 						</div>
 						<div class="row">
 							<label for="firewall_rules" class="control-label col-sm-3">规则：</label>
 							<div class="col-sm-7 col-sm">
-								{{each firewall_rules as rule}}
-									{{rule}}
-    	                        {{/each}}
+								{{firewall_policy.firewallRuleNames}}
 							</div>
 						</div>
 						<div class="row">
 							<label for="shared" class="control-label col-sm-3">共享的：</label>
 							<div class="col-sm-7 col-sm">
-								{{if shared}} 
+								{{if firewall_policy.shared}} 
 									 是
 								{{else}}
 									否
@@ -45,7 +43,7 @@
 						<div class="row">
 							<label for="audited" class="control-label col-sm-3">已审计：</label>
 							<div class="col-sm-7 col-sm">
-								{{if audited}} 
+								{{if firewall_policy.audited}} 
 									 是
 								{{else}}
 									否
