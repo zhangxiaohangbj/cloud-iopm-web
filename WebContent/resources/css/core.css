@@ -34,6 +34,15 @@ a.link-more:hover, .link-more a:hover {
 	margin-top: -32px;
 	z-index: 99999;
 }
+.icheckbox, .iradio{
+	margin-right:10px;
+}
+.text-align-left{
+	text-align:left;
+}
+.text-align-right{
+	text-align:right;
+}
 /*!header头部分开始*/
 header {
 	height: 48px;

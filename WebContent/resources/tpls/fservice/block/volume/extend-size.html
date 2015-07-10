@@ -1,11 +1,14 @@
 <div class="edit-vm-list clearfix">
-	<p>扩展<span class="mount_volume_name" style="color:red;">{{volName}}</span> 磁盘的空间为:</p>
-	
-	<div class="col-sm-9">
-		<label for="extend_size">
-			<input type="text" name="extend_size" id="extend_size">GB
-		</label>
-	</div>
-	<div class="col-sm-9 quotas-size">
-	</div>
+	<form id="extend_volume_size">
+		<div class="form-group clearfix" style="margin:10px 0 20px;">
+			<label for="extend_size" class="control-label col-sm-4 text-align-right"><span>* </span>扩展磁盘的空间为:</label>
+			<div class="col-sm-7 col-sm">
+				<input type="text" name="extend_size" id="extend_size" value="{{size}}" />GB
+			</div>
+		</div>
+		<div class="form-group clearfix">
+			<label for="" class="control-label col-sm-4 text-align-right" >配额使用:</label>
+			<div class="col-sm-7 col-sm quotas-size"></div>
+		</div>
+	</form>
 </div>
