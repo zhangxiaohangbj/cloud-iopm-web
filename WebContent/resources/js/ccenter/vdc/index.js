@@ -254,14 +254,14 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 				//配额的表单验证
 				vdc_form:function($form){
 					if(!$form)return null;
-					$.validator.addMethod("integer",function(str){
+				/*	$.validator.addMethod("integer",function(str){
 						if(parseInt(str) == str){
 							 return true;
 						}else{
 							return false;
 						}
 						
-					},"必须输入整数");
+					},"必须输入整数");*/
 					return $form.validate({
 						errorContainer: "_form",
 						rules:{
@@ -347,6 +347,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 			                },
 			                'vdc-name': {
 			                    required: true,
+			                    name_cn:true,
 			                    maxlength:15,
 			                    minlength:4
 			                }

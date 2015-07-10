@@ -112,7 +112,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 	    	                		}
 	    	                	  };
 	    	                	for(var i=0;i<data.length;i++){
-	    	                		serverData.member[data[i]["name"]] = data[i]["value"];
+	    	                		serverData.monitor[data[i]["name"]] = data[i]["value"];
 	    						}
 	    	                	Common.xhr.postJSON('/networking/v2.0/subnets',serverData,function(data){
 	    	                		if(data){
@@ -153,10 +153,14 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
     	                action: function(dialog) {
     	                	var valid = $(".form-horizontal").valid();
     	            		if(!valid) return false;
-    	            		var serverData = {
-	    	                		"pool":{
-	    	                		}
-	    	                	  };
+    	            		var data = $("#addMonitor").serializeArray();
+    	                	var serverData = {
+    	                		"monitor":{
+    	                		}
+    	                	  };
+    	                	for(var i=0;i<data.length;i++){
+    	                		serverData.monitor[data[i]["name"]] = data[i]["value"];
+    						}
     	                	Common.xhr.putJSON('/networking/v2.0/subnets/'+id,serverData,function(data){
     	                		if(data){
     	                			Dialog.success('保存成功')
