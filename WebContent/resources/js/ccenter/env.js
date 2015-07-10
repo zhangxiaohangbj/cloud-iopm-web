@@ -23,10 +23,10 @@ define(['Common','bs/modal','jq/form/wizard','jq/form/validator-bs3','bs/tooltip
         });
         $("[data-toggle='tooltip']").tooltip();
 
-        //ip校验
-        $.validator.addMethod("ip", function(value, element) {
-            return this.optional(element) || /^((\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.){3}(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])$/.test(value);
-        }, "请填写正确的网关IP");
+
+        $.validator.addMethod("connection", function(value, element) {
+            return value == "true";
+        }, "请测试连接的可用性");
 
         //icheck
         $('input[type="checkbox"]').iCheck({
@@ -44,6 +44,7 @@ define(['Common','bs/modal','jq/form/wizard','jq/form/validator-bs3','bs/tooltip
 
         //初始化
         var wizard;
+        var validators = [];
         var renderData = {};
         var currentChosenEnv = {
             type: null,	//虚拟环境类型
@@ -53,14 +54,12 @@ define(['Common','bs/modal','jq/form/wizard','jq/form/validator-bs3','bs/tooltip
             vendor:"default"//default
         };
         var currentChosenConnector={
-            version:'v2.0',
             type:null,
             ip:null,
             port:null,
             username:null,
             password:null,
             protocol: null,	//协议
-            tenantName:"admin"
         }
         var dataGetter={
             //获取类型数据
@@ -91,14 +90,11 @@ define(['Common','bs/modal','jq/form/wizard','jq/form/validator-bs3','bs/tooltip
                     renderData.period = period;
                 });
             }
-
         };
         dataGetter.getType();
         dataGetter.getZone();
         dataGetter.getProtocol();
         dataGetter.getPeriod();
-
-
         var dataSetHandler={
             nameSet:function(){
                 currentChosenEnv.name = $("#env-name").val();
@@ -195,13 +191,14 @@ define(['Common','bs/modal','jq/form/wizard','jq/form/validator-bs3','bs/tooltip
                 //加载时载入validate
                 wizard.on('show',function(){
                     wizard.form.each(function(){
-                    	$(this).validate({
+                    	var temp = $(this).validate({
                             errorContainer: '_form',
                             rules: {
                                 'env-name': {
                                     required: true,
                                     minlength: 1,
-                                    maxlength:15
+                                    maxlength:15,
+                                    name_en:true
                                 },
                                 'env-version': {
                                     required: true
@@ -234,12 +231,42 @@ define(['Common','bs/modal','jq/form/wizard','jq/form/validator-bs3','bs/tooltip
                                 },
                                 'connector-ip':{
                                     required:true,
-                                    ip:true
+                                    IP:true
+                                },
+                                'test-connection':{
+                                    required:true,
+                                    connection:true
                                 }
                             }
                         });
+                        validators.push(temp);
                     })
                 });
+                wizard.cards.detail.on("selected",function(card){
+                    $("#test-connection-btn").click(function(){
+                        var cur = {
+                            type: $('select.select-env-type option:selected').val(),
+                            version: $("#env-version").val(),
+                            ip: $("#connector-ip").val(),
+                            port:$("#connector-port").val(),
+                            protocol:$('select.select-protocol option:selected').val(),
+                            username:$("#connector-username").val(),
+                            password:$("#connector-password-confirm").val(),
+                            tenantName:Common.cookies.getVdcId()
+                        }
+                        validators[1].hideErrors();
+                        Modal.loading('测试连接中');
+                        Common.xhr.putJSON("/cloud/v2.0/connector/test",cur,function(data){
+                            Modal.loading('remove');
+                            if(data){
+                                Modal.success("该连接信息可用");
+                                $("#test-connection").val("true");
+                            }else{
+                                Modal.warning("连接信息不可用");
+                            }
+                        })
+                    })
+                })
                 //确认信息卡片被选中的监听
                 wizard.cards.confirm.on('selected',function(card){
                     //获取上几步中填写的值
@@ -256,10 +283,7 @@ define(['Common','bs/modal','jq/form/wizard','jq/form/validator-bs3','bs/tooltip
                     dataSetHandler.periodSet();
                     dataSetHandler.protocolSet();
                 });
-
-
                 wizard.show();
-
                 //关闭弹窗
                 var closeWizard = function(){
                     $('div.wizard').remove();
@@ -270,14 +294,13 @@ define(['Common','bs/modal','jq/form/wizard','jq/form/validator-bs3','bs/tooltip
                 wizard.on('closed', function() {
                     closeWizard();
                 });
-
-
                 //提交按钮
                 wizard.on("submit", function(wizard) {
                     //合并数据
+                    currentChosenConnector.version="v2.0";
+                    currentChosenConnector.tenantName=Common.cookies.getVdcName();
                     currentChosenEnv["connector"] = currentChosenConnector;
                     Common.xhr.postJSON('/v2/virtual-env',currentChosenEnv,function(data){
-
                         if(data && data.error!=true){
                             wizard._submitting = false;
                             wizard.updateProgressBar(100);
@@ -285,14 +308,12 @@ define(['Common','bs/modal','jq/form/wizard','jq/form/validator-bs3','bs/tooltip
                             Modal.success('保存成功');
                             Common.router.route();
                         }else{
-                            Modal.warning ('保存失败')
+                            //Modal.warning ('保存失败')
                         }
-
                     });
                 });
             });
         });
-
         //操作按钮
         //日志按钮
         $("a.log-info").on("click",function(){
@@ -306,12 +327,10 @@ define(['Common','bs/modal','jq/form/wizard','jq/form/validator-bs3','bs/tooltip
                         nl2br: false,
                         onshown : ""
                     });
-
                 });
             });
         });
         //编辑按钮
-
         $("a.edit").on("click",function(){
             var data = $(this).attr("data");
             Common.xhr.ajax("/v2/virtual-env/"+data,function(env){
@@ -332,7 +351,6 @@ define(['Common','bs/modal','jq/form/wizard','jq/form/validator-bs3','bs/tooltip
                             action: function(dialog) {
                                 var valid = $(".form-horizontal").valid();
                                 if(!valid) return false;
-
                                 var envData ={
                                     "id":env.id,
                                     "name": $("#edit-env-name").val(),
@@ -355,10 +373,8 @@ define(['Common','bs/modal','jq/form/wizard','jq/form/validator-bs3','bs/tooltip
                             formValidator($("#editRegion"));
                         }
                     });
-
                 });
             });
-
         });
 
         //同步按钮
@@ -383,6 +399,13 @@ define(['Common','bs/modal','jq/form/wizard','jq/form/validator-bs3','bs/tooltip
             });
 
         });
+        //编辑 connector
+        //$("a.connector").on("click",function(){
+        //    var envId =  $(this).attr("data")
+        //    Common.render();
+        //});
+
+
         $("a.delete").on("click",function(){
             var id = $(this).attr("data");
             Modal.confirm('确定要删除该虚拟环境吗?',function(result){
@@ -391,10 +414,12 @@ define(['Common','bs/modal','jq/form/wizard','jq/form/validator-bs3','bs/tooltip
                         function(data){
                             if(data && data.error!=true){
                                 Modal.success('删除成功')
-                                setTimeout(function(){Dialog.closeAll()},2000);
-                                Common.router.route();//重新载入
+                                setTimeout(function(){
+                                    Modal.closeAll();
+                                    Common.router.route();//重新载入
+                                },2000);
+
                             }else{
-                                Modal.warning ('删除失败')
                             }
                         });
                 }else {

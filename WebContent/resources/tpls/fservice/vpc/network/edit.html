@@ -33,12 +33,5 @@
 		    </p>
 		</div>
 	</div>
-	<div class="form-group">
-		<label for="router:external" class="control-label col-sm-4">网络类型：</label>
-		<div class="col-sm-5 col-sm">
-			<p>
-		        <input type="checkbox"  name="router:external" data-size="small" data-on-text="外部" data-off-text="内部" {{if network["router:external"] == true}}checked {{/if}}>
-		    </p>
-		</div>
-	</div>
+	<input type="hidden"  name="router:external" value="{{if network['router:external']}}true{{else}}false{{/if}}">
 </form>

@@ -1,85 +1,102 @@
-<div class="wizard" id="create-flavor-wizard" data-title="创建服务器类型">
-			<!-- 基本信息 -->
-			<div class="wizard-card" data-cardname="basic">
-				<h3>基本信息</h3>
-				<div class="wizard-card-content col-sm-8">
-					<div class="wizard-input-section" id="addFlavor">
-						<div class="form-group">
-							<label for="name" class="control-label col-sm-3"><span>* </span>名称：</label>
-							<div class="col-sm-7 col-sm">
-								<input type="text" class="form-control" id="name" name="name" placeholder="服务器名称">
-							</div>
-
-						</div>
-                        <div class="form-group">
-                            <label for="vcpus" class="control-label col-sm-3"><span>* </span>虚拟内核数：</label>
-                            <div class="col-sm-7 col-sm">
-                                <input type="text" class="form-control" id="vcpus" name="vcpus" placeholder="虚拟内核数">
-                            </div>
-
-                        </div>
-                        <div class="form-group">
-                            <label for="ram" class="control-label col-sm-3"><span>* </span>内存(MB)：</label>
-                            <div class="col-sm-7 col-sm">
-                                <input type="text" class="form-control" id="ram" name="ram" placeholder="内存(MB)">
-                            </div>
-
-                        </div>
-                        <div class="form-group">
-                            <label for="disk" class="control-label col-sm-3"><span>* </span>根磁盘(GB)：</label>
-                            <div class="col-sm-7 col-sm">
-                                <input type="text" class="form-control" id="disk" name="disk" placeholder="根磁盘(GB)">
-                            </div>
-
-                        </div>
-                        <div class="form-group">
-                            <label for="ephemera" class="control-label col-sm-3"><span>* </span>临时磁盘(GB)：</label>
-                            <div class="col-sm-7 col-sm">
-                                <input type="text" class="form-control" id="ephemera" name="ephemera" placeholder="临时磁盘(GB)">
-                            </div>
-
-                        </div>
-                        <div class="form-group">
-                            <label for="swap" class="control-label col-sm-3"><span>* </span>交换空间(MB)：</label>
-                            <div class="col-sm-7 col-sm">
-                                <input type="text" class="form-control" id="swap" name="swap" placeholder="交换空间(MB)">
-                            </div>
-
-                        </div>
+<div class="wizard" id="create-flavor-wizard" data-title="创建云主机类型">
+	<!-- 基本信息 -->
+	<div class="wizard-card" data-cardname="basic">
+		<h3>基本信息</h3>
+		<div class="wizard-card-content col-sm-8" id="addFlavor">
+			<div class="wizard-input-section">
+				<div class="form-group">
+					<label for="name" class="control-label col-sm-3"><span>*
+					</span>名称：</label>
+					<div class="col-sm-7 col-sm">
+						<input type="text" class="form-control" id="name" name="name"
+							placeholder="服务器名称">
 					</div>
+
 				</div>
-				<div class="wizard-card-desc col-sm-4">
-					<p><b>镜像</b>：
-					<br>选择创建你的云主机所用的镜像。其中：
-					<br>从<b>镜像</b>创建是指从不同类型操作系统的镜像文件创建；
-					<br>从<b>快照</b>创建是指从云主机的快照创建；
-					<br>从<b>云硬盘</b>创建是指从一个通过云主机创建的云硬盘来创建云主机，云硬盘会被挂载到云主机上；
-					<br>从<b>云硬盘快照</b>创建是指从一个通过云主机创建的云硬盘快照创建云主机，同时创建一个新的云硬盘。</p>
+			</div>
+			<div class="wizard-input-section">
+				<div class="form-group">
+					<label for="vcpus" class="control-label col-sm-3"><span>*
+					</span>虚拟内核数：</label>
+					<div class="col-sm-7 col-sm">
+						<input type="text" class="form-control" id="vcpus" name="vcpus"
+							placeholder="虚拟内核数">
+					</div>
+
 				</div>
-			
+			</div>
+			<div class="wizard-input-section">
+				<div class="form-group">
+					<label for="ram" class="control-label col-sm-3"><span>*
+					</span>内存(MB)：</label>
+					<div class="col-sm-7 col-sm">
+						<input type="text" class="form-control" id="ram" name="ram"
+							placeholder="内存(MB)">
+					</div>
+
+				</div>
+			</div>
+			<div class="wizard-input-section">
+				<div class="form-group">
+					<label for="disk" class="control-label col-sm-3"><span>*
+					</span>根磁盘(GB)：</label>
+					<div class="col-sm-7 col-sm">
+						<input type="text" class="form-control" id="disk" name="disk"
+							placeholder="根磁盘(GB)">
+					</div>
+
+				</div>
+			</div>
+			<div class="wizard-input-section">
+				<div class="form-group">
+					<label for="ephemera" class="control-label col-sm-3"><span>*
+					</span>临时磁盘(GB)：</label>
+					<div class="col-sm-7 col-sm">
+						<input type="text" class="form-control" id="ephemera"
+							name="ephemera" placeholder="临时磁盘(GB)">
+					</div>
+
+				</div>
+			</div>
+			<div class="wizard-input-section">
+				<div class="form-group">
+					<label for="swap" class="control-label col-sm-3"><span>*
+					</span>交换空间(MB)：</label>
+					<div class="col-sm-7 col-sm">
+						<input type="text" class="form-control" id="swap" name="swap"
+							placeholder="交换空间(MB)">
+					</div>
+
+				</div>
+			</div>
+		</div>
+		<div class="wizard-card-desc col-sm-4">
+			<p>
+				云主机类型定义内核数、内存和磁盘大小，以及其他资源，在用户部署云主机的时候使用。
+			</p>
+		</div>
+
+	</div>
+
+	<div class="wizard-card" data-cardname="flavorVdcAccess">
+		<h3>访问权限</h3>
+		<div class="wizard-card-content  col-sm-8">
+			<div class="wizard-input-section">
+				<div class="form-group">
+					<label class="control-label col-sm-3"><b>虚拟数据中心：</b></label>
+				</div>
 			</div>
 
-            <div class="wizard-card" data-cardname="flavorVdcAccess">
-                <h3>访问权限</h3>
-                <div class="wizard-card-content  col-sm-8">
-                    <div class="wizard-input-section">
-                        <div class="form-group">
-                            <label  class="control-label col-sm-3">虚拟数据中心：</label>
-                        </div>
-                    </div>
+			<div class="wizard-input-section">
+				<div class="chose-vdc choose-style  clearfix" id="flavorVdcAccess">
+				</div>
+			</div>
 
-                    <div class="wizard-input-section">
-                        <div class="chose-vdc choose-style  clearfix"  id="flavorVdcAccess">
-                        </div>
-                    </div>
-
-                </div>
-                <div class="wizard-card-desc col-sm-4">
-                    <p>一个虚拟数据中心对于一个租户：选择创建你的云主机所用的镜像。其中，从镜像创建是指从不同类型操作系统的镜像文件创建，另外可选择是否创建一个新磁盘；
-                        从快照创建是指从云主机的快照创建；
-                        从云硬盘创建是指从一个通过云主机创建的云硬盘来创建云主机，云硬盘会被挂载到云主机上；</p>
-                </div>
-
-            </div>
-			
 		</div>
+		<div class="wizard-card-desc col-sm-4">
+			<p>选择可以使用云主机类型的虚拟数据中心。如果没有选择任何虚拟数据中心，云主机类型可以在所有虚拟数据中心中使用。</p>
+		</div>
+
+	</div>
+
+</div>

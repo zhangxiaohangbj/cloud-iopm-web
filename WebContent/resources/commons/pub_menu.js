@@ -158,11 +158,15 @@ define('commons/pub_menu', function() {
                         },
                         {
                             text: '<i class="fa fa-dot fa-1"></i>子网管理',
-                            link: '#vpc/subnet'
+                            link: '#vpc/subnet/'
                         },
                         {
                             text: '<i class="fa fa-dot fa-1"></i>路由器管理',
-                            link: '#vpc/router'
+                            link: '#vpc/router/'
+                        },
+                        {
+                            text: '<i class="fa fa-dot fa-1"></i>防火墙管理',
+                            link: '#vpc/firewall/'
                         },
                         {
                             text: '<i class="fa fa-dot fa-1"></i>浮动IP管理',
@@ -207,15 +211,15 @@ define('commons/pub_menu', function() {
                     items: [
                         {
                             text: '<i class="fa fa-dot fa-1"></i>资源池',
-                            link: '#lbaas/pool'
+                            link: '#lbaas/pool/'
                         },
                         {
                             text: '<i class="fa fa-dot fa-1"></i>成员管理',
-                            link: '#lbaas/member'
+                            link: '#lbaas/member/'
                         },
                         {
                             text: '<i class="fa fa-dot fa-1"></i>监控管理',
-                            link: '#lbaas/monitor'
+                            link: '#lbaas/monitor/'
                         }
                     ]
                 }
@@ -409,7 +413,43 @@ define('commons/pub_menu', function() {
                             link: '#task/strategyGroup'
                         }
                     ]
+
+                },
+                {
+                    text: '<i class="fa fa-monitor"></i>监控<i class="fa icon-arrow"></i>',
+                    items: [
+                        {
+                            text: '<i class="fa fa-dot fa-1"></i>在线监控',
+                            link: '#monitor/monitor'
+                        },
+                        {
+                            text: '<i class="fa fa-dot fa-1"></i>监控概览',
+                            link: '#monitor/strategy'
+                        },
+                        {
+                            text: '<i class="fa fa-dot fa-1"></i>agent管理',
+                            link: '#monitor/agent'
+                        },
+                        {
+                            text: '<i class="fa fa-dot fa-1"></i>监控指标',
+                            link: '#monitor/meter'
+                        },
+                        {
+                            text: '<i class="fa fa-dot fa-1"></i>告警方案',
+                            link: '#monitor/strategyGroup'
+                        },
+                        {
+                            text: '<i class="fa fa-dot fa-1"></i>通知方案',
+                            link: '#monitor/strategyGroup'
+                        },
+
+                        {
+                            text: '<i class="fa fa-dot fa-1"></i>监控对象设置',
+                            link: '#monitor/strategyGroup'
+                        }
+                    ]
                 }
+
             ]
         },
         {

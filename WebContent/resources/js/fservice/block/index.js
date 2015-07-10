@@ -24,10 +24,6 @@ define(['Common','bs/modal','rq/text!tpls/fservice/block/volume/list-opts.html',
 		Common.$pageContent.addClass("loading");
 		Common.render(true,{
 			tpl:'tpls/fservice/block/volume/list.html',
-			/*data:'',
-			beforeRender: function(data){
-				debugger
-			},*/
 			callback: bindEvent
 		});
 	};
@@ -35,9 +31,10 @@ define(['Common','bs/modal','rq/text!tpls/fservice/block/volume/list-opts.html',
 	//quatos  getClass  
 	var renderQuatos = function(options){
 		function _renderQuatos(options) {
-			var quatos = options.quatos || []
+			var quatos = options.quatos || [];
 			var vdcId = options.vdcId;
-			var size = $(options.valueNode).val() || 0;
+			var size = $(options.valueNode).val();
+			size = /\d+/.test(size) ? parseInt(size) : 0;
 			Common.xhr.ajax('/compute/v2/' + vdcId + '/os-quota-sets/' + vdcId,function(allQuotas){
 				allQuotas = (allQuotas && allQuotas.quota_set) || {};
 				Common.xhr.ajax('/compute/v2/' + vdcId + '/limits',function(allQuotaUsages){
@@ -47,7 +44,6 @@ define(['Common','bs/modal','rq/text!tpls/fservice/block/volume/list-opts.html',
 						var q = quatos[i];
 						var type = q.type || "count";
 						var total = allQuotas[q.name];
-						
 						var newUse = type == "count" ? (size>0 ? 1 : 0) : size;
 						var used = allQuotaUsages[q.name] + Number(newUse);
 						var rate = 100;
@@ -75,10 +71,9 @@ define(['Common','bs/modal','rq/text!tpls/fservice/block/volume/list-opts.html',
 				});
 			});
 		}
-		
-		$(options.valueNode).on("blur", function(){
+		$(options.valueNode).blur(function(){
 			_renderQuatos(options);
-		})
+		});
 		_renderQuatos(options);
 	}
 	
@@ -283,10 +278,10 @@ define(['Common','bs/modal','rq/text!tpls/fservice/block/volume/list-opts.html',
 					Common.xhr.ajax('/resources/data/specs.txt',function(data){
 						var dataArr = [];
 						$.each(data,function(i,item){
-							dataArr.push('<div class="col-sm-9"><label data-id="'+item.name+'"><input type="checkbox">'+item.name+'</label></div>')
+							dataArr.push('<div class="col-sm-9"><label data-id="'+item.name+'"><input name="user-vms" type="radio">'+item.name+'</label></div>')
 						})
 						$('.vm-list').html(dataArr.join(''));
-						EventsHandler.initCheckBox();
+						EventsHandler.initRadioBox();
 					});
 				}
 		};
@@ -302,19 +297,12 @@ define(['Common','bs/modal','rq/text!tpls/fservice/block/volume/list-opts.html',
 					});
 				},
 				//挂载磁盘
-				initCheckBox : function(){
+				initRadioBox : function(){
 					$('input[type="checkbox"],input[type="radio"]').iCheck({
-				    	checkboxClass: "icheckbox-info"
+				    	checkboxClass: "icheckbox-info",
+				    	radioClass: "iradio-info"
 				    })
 				},
-				//input propertychange
-//				inputListener: function(){
-//					$('#size').on('blur',function(){
-//						if($(this).parents('form:first').validate().element('#size')){
-//							DataIniter.initQuato();//重新加载配额数据
-//						}
-//					})
-//				},
 				checkNextWizard: function(){
 					$('.form-group .progress-bar').each(function(){
 						var info = $(this).parent().prev(),
@@ -346,9 +334,6 @@ define(['Common','bs/modal','rq/text!tpls/fservice/block/volume/list-opts.html',
 		    			DataIniter.initVolumeType();
 		    		});
 		    	});
-		    	DataIniter.initQuato();
-		    	DataIniter.initUserVms();
-		    	
 		    	//
     			wizard = $('#create-volume-wizard').wizard({
     				keyboard : false,
@@ -374,17 +359,6 @@ define(['Common','bs/modal','rq/text!tpls/fservice/block/volume/list-opts.html',
     				wizard.form.each(function(){
     					$(this).validate({
                             errorContainer: '_form',
-                            /*errorPlacement: function(error, element) {
-                            	debugger
-                                if ( $(element).is(":radio") )
-                                	$(element).appendTo( $(element).parent().next().next() );
-                                else if ( $(element).is(":checkbox") )
-                                	$(element).appendTo ( $(element).next() );
-                                else
-                            	alert($(error).html());
-                            	//alert($(element).parent().html());
-                            	$(error).appendTo( $(element).parents('.form-group:first') );
-                            },*/
                             rules: {
     			            	'name': {
     			                    required: true,
@@ -401,7 +375,8 @@ define(['Common','bs/modal','rq/text!tpls/fservice/block/volume/list-opts.html',
     				})
     				//载入事件
     		    	EventsHandler.vdcChange();
-    				//EventsHandler.inputListener();
+    				DataIniter.initQuato();
+    		    	DataIniter.initUserVms();
     			});
     			var getMountVm = function(){
     				var data = [];
@@ -418,7 +393,6 @@ define(['Common','bs/modal','rq/text!tpls/fservice/block/volume/list-opts.html',
     			});
     			//确认信息卡片被选中的监听
     			wizard.cards.confirm.on('selected',function(card){
-    				//debugger
     				//获取上几步中填写的值
     				var serverData = wizard.serializeObject();
     				console.log(serverData);
@@ -447,7 +421,6 @@ define(['Common','bs/modal','rq/text!tpls/fservice/block/volume/list-opts.html',
 				});
     			
     			wizard.show();
-    			
     			wizard.on("submit", function(wizard) {
     				var volume = wizard.serializeObject();
     				if(volume.availability_zone == "") {
@@ -523,7 +496,7 @@ define(['Common','bs/modal','rq/text!tpls/fservice/block/volume/list-opts.html',
 		    	     	                			setTimeout(function(){Modal.closeAll()},3000);
 		    	    	                			Common.router.route();
 		    									}else{
-		    										alert("创建失败");
+		    										Modal.error("创建失败");
 		    									}
 		    	    	    				});
 	    	    	                	 }
@@ -558,7 +531,7 @@ define(['Common','bs/modal','rq/text!tpls/fservice/block/volume/list-opts.html',
     				})
 	    		});
 	    	},
-    		editMount: function(){
+	    	attachVolume: function(){
     			Common.on('click','.dropdown-menu a.edit_mount',function(){
     				var rowdata = $(this).parents("tr:first").data("rowData.dt");
     				var id = rowdata.id,
@@ -579,7 +552,7 @@ define(['Common','bs/modal','rq/text!tpls/fservice/block/volume/list-opts.html',
 	    	    	            buttons: [{
 	    	    	                label: '确定',
 	    	    	                disabled: true,
-	    	    	                action: function(Modal) {
+	    	    	                action: function(dialog) {
 	    	    	                	var postData = {
 	    	    	                			"volumeAttachment": {
 	    	    	                			    "volumeId": id
@@ -589,33 +562,63 @@ define(['Common','bs/modal','rq/text!tpls/fservice/block/volume/list-opts.html',
 	    	    	                	var url = '/compute/v2/' + current_vdc_id + '/servers/' + serverId + '/os-volume_attachments';
 	    	    	                	Common.xhr.postJSON(url, postData, function(data){
 		    	    	                		if(data){
-		    	    	                			Modal.close();
-		    	    	                			Modal.success('挂载成功')
+		    	    	                			dialog.close();
+		    	    	                			Modal.success('挂载成功');
 		    	     	                			setTimeout(function(){Modal.closeAll()},3000);
 		    	    	                			Common.router.route();
 		    									}else{
-		    										alert("挂载失败");
+		    										Modal.error("挂载失败");
 		    									}
 		    	    	    				});
 	    	    	                	 }
 	    	    	            	},
 	    	    	            	{
-	    	    	                label: '取消',
-	    	    	                action: function(Modal) {
-	    	    	                    Modal.close();
+		    	    	                label: '取消',
+		    	    	                action: function(dialog) {
+		    	    	                	dialog.close();
 	    	    	                	}
 	    	    	            	}],
-	    	    	            	onshown : function(){
-	    	        	            	EventsHandler.initCheckBox();
+	    	    	            	onrealized : function(){
+	    	        	            	EventsHandler.initRadioBox();
 	    	        	            }
 	    					});
 						}
     				})
     			})
     		},
+    		detachVolume: function(){
+    			Common.on('click','.dropdown-menu a.detach_mount',function(){
+    				var rowdata = $(this).parents("tr:first").data("rowData.dt");
+    				var id = rowdata.id,
+    				name = rowdata.name;
+    				var url = '/compute/v2/' + current_vdc_id + '/volumes/'
+    					+ id + '/os-volume_attachments';
+    				Common.xhr.get(url, {}, function(data){
+                		if(data){
+                			Modal.confirm('确定要卸载"' + name + '"吗?', function(result){
+               	             if(result) {
+               	            	 var detachUrl = "/compute/v2/" + current_vdc_id + "/servers/" + data.serverId + "/os-volume_attachments/" + data.id;
+               	            	 Common.xhr.del(detachUrl, function(data){
+           	                    	 if(data){
+           	                    		 Modal.success('磁盘卸载成功')
+            	                			 setTimeout(function(){Modal.closeAll()},3000);
+           	                    		 Common.router.route();//重新载入
+           	                    	 }else{
+           	                    		 Modal.warning ('磁盘卸载失败')
+           	                    	 }
+           	                     });
+               	             }else {
+               	            	 Modal.closeAll();
+               	             }
+               	         	});
+						}else{
+							Modal.warning("尚未挂载到任何主机");
+						}
+    				});
+    			})
+    		},
     		//删除
     		deleteVolume: function(){
-
     			Common.on('click','.dropdown-menu a.delete',function(){
     				var rowdata = $(this).parents("tr:first").data("rowData.dt");
     				var id = rowdata.id;
@@ -632,8 +635,6 @@ define(['Common','bs/modal','rq/text!tpls/fservice/block/volume/list-opts.html',
 	       	 	                		setTimeout(function(){Modal.closeAll()},3000);
 	       	                    	 }
 	       	                     });
-	       	             }else {
-	       	            	 //Modal.close();
 	       	             }
 	       	         });
 	       		})
@@ -643,67 +644,70 @@ define(['Common','bs/modal','rq/text!tpls/fservice/block/volume/list-opts.html',
     			Common.on('click','.dropdown-menu a.extend_size',function(){
     				var rowData = $(this).parents("tr:first").data("rowData.dt"); 
     				var	id = rowData.id;
-    				var	name = rowData.name;
-    				var extendDialog;
+    				var	name = rowData.name,
+    					size = rowData.size;
+    				var extendValidate;
 	       	    	Common.render({
     					tpl:'tpls/fservice/block/volume/extend-size.html',
-						data: {volName:name},
+						data: {volName:name,size:size},
 						callback: function(html) {
 							Modal.show({
 	    	    	            title: '扩展'+name+'磁盘的大小',
 	    	    	            message: html,
 	    	    	            closeByBackdrop: false,
 	    	    	            nl2br: false,
-	    	    	            onshow: function(dialog) {
-	    	    	            	extendDialog = dialog;
-	    	    	                dialog.getButton('os-extend-btn').disable();
-	    	    	            },
 	    	    	            buttons: [{
 	    	    	            	id: 'os-extend-btn',
 	    	    	                label: '确定',
 	    	    	                action: function(dialog) {
-	    	    	                	var url = 'block-storage/v2/' + current_vdc_id + '/volumes/' + id + '/action';
-	    	    	                	var newSize = {
-    	    	                		    "os-extend": {
-    	    	                		        "new_size": $("#extend_size").val()
-    	    	                		    }
-    	    	                		};
-	    	    	                	Common.xhr.postJSON(url , newSize, function(data){
-		    	    	                		if(data){
-		    	    	                			dialog.close();
-		    	    	                			Modal.success('保存成功')
-		    	     	                			setTimeout(function(){Modal.closeAll()},3000);
-		    	    	                			Common.router.route();
-		    									}else{
-		    										alert("保存失败");
-		    									}
-		    	    	    				});
-	    	    	                	 }
+	    	    	                	if(extendValidate.valid()){
+	    	    	                		var url = 'block-storage/v2/' + current_vdc_id + '/volumes/' + id + '/action';
+		    	    	                	var newSize = {
+	    	    	                		    "os-extend": {
+	    	    	                		        "new_size": $("#extend_size").val()
+	    	    	                		    }
+	    	    	                		};
+		    	    	                	Common.xhr.postJSON(url , newSize, function(data){
+			    	    	                		if(data){
+			    	    	                			Modal.success('保存成功');
+			    	     	                			setTimeout(function(){
+			    	     	                				Common.router.route();
+			    	     	                				},1500);
+			    									}else{
+			    										Modal.error("保存失败");
+			    									}
+			    	    	    				});
+	    	    	                	}
+	    	    	                }
 	    	    	            	}, {
 	    	    	            		label: '取消',
 	    	    	            		action: function(dialog) {
 	    	    	            			dialog.close();
 	    	    	                	}
 	    	    	            	}],
-	    	    	            	onshown : function(){
+	    	    	            	onrealized: function(){
+	    	    	            		extendValidate = $('#extend_volume_size').validate({
+	 	    	    	                	rules: {
+	 	    	    	                		'extend_size': {
+	 	    	    	                			required: true,
+	 	    	    	                			integer: true
+	 	    	    	                		}
+	 	    	    	                	}
+	 	    	    	                });
 	    	    	            		renderQuatos({
 	    									vdcId : current_vdc_id,
 	    									valueNode : '#extend_size',
 	    									quatos : [{name: "gigabytes", title: "容量", type: "mount"}],
-	    									domNode : 'div.quotas-size',
-	    									callback: function(msg) {
-	    										if(msg) {
-	    											extendDialog.getButton('os-extend-btn').disable();
-	    										} else {
-	    											extendDialog.getButton('os-extend-btn').enable();
-	    										}
-	    									}
+	    									domNode : 'div.quotas-size'
 	    								})
+	    	        	            },
+	    	        	            onhide: function(){
+	    	        	            	extendValidate && extendValidate.hideErrors();
 	    	        	            }
+	    	        	            
 	    					});
 							
 						}
-						
 						
     				})
 	       		})

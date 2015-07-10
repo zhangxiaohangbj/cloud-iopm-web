@@ -19,10 +19,13 @@ define(['Common','bs/modal','jq/form/wizard','jq/form/validator-bs3','bs/tooltip
 
         //真实请求的数据
         Common.xhr.ajax('/v2/tenant_id/os-availability-zone/list',function(data){
-            var indexData = {"zone":data,"data":renderData};
-            Common.render(true,'tpls/ccenter/zone/index.html',indexData,function(){
-                bindEvent();
-            });
+            var indexData = {"zone":data};
+            Common.xhr.ajax("/resources/data/defaultZone.txt",function(az){
+                indexData.defaultAz = az;
+                Common.render(true,'tpls/ccenter/zone/index.html',indexData,function(){
+                    bindEvent();
+                });
+            })
         });
     };
 
@@ -76,6 +79,7 @@ define(['Common','bs/modal','jq/form/wizard','jq/form/validator-bs3','bs/tooltip
                     renderData.type = type;
                 });
             }
+
         };
         dataGetter.getVirtualEnv();
         dataGetter.getZone();
@@ -236,7 +240,8 @@ define(['Common','bs/modal','jq/form/wizard','jq/form/validator-bs3','bs/tooltip
                                 'zone-name': {
                                     required: true,
                                     minlength: 4,
-                                    maxlength: 15
+                                    maxlength: 15,
+                                    name_en:true
                                 },
                                 'zone-description':{
                                     required:false,
@@ -285,13 +290,13 @@ define(['Common','bs/modal','jq/form/wizard','jq/form/validator-bs3','bs/tooltip
                         }
                     });
                     Common.xhr.postJSON('/v2/tenant_id/os-availability-zone',currentZone,function(data){
-                       debugger
                         if(data && data.error !=true){
                             wizard._submitting = false;
                             wizard.updateProgressBar(100);
                             closeWizard();
                             Common.router.route();
                         } else{
+                            debugger
                             Modal.warning ('保存失败')
                         }
                     });
@@ -348,35 +353,80 @@ define(['Common','bs/modal','jq/form/wizard','jq/form/validator-bs3','bs/tooltip
         $("a.add-resource").on("click",function(){
             var data = $(this).attr("data");
             Common.xhr.ajax( "/v2/os-availability-zone/"+data,function(zoneInfo){
-                Common.render('tpls/ccenter/zone/addResource.html',renderData,function(html){
-                    Modal.show({
-                        title: '添加资源',
-                        message: html,
-                        nl2br: false,
-                        buttons: [{
-                            label:'取消',
-                            action:function(dialog){
-                                dialog.close();
-                            }
-                        },
-                            {
-                                label: '保存',
-                                action: function(dialog) {
-                                    Modal.success('保存成功');
-                                    setTimeout(function(){Modal.closeAll()},2000);
-                                    Common.router.route();
-                                }
-                            }],
-                        onshown : function(){
-                            dataSetHandler.resourceSet("choseResource");
+                /////////////////////////////////////////////////////////////
+                var resourceName = renderData.type[0].name;;
+                var elem= "choseResource";
+                var link ;
+                var rtype;
+                //复制一个array,用来初始化choose的headAppend
+                var tempArray=[];
+                renderData.type.forEach(function(e){
+                    var temType = {
+                        name:e.name,
+                        type:e.name,
+                    }
+                    if(e.name == resourceName){
+                        temType.selected = true;
+                        rtype = e.name;
+                        link = e.link;
+                    }
+                    tempArray.push(temType);
+                })
+                Common.xhr.ajax(link,function(data){
+                    //遍历对象，过滤unchosenList
+                    var unChosenList=resourceHandler.refreshUnChosenList(data,rtype);
+                    //复制chosen，符合当前资源类型的可编辑
+                    var tmpChosenList = resourceHandler.refreshChosen(rtype);
+                    var options = {
+                        selector: '#choseResource',
+                        allData: unChosenList,
+                        selectData: tmpChosenList,
+                        headAppend: {
+                            className: 'select-resource-type',
+                            list: tempArray
                         }
-                    });
+                    }
+                    require(['js/common/choose'],function(choose){
+                       //先加载choose，在render
+                        Common.render('tpls/ccenter/zone/addResource.html',renderData,function(html){
+                            options.doneCall = function(html,chooseWrapper) {
+                                chooseWrapper.append(html);
+                                $(options.selector).empty().append(chooseWrapper.find('div:first'));
+                               // alert(chooseWrapper.html());
+                                Modal.show({
+                                    title: '添加资源',
+                                    message: chooseWrapper.html(),
+                                    nl2br: false,
+                                    buttons: [{
+                                        label: '取消',
+                                        action: function (dialog) {
+                                            dialog.close();
+                                        }
+                                    },
+                                        {
+                                            label: '保存',
+                                            action: function (dialog) {
+                                                Modal.success('保存成功');
+                                                setTimeout(function () {
+                                                    Modal.closeAll()
+                                                }, 2000);
+                                                Common.router.route();
+                                            }
+                                        }],
+                                    onshown: function () {
+                                        chooseWrapper.remove();
+                                        resourceHandler.changeHandler(elem);
+                                    }
+                                });
+                            }
+                            options.doneData = html;
+                            choose.initChoose(options);
 
+                        });
+                    });
                 });
             });
-
-
-
+                ////////////////////////////////////////////////////////////////
         });
         //删除按钮
         $("a.delete").on("click",function(){

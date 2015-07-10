@@ -14,11 +14,6 @@ define(['Common','bs/modal','jq/form/wizard','jq/form/validator-bs3','bs/tooltip
     }
     dataGetter.versionGetter();
 
-    //ip校验
-    $.validator.addMethod("ip", function(value, element) {
-        return this.optional(element) || /^((\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.){3}(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])$/.test(value);
-    }, "请填写正确的网关IP");
-
     $.validator.addMethod("nameDulplicateCheck", function(value, element) {
         var flag = false;
         Common.xhr.ajax(""+element,function(data){
@@ -35,16 +30,18 @@ define(['Common','bs/modal','jq/form/wizard','jq/form/validator-bs3','bs/tooltip
                 'region-name': {
                     required: true,
                     maxlength:15,
-                    minlength:1
+                    minlength:1,
+                    name_cn:true
                 },
                 'service-name': {
                     required: true,
                     maxlength:15,
-                    minlength:4
+                    minlength:1,
+                    name_cn:true
                 },
                 'ip':{
                     required: true,
-                    ip: true
+                    IP: true
                 },
                 'port':{
                     required:true,
@@ -54,7 +51,8 @@ define(['Common','bs/modal','jq/form/wizard','jq/form/validator-bs3','bs/tooltip
                 'username':{
                     required:true,
                     minlength:1,
-                    maxlength:15
+                    maxlength:15,
+                    name_en:true
                 },
                 'version':{
                     required:true,
@@ -121,19 +119,20 @@ define(['Common','bs/modal','jq/form/wizard','jq/form/validator-bs3','bs/tooltip
         $("#regionTable_wrapper span.btn-add").on("click",function(){
             var selectData = {"data":renderData};
             Common.render('tpls/ccenter/region/add.html',selectData,function(html){
-
                 Modal.show({
                     title: '新增资源区域',
                     message: html,
                     nl2br: false,
                     buttons: [{
                         label:'测试链接',
-                        action:function(Modal){
+                        action:function(){
                             if(!$(".form-horizontal").valid()){
                                 //校验不通过，什么都不做
-                                alert(1)
+                                //alert(1)
+                                Modal.warning("连接不可用，请重新检查配置信息");
                             }else{
                                 //校验通过，提示可行
+                                Modal.loading('加载中');
                                 var connector = {
                                     "name": $("#service-name").val(),
                                     "type":"CLOUDSERVICE",
@@ -143,13 +142,13 @@ define(['Common','bs/modal','jq/form/wizard','jq/form/validator-bs3','bs/tooltip
                                     "password":$("#password").val(),
                                     "version":"v2.0",
                                 }
-                                Common.xhr.putJSON("/cloud/connector/test",connector,function(data){
+                                Common.xhr.putJSON("/cloud/v2.0/connector/test",connector,function(data){
+                                    Modal.loading('remove');
                                     if(data && data.error!=true){
-                                        Modal.success('连接成功')
-                                        setTimeout(function(){Dialog.closeAll()},2000);
-                                        Common.router.route();//重新载入
+                                        Modal.success('连接成功');
+
                                     }else{
-                                        Modal.warning ('连接失败')
+                                        //Modal.warning ('连接失败')
                                     }
                                 });
                             }
@@ -283,7 +282,7 @@ define(['Common','bs/modal','jq/form/wizard','jq/form/validator-bs3','bs/tooltip
         //删除按钮
         $("a.delete").on("click",function(){
             var id = $(this).attr("data");
-            Modal.confirm('确定要删除该可用分区吗?',function(result){
+            Modal.confirm('确定要删除该物理区域吗?',function(result){
                 if(result) {
                     Common.xhr.del("/resource-manager/v2/region/"+id,
                         function(data){

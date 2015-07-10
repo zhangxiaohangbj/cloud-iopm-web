@@ -27,7 +27,7 @@ webAppDirName = 'WebContent' //The name of the web application source directory,
 sourceCompatibility = JavaVersion.VERSION_1_7
 targetCompatibility = JavaVersion.VERSION_1_7
 ext{
-	ext.springVersion = '4.0.5.RELEASE'
+	springVersion = '4.0.5.RELEASE'
 }
 
 configurations {
@@ -100,6 +100,7 @@ dependencies {
 	runtime("com.inspur.cloud:cloud-image:1.2.0-SNAPSHOT")
 	runtime("com.inspur.cloud:cloud-vdc:1.2.0-SNAPSHOT")
 	runtime("com.inspur.cloud:cloud-am:1.2.0-SNAPSHOT")
+    runtime("com.inspur.cloud:cloud-monitor:1.2.0-SNAPSHOT")
 	runtime("cglib:cglib-nodep:2.2.2")
 	
 }

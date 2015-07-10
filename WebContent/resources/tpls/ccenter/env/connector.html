@@ -1,0 +1,50 @@
+<div class="page-header">
+    <ol class="breadcrumb minus">
+        <li><a href="#ccenter/env" class="reload">虚拟环境connector管理</a></li>
+        <li class="active">ENV</li>
+        <li class="backlist"><a href="#ccenter/env">返回列表</a></li>
+    </ol>
+</div>
+<div class="page-body">
+    <div class="pane">
+        <div class="pane-content">
+            <table class="table table-primary table-striped" id="connectorTable">
+                <thead>
+                <tr>
+                    <th class="c15">ID</th>
+                    <th class="c12">名称</th>
+                    <th class="c12">类型</th>
+                    <th class="c12">IP</th>
+                    <th class="c8">端口</th>
+                    <th class="c15">用户名</th>
+                    <th class="c15">描述</th>
+                    <th class="c15">操作</th>
+                </tr>
+                </thead>
+                <tbody>
+                {{each data as item i}}
+                <tr data-id="{{item.id}}">
+                    <td>{{item.id}}</td>
+                    <td><a class="connector_name" href="javascript:void(0)">{{item.name}}</a></td>
+                    <td>{{item.type}}</td>
+                    <td>{{item.ip}}</td>
+                    <td>{{item.port}}</td>
+                    <td>{{item.username}}</td>
+                    <td>{{item.description}}</td>
+                    <td>
+                        <a class="btn-opt" data-toggle="tooltip" title="删除" ><i class="fa fa-trash-o"></i></a>
+                    </td>
+                </tr>
+                {{/each}}
+                </tbody>
+                <tfoot>
+                <tr>
+                    <td >
+                        <span class="text-danger">*</span> 每个类型的connector只可以添加并维护一个;"<span class="nums">右键</span>"来进行常用操作,"<span class="nums">双击</span>"来编辑基本属性
+                    </td>
+                </tr>
+                </tfoot>
+            </table>
+        </div>
+    </div>
+</div>
