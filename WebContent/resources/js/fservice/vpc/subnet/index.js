@@ -285,7 +285,8 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 	           	    	                	    "ip_version": $("#addSubnet [name='ip_version']").val(),
 	           	    	                	    "ipv6_address_mode": "",
 	           	    	                	    "ipv6_ra_mode": "",
-	           	    	                	    "name": $("#addSubnet [name='name']").val()
+	           	    	                	    "name": $("#addSubnet [name='name']").val(),
+	           	    	                	    "cidr": $("#addSubnet [name='cidr']").val()
 		    	                		}
 		    	                	  };
 	    	                	Common.xhr.putJSON('/networking/v2.0/subnets/'+id,serverData,function(data){
