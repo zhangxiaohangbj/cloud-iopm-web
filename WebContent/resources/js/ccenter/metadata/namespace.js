@@ -190,7 +190,7 @@ define(['Common','bs/modal','jq/form/wizard','jq/form/validator-bs3','bs/tooltip
                        "description":$("#description").val(),
                        "visibility":$("#visibility option:selected").val(),
                        "protected":$("#is-protected option:selected").val(),
-                       "owner":"admin"
+                       "owner":Common.cookies.getVdcName()
                    }
                    //为namespace添加类型
                    var selectedList = [];
@@ -280,10 +280,18 @@ define(['Common','bs/modal','jq/form/wizard','jq/form/validator-bs3','bs/tooltip
                                     }
 
                                     var namespaceMeta = {
-                                        "name":$("#edit-name").val(),
-                                        "value":$("#edit-tag-value").val(),
-                                        "description":$("#description").val(),
-
+                                        "visibility":$("#visibility option:selected").val(),
+                                        "protected":$("#is-protected option:selected").val(),
+                                        "owner":Common.cookies.getVdcName()
+                                    }
+                                    if($("#name").val() !=""){
+                                        namespaceMeta.namespace = $("#name").val();
+                                    }
+                                    if($("#display-name").val()!=""){
+                                        namespaceMeta.display_name = $("#display-name").val();
+                                    }
+                                    if($("#description").val()!=""){
+                                        namespaceMeta.description=$("#description").val();
                                     }
                                     Common.xhr.putJSON('/v2/metadefs/namespaces/'+name,namespaceMeta,function(data){
                                         if(data){
