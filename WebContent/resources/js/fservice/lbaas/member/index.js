@@ -98,7 +98,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 	    	                action: function(dialog) {
 	    	                	var valid = $(".form-horizontal").valid();
 	    	            		if(!valid) return false;
-	    	            		var data = $("#addNetwork").serializeArray();
+	    	            		var data = $("#addMember").serializeArray();
 	    	                	var serverData = {
 	    	                		"member":{
 	    	                		}
@@ -146,10 +146,14 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
     	                action: function(dialog) {
     	                	var valid = $(".form-horizontal").valid();
     	            		if(!valid) return false;
-    	            		var serverData = {
-	    	                		"pool":{
-	    	                		}
-	    	                	  };
+    	            		var data = $("#addMember").serializeArray();
+    	                	var serverData = {
+    	                		"member":{
+    	                		}
+    	                	  };
+    	                	for(var i=0;i<data.length;i++){
+    	                		serverData.member[data[i]["name"]] = data[i]["value"];
+    						}
     	                	Common.xhr.putJSON('/networking/v2.0/subnets/'+id,serverData,function(data){
     	                		if(data){
     	                			Dialog.success('保存成功')
