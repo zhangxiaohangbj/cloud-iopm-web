@@ -700,7 +700,11 @@ define(['Common','bs/modal','rq/text!tpls/fservice/block/volume/list-opts.html',
 	    									quatos : [{name: "gigabytes", title: "容量", type: "mount"}],
 	    									domNode : 'div.quotas-size'
 	    								})
+	    	        	            },
+	    	        	            onhide: function(){
+	    	        	            	extendValidate && extendValidate.hideErrors();
 	    	        	            }
+	    	        	            
 	    					});
 							
 						}
