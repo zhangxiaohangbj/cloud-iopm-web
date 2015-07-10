@@ -23,12 +23,14 @@ define(['Common','bs/modal','jq/form/wizard','jq/form/validator-bs3','bs/tooltip
                 'name': {
                     required: true,
                     maxlength:15,
-                    minlength:1
+                    minlength:2,
+                    name_en:true
                 },
                 'display-name': {
                     required: true,
                     maxlength:2048,
-                    minlength:1
+                    minlength:1,
+                    name_cn:true
                 }
             }
         });
@@ -89,11 +91,13 @@ define(['Common','bs/modal','jq/form/wizard','jq/form/validator-bs3','bs/tooltip
                 $.each(renderData.type,function(i,item){
                     var flag = true;
                     //根据id判断是否已经出现在chosen中
-                    $.each(chosenList,function(i,item0){
-                        if(item0.resourceType == item.id){
-                            flag = false;
-                        }
-                    })
+                    if(chosenList != null && typeof chosenList == Array){
+                        $.each(chosenList,function(i,item0){
+                            if(item0.resourceType == item.id){
+                                flag = false;
+                            }
+                        })
+                    }
                     if(flag){
                         unChosenList.push(item);
                     }else{
@@ -147,13 +151,15 @@ define(['Common','bs/modal','jq/form/wizard','jq/form/validator-bs3','bs/tooltip
                            rules: {
                                'name': {
                                    required: true,
-                                   minlength: 4,
-                                   maxlength:15
+                                   minlength: 2,
+                                   maxlength:15,
+                                   name_en:true
                                },
                                'display-name': {
                                    required: true,
-                                   minlength: 4,
-                                   maxlength:15
+                                   minlength: 2,
+                                   maxlength:15,
+                                   name_cn:true
                                },
                                'description': {
                                    required: false,
@@ -275,13 +281,17 @@ define(['Common','bs/modal','jq/form/wizard','jq/form/validator-bs3','bs/tooltip
 
                                     var namespaceMeta = {
                                         "name":$("#edit-name").val(),
-                                        "value":$("#edit-tag-value").val()
+                                        "value":$("#edit-tag-value").val(),
+                                        "description":$("#description").val(),
+
                                     }
                                     Common.xhr.putJSON('/v2/metadefs/namespaces/'+name,namespaceMeta,function(data){
                                         if(data){
                                             Modal.success('保存成功');
-                                            setTimeout(function(){Modal.closeAll()},2000);
-                                            Common.router.route();
+                                            setTimeout(function(){Modal.closeAll();
+                                                Common.router.route();
+                                            },2000);
+
                                         }else{
                                             Modal.warning ('保存失败')
                                         }
@@ -303,13 +313,15 @@ define(['Common','bs/modal','jq/form/wizard','jq/form/validator-bs3','bs/tooltip
         //删除按钮
         $("a.delete").on("click",function(){
             var data = $(this).attr("data");
-            Modal.confirm('确定要删除该可用分区吗?',function(result){
+            Modal.confirm('确定要删除该命名空间吗?',function(result){
                 if(result) {
                     Common.xhr.del("/v2/metadefs/namespaces/"+data,
                         function(data){
                             if(data){
                                 Modal.success('删除成功')
-                                Common.router.route();//重新载入
+                                setTimeout(function(){Modal.closeAll();
+                                    Common.router.route();
+                                },2000);
                             }else{
                                 Modal.warning ('删除失败')
                             }

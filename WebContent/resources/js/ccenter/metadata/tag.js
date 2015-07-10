@@ -170,7 +170,7 @@ define(['Common','bs/modal','jq/form/wizard','jq/form/validator-bs3','bs/tooltip
         //删除按钮
         $("a.delete").on("click",function(){
             var data = $(this).attr("data");
-            Modal.confirm('确定要删除该可用分区吗?',function(result){
+            Modal.confirm('确定要删除该标签吗?',function(result){
                 if(result) {
                     Common.xhr.del("/resource-manager/v2/tag/"+data,
                         function(data){
