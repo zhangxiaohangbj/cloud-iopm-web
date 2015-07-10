@@ -73,10 +73,6 @@ input[disabled], select[disabled], textarea[disabled], input[readonly], select[r
  	overflow:hidden;
  	margin-left:18%;
  }
- .wizard-cards .icheckbox-info,
- .wizard-cards .iradio-info{
- 	margin-right:10px;
- }
  .wizard-card-container{
  	margin-left:0;
  	/* float:right; */
@@ -129,18 +125,18 @@ input[disabled], select[disabled], textarea[disabled], input[readonly], select[r
  .wizard-input-section div.form-group textarea.form-control{
  	height:auto;
  }
-.wizard-input-section div.form-group label{
+div.form-group label{
 	padding:5px 0 0 0 ;
 	font-weight:normal;
 }
-.wizard-input-section div.form-group .progress-info{
+div.form-group .progress-info{
 	margin:5px 0 10px;
 }
-.wizard-input-section div.form-group .progress-info .quota-key{
+div.form-group .progress-info .quota-key{
 	font-weight:bold;
 	float:left;
 }
-.wizard-input-section div.form-group .progress-info .quota-desc{
+div.form-group .progress-info .quota-desc{
 	color:#B4B4B4;
 	float:right;
 }
