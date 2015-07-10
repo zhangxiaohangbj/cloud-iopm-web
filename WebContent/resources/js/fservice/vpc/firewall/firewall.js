@@ -40,6 +40,29 @@ define('js/fservice/vpc/firewall/firewall', ['Common','bs/modal','bs/tooltip','j
                 	 }
                  },
                  {
+                	 "targets":[4],
+                	 "render":function(data, type, full){
+                		 if(data == "ACTIVE"){return "运行中";}
+                		 if(data == "DOWN"){return "未激活";}
+                		 if(data == "BUILD"){return "创建中";}
+                		 if(data == "ERROR"){return "错误";}
+                		 if(data == "PENDING_CREATE"){return "创建中";}
+                		 if(data == "PENDING_UPDATE"){return "更新中";}
+                		 if(data == "PENDING_DELETE"){return "删除中";}
+                		 if(data == "UNRECOGNIZED"){return "未知";}
+                	 }
+                 },
+                 {
+                	 "targets":[5],
+                	 "render":function(data, type, full){
+                		 if(data == true){
+                			 return "可用";
+                		 }else {
+                			 return "禁用";
+                		 }
+                	 }
+                 },
+                 {
                 	 "targets": [6],
 	                 "render": function(data, type, full) {
 	            		 var html = '<a class="btn-opt editFirewall" href="javascript:void(0)" data="'+data.id+'" data-name="'+data.name+'" data-toggle="tooltip" title="编辑防火墙" style="margin: 0;"><i class="fa fa-edit fa-fw"></i></a>'
