@@ -15,6 +15,20 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 	};
 	
 	var bindEvent = function(){
+		
+		//websocket
+		var sendMsg = {};
+		sendMsg["type"] = "image";
+		sendMsg["action"] = "status";
+		sendMsg["vdcId"] = current_vdc_id;
+		Common.addWebsocketListener(sendMsg, function(data){
+			var id = data.id;
+			id = "f5060f0f58be4b35934388fe3b497770";
+			var status = data.status;
+			$("#status_"+id).html(status);
+//			alert(data);
+		});
+		
 		//dataTables
 		Common.initDataTable($('#imageTable'),function($tar){
 			$tar.prev().find('.left-col:first').append(
