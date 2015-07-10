@@ -496,7 +496,7 @@ define(['Common','bs/modal','rq/text!tpls/fservice/block/volume/list-opts.html',
 		    	     	                			setTimeout(function(){Modal.closeAll()},3000);
 		    	    	                			Common.router.route();
 		    									}else{
-		    										alert("创建失败");
+		    										Modal.error("创建失败");
 		    									}
 		    	    	    				});
 	    	    	                	 }
@@ -563,11 +563,11 @@ define(['Common','bs/modal','rq/text!tpls/fservice/block/volume/list-opts.html',
 	    	    	                	Common.xhr.postJSON(url, postData, function(data){
 		    	    	                		if(data){
 		    	    	                			dialog.close();
-		    	    	                			Modal.success('挂载成功')
+		    	    	                			Modal.success('挂载成功');
 		    	     	                			setTimeout(function(){Modal.closeAll()},3000);
 		    	    	                			Common.router.route();
 		    									}else{
-		    										alert("挂载失败");
+		    										Modal.error("挂载失败");
 		    									}
 		    	    	    				});
 	    	    	                	 }
@@ -578,7 +578,7 @@ define(['Common','bs/modal','rq/text!tpls/fservice/block/volume/list-opts.html',
 		    	    	                	dialog.close();
 	    	    	                	}
 	    	    	            	}],
-	    	    	            	onshown : function(){
+	    	    	            	onrealized : function(){
 	    	        	            	EventsHandler.initRadioBox();
 	    	        	            }
 	    					});
@@ -612,14 +612,13 @@ define(['Common','bs/modal','rq/text!tpls/fservice/block/volume/list-opts.html',
                	             }
                	         	});
 						}else{
-							alert("获取挂载信息失败");
+							Modal.warning("尚未挂载到任何主机");
 						}
     				});
     			})
     		},
     		//删除
     		deleteVolume: function(){
-
     			Common.on('click','.dropdown-menu a.delete',function(){
     				var rowdata = $(this).parents("tr:first").data("rowData.dt");
     				var id = rowdata.id;
@@ -636,8 +635,6 @@ define(['Common','bs/modal','rq/text!tpls/fservice/block/volume/list-opts.html',
 	       	 	                		setTimeout(function(){Modal.closeAll()},3000);
 	       	                    	 }
 	       	                     });
-	       	             }else {
-	       	            	 //Modal.close();
 	       	             }
 	       	         });
 	       		})
@@ -647,67 +644,66 @@ define(['Common','bs/modal','rq/text!tpls/fservice/block/volume/list-opts.html',
     			Common.on('click','.dropdown-menu a.extend_size',function(){
     				var rowData = $(this).parents("tr:first").data("rowData.dt"); 
     				var	id = rowData.id;
-    				var	name = rowData.name;
-    				var extendDialog;
+    				var	name = rowData.name,
+    					size = rowData.size;
+    				var extendValidate;
 	       	    	Common.render({
     					tpl:'tpls/fservice/block/volume/extend-size.html',
-						data: {volName:name},
+						data: {volName:name,size:size},
 						callback: function(html) {
 							Modal.show({
 	    	    	            title: '扩展'+name+'磁盘的大小',
 	    	    	            message: html,
 	    	    	            closeByBackdrop: false,
 	    	    	            nl2br: false,
-	    	    	            onshow: function(dialog) {
-	    	    	            	extendDialog = dialog;
-	    	    	                dialog.getButton('os-extend-btn').disable();
-	    	    	            },
 	    	    	            buttons: [{
 	    	    	            	id: 'os-extend-btn',
 	    	    	                label: '确定',
 	    	    	                action: function(dialog) {
-	    	    	                	var url = 'block-storage/v2/' + current_vdc_id + '/volumes/' + id + '/action';
-	    	    	                	var newSize = {
-    	    	                		    "os-extend": {
-    	    	                		        "new_size": $("#extend_size").val()
-    	    	                		    }
-    	    	                		};
-	    	    	                	Common.xhr.postJSON(url , newSize, function(data){
-		    	    	                		if(data){
-		    	    	                			dialog.close();
-		    	    	                			Modal.success('保存成功')
-		    	     	                			setTimeout(function(){Modal.closeAll()},3000);
-		    	    	                			Common.router.route();
-		    									}else{
-		    										alert("保存失败");
-		    									}
-		    	    	    				});
-	    	    	                	 }
+	    	    	                	if(extendValidate.valid()){
+	    	    	                		var url = 'block-storage/v2/' + current_vdc_id + '/volumes/' + id + '/action';
+		    	    	                	var newSize = {
+	    	    	                		    "os-extend": {
+	    	    	                		        "new_size": $("#extend_size").val()
+	    	    	                		    }
+	    	    	                		};
+		    	    	                	Common.xhr.postJSON(url , newSize, function(data){
+			    	    	                		if(data){
+			    	    	                			Modal.success('保存成功');
+			    	     	                			setTimeout(function(){
+			    	     	                				Common.router.route();
+			    	     	                				},1500);
+			    									}else{
+			    										Modal.error("保存失败");
+			    									}
+			    	    	    				});
+	    	    	                	}
+	    	    	                }
 	    	    	            	}, {
 	    	    	            		label: '取消',
 	    	    	            		action: function(dialog) {
 	    	    	            			dialog.close();
 	    	    	                	}
 	    	    	            	}],
-	    	    	            	onshown : function(){
+	    	    	            	onrealized: function(){
+	    	    	            		extendValidate = $('#extend_volume_size').validate({
+	 	    	    	                	rules: {
+	 	    	    	                		'extend_size': {
+	 	    	    	                			required: true,
+	 	    	    	                			integer: true
+	 	    	    	                		}
+	 	    	    	                	}
+	 	    	    	                });
 	    	    	            		renderQuatos({
 	    									vdcId : current_vdc_id,
 	    									valueNode : '#extend_size',
 	    									quatos : [{name: "gigabytes", title: "容量", type: "mount"}],
-	    									domNode : 'div.quotas-size',
-	    									callback: function(msg) {
-	    										if(msg) {
-	    											extendDialog.getButton('os-extend-btn').disable();
-	    										} else {
-	    											extendDialog.getButton('os-extend-btn').enable();
-	    										}
-	    									}
+	    									domNode : 'div.quotas-size'
 	    								})
 	    	        	            }
 	    					});
 							
 						}
-						
 						
     				})
 	       		})
