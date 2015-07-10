@@ -48,7 +48,7 @@
 	-->
 	<context:annotation-config />
 	
-	<context:component-scan base-package="com.inspur.cloud.**.service,com.inspur.cloud.**.dao,com.inspur.cloud.**.controller,com.inspur.cloudframework.**.controller,com.inspur.cloudframework.**.service,com.inspur.cloudframework.**.dao,com.inspur.cloud.driver,com.inspur.cloud.driver.builder,com.inspur.cloud.driver.virtualenv.openstack.compute" >
+	<context:component-scan base-package="com.inspur.cloud.**.service,com.inspur.cloud.**.dao,com.inspur.cloud.**.controller,com.inspur.cloudframework.**.controller,com.inspur.cloudframework.**.service,com.inspur.cloudframework.**.dao,com.inspur.cloud.driver,com.inspur.cloud.driver.builder,com.inspur.cloud.driver.virtualenv.openstack.compute,com.inspur.cloud.**.eventlistener" >
 	</context:component-scan>
 	
 	<!-- use dateFormat property to set java.util.Date's format -->
@@ -176,5 +176,4 @@
 	<mvc:annotation-driven/>
 	-->
 	<bean class="com.inspur.cloud.api.SwaggerConfiguration" />
-	
 </beans>

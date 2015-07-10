@@ -1,0 +1,46 @@
+<div class="page-header">
+	<ol class="breadcrumb minus">
+		<li class="active"><h4>监控详情</h4></li>
+		<li class="backlist"><a href="#fservice/lbaas/monitor/">返回列表</a></li>
+	</ol>
+</div>
+<div class="page-body">
+	<div class="pane">
+		<div class="pane-content">
+			<div class="detail-info">
+				<div class="tab-content">
+					<div class="clearfix">
+						<div class="row">
+							<label class="control-label col-sm-3">ID：</label>
+							<div class="col-sm-7 col-sm">{{subnet.network_id}}</div>
+						</div>
+						<div class="row">
+							<label class="control-label col-sm-3">类型：</label>
+							<div class="col-sm-7 col-sm">{{subnet.name}}</div>
+						</div>
+						<div class="row">
+							<label class="control-label col-sm-3">延迟：</label>
+							<div class="col-sm-7 col-sm">{{subnet.ip_version}}</div>
+						</div>
+						<div class="row">
+							<label class="control-label col-sm-3">超时：</label>
+							<div class="col-sm-7 col-sm">{{subnet.ip_version }}</div>
+						</div>
+						<div class="row">
+							<label class="control-label col-sm-3">最大超时次数：</label>
+							<div class="col-sm-7 col-sm">{{subnet.ip_version}}</div>
+						</div>
+						<div class="row">
+							<label class="control-label col-sm-3">管理员状态：</label>
+							<div class="col-sm-7 col-sm">{{if subnet.gateway_ip != null}}启用{{else}}禁用 {{/if}}</div>
+						</div>
+						<div class="row">
+							<label class="control-label col-sm-3">资源池：</label>
+							<div class="col-sm-7 col-sm">{{if subnet.enable_dhcp == '1'}}激活{{else}}禁用 {{/if}}</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
