@@ -108,6 +108,43 @@ define('commons/main',
             }
             
         },
+        _socketListener: this._socketListener || {},
+        _webSocket: null,
+        _initWebSocket: function(){
+        	debugger;
+        	var that = this;
+        	this._webSocket = this._webSocket || new WebSocket('ws://localhost:8089/cloud-web/websocket');
+        	this._webSocket.onerror = this._webSocket.onerror || function(event) {
+    			//onError(event)
+        		alert('err')
+    		};
+
+    		this._webSocket.onopen = this._webSocket.onopen || function(event) {
+    			that.isOpen = true;
+    			for(var i=0;i<that.msgs.length;i++){
+    				that._webSocket.send(msgs[i]);
+    			}
+    		};
+
+    		this._webSocket.onmessage = this._webSocket.onmessage || function(event) {
+    			var message = JSON.parse(event.data);
+    			var method = that._socketListener[message.type+"_"+message.action];
+    			if(method && typeof method === 'function'){
+    				method(message);
+    			}
+    		};
+        },
+        isOpen: false,
+        msgs : [],
+        addWebsocketListener: function(sendMsg, method){
+			debugger
+			this._socketListener[sendMsg.type+"_"+sendMsg.action] = method;
+			if(this.isOpen){
+				this._webSocket.send(JSON.stringify(sendMsg));
+			}else{
+				this.msgs.push(JSON.stringify(sendMsg));
+			}
+		},
         scrollbarWidth: function() {
             var scrollDiv = document.createElement('div');
             scrollDiv.className = 'modal-scrollbar-measure';
@@ -158,6 +195,7 @@ define('commons/main',
             this.resetPageIndex();
             // 初始化cookie工具
             this._cookies();
+            this._initWebSocket();
             // 取消加载中效果
             $("#loader").loader('destroy');
             return this;
@@ -1252,6 +1290,7 @@ define('commons/main',
             });
         },
         error: function(e) {
+        	debugger
             if(typeof e === "string") {
                 Modal.error(e);
             } else {

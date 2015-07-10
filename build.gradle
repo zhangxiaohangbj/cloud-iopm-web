@@ -64,6 +64,12 @@ dependencies {
 	compile("org.springframework:spring-orm:$springVersion")
 	compile("org.springframework:spring-oxm:$springVersion")
 	
+	//websockets
+	compile("com.fasterxml.jackson.core:jackson-core:2.3.0")
+	compile("com.fasterxml.jackson.core:jackson-databind:2.3.0")
+	compile("org.springframework:spring-websocket:4.0.1.RELEASE")
+	compile("javax.websocket:javax.websocket-api:1.1")
+	
 	//yfjs-lib
 	compile("com.inspur.iop:yfjs:0.1-SNAPSHOT")
 	

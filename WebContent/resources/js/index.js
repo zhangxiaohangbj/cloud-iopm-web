@@ -200,9 +200,7 @@ define(['Common','PubView','echarts', 'echarts/chart/pie', 'echarts/chart/funnel
 		}, 200);
 
 		$('#services-tab').tab();
-
-
-	}
+	};
 	return {
 		init : init
 	};
