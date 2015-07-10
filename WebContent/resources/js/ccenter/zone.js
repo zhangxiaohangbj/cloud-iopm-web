@@ -19,10 +19,13 @@ define(['Common','bs/modal','jq/form/wizard','jq/form/validator-bs3','bs/tooltip
 
         //真实请求的数据
         Common.xhr.ajax('/v2/tenant_id/os-availability-zone/list',function(data){
-            var indexData = {"zone":data,"data":renderData};
-            Common.render(true,'tpls/ccenter/zone/index.html',indexData,function(){
-                bindEvent();
-            });
+            var indexData = {"zone":data};
+            Common.xhr.ajax("/resources/data/defaultZone.txt",function(az){
+                indexData.defaultAz = az;
+                Common.render(true,'tpls/ccenter/zone/index.html',indexData,function(){
+                    bindEvent();
+                });
+            })
         });
     };
 
@@ -76,6 +79,7 @@ define(['Common','bs/modal','jq/form/wizard','jq/form/validator-bs3','bs/tooltip
                     renderData.type = type;
                 });
             }
+
         };
         dataGetter.getVirtualEnv();
         dataGetter.getZone();

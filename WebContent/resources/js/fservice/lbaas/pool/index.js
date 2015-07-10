@@ -84,7 +84,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 			                },
 			                'address': {
 			                	IP: true
-			                }
+			                },
 			                'protocol_port': {
 			                	required: true,
 			                	digits: true,
@@ -105,7 +105,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 		    					min: -1
 	    				});
 	    			})
-				},
+				}
 	    }
 	    
 	    //创建
@@ -123,11 +123,14 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 	    	                action: function(dialog) {
 	    	                	var valid = $(".form-horizontal").valid();
 	    	            		if(!valid) return false;
-	    	        	    	
+	    	            		var data = $("#addPool").serializeArray();
 	    	                	var serverData = {
 	    	                		"pool":{
 	    	                		}
 	    	                	  };
+	    	                	for(var i=0;i<data.length;i++){
+	    	                		serverData.pool[data[i]["name"]] = data[i]["value"];
+	    						}
 	    	                	Common.xhr.postJSON('/networking/v2.0/subnets',serverData,function(data){
 	    	                		if(data){
 	    	                			Dialog.success('保存成功')
@@ -161,10 +164,14 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
     	                action: function(dialog) {
     	                	var valid = $(".form-horizontal").valid();
     	            		if(!valid) return false;
-    	            		var serverData = {
-	    	                		"pool":{
-	    	                		}
-	    	                	  };
+    	            		var data = $("#addPool").serializeArray();
+    	                	var serverData = {
+    	                		"pool":{
+    	                		}
+    	                	  };
+    	                	for(var i=0;i<data.length;i++){
+    	                		serverData.pool[data[i]["name"]] = data[i]["value"];
+    						}
     	                	Common.xhr.putJSON('/networking/v2.0/subnets/'+id,serverData,function(data){
     	                		if(data){
     	                			Dialog.success('保存成功')
@@ -219,11 +226,14 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 	    	                action: function(dialog) {
 	    	                	var valid = $(".form-horizontal").valid();
 	    	            		if(!valid) return false;
-	    	        	    	
+	    	            		var data = $("#addPool").serializeArray();
 	    	                	var serverData = {
-	    	                		"pool":{
+	    	                		"vip":{
 	    	                		}
 	    	                	  };
+	    	                	for(var i=0;i<data.length;i++){
+	    	                		serverData.vip[data[i]["name"]] = data[i]["value"];
+	    						}
 	    	                	Common.xhr.postJSON('/networking/v2.0/subnets',serverData,function(data){
 	    	                		if(data){
 	    	                			Dialog.success('保存成功')
@@ -263,11 +273,14 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 	    	                action: function(dialog) {
 	    	                	var valid = $(".form-horizontal").valid();
 	    	            		if(!valid) return false;
-	    	        	    	
+	    	            		var data = $("#addPool").serializeArray();
 	    	                	var serverData = {
-	    	                		"pool":{
+	    	                		"vip":{
 	    	                		}
 	    	                	  };
+	    	                	for(var i=0;i<data.length;i++){
+	    	                		serverData.vip[data[i]["name"]] = data[i]["value"];
+	    						}
 	    	                	Common.xhr.postJSON('/networking/v2.0/subnets',serverData,function(data){
 	    	                		if(data){
 	    	                			Dialog.success('保存成功')
