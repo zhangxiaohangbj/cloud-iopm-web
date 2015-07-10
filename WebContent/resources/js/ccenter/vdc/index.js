@@ -649,7 +649,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 	    var more = {
 		    	//配额管理
 		    	QuotaSets : function(id){
-		    		//先获取QuotaSets后，再render
+		    		//先获取QuotaSets后，再render Common.cookies.getVdcId()
 		    		Common.xhr.ajax('/compute/v2/'+Common.cookies.getVdcId()+'/os-quota-sets/' + id,function(data){
 		    			if(data == null){
 		    				return Modal.warning ('Permission denied');
