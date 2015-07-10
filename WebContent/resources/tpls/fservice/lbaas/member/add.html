@@ -1,0 +1,78 @@
+<form class="form-horizontal" id="addMember">
+	<div class="form-group">
+		<label for="pool_id" class="control-label col-sm-3">
+	 	<span style="color: red;">* </span>资源池：</label>
+	 	<div class="col-sm-7 col-sm">
+			<select class="form-control select" name="pool_id">
+				{{each subnets as item i}}
+			 		<option value="{{item.id}}">{{item.name}}</option>
+			 	{{/each}}
+			</select>
+		</div>
+	</div>
+	<div class="form-group">
+		<label for="member_type" class="control-label col-sm-3">
+	 	成员来源：</label>
+	 	<div class="col-sm-7 col-sm">
+		 	<select class="form-control select" name="member_type">
+		 		<option value="server_list">从可用实例选择</option>
+		 		<option value="member_address">指定成员的IP地址</option>
+		 	</select>
+		</div>
+	</div>
+	<div class="form-group">
+		<label for="members" class="control-label col-sm-3">
+	 	成员：</label>
+	 	<div class="col-sm-7 col-sm">
+			<select class="form-control select" name="members" multiple tabindex="4" style="height: auto;">
+				{{each subnets as item i}}
+			 		<option value="{{item.id}}">{{item.name}}</option>
+			 	{{/each}}
+			</select>
+		</div>
+	</div>
+	<div class="form-group">
+		<label for="weight" class="control-label col-sm-3">
+	 	重量：</label>
+	 	<div class="col-sm-7 col-sm">
+			<div class="spinbox" id="weight">
+		 		<input name="weight" type="text" class="form-control input-mini spinbox-input" style="height: 35px;"/>
+		 		<div class="spinbox-buttons btn-group btn-group-vertical">
+				    <button type="button" class="btn btn-default spinbox-up btn-xs">
+				      <span class="glyphicon glyphicon-chevron-up"></span><span class="sr-only">Increase</span>
+				    </button>
+				    <button type="button" class="btn btn-default spinbox-down btn-xs">
+				      <span class="glyphicon glyphicon-chevron-down"></span><span class="sr-only">Decrease</span>
+				    </button>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="form-group">
+		<label for="protocol_port" class="control-label col-sm-3">
+	 	<span style="color: red;">* </span>协议端口：</label>
+	 	<div class="col-sm-7 col-sm">
+			<div class="spinbox" id="protocol_port">
+		 		<input name="protocol_port" type="text" class="form-control input-mini spinbox-input" style="height: 35px;"/>
+		 		<div class="spinbox-buttons btn-group btn-group-vertical">
+				    <button type="button" class="btn btn-default spinbox-up btn-xs">
+				      <span class="glyphicon glyphicon-chevron-up"></span><span class="sr-only">Increase</span>
+				    </button>
+				    <button type="button" class="btn btn-default spinbox-down btn-xs">
+				      <span class="glyphicon glyphicon-chevron-down"></span><span class="sr-only">Decrease</span>
+				    </button>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="form-group">
+		<label for="admin_state_up" class="control-label col-sm-3">
+	 	<span style="color: red;">* </span>管理员状态：</label>
+	 	<div class="col-sm-7 col-sm">
+			<select class="form-control select" name="admin_state_up">
+	 			<option value="true">上</option>
+	 			<option value="false">下</option>
+	 		</select>
+		</div>
+	</div>
+</form>

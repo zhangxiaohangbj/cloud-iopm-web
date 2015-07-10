@@ -24,10 +24,6 @@ define(['Common','bs/modal','rq/text!tpls/fservice/block/volume/list-opts.html',
 		Common.$pageContent.addClass("loading");
 		Common.render(true,{
 			tpl:'tpls/fservice/block/volume/list.html',
-			/*data:'',
-			beforeRender: function(data){
-				debugger
-			},*/
 			callback: bindEvent
 		});
 	};
@@ -35,9 +31,10 @@ define(['Common','bs/modal','rq/text!tpls/fservice/block/volume/list-opts.html',
 	//quatos  getClass  
 	var renderQuatos = function(options){
 		function _renderQuatos(options) {
-			var quatos = options.quatos || []
+			var quatos = options.quatos || [];
 			var vdcId = options.vdcId;
-			var size = $(options.valueNode).val() || 0;
+			var size = $(options.valueNode).val();
+			size = /\d+/.test(size) ? parseInt(size) : 0;
 			Common.xhr.ajax('/compute/v2/' + vdcId + '/os-quota-sets/' + vdcId,function(allQuotas){
 				allQuotas = (allQuotas && allQuotas.quota_set) || {};
 				Common.xhr.ajax('/compute/v2/' + vdcId + '/limits',function(allQuotaUsages){
@@ -47,7 +44,6 @@ define(['Common','bs/modal','rq/text!tpls/fservice/block/volume/list-opts.html',
 						var q = quatos[i];
 						var type = q.type || "count";
 						var total = allQuotas[q.name];
-						
 						var newUse = type == "count" ? (size>0 ? 1 : 0) : size;
 						var used = allQuotaUsages[q.name] + Number(newUse);
 						var rate = 100;
@@ -75,10 +71,9 @@ define(['Common','bs/modal','rq/text!tpls/fservice/block/volume/list-opts.html',
 				});
 			});
 		}
-		
-		$(options.valueNode).on("blur", function(){
+		$(options.valueNode).blur(function(){
 			_renderQuatos(options);
-		})
+		});
 		_renderQuatos(options);
 	}
 	
@@ -283,10 +278,10 @@ define(['Common','bs/modal','rq/text!tpls/fservice/block/volume/list-opts.html',
 					Common.xhr.ajax('/resources/data/specs.txt',function(data){
 						var dataArr = [];
 						$.each(data,function(i,item){
-							dataArr.push('<div class="col-sm-9"><label data-id="'+item.name+'"><input type="checkbox">'+item.name+'</label></div>')
+							dataArr.push('<div class="col-sm-9"><label data-id="'+item.name+'"><input name="user-vms" type="radio">'+item.name+'</label></div>')
 						})
 						$('.vm-list').html(dataArr.join(''));
-						EventsHandler.initCheckBox();
+						EventsHandler.initRadioBox();
 					});
 				}
 		};
@@ -302,19 +297,12 @@ define(['Common','bs/modal','rq/text!tpls/fservice/block/volume/list-opts.html',
 					});
 				},
 				//挂载磁盘
-				initCheckBox : function(){
+				initRadioBox : function(){
 					$('input[type="checkbox"],input[type="radio"]').iCheck({
-				    	checkboxClass: "icheckbox-info"
+				    	checkboxClass: "icheckbox-info",
+				    	radioClass: "iradio-info"
 				    })
 				},
-				//input propertychange
-//				inputListener: function(){
-//					$('#size').on('blur',function(){
-//						if($(this).parents('form:first').validate().element('#size')){
-//							DataIniter.initQuato();//重新加载配额数据
-//						}
-//					})
-//				},
 				checkNextWizard: function(){
 					$('.form-group .progress-bar').each(function(){
 						var info = $(this).parent().prev(),
@@ -346,9 +334,6 @@ define(['Common','bs/modal','rq/text!tpls/fservice/block/volume/list-opts.html',
 		    			DataIniter.initVolumeType();
 		    		});
 		    	});
-		    	DataIniter.initQuato();
-		    	DataIniter.initUserVms();
-		    	
 		    	//
     			wizard = $('#create-volume-wizard').wizard({
     				keyboard : false,
@@ -390,6 +375,8 @@ define(['Common','bs/modal','rq/text!tpls/fservice/block/volume/list-opts.html',
     				})
     				//载入事件
     		    	EventsHandler.vdcChange();
+    				DataIniter.initQuato();
+    		    	DataIniter.initUserVms();
     			});
     			var getMountVm = function(){
     				var data = [];
@@ -406,7 +393,6 @@ define(['Common','bs/modal','rq/text!tpls/fservice/block/volume/list-opts.html',
     			});
     			//确认信息卡片被选中的监听
     			wizard.cards.confirm.on('selected',function(card){
-    				//debugger
     				//获取上几步中填写的值
     				var serverData = wizard.serializeObject();
     				console.log(serverData);
@@ -593,7 +579,7 @@ define(['Common','bs/modal','rq/text!tpls/fservice/block/volume/list-opts.html',
 	    	    	                	}
 	    	    	            	}],
 	    	    	            	onshown : function(){
-	    	        	            	EventsHandler.initCheckBox();
+	    	        	            	EventsHandler.initRadioBox();
 	    	        	            }
 	    					});
 						}

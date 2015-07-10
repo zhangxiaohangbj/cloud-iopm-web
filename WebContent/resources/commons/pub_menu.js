@@ -211,15 +211,15 @@ define('commons/pub_menu', function() {
                     items: [
                         {
                             text: '<i class="fa fa-dot fa-1"></i>资源池',
-                            link: '#lbaas/pool'
+                            link: '#lbaas/pool/'
                         },
                         {
                             text: '<i class="fa fa-dot fa-1"></i>成员管理',
-                            link: '#lbaas/member'
+                            link: '#lbaas/member/'
                         },
                         {
                             text: '<i class="fa fa-dot fa-1"></i>监控管理',
-                            link: '#lbaas/monitor'
+                            link: '#lbaas/monitor/'
                         }
                     ]
                 }
@@ -428,7 +428,7 @@ define('commons/pub_menu', function() {
                         },
                         {
                             text: '<i class="fa fa-dot fa-1"></i>agent管理',
-                            link: '#monitor/monitor'
+                            link: '#monitor/agent'
                         },
                         {
                             text: '<i class="fa fa-dot fa-1"></i>监控指标',

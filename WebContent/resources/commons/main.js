@@ -44,12 +44,15 @@ define('commons/main',
 
     // init form validator rules
     if($.validator) {
+        $.validator.addMethod('integer', function(value, element) {
+            return this.optional(element) || /^-?(?:\d+|\d{1,3}(?:,\d{3})+)?$/.test(value);
+        }, "只能输入整数数值");
         $.validator.addMethod('mobile', function(value, element) {
             return this.optional(element) || /^(13[0-9]|14[5|7]|15[0|1|2|3|5|6|7|8|9]|18[0-9]|170)\d{8}$/.test(value);
         }, "请输入正确的手机号");
         $.validator.addMethod('telephone', function(value, element) {
             return this.optional(element) || /^\d{3,4}-?\d{7,9}$/.test(value);
-        }, "请输入正确的电话号");
+        }, "请输入正确的电话号码");
         $.validator.addMethod('name_en', function(value, element) {
             return this.optional(element) || /^[a-z][a-z0-9_]*$/i.test(value);
         }, "请输入正确的英文名称");
@@ -407,9 +410,15 @@ define('commons/main',
     		    	        	 * "totalCount":31,"first":1,"orderBySetted":false,"totalPages":7,"hasNext":true,"nextPage":2,"hasPre":false,"prePage":1}
     		    	        	 * DataTables期望的格式 {"draw": 2,"recordsTotal": 11,"recordsFiltered": 11,"data": [{"id": 1,"firstName": "Troy"}]}
     							*/
-    		    	        	resp.data = resp.result;
+		    	        		resp.data = resp.result;
     		    	        	resp.recordsTotal = resp.totalCount;
     		    	        	resp.recordsFiltered = resp.totalCount;
+    		    	        	if(resp.error){
+ 		    	        		   that.error(resp.message);
+ 		    	        		   resp.data = [];
+          		    	           resp.recordsTotal = 0;
+          		    	           resp.recordsFiltered = 0;
+     		    	        	}
     		    	            fnCallback(resp);   //fnCallback：服务器返回数据后的处理函数，需要按DataTables期望的格式传入返回数据 
     		    	        }   
     		    	    });   

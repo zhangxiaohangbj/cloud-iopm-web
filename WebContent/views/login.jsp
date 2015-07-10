@@ -95,13 +95,35 @@
 		}
 		function callbackSuccess(res){
 			if(res != null && res.error == null && res.access.token != null){
-				window.location.href="${pageContext.request.contextPath}";
+				if(res.access.user.status=='reset_pwd'){
+					alert("由于系统升级，须重设密码...");
+					window.location.href="${pageContext.request.contextPath}/resetpwd";
+				}else{
+					window.location.href="${pageContext.request.contextPath}";
+				}
 			}else{
-				alert("错误代码："+res.error.title+"\n错误描述: "+res.error.message);
+				showErrorInfo(res);
 			}
 		}
 		function callbackErr(res){
-			alert("登录失败！"+res);
+			showErrorInfo(JSON.parse(res.responseText));
+		}
+		function showErrorInfo(res){
+			if(res.inner_code == "username_is_null"){
+				alert("请输入登录账号！");
+			}else if(res.inner_code == "password_is_null"){
+				alert("请输入登录密码！");
+			}else if(res.inner_code == "invalid_username"){
+				alert("用户名或密码错误！");
+			}else if(res.inner_code == "password_is_incorrect"){
+				alert("用户名或密码错误！");
+			}else if(res.inner_code == "account_is_locked"){
+				alert("账号已锁定！");
+			}else if(res.inner_code == "account_is_disabled"){
+				alert("账号已禁用！");
+			}else{
+				alert("系统错误！");
+			}
 		}
 	});
 </script>
