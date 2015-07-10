@@ -84,7 +84,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 			                },
 			                'address': {
 			                	IP: true
-			                }
+			                },
 			                'protocol_port': {
 			                	required: true,
 			                	digits: true,
@@ -105,7 +105,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 		    					min: -1
 	    				});
 	    			})
-				},
+				}
 	    }
 	    
 	    //创建
