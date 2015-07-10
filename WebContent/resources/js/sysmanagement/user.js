@@ -63,6 +63,15 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 		Common.on('click','.dataTables_filter .btn-query',function(){
 			table.search($('.global-search').val()).draw();
 		});
+		var checkAdd = function(uniqueKey,$wrapper){
+			var flag = true;
+			$wrapper.children().each(function(){
+				if(uniqueKey === $(this).find("input[name='role']").val()){
+					flag = false;
+				}
+			});
+			return flag;
+		}
 		//载入后的事件
 		var EventsHandler = {
 			//选择部门
@@ -178,8 +187,12 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 			    	                		Modal.warning("请选择VDC");
 			    	                		return;
 			    	                	}
-			    	                	obj.parent().find(".vdc").html($("#chooseVDCTable input[type='radio']:checked").parent().next().html());
-			    	                	obj.parent().find("[name='vdc']").val($("#chooseVDCTable input[type='radio']:checked").next().val());
+			    	                	var role_text = '<li class="clearfix"><span>'+$("#chooseVDCTable input[type='radio']:checked").parent().next().html()+'</span>'
+			    	                			+'<a class="btn-move pull-right" data-toggle="tooltip" title="移除" href="javascript:void(0)" style="display: inline-block;padding: 5px;">'
+			    	                			+'<i class="fa fa-minus-circle "></i></a>'
+			    	                			+'<input type="hidden" name="vdc" value="'+$("#chooseVDCTable input[type='radio']:checked").next().val()+'"/></li>';
+			    	                	obj.parent().find(".vdc").html(role_text);
+			    	                	obj.remove();
 			    	                	dialog.close();
 			    	                }
 			    	            }, {
@@ -210,14 +223,17 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 		    	            buttons: [{
 		    	                label: '确定',
 		    	                action: function(dialog) {
-		    	                	var role_text = "";
-		    	                	var role_id = "";
+		    	                	var role_text = "", role_id;
 		    	                	$("#chooseRoleTable div.checked").each(function(){
-		    	                		role_text += $(this).parent().next().html()+",";
-		    	                		role_id += $(this).next().val()+",";
+		    	                		role_id = $(this).next().val();
+		    	                		if(checkAdd(role_id, obj.parent().find(".role"))){
+		    	                			role_text += '<li class="clearfix"><span>'+$(this).parent().next().html()+'</span>'
+		    	                			+'<a class="btn-move pull-right" data-toggle="tooltip" title="移除" href="javascript:void(0)" style="display: inline-block;padding: 5px;">'
+		    	                			+'<i class="fa fa-minus-circle "></i></a>'
+		    	                			+'<input type="hidden" name="role" value="'+role_id+'"/></li>';
+		    	                		}
 		    	                	})
-		    	                	obj.parent().find(".role").html(role_text.substring(0,role_text.length-1));
-		    	                	obj.parent().find("[name='role']").val(role_id.substring(0,role_id.length-1));
+		    	                	obj.parent().find(".role").append(role_text);
 		    	                	dialog.close();
 		    	                }
 		    	            }, {
@@ -239,12 +255,10 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 			addAuthority :function(){
 				$(document).off("click","span.addAuthority");
 				$(document).on("click","span.addAuthority",function(){
-					$("#authorityInfo tbody").append('<tr><td><span class="vdc"></span><input type="hidden" name="vdc"/><span class="btn btn-primary chooseVDC">选择</span></td>'
-							+'<td><span class="role"></span><input type="hidden" name="role"/><span class="btn btn-primary chooseRole">选择</span></td>'
+					$("#authorityInfo tbody").append('<tr><td><ul class="vdc nav"></ul><span class="btn btn-primary chooseVDC">选择</span></td>'
+							+'<td><ul class="role nav"></ul><span class="btn btn-primary chooseRole">选择</span></td>'
 							+'<td><a class="btn-delete" data-toggle="tooltip" title="删除" href="javascript:void(0)" style="margin: 0 8px;">'
 							+'<i class="fa fa-trash-o fa-fw"></i></a></td></tr>');
-					EventsHandler.chooseVDC();
-					EventsHandler.chooseRole();
 				})
 			},
 			//权限信息删除行
@@ -252,6 +266,21 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 				$(document).off("click","a.btn-delete");
 				$(document).on("click","a.btn-delete",function(){
 					$(this).parent().parent().remove();
+				})
+			},
+			//移除vdc
+			removeVdc : function(){
+				$(document).off("click",".vdc a.btn-move");
+				$(document).on("click",".vdc a.btn-move",function(){
+					$(this).parents("td:first").append('<span class="btn btn-primary chooseVDC">选择</span>')
+					$(this).parent().remove();
+				})
+			},
+			//移除role
+			removeRole : function(){
+				$(document).off("click",".role a.btn-move");
+				$(document).on("click",".role a.btn-move",function(){
+					$(this).parent().remove();
 				})
 			},
 			//配额的表单验证
@@ -308,11 +337,9 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 					$(obj+" tbody").find("tr").each(function(i,element){
 						var vdc_id = $(element).find("[name='vdc']").val();
 						if(vdc_id){
-							var role_id = $(element).find("[name='role']").val();
-							var role_ids = role_id.split(",");
-							for(var i = 0; i<role_ids.length;i++){
-								authorityList.push({"scopeId":vdc_id,"roleId":role_ids[i],"scopeType":"tenant"});
-							}
+							$(element).find("[name='role']").each(function(){
+								authorityList.push({"scopeId":vdc_id,"roleId":$(this).val(),"scopeType":"tenant"});
+							})
 						}
 					});
 					return authorityList;
@@ -324,12 +351,10 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 						if(!vdc_id){
 							return roleList;
 						}
-						var role_id = $(element).find("[name='role']").val();
-						var role_ids = role_id.split(",");
 						var roles = [];
-						for(var i = 0; i<role_ids.length;i++){
-							roles.push({"id":role_ids[i]})
-						}
+						$(element).find("[name='role']").each(function(){
+							roles.push({"id":$(this).val()})
+						})
 						roleList.push({"id":vdc_id,"roles":roles});
 					});
 					return roleList;
@@ -353,6 +378,8 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 				EventsHandler.chooseVDC();
 				EventsHandler.chooseRole();
 				EventsHandler.delAuthority();
+				EventsHandler.removeVdc();
+				EventsHandler.removeRole();
     			
     			wizard = $('#create-user-wizard').wizard({
     				keyboard : false,
@@ -395,6 +422,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 					$("#confirm .table tbody").html($("#authorityInfo tbody").html());
 					$("#confirm .table .chooseVDC").remove();
 					$("#confirm .table .chooseRole").remove();
+					$("#confirm .table a.btn-move").remove();
 					$("#confirm .table tr").each(function(){
 						$(this).find("td:last").remove();
 					})
@@ -528,7 +556,6 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 		    	                		if(data){
 		    	                			Modal.success('保存成功')
 		    	                			setTimeout(function(){Modal.closeAll()},2000);
-		    	                			Common.router.route();
 										}else{
 											Modal.warning ('保存失败')
 										}
@@ -545,6 +572,8 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 		    					EventsHandler.chooseVDC();
 		    					EventsHandler.chooseRole();
 		    					EventsHandler.delAuthority();
+		    					EventsHandler.removeVdc();
+		    					EventsHandler.removeRole();
 		    	            }
 		    	        });
 		    		});
