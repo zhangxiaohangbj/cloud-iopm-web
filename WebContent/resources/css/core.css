@@ -619,9 +619,11 @@ table.dataTable > tbody > tr > td .btn-opt i {
 	color:#227B9B;
 }
 .tableMenus .dataTables_filter label {
+	float:left;
 	position: relative;
 	font-weight: normal;
 	margin-bottom:0;
+	margin-left:8px;
 }
 .tableMenus .dataTables_filter label > .fa-search{
 	color:#9D9898;
@@ -661,17 +663,19 @@ table.dataTable + .row > [class*="col-"] {
 	margin:0;
 	border:1px solid #e5e5e5;
 	background-color:#f9f9f9;
+	height:40px;
 	overflow:hidden;
 }
 .row.tableMenus .right-col .form-control{
+	margin-left:0px;
 	padding:3px 18px 3px 8px;
 	color:#938E8E;
-	height:30px;
+	font-size:12px;
+	height:26px;
 	border-radius:0;
 	border-color:#e2e7ea;
 	box-shadow:none;
 	vertical-align:baseline;
-	font-size:12px;
 }
 .row.tableMenus .right-col .global-search{
 	width:250px;
@@ -694,8 +698,8 @@ table.dataTable + .row > [class*="col-"] {
 }
 .dataTables_wrapper .btn{
 	display:inline-block;
-	height:30px;
-	line-height:30px;
+	height:25px;
+	line-height:25px;
 	padding: 0 16px;
 	color: #fff;
 	cursor:pointer;
@@ -711,7 +715,7 @@ table.dataTable + .row > [class*="col-"] {
 	top:0;
 	right:0;
 	display:inline-block;
-	height:30px;
+	height:25px;
 	margin-right:0;
 	padding:0 10px;
 	border-left:1px solid #e2e7ea;
