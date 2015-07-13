@@ -1284,3 +1284,15 @@ i.image-icon-default.centos {
     left:35px;padding:0;
 }
 
+
+.hidden-input-txt{
+	opacity: 0;
+	-webkit-opacity: 0;
+	-moz-opacity: 0;
+	filter:alpha(opacity=0);
+	filter:progid:DXImageTransform.Microsoft.Alpha(Opacity=0);
+	position:absolute;
+	left:35px;padding:0;
+	z-index:-1;
+}
+

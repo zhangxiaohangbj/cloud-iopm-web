@@ -243,7 +243,8 @@ define(['Common','bs/modal','jq/form/wizard','jq/form/validator-bs3','bs/tooltip
                     })
                 });
                 wizard.cards.detail.on("selected",function(card){
-                    $("#test-connection-btn").click(function(){
+                    $("#test-connection-btn").off("click").on("click", function(){
+                        debugger;
                         var cur = {
                             type: $('select.select-env-type option:selected').val(),
                             version: $("#env-version").val(),
@@ -262,6 +263,7 @@ define(['Common','bs/modal','jq/form/wizard','jq/form/validator-bs3','bs/tooltip
                                 Modal.success("该连接信息可用");
                                 $("#test-connection").val("true");
                             }else{
+                                debugger
                                 Modal.warning("连接信息不可用");
                             }
                         })
