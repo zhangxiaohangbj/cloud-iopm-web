@@ -154,8 +154,8 @@ define(['Common','bs/modal','rq/text!tpls/fservice/block/volume/list-opts.html',
  							    {title: "挂载到虚机", clazz: "edit_mount"},
  							    {title: "从虚机卸载", clazz: "detach_mount"},
  							    {title: "扩展容量", clazz: "extend_size"},
- 							    {title: "设置为只读", clazz: "make_rw"},
- 							    {title: "设置为读写", clazz: "make_r"},
+ 							    {title: "设置为只读", clazz: "make_r"},
+ 							    {title: "设置为读写", clazz: "make_rw"},
  							    {title: "备份", clazz: "backup"},
  							    {title: "删除", clazz: "delete"}
  							],
@@ -678,7 +678,7 @@ define(['Common','bs/modal','rq/text!tpls/fservice/block/volume/list-opts.html',
 			    									}
 			    	    	    				});
 	    	    	                	}
-	    	    	                }
+	    	    	                  }
 	    	    	            	}, {
 	    	    	            		label: '取消',
 	    	    	            		action: function(dialog) {
@@ -710,6 +710,37 @@ define(['Common','bs/modal','rq/text!tpls/fservice/block/volume/list-opts.html',
 						}
 						
     				})
+	       		})
+    		},
+    		setReadonly: function(){
+    			Common.on('click','.dropdown-menu a.make_rw,.dropdown-menu a.make_r',function(){
+    				var id = $(this).parents("tr:first").data("rowData.dt").id;
+    				var confirmTips = this.className == 'make_rw' ? '读写' : '只读',
+    					requestVal = this.className == 'make_rw' ? 'False' : 'True';
+    				if(id){
+    					Modal.confirm('确定要设置为'+confirmTips+'?', function(result){
+    	       	             if(result) {
+    	       	            	var url = 'block-storage/v2/' + current_vdc_id + '/volumes/' + id + '/action',
+    	       	            		postData = {
+    	       	            			"os-update-readonly": {
+    	       	            				"readonly": requestVal
+    	       	            			}
+    	       	            		};
+    	       	            	Common.xhr.postJSON(url , postData, function(data){
+	    	                		if(data){
+	    	                			Modal.success('操作成功');
+	     	                			setTimeout(function(){
+	     	                				Common.router.route();
+	     	                				},1500);
+									}else{
+										Modal.error("保存失败");
+									}
+	    	    				});
+    	       	             }
+    	       	         });
+    				}else{
+    					Modal.error('缺少必要的执行参数');
+    				}
 	       		})
     		}
 	    };
