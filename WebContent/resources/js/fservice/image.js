@@ -6,7 +6,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 		//先获取数据，进行加工后再去render
 		Common.render(true,{
 			tpl:'tpls/ccenter/image/list.html',
-			data:'/image/v2/'+current_vdc_id+'/images?vdcId='+current_vdc_id+'&isDeleted=false',
+			data:'/image/v2/'+current_vdc_id+'/images?isDeleted=false',
 			beforeRender: function(data){
 				return data;
 			},
@@ -141,8 +141,8 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 		    	            				
 		    	            				$("#editImage").ajaxSubmit(function () {
 		    	            					Modal.alert("保存成功",function(){
-//		    	    	                			dialog.close();
-//		    	    	                			Common.router.reload();
+		    	    	                			dialog.close();
+		    	    	                			Common.router.reload();
 	    	    	                			});
 		    	            				});
 	    	            				}else if("address" == imageSource){
