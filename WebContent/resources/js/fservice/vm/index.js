@@ -303,8 +303,6 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 				    	//同步currentChosenObj
 				    	currentChosenObj.az = $('select.availability_zone').children('option:selected');
 					});
-				}else{
-					Modal.error('尚未选择所属vdc');
 				}
 			},
 			//init云主机规格的详细信息popver
@@ -382,9 +380,6 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 						})
 					})
 				}
-//				else{
-//					Modal.error('尚未选择vdc');
-//				}
 			},
 			//根据vdc可用网络信息
 			initAvailableNetWorks : function(){
