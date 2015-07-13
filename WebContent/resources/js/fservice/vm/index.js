@@ -13,6 +13,38 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 	};
 	
 	var bindEvent = function(){
+		//websocket
+		var sendMsg = {};
+		sendMsg["type"] = "vm";
+		sendMsg["action"] = "status";
+		sendMsg["vdcId"] = current_vdc_id;
+		Common.addWebsocketListener(sendMsg, function(data){
+//			alert(JSON.stringify(data));
+			var id = data.id;
+			var status = data.status;
+//			$("#status_"+id).html(status);
+			$("span[data="+id+"]").html(status);
+			$("span[data="+id+"]").attr("class","text-success");
+//			if(status=="ACTIVE"){
+//				
+//			}
+//			Common.router.reload();
+//			if(data.vmState == 'ACTIVE') return ' <span class="text-success" data="'+data.id+'">运行中</span>';
+//			if(data.vmState == 'BUILD') return ' <span class="text-warning" data="'+data.id+'">创建中</span>';
+//			if(data.vmState == 'BUILDING') return ' <span class="text-warning" data="'+data.id+'">创建中</span>';
+//			if(data.vmState == 'REBUILD') return ' <span class="text-success" data="'+data.id+'">重建中</span>';
+//			if(data.vmState == 'SUSPENDED') return ' <span class="text-danger" data="'+data.id+'">已挂起</span>';
+//			if(data.vmState == 'PAUSED') return ' <span class="text-danger" data="'+data.id+'">已暂停</span>';
+//			if(data.vmState == 'RESIZE') return ' <span class="text-danger" data="'+data.id+'">重建中</span>';
+//			if(data.vmState == 'VERIFY_RESIZE') return ' <span class="text-success" data="'+data.id+'">确认重建</span>';
+//			if(data.vmState == 'REVERT_RESIZE') return ' <span class="text-success" data="'+data.id+'">回退重建</span>';
+//			if(data.vmState == 'REBOOT') return ' <span class="text-warning" data="'+data.id+'">重启中</span>';
+//			if(data.vmState == 'HARD_REBOOT') return ' <span class="text-warning" data="'+data.id+'">硬重启中</span>';
+//			if(data.vmState == 'DELETED') return ' <span class="text-danger" data="'+data.id+'">已删除</span>';
+//			if(data.vmState == 'ERROR') return ' <span class="text-danger" data="'+data.id+'">错误</span>';
+//			if(data.vmState == 'SHUTOFF') return ' <span class="text-danger" data="'+data.id+'">关机</span>';
+		});
+		
 		//页面渲染完后进行各种事件的绑定
 		//dataTables
 		var table =Common.initDataTable($('#VmTable'),
@@ -30,7 +62,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 			        {"data": "flavor"},
 			        {"data": "availability_zone"},
 			        {"data": "vdcName"},
-			        {"data": "vmState"},
+			        {"data": {}},
 			        {"data": "created_at"},
 			        {"data": {}}
 		      ],
@@ -75,23 +107,22 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 					},	
 					{
 					    "targets": [7],
-					    "data": "vmState",
 					    "render": function(data, type, full) {
-				 			if(data == 'ACTIVE') return ' <span class="text-success">运行中</span>';
-							if(data == 'BUILD') return ' <span class="text-warning">创建中</span>';
-							if(data == 'BUILDING') return ' <span class="text-warning">创建中</span>';
-							if(data == 'REBUILD') return ' <span class="text-success">重建中</span>';
-							if(data == 'SUSPENDED') return ' <span class="text-danger">已挂起</span>';
-							if(data == 'PAUSED') return ' <span class="text-danger">已暂停</span>';
-							if(data == 'RESIZE') return ' <span class="text-danger">重建中</span>';
-							if(data == 'VERIFY_RESIZE') return ' <span class="text-success">确认重建</span>';
-							if(data == 'REVERT_RESIZE') return ' <span class="text-success">回退重建</span>';
-							if(data == 'REBOOT') return ' <span class="text-warning">重启中</span>';
-							if(data == 'HARD_REBOOT') return ' <span class="text-warning">硬重启中</span>';
-							if(data == 'DELETED') return ' <span class="text-danger">已删除</span>';
-							if(data == 'ERROR') return ' <span class="text-danger">错误</span>';
-							if(data == 'SHUTOFF') return ' <span class="text-danger">关机</span>';
-							return '<span class="text-danger">未知</span>';
+				 			if(data.vmState == 'ACTIVE') return ' <span class="text-success" data="'+data.id+'">运行中</span>';
+							if(data.vmState == 'BUILD') return ' <span class="text-warning" data="'+data.id+'">创建中</span>';
+							if(data.vmState == 'BUILDING') return ' <span class="text-warning" data="'+data.id+'">创建中</span>';
+							if(data.vmState == 'REBUILD') return ' <span class="text-success" data="'+data.id+'">重建中</span>';
+							if(data.vmState == 'SUSPENDED') return ' <span class="text-danger" data="'+data.id+'">已挂起</span>';
+							if(data.vmState == 'PAUSED') return ' <span class="text-danger" data="'+data.id+'">已暂停</span>';
+							if(data.vmState == 'RESIZE') return ' <span class="text-danger" data="'+data.id+'">重建中</span>';
+							if(data.vmState == 'VERIFY_RESIZE') return ' <span class="text-success" data="'+data.id+'">确认重建</span>';
+							if(data.vmState == 'REVERT_RESIZE') return ' <span class="text-success" data="'+data.id+'">回退重建</span>';
+							if(data.vmState == 'REBOOT') return ' <span class="text-warning" data="'+data.id+'">重启中</span>';
+							if(data.vmState == 'HARD_REBOOT') return ' <span class="text-warning" data="'+data.id+'">硬重启中</span>';
+							if(data.vmState == 'DELETED') return ' <span class="text-danger" data="'+data.id+'">已删除</span>';
+							if(data.vmState == 'ERROR') return ' <span class="text-danger" data="'+data.id+'">错误</span>';
+							if(data.vmState == 'SHUTOFF') return ' <span class="text-danger" data="'+data.id+'">关机</span>';
+							return '<span class="text-danger" data="'+data.id+'">未知</span>';
 					    }
 					},
                     {
@@ -350,9 +381,10 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 							});
 						})
 					})
-				}else{
-					Modal.error('尚未选择vdc');
 				}
+//				else{
+//					Modal.error('尚未选择vdc');
+//				}
 			},
 			//根据vdc可用网络信息
 			initAvailableNetWorks : function(){
