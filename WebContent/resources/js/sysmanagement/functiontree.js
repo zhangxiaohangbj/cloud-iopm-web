@@ -124,7 +124,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 			    	    		 		            {
 			    	    		 		            	"targets": [0],
 			    	    		 		            	"render":function(data, type,full){
-			    	    		 		            		return "<label><input type='checkbox' value='"+data+"'></label>";
+			    	    		 		            		return "<label><input type='checkbox' value='"+ data +"'></label>";
 			    	    		 		            	}
 			    	    		 		            }
 			    	    		 		      ]
