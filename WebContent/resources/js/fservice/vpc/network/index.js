@@ -34,7 +34,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 			        	"defaultContent":"<label><input type='checkbox'></label>"
 			        },
 			        {"data": {}},
-			        {"data": "virtualEnvName"},
+			        {"data": "vdc_name"},
 			        {"data": "router:external"},
 			        {"data": "cidr"},
 			        {"data": "shared"},
