@@ -110,6 +110,47 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 				    	    		      "serverSide": true,  //页面在加载时就请求后台，以及每次对 datatable 进行操作时也是请求后台
 				    	    		      "ordering": false,   //禁用所有排序
 				    	    		      "sAjaxSource":"identity/v2.0/url/page/", //ajax源，后端提供的分页接口
+				    	    		      'fnServerData': function( sSource, aoData, fnCallback ) {
+				    	      		    	  	//前端处理搜索关键字的转换
+				    	      		    	  	var $filter = $('#chooseUrlTable').prev().find('.dataTables_filter'),
+				    	      		    	  		parameter = "";
+				    	      		    	  	var getSeparator = function(parameter){
+				    	      		    	  		return parameter.indexOf('?') > -1 ? '&' : '?';
+				    	      		    	  	}
+				    	      		    	  	$filter.find('select,input').each(function(){
+				    	      		    	  		var filterKey = $(this).attr('name'),
+				    	      		    	  			filterVal = $(this).val();
+				    	      		    	  		if(filterKey && filterVal){
+				    	      		    	  			parameter += getSeparator(parameter)+filterKey+"="+filterVal;
+				    	      		    	  		}
+				    	      		    	  	})
+				    	      		    	  	//过滤functionItemId
+				    	      		    	  	if(parameter == ""){
+					    	      		    	  	$("div.table-menus").find('select,input').each(function(){
+					    	      		    	  		var filterKey = $(this).attr('name'),
+					    	      		    	  			filterVal = $(this).val();
+					    	      		    	  		if(filterKey && filterVal){
+					    	      		    	  			parameter += getSeparator(parameter)+filterKey+"="+filterVal;
+					    	      		    	  		}
+					    	      		    	  	})
+				    	      		    	  	}
+				    	    		    	    $.ajax({
+				    	    		    	        "url": sSource + (aoData[3].value/aoData[4].value+1) +"/"+aoData[4].value+parameter,
+				    	    		    	        "dataType": "json",
+				    	    		    	        "success": function(resp) {
+				    			    	        		resp.data = resp.result;
+				    	    		    	        	resp.recordsTotal = resp.totalCount;
+				    	    		    	        	resp.recordsFiltered = resp.totalCount;
+				    	    		    	        	if(resp.error){
+				    	 		    	        		   that.error(resp.message);
+				    	 		    	        		   resp.data = [];
+				    	          		    	           resp.recordsTotal = 0;
+				    	          		    	           resp.recordsFiltered = 0;
+				    	     		    	        	}
+				    	    		    	            fnCallback(resp);   //fnCallback：服务器返回数据后的处理函数，需要按DataTables期望的格式传入返回数据 
+				    	    		    	        }   
+				    	    		    	    });   
+				    	                    },
 				    	    		      "columns": [
 				    	    			        {
 				    	    			        	"data":"id",
