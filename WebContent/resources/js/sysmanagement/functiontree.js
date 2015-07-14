@@ -236,10 +236,10 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 					nodes = node.children;
         			if(nodes && nodes.length > 0){
         				if(seq > nodes.length) seq = nodes.length;
-        				newNode = treeObj.addNodes(node, newNode);
+        				newNode = treeObj.addNodes(node == "root"? null:node, newNode);
             			treeObj.moveNode(nodes[seq > 0? seq-1:0], newNode[0], seq > 0?"next":"prev");
         			}else
-        				treeObj.addNodes(node, newNode);
+        				treeObj.addNodes(node == "root"? null:node, newNode);
 				}
 		}
 		//增加按钮
@@ -407,7 +407,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 		            			}
 		            		}
 		            		function getUrl(treeId, treeNode) {
-		            			return "identity/v2.0/functiontree/childrennodes/"+treeNode.id;
+		            			return "identity/v2.0/functiontree/"+ id +"/childrennodes/"+treeNode.id;
 		            		}
 		            		function filter(treeId, parentNode, childNodes) {
 		            			if (!childNodes) return null;
