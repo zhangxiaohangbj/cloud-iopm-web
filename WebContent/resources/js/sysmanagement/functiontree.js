@@ -65,18 +65,23 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 					$(document).off("click","#UrlTable_wrapper span.btn-add");
 					$(document).on("click","#UrlTable_wrapper span.btn-add",function(){
 						var obj = $(this);
-						Common.render('tpls/sysmanagement/functiontree/urllist.html','/identity/v2.0/url/page/1/10',function(html){
+						Common.render('tpls/sysmanagement/functiontree/urllist.html',{"functionItemId":obj.attr("data")},function(html){
 							Modal.show({
 			    	            title: '选择关联URL',
 			    	            message: html,
 			    	            closeByBackdrop: false,
 			    	            nl2br: false,
+			    	            size: {
+			    	                width: '800px',
+			    	                maxHeight: '100%'
+			    	            },
+			    	            position: 'top',
 			    	            buttons: [{
 			    	                label: '确定',
 			    	                action: function(dialog) {
 			    	                	var urlIds = "";
-			    	                	$("#chooseUrlTable input[type='checkbox']:checked").each(function(){
-			    	                		urlIds += $(this).val()+",";
+			    	                	$("#chooseUrlTable tbody div.checked").each(function(){
+			    	                		urlIds += $(this).find("input[type='checkbox']").val()+",";
 			    	                	})
 			    	                	serverData = {
 			    	                		"functionItemId":obj.attr("data"),
@@ -100,10 +105,42 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 			    	                }
 			    	            }],
 			    	            onshown : function(dialog){
-			    	            	Common.initDataTable($('#chooseUrlTable'));
+			    	            	var urltable = Common.initDataTable($('#chooseUrlTable'),{
+				    	      		      "processing": true,  //加载效果，默认false
+				    	    		      "serverSide": true,  //页面在加载时就请求后台，以及每次对 datatable 进行操作时也是请求后台
+				    	    		      "ordering": false,   //禁用所有排序
+				    	    		      "sAjaxSource":"identity/v2.0/url/page/", //ajax源，后端提供的分页接口
+				    	    		      "columns": [
+				    	    			        {
+				    	    			        	"data":"id",
+				    	    			        	"orderable": false
+				    	    			        },
+				    	    			        {"data": "urlName"},
+				    	    			        {"data": "endpoint.url"},
+				    	    			        {"data": "urlAddress"},
+				    	    			        {"data": "method"}
+				    	    		      ],
+				    	    		      "columnDefs": [
+			    	    		 		            {
+			    	    		 		            	"targets": [0],
+			    	    		 		            	"render":function(data, type,full){
+			    	    		 		            		return "<label><input type='checkbox' value='"+ data +"'></label>";
+			    	    		 		            	}
+			    	    		 		            }
+			    	    		 		      ]
+				    	    		    },
+				    	    		    function($tar){
+				    	    		    	var $tbMenu = $tar.prev('.tableMenus');
+				    	    		    	$tbMenu.length && $tbMenu.empty().html($('.table-menus').html());
+				    	    				Common.$pageContent.removeClass("loading");
+				    	    		});
+			    	            	Common.on('click','.dataTables_filter .btn-query',function(){
+			    	            		urltable.search($('.global-search').val()).draw();
+			    	        		});
 			    	            }
 			    	        });
 						});
+						
 						
 					});
 				},
