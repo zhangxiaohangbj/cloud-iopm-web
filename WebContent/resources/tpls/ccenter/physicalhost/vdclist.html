@@ -1,0 +1,28 @@
+<style>
+<!--
+.dataTables_length select.input-sm {
+	width: 40%;
+}
+-->
+</style>
+<form class="form-horizontal" id="chooseVDC">
+	<table class="table table-primary" id="chooseVDCTable">
+		<thead>
+			<tr>
+				<th class="c1">
+				</th>
+				<th class="c3">VDC名称</th>
+				<th class="c4">VDC描述</th>
+			</tr>
+		</thead>
+		<tbody>
+			{{each tenants as item i}}
+				<tr>
+					<td><input type="radio" name="vdc_radio" {{if item.id == vdc_id}}checked{{/if}}><input type="hidden" value="{{item.id}}"/></td>
+					<td>{{item.name}}</td>
+					<td>{{item.description}}</td>
+				</tr>
+			{{/each}}
+		</tbody>
+	</table>
+</form>
