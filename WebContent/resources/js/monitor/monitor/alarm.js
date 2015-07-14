@@ -3,10 +3,9 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
     var init = function(){
         Common.$pageContent.addClass("loading");
         //先获取数据，进行加工后再去render
-        debugger
-        Common.xhr.ajax('monitor/v2/alarmDefines',function(data){
-            debugger
-            Common.render('tpls/monitor/monitor/agent/agent.html',data,function(){
+        Common.xhr.ajax('monitor/v2/alarmDefines',function(alarmDefines){
+            var data = {"data":alarmDefines}
+            Common.render(true,'tpls/monitor/monitor/alarm/index.html',data,function(){
                 bindEvent();
             });
         })
@@ -16,7 +15,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
     var bindEvent = function() {
         //页面渲染完后进行各种事件的绑定
         //dataTables
-        Common.initDataTable($('#VirtualEnvTable'),function($tar){
+        Common.initDataTable($('#alarmDefineTable'),function($tar){
             $tar.prev().find('.left-col:first').append(
                 '<span class="btn btn-add">创 建</span>'
             );
@@ -42,17 +41,45 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
         //初始化加载，不依赖其他模块
         var wizard;
         //载入默认的数据 inits,创建数据载入类
-        var DataIniter = {};
+        var DataIniter = {
+            getMeter:function(type){
+                Common.xhr.ajax('',function(data){
+                    renderData.meter = data;
+                })
+            },
+            getResourceType:function(){
+                Common.xhr.ajax('/virtual-env/type',function(data){
+                    renderData.resourceType = data;
+                })
+            },
+            getSeverity:function(){
+                Common.xhr.ajax("/",function(data){
+                    renderData.severity =data;
+                })
+            },
+            getPeriod:function(){
+                Common.xhr.ajax("",function(data){
+                    renderData.period = data;
+                })
+            },
+            getCompareStrategy:function(){
+                Common.xhr.ajax("",function(data){
+                    renderData.compareStrategy = data;
+                })
+            }
+        };
+        //初始化部分数据
+        DataIniter.getResourceType();
+
         //载入后的事件
-
-
-        $("#alarmTable_wrapper span.btn-add").on("click",function(){
+        $("#alarmDefineTable_wrapper span.btn-add").on("click",function(){
+            debugger
             var selectData= {"data":renderData};
-            Common.render('tpls/ccenter/env/add.html',selectData,function(html){
+            Common.render('tpls/monitor/monitor/alarm/add.html',selectData,function(html){
                 $('body').append(html);
 
                 $.fn.wizard.logging = true;
-                wizard = $('#create-virtualEnv-wizard').wizard({
+                wizard = $('#create-defines-wizard').wizard({
                     keyboard : false,
                     contentHeight : 526,
                     contentWidth : 900,
@@ -202,6 +229,8 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
                 });
             });
         });
+
+
 
     }
 
