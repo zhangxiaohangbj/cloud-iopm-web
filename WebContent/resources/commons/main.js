@@ -405,7 +405,7 @@ define('commons/main',
                 	if(th_num < td_num)
                 		$table.find("thead th:last").attr("colspan",td_num-th_num+1);
                 }
-                _options = $.extend(true, {}, _options, {
+                _options = $.extend(true, {}, {
                     'initComplete': function() {
                     	var settings = this.fnSettings();
                         var firstColumn = settings.aoColumns[0];
@@ -487,7 +487,7 @@ define('commons/main',
                         	});
                         }
                     }
-                });
+                }, _options);
                 var tableFlag = true;
                 $.fn.dataTableExt.errMode = function(table, errCode, errText) {
                     tableFlag = false;
