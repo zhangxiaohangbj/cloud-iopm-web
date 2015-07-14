@@ -14,7 +14,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 		      "processing": true,  //加载效果，默认false
 		      "serverSide": true,  //页面在加载时就请求后台，以及每次对 datatable 进行操作时也是请求后台
 		      "ordering": false,   //禁用所有排序
-		      "sAjaxSource":'block-storage/v2/' + current_vdc_id + '/bootable-snapshots/', //ajax源，后端提供的分页接口
+		      "sAjaxSource":'block-storage/v2/' + current_vdc_id + '/snapshots/', //ajax源，后端提供的分页接口
 	    	  /*属性 columns 用来配置具体列的属性，包括对应的数据列名,如trueName，是否支持搜索，是否显示，是否支持排序等*/
 		      "columns": [
 			        {	"data": "",
