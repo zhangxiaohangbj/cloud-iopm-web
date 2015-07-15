@@ -23,7 +23,7 @@
 		</div>
 	</div>
 	<div class="signin-body">
-		<form id="login_form" class="form-signin" action="/identity/v2.0/tokens" method="post">
+		<form id="login_form" class="form-signin" method="post">
 			<div class="input-group">
 				<span class="signin-icons signin-icon-input signin-icon-user">
 					<i class="signin-icons signin-icon-br"></i>
@@ -52,7 +52,7 @@
 </body>
 <script type="text/javascript">
 
-	require(['json'], function(JSON) {
+	require(['json','jq/form/validator-bs3','bs/popover'], function(JSON) {
 		
 		$(document).on('keydown', '#password', function() {
 			var e = event || window.event || arguments.callee.caller.arguments[0];
@@ -68,8 +68,40 @@
 		});
 		//光标定位到账号输入框
 		document.getElementById('loginName').focus();
-		
+		var errorTip = function($tar, msg) {
+	        if(PubView.utils.is$($tar)) {
+	            $tar.popover({
+	                container: $("#login_form"),
+	                className: "popover-danger",
+	                placement: "left top",
+	                content: '<i class="glyphicon glyphicon-exclamation-sign"></i> '+(msg||''),
+	                trigger: 'manual',
+	                html: true
+	            }).popover("show");
+	        }
+	    };
+	    $("#login_form").validate({
+			errorContainer: '_form',
+	        rules: {
+	        	'loginName': {
+	                required: true
+	            },
+	            'password': {
+	            	required: true
+	            }
+	        },
+	        messages: {
+	        	'loginName': {
+	                required: "请输入登录账号！"
+	            },
+	            'password': {
+	            	required: "请输入登录密码！"
+	            }
+	        }
+	    });
 		$(document).on('click', '#signin-btn', function() {
+			var valid = $("#login_form").valid();
+    		if(!valid) return false;
 			submitForm();
 		});
 		function submitForm() {
@@ -110,19 +142,19 @@
 		}
 		function showErrorInfo(res){
 			if(res.inner_code == "username_is_null"){
-				alert("请输入登录账号！");
+				errorTip($('#loginName'), "请输入登录账号！");
 			}else if(res.inner_code == "password_is_null"){
-				alert("请输入登录密码！");
+				errorTip($('#password'), "请输入登录密码！");
 			}else if(res.inner_code == "invalid_username"){
-				alert("用户名或密码错误！");
+				errorTip($('#loginName'), "用户名或密码错误！");
 			}else if(res.inner_code == "password_is_incorrect"){
-				alert("用户名或密码错误！");
+				errorTip($('#loginName'), "用户名或密码错误！");
 			}else if(res.inner_code == "account_is_locked"){
-				alert("账号已锁定！");
+				errorTip($('#loginName'), "账号已锁定！");
 			}else if(res.inner_code == "account_is_disabled"){
-				alert("账号已禁用！");
+				errorTip($('#loginName'), "账号已禁用！");
 			}else{
-				alert("系统错误！");
+				errorTip($('#loginName'), "系统错误！");
 			}
 		}
 	});
