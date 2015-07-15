@@ -1,9 +1,9 @@
 <div class="page-header clearfix">
     <ol class="breadcrumb">
-        <li class="active"><i class="icon-squre-d"></i>�澯����</li>
+        <li class="active"><i class="icon-squre-d"></i>告警方案</li>
     </ol>
     <p class="description">
-        �澯����������ÿһ����Դ�����¶�Ӧ�ļ��ָ�꣬���ò�ͬ����ֵ��Ϊ�澯���ԣ�������澯���𣬸澯ִ�е�֪ͨ�����ȡ�ÿһ�ָ澯�������԰󶨵���Ӧ����Դ�������������Դ�ϣ�������ֱ�Ӹ��ݸ澯���𣬻򷽰���idͳһ���ø澯��֪ͨ������
+        根据每一种资源类型下对应的监控指标，设置不同的阈值作为告警策略，设置其告警级别，告警执行的通知动作等。每一种告警方案可以绑定到对应的资源类型下任意个资源上，并可以直接根据告警级别，或方案的id统一设置告警的通知动作。
     </p>
 </div>
 <div class="page-body">
@@ -15,13 +15,13 @@
                     <th class="c1">
                         <label><input type="checkbox" class="selectAll"></label>
                     </th>
-                    <th class="c2">����</th>
-                    <th class="c3">�澯��������</th>
-                    <th class="c2">��Դ����</th>
-                    <th class="c2">��������</th>
-                    <th class="c2">ͳ������</th>
-                    <th class="c2">����ʱ��</th>
-                    <th class="c5 sorting_disabled" >����</th>
+                    <th class="c2">名称</th>
+                    <th class="c3">告警策略描述</th>
+                    <th class="c2">资源类型</th>
+                    <th class="c2">报警级别</th>
+                    <th class="c2">统计周期</th>
+                    <th class="c2">创建时间</th>
+                    <th class="c5 sorting_disabled" >操作</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -35,11 +35,11 @@
                     <td>{{item.id}}</td>
                     <td>{{item.id}}</td>
                     <td>
-                        <a class="btn-opt pull-left log-info" data-toggle="tooltip" data-act="log" title="��־��Ϣ" style="margin: 0 5px;" data="{{item.id}}"><i class="fa fa-file-text"></i></a>
-                        <a class="btn-opt pull-left edit" data-toggle="tooltip" data-act="edit" title="�༭" style="margin: 0 5px;" data="{{item.id}}"><i class="fa fa-edit"></i></a>
-                        <a class="btn-opt pull-left delete" data-toggle="tooltip" data-act="delete" title="ɾ��" style="margin: 0 5px;" data="{{item.id}}"><i class="fa fa-trash-o"></i></a>
-                        <a class="btn-opt pull-left synchronize" data-toggle="tooltip" data-act="synchronize" title="ͬ��" style="margin: 0 5px;" data="{{item.connectorId}}"><i class="fa fa-refresh"></i></a>
-                        <a href="#ccenter/env/connector/{{item.id}}" class="btn-opt pull-left connector" data-toggle="tooltip" data-act="connector" title="�༭������" style="margin: 0 5px;" data="{{item.id}}"><i class="fa fa-list"></i></a>
+                        <a class="btn-opt pull-left log-info" data-toggle="tooltip" data-act="log" title="日志信息" style="margin: 0 5px;" data="{{item.id}}"><i class="fa fa-file-text"></i></a>
+                        <a class="btn-opt pull-left edit" data-toggle="tooltip" data-act="edit" title="编辑" style="margin: 0 5px;" data="{{item.id}}"><i class="fa fa-edit"></i></a>
+                        <a class="btn-opt pull-left delete" data-toggle="tooltip" data-act="delete" title="删除" style="margin: 0 5px;" data="{{item.id}}"><i class="fa fa-trash-o"></i></a>
+                        <a class="btn-opt pull-left synchronize" data-toggle="tooltip" data-act="synchronize" title="同步" style="margin: 0 5px;" data="{{item.connectorId}}"><i class="fa fa-refresh"></i></a>
+                        <a href="#ccenter/env/connector/{{item.id}}" class="btn-opt pull-left connector" data-toggle="tooltip" data-act="connector" title="编辑连接器" style="margin: 0 5px;" data="{{item.id}}"><i class="fa fa-list"></i></a>
                     </td>
                 </tr>
                 {{/each}}
@@ -47,7 +47,7 @@
                 <tfoot>
                 <tr>
                     <td>
-                        <span class="text-danger">*</span> ��ͨ����ʵ����"<span class="nums">�Ҽ�</span>"�����г��ò���,"<span class="nums">˫��</span>"���༭��������
+                        <span class="text-danger">*</span> 可通过在实例上"<span class="nums">右键</span>"来进行常用操作,"<span class="nums">双击</span>"来编辑基本属性
                     </td>
                 </tr>
                 </tfoot>

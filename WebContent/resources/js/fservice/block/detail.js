@@ -2,6 +2,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 	Common.requestCSS('css/detail.css');
 	var init = function(){
 		Common.$pageContent.addClass("loading");
+		var current_vdc_id = Common.cookies.getVdcId();
 		var hashArr = Common.hash.split('/');
 	    var volume_id = hashArr[hashArr.length-1];
 		var tmpDetailData = {
@@ -22,9 +23,18 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 	            mount_path: '/opt/vdc',
 	            create_time: '2015-04-24 17:14:57'
     	};
-    	Common.render(true,'tpls/fservice/block/volume/detail.html',tmpDetailData,function(html){
+    	/*Common.render(true,'tpls/fservice/block/volume/detail.html','/block-storage/v2/'+current_vdc_id+'/volumes/'+volume_id,function(html){
     		bindEvent();
-    	});
+    	});*/
+		debugger
+    	Common.render(true,{
+			tpl:'tpls/fservice/block/volume/detail.html',
+			data:'/block-storage/v2/'+current_vdc_id+'/volumes/'+volume_id,
+			beforeRender: function(data){
+				return data.volume;
+			},
+			callback: bindEvent
+		});
 	};
 	function bindEvent(){
 		Common.$pageContent.removeClass("loading");

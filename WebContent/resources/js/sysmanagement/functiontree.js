@@ -240,6 +240,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
  		 			                    	 if(data){
  		 			                    		 Modal.success(old_text+'成功')
  		 			                			 setTimeout(function(){Modal.closeAll()},2000);
+ 		 			                    		 $('.btn-set-default').html(old_text);
  		 			                    		 obj.html(text);
  		 			                    	 }else{
  		 			                    		 Modal.warning (old_text+'失败')
