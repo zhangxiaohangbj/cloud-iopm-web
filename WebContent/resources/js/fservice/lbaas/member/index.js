@@ -50,6 +50,18 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 		})
 		$("[data-toggle='tooltip']").tooltip();
 		
+		//载入默认的数据 inits,创建数据载入类
+		var DataIniter = {
+				//成员列表
+				initMemberList : function(){
+					Common.xhr.ajax('/identity/v2.0/tenants',function(data){
+						var tenants = data.tenants;
+						var html = Common.uiSelect(tenants);
+				    	$('select.members').html(html);
+				    	
+					})
+				},
+		};
 	    var EventsHandler = {
 	    		//表单校验
 				formValidator: function(){
@@ -81,6 +93,17 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 	    					max: 65535
 	    				})
 	    			})
+				},
+				MemberTypeChange : function(){
+					$(document).off("change", "select[name='member_type']");
+					$(document).on("change", "select[name='member_type']", function(){
+						if($(this).val() == "member_address")
+							$("#members").html('<input class="form-control" name="members"/>');
+						else {
+							$("#members").html('<select class="form-control select members" name="members" multiple tabindex="4" style="height: auto;"></select>');
+							DataIniter.initMemberList();
+						}
+					});
 				}
 	    }
 	    
@@ -124,8 +147,10 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 	    	            	}
 	    	            }],
 	    	            onshown : function(){
+	    	            	DataIniter.initMemberList();
 	    	            	EventsHandler.Spinbox();
 	    		    		EventsHandler.formValidator();
+	    		    		EventsHandler.MemberTypeChange();
 	    		    	}
 	    	        });
 	    		});
