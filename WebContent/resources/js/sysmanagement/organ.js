@@ -235,13 +235,9 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 				hideRMenu();
 				var nodes = treeObj.getSelectedNodes();
 				if (nodes && nodes.length>0) {
-					var msg = "确定要删除该节点?"
-					if (nodes[0].children && nodes[0].children.length > 0) {
-						msg = "要删除的节点是父节点，如果删除将连同子节点一起删掉。\n\n请确认！";
-					}
+					var msg = "确定要删除该节点? 注意：只有末级节点才可以删除，请确认当前节点是否末级节点！"
 					Modal.confirm(msg, function(result){
 			            if(result) {
-			            	 treeObj.removeNode(nodes[0]);
 			            	 Common.xhr.del('/identity/v2.0/organ/'+nodes[0].id,
 			                     function(data){
 			                    	 if(data){
