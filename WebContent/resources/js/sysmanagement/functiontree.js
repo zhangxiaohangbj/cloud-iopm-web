@@ -207,7 +207,8 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 	 			                    	 if(data){
 	 			                    		 Modal.success('取消成功')
 	 			                			 setTimeout(function(){Modal.closeAll()},2000);
-	 			                    		 obj.parents("tr:first").remove();
+	 			                    		 //obj.parents("tr:first").remove();
+	 			                    		obj.parents("td:first").html('已取消关联');
 	 			                    	 }else{
 	 			                    		 Modal.warning ('取消失败')
 	 			                    	 }
