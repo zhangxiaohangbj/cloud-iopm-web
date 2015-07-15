@@ -39,7 +39,7 @@ define('commons/router_table', function() {
 		'^#fservice/lbaas/pool/detail/(.*)$' :"js/fservice/lbaas/pool/detail",
 		'^#fservice/lbaas/member/detail/(.*)$' :"js/fservice/lbaas/member/detail",
 		'^#fservice/lbaas/monitor/detail/(.*)$' :"js/fservice/lbaas/monitor/detail",
-		//'^#monitor/monitor/alarm(.*)$' :"js/monitor/monitor/alarm",
+		'^#monitor/monitor/alarm/detail(.*)$' :"js/monitor/monitor/alarm/detail",
         '^#monitor/monitor/agent/detail/(.*)$' :"js/monitor/monitor/agent_detail"
     };
 });

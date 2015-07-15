@@ -3,10 +3,13 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
     var init = function(){
         Common.$pageContent.addClass("loading");
         //先获取数据，进行加工后再去render
-        Common.xhr.ajax('monitor/v2/alarmDefines',function(alarmDefines){
+        Common.xhr.ajax('/monitor/v2/alarmDefines',function(alarmDefines){
             var data = {"data":alarmDefines}
-            Common.render(true,'tpls/monitor/monitor/alarm/index.html',data,function(){
-                bindEvent();
+            Common.xhr.ajax("/resources/data/severity.txt",function(severity){
+                data.severity = severity;
+                Common.render(true,'tpls/monitor/monitor/alarm/index.html',data,function(){
+                    bindEvent();
+                });
             });
         })
 
@@ -43,37 +46,52 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
         //载入默认的数据 inits,创建数据载入类
         var DataIniter = {
             getMeter:function(type){
-                Common.xhr.ajax('',function(data){
-                    renderData.meter = data;
+                Common.xhr.ajax('/monitor/v2/meters/resource/'+type,function(data){
+                        var tmp = [];
+                        for(var i in data){
+                            var item = data[i];
+                            var opt = "<option value='"+item.id+"'>"+item.name+"</option>";
+                            tmp.push(opt);
+                        }
+                        $("#meter").html(tmp.join(''))
                 })
             },
             getResourceType:function(){
-                Common.xhr.ajax('/virtual-env/type',function(data){
+                Common.xhr.ajax('/resources/data/resourceType.txt',function(data){
                     renderData.resourceType = data;
                 })
             },
             getSeverity:function(){
-                Common.xhr.ajax("/",function(data){
-                    renderData.severity =data;
+                Common.xhr.ajax("/resources/data/severity.txt",function(data){
+                    var severity = [];
+                    for(var item in data){
+                        var tmp = {
+                            id:item,
+                            name:data[item]
+                        }
+                        severity.push(tmp)
+                    }
+                    renderData.severity =severity;
                 })
             },
             getPeriod:function(){
-                Common.xhr.ajax("",function(data){
+                Common.xhr.ajax("/resources/data/period.txt",function(data){
                     renderData.period = data;
                 })
             },
             getCompareStrategy:function(){
-                Common.xhr.ajax("",function(data){
+                Common.xhr.ajax("/virtual-env/type",function(data){
                     renderData.compareStrategy = data;
                 })
             }
         };
         //初始化部分数据
         DataIniter.getResourceType();
+        DataIniter.getPeriod();
+        DataIniter.getSeverity();
 
         //载入后的事件
         $("#alarmDefineTable_wrapper span.btn-add").on("click",function(){
-            debugger
             var selectData= {"data":renderData};
             Common.render('tpls/monitor/monitor/alarm/add.html',selectData,function(html){
                 $('body').append(html);
@@ -104,106 +122,35 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
                 //加载时载入validate
                 wizard.on('show',function(){
                     wizard.form.each(function(){
-                        var temp = $(this).validate({
+                        $(this).validate({
                             errorContainer: '_form',
                             rules: {
-                                'env-name': {
+                                'name': {
                                     required: true,
                                     minlength: 1,
                                     maxlength:15,
-                                    name_en:true
+                                    name_cn:true
                                 },
-                                'env-version': {
-                                    required: true
-                                },
-                                'env-vendor': {
-                                    required: true,
-                                    minlength: 1,
-                                    maxlength:15
-                                },
-                                'connector-port':{
+                                'thresholds': {
                                     required: true,
                                     number:true,
-                                    range:[1025,65534]
-                                },
-                                'connector-username':{
-                                    required:true,
-                                    minlength:1,
-                                    maxlength:15
-                                },
-                                'connector-password': {
-                                    required: true,
-                                    minlength: 6,
-                                    maxlength:15
-                                },
-                                'connector-password-confirm':{
-                                    required:true,
-                                    minlength:6,
-                                    maxlength:15,
-                                    equalTo:"#connector-password"
-                                },
-                                'connector-ip':{
-                                    required:true,
-                                    IP:true
-                                },
-                                'test-connection':{
-                                    required:true,
-                                    connection:true
+                                    range:[0,100]
                                 }
                             }
                         });
-                        validators.push(temp);
                     })
                 });
-                wizard.cards.detail.on("selected",function(card){
-                    $("#test-connection-btn").off("click").on("click", function(){
-                        debugger;
-                        var cur = {
-                            type: $('select.select-env-type option:selected').val(),
-                            version: $("#env-version").val(),
-                            ip: $("#connector-ip").val(),
-                            port:$("#connector-port").val(),
-                            protocol:$('select.select-protocol option:selected').val(),
-                            username:$("#connector-username").val(),
-                            password:$("#connector-password-confirm").val(),
-                            tenantName:Common.cookies.getVdcId()
-                        }
-                        validators[1].hideErrors();
-                        Modal.loading('测试连接中');
-                        Common.xhr.putJSON("/cloud/v2.0/connector/test",cur,function(data){
-                            Modal.loading('remove');
-                            if(data){
-                                Modal.success("该连接信息可用");
-                                $("#test-connection").val("true");
-                            }else{
-                                debugger
-                                Modal.warning("连接信息不可用");
-                            }
-                        })
-                    })
+                wizard.cards.strategy.on("selected",function(card){
+                    var resourceType = $("#resource-type option:selected").val();
+                    DataIniter.getMeter(resourceType)
                 })
-                //确认信息卡片被选中的监听
-                wizard.cards.confirm.on('selected',function(card){
-                    //获取上几步中填写的值
-                    //var serverData = wizard.serializeObject()
-                    dataSetHandler.nameSet();
-                    dataSetHandler.vendorSet();
-                    dataSetHandler.versionSet();
-                    dataSetHandler.ipSet();
-                    dataSetHandler.paswSet();
-                    dataSetHandler.portSet();
-                    dataSetHandler.userSet();
-                    dataSetHandler.typeSet();
-                    dataSetHandler.regionSet();
-                    dataSetHandler.periodSet();
-                    dataSetHandler.protocolSet();
-                });
+
                 wizard.show();
+
                 //关闭弹窗
                 var closeWizard = function(){
                     $('div.wizard').remove();
                     $('div.modal-backdrop').remove();
-                    resetCurrentChosenObj();
                 }
                 //关闭后移出dom
                 wizard.on('closed', function() {
@@ -211,11 +158,32 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
                 });
                 //提交按钮
                 wizard.on("submit", function(wizard) {
+
                     //合并数据
-                    currentChosenConnector.version="v2.0";
-                    currentChosenConnector.tenantName=Common.cookies.getVdcName();
-                    currentChosenEnv["connector"] = currentChosenConnector;
-                    Common.xhr.postJSON('/v2/virtual-env',currentChosenEnv,function(data){
+                    var condition= $("#meter option:selected").val()+":"+
+                        $("#comparison-operators option:selected").val()+":"+
+                        $("#thresholds").val()+":"+
+                        $("#comparison-strategy option:selected").val();
+                    var description = $("#meter option:selected").text()+" "+
+                        $("#comparison-operators option:selected").text()+" "+
+                        $("#thresholds").val()+" ("+
+                        $("#comparison-strategy option:selected").text()+")";
+                    var curAlarm = {
+                        alarmType:"sys",
+                        name:$("#name").val(),
+                        severity:$("#severity").val(),
+                        resourceId:$("#resource-type").val(),
+                        periodTime:$("#period option:selected").val(),
+                        periodCount:$("#period-count option:selected").val(),
+                        isRepeated:$("#repeated option:selected").val(),
+                        meterId:$("#meter option:selected").val(),
+                        alarmCondition:condition,
+                        alarmDescription:description,
+                        isEnable:$("#isEnable option:selected").val(),
+                        isShield:$("#shield option:selected").val(),
+                        isAutoClear:false
+                    }
+                    Common.xhr.postJSON('/monitor/v2/alarmDefines',curAlarm,function(data){
                         if(data && data.error!=true){
                             wizard._submitting = false;
                             wizard.updateProgressBar(100);
@@ -230,7 +198,97 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
             });
         });
 
+        //编辑
+        //删除
+        $("a.delete").on("click",function(){
+            var id = $(this).attr("data");
 
+            Modal.confirm('确定要删除该告警方案吗?',function(result){
+                if(result) {
+                    Common.xhr.del('monitor/v2/alarmDefines/'+id,
+                        function(data){
+                            if(data && data.error!=true){
+                                Modal.success('删除成功')
+                                setTimeout(function(){
+                                    Modal.closeAll();
+                                    Common.router.route();//重新载入
+                                },1000);
+
+                            }else{
+                            }
+                        });
+                }else {
+                    Modal.closeAll();
+                }
+            });
+
+        })
+
+
+
+        $("ul.dropdown-menu a.edit-basic").on("click",function(){
+            var id = $(this).attr("data");
+            Common.xhr.ajax('monitor/v2/alarmDefines/'+id,function(alarm){
+                var severityList = [];
+                for(var i in renderData.severity){
+                    if(alarm.severity == renderData.severity[i].id){
+                        renderData.severity[i].selected = "selected";
+                    }
+                }
+               alarm.severityList =renderData.severity;
+
+                Common.render('tpls/monitor/monitor/alarm/editBasic.html',alarm,function(html){
+                    Modal.show({
+                        title: '编辑基本信息',
+                        message: html,
+                        nl2br: false,
+                        buttons: [{
+                            label:'取消',
+                            action:function(dialog){
+                                dialog.close();
+                            }
+                        },
+                            {
+                                label: '保存',
+                                action: function(dialog) {
+                                    var alarm={
+                                        severity:$("#severity option:selected").val(),
+                                        isRepeated:$("#isRepeated option:selected").val(),
+                                        isEnable:$("#isEnable option:selected").val(),
+                                        isShield:$("#isShield option:selected").val()
+                                    }
+                                    if($("#name").val()!=""){
+                                        alarm.name =$("#name").val();
+                                    }
+                                    Common.xhr.putJSON('/monitor/v2/alarmDefines/'+id,alarm,function(data){
+                                        if(data && data.error !=true){
+                                            Modal.success('保存成功');
+                                            setTimeout(function(){Modal.closeAll()},2000);
+                                            Common.router.route();
+                                        }else{
+                                            Modal.warning ('保存失败')
+                                        }
+                                    })
+                                }
+                            }],
+                        onshown : function(){}
+                    });
+                });
+            })
+        });
+
+        $("ul.dropdown-menu a.edit-strategy").on("click",function(){
+           var id = $(this).attr("data");
+            Common.xhr.ajax('monitor/v2/alarmDefines/'+id,function(alarm){
+                var strategyList = [];
+                for(var i in renderData.compareStrategy){
+                    if(alarm.severity == renderData.compareStrategy[i].id){
+                        renderData.severity[i].selected = "selected";
+                    }
+                }
+                alarm.severityList =renderData.severity;
+            })
+        });
 
     }
 

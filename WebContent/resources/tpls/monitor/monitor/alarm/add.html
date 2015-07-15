@@ -31,7 +31,7 @@
                     <div class="col-sm-5 col-sm">
                         <select name="resource-type" id="resource-type"  class="form-control select select-reource-type">
                             {{each data.resourceType as item i}}
-                            <option value="{{item.name}}">{{item.description}}</option>
+                            <option value="{{item.id}}">{{item.description}}</option>
                             {{/each}}
                         </select>
                     </div>
@@ -95,9 +95,7 @@
                     <label for="meter" class="control-label col-sm-3"><span>* </span>指标：</label>
                     <div  class="col-sm-5 col-sm">
                         <select name="meter" id="meter"  class="form-control select select-meter">
-                            {{each data.meter as item i}}
-                                <option value="{{item.id}}">{{item.name}}</option>
-                            {{/each}}
+
                         </select>
                     </div>
                 </div>
@@ -117,10 +115,9 @@
 
             <div class="wizard-input-section">
                 <div class="form-group">
-                    <label for="threshold " class="control-label col-sm-3"><span>* </span>阈值：</label>
+                    <label for="thresholds" class="control-label col-sm-3"><span>* </span>阈值：</label>
                     <div class="col-sm-5 col-sm">
-                        <input type="text" class="form-control" id="threshold " name="threshold " placeholder="阈值"/>
-
+                        <input type="text" class="form-control" id="thresholds" name="thresholds" placeholder="阈值"/>
                     </div>
                 </div>
             </div>
@@ -143,29 +140,43 @@
         </div>
         <div class="wizard-card-desc col-sm-4">
             <p>每种资源种类下，可以选择不同的监控指标设置不同的监控方案。</p>
+            <p>阈值的单位与指标的单位是一致的，请合理设置阈值的大小。</p>
+            <p>比较策略是指在统计周期内所有数据的统计计算结果，该结果与阈值进行比较。</p>
         </div>
     </div>
 
-    <div class="wizard-card" data-cardname="notification">
-        <h3>告警通知</h3>
+    <div class="wizard-card" data-cardname="more">
+        <h3>高级设置</h3>
         <div class="wizard-card-content col-sm-8">
             <div class="wizard-input-section">
                 <div class="form-group">
-                    <label class="control-label col-sm-2">名称：</label>
-                    <label class="control-label col-sm-2">名称：</label>
-                    <label class="control-label col-sm-4">名称：</label>
+                    <label for="isEnable" class="control-label col-sm-3"><span>* </span>是否开启：</label>
+                    <div class="col-sm-5 col-sm">
+                        <select name="isEnable" id="isEnable"  class="form-control select ">
+                            <option value="true">是</option>
+                            <option value="false">否</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <div class="wizard-input-section">
+                <div class="form-group">
+                    <label for="shield" class="control-label col-sm-3"><span>* </span>是否屏蔽：</label>
+                    <div class="col-sm-5 col-sm">
+                        <select name="shield" id="shield"  class="form-control select ">
+                            <option value="false">否</option>
+                            <option value="true">是</option>
+                        </select>
+                    </div>
                 </div>
             </div>
        </div>
         <div class="wizard-card-desc col-sm-4">
-            <p>为告警方案绑定通知。告警的三种状态：
-                告警时：告警数据满足
-                告警条件，发出告警；
-                数据正常时：有监控数
-                据，但监控数据没有满
-                足告警条件；
-                数据不足时：没有检测
-                到监控数据。</p>
+            <p>告警设置说明：
+                开启状态-开启状态下的告警方案才可以绑定资源使用，默认为开启；
+                屏蔽状态-该状态下的告警可以不发送通知，默认为不屏蔽。
+            </p>
         </div>
     </div>
 
