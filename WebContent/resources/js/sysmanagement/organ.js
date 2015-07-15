@@ -23,6 +23,9 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 						simpleData: {
 							enable: true
 						},
+						keep:{
+        					parent:true  //即使该节点的子节点被全部删除或移走，依旧保持父节点状态
+        				},
 						key: {
 							name:'organName'
 						}
@@ -281,12 +284,13 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 						nodes = treeObj.getNodes();
 					}else
 					nodes = node.children;
-        			if(nodes && nodes.length > 0){
+					if(!nodes) treeObj.reAsyncChildNodes(node, "refresh"); //如果没有加载子节点，直接异步加载
+					else if(nodes.length > 0){
         				if(seq > nodes.length) seq = nodes.length;
-        				newNode = treeObj.addNodes(node, newNode);
+        				newNode = treeObj.addNodes(node == "root"? null:node, newNode);
             			treeObj.moveNode(nodes[seq > 0? seq-1:0], newNode[0], seq > 0?"next":"prev");
         			}else
-        				treeObj.addNodes(node, newNode);
+        				treeObj.addNodes(node == "root"? null:node, newNode);
 				}
 		}
 		
