@@ -36,7 +36,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 			        {"data": {}},
 			        {"data": "vdc_name"},
 			        {"data": "router:external"},
-			        {"data": "cidr"},
+//			        {"data": "cidr"},
 			        {"data": "shared"},
 			        {"data": "status"},
 			        {"data": "admin_state_up"},
@@ -67,21 +67,21 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 					    }
 					},
 					{
-					    "targets": [5],
+					    "targets": [4],
 					    "render": function(data, type, full) {
 					    	if(data == true) return "共享";
 					    	else return "非共享";
 					    }
 					},
 					{
-					    "targets": [6],
+					    "targets": [5],
 					    "render": function(data, type, full) {
 					    	if(data == "ACTIVE") return "运行中";
 					    	else return "停止";
 					    }
 					},
 					{
-					    "targets": [7],
+					    "targets": [6],
 					    "render": function(data, type, full) {
 					    	if(data == true) return "可用";
 					    	else return "禁用";
@@ -118,9 +118,9 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 				},
 		};
 	    //cidr校验
-	    $.validator.addMethod("cidr", function(value, element) {
-	    	return this.optional(element) || /^((\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.){3}(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\/\d{1,2}$/.test(value);
-	    }, "请填写正确的CIDR地址");
+//	    $.validator.addMethod("cidr", function(value, element) {
+//	    	return this.optional(element) || /^((\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.){3}(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\/\d{1,2}$/.test(value);
+//	    }, "请填写正确的CIDR地址");
 		var EventsHandler = {
 	    		//表单校验
 				formValidator: function(){
@@ -131,12 +131,12 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 			            		required: true,
 			                    minlength: 4,
 			                    maxlength:255
-			                },
-			                'cidr': {
-			                    required: true,
-			                    maxlength:64,
-			                    cidr: true
 			                }
+//			                'cidr': {
+//			                    required: true,
+//			                    maxlength:64,
+//			                    cidr: true
+//			                }
 			            }
 			        });
 				},
