@@ -44,13 +44,13 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 									+'<div class="dropdown">'
 		                 		   	+'<a class="btn-opt dropdown-toggle" data-toggle="dropdown" title="更多"  aria-expanded="false" ><i class="fa fa-angle-double-right"></i></a>'
 		                 		   	+'<ul class="dropdown-menu" style="right: 0;left: initial;">';
-							if(data.name) html += '<li><a href="javascript:void(0)" class="editVip"><i class="fa fa-gear fa-fw"></i>编辑VIP</a></li>'
+							if(data.ip_version == 6) html += '<li><a href="javascript:void(0)" class="editVip"><i class="fa fa-gear fa-fw"></i>编辑VIP</a></li>'
 									+'<li><a href="javascript:void(0)" class="delVip"><i class="fa fa-trash-o fa-fw"></i>删除VIP</a></li>'
 									+(data.monitor_id? '<li><a href="javascript:void(0)" class="unbindMonitor"><i class="fa fa-file-text fa-fw"></i>解除监控关联</a></li>':
 										'<li><a href="javascript:void(0)" class="bindMonitor"><i class="fa fa-gear fa-fw"></i>关联监控</a></li>');
 		                 		   
 							else html += '<li><a href="javascript:void(0)" class="addVip"><i class="fa fa-gear fa-fw"></i>添加VIP</a></li>'
-		                 		   +(row.monitor_id? '<li><a href="javascript:void(0)" class="unbindMonitor"><i class="fa fa-file-text fa-fw"></i>解除监控关联</a></li>':
+		                 		   +(data.monitor_id? '<li><a href="javascript:void(0)" class="unbindMonitor"><i class="fa fa-file-text fa-fw"></i>解除监控关联</a></li>':
 									'<li><a href="javascript:void(0)" class="bindMonitor"><i class="fa fa-gear fa-fw"></i>关联监控</a></li>')
 		                 		   +'<li><a href="javascript:void(0)" class="delPool"><i class="fa fa-trash-o fa-fw"></i>删除资源池</a></li>';
 		                 	return html +'</ul></div>';
@@ -105,6 +105,14 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 		    					min: -1
 	    				});
 	    			})
+				},
+				SessionTypeChange : function(){
+					$(document).off("change", "select[name='session_type']");
+					$(document).on("change", "select[name='session_type']", function(){
+						if($(this).val() == "APP_COOKIE")
+							$("#app_cookie").css("display","");
+						else $("#app_cookie").css("display","none");
+					});
 				}
 	    }
 	    
@@ -253,6 +261,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 	    	            }],
 	    	            onshown : function(){
 	    	            	EventsHandler.LimitSpinbox();
+	    	            	EventsHandler.SessionTypeChange();
 	    		    		EventsHandler.formValidator();
 	    		    	}
 	    	        });
