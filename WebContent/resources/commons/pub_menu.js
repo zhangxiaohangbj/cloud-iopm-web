@@ -436,16 +436,16 @@ define('commons/pub_menu', function() {
                         },
                         {
                             text: '<i class="fa fa-dot fa-1"></i>告警方案',
-                            link: '#monitor/strategyGroup'
+                            link: '#monitor/alarm'
                         },
                         {
                             text: '<i class="fa fa-dot fa-1"></i>通知方案',
-                            link: '#monitor/strategyGroup'
+                            link: '#monitor/notification'
                         },
 
                         {
                             text: '<i class="fa fa-dot fa-1"></i>监控对象设置',
-                            link: '#monitor/strategyGroup'
+                            link: '#monitor/resource'
                         }
                     ]
                 }

@@ -1,0 +1,16 @@
+[
+        {
+            "name" : "紧急",
+            "id": "critical",
+        },
+        {
+            "name" : "严重",
+            "id": "major",
+        },{
+            "name" : "次要",
+            "id": "minor",
+        },{
+            "name" : "一般",
+            "id": "common",
+        }
+]

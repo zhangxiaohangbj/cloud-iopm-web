@@ -146,7 +146,6 @@ define('commons/main',
         _socketListener: this._socketListener || {},
         _webSocket: null,
         _initWebSocket: function(){
-        	debugger;
         	var that = this;
         	this._webSocket = this._webSocket || new WebSocket('ws://localhost:8080/cloud-web/websocket');
         	this._webSocket.onerror = this._webSocket.onerror || function(event) {
@@ -172,7 +171,7 @@ define('commons/main',
         isOpen: false,
         msgs : [],
         addWebsocketListener: function(sendMsg, method){
-			debugger
+			//debugger
 			this._socketListener[sendMsg.type+"_"+sendMsg.action] = method;
 			if(this.isOpen){
 				this._webSocket.send(JSON.stringify(sendMsg));
@@ -230,7 +229,7 @@ define('commons/main',
             this.resetPageIndex();
             // 初始化cookie工具
             this._cookies();
-            this._initWebSocket();
+            //this._initWebSocket();
             // 取消加载中效果
             $("#loader").loader('destroy');
             return this;
@@ -405,7 +404,7 @@ define('commons/main',
                 	if(th_num < td_num)
                 		$table.find("thead th:last").attr("colspan",td_num-th_num+1);
                 }
-                _options = $.extend(true, {}, _options, {
+                _options = $.extend(true, {}, {
                     'initComplete': function() {
                     	var settings = this.fnSettings();
                         var firstColumn = settings.aoColumns[0];
@@ -487,7 +486,7 @@ define('commons/main',
                         	});
                         }
                     }
-                });
+                }, _options);
                 var tableFlag = true;
                 $.fn.dataTableExt.errMode = function(table, errCode, errText) {
                     tableFlag = false;

@@ -182,11 +182,13 @@ define(['Common','bs/modal','jq/form/wizard','jq/form/validator-bs3','bs/tooltip
                                 }
                                 cloudService.connector = connector;
 
-                                Common.xhr.postJSON('/resource-manager/v2/region',cloudService,function(data){
+                                Common.xhr.putJSON('/resource-manager/v2/region',cloudService,function(data){
                                     if(data && data.error!= true){
                                         Modal.success('保存成功');
-                                        setTimeout(function(){Modal.closeAll()},2000);
-                                        Common.router.route();
+                                        setTimeout(function(){Modal.closeAll();
+                                            Common.router.route();
+                                        },2000);
+
                                     }else{
                                         Modal.warning ('保存失败')
                                     }
@@ -219,7 +221,7 @@ define(['Common','bs/modal','jq/form/wizard','jq/form/validator-bs3','bs/tooltip
                             {
                                 label: '完成',
                                 action: function(dialog) {
-                                    debugger
+
                                     if(!$(".form-horizontal").valid()){
                                         //校验不通过，什么都不做
                                         return;
@@ -239,8 +241,9 @@ define(['Common','bs/modal','jq/form/wizard','jq/form/validator-bs3','bs/tooltip
                                         connector.description = description;
                                     }
                                     cloudService.connector = connector;
-
+                                    debugger
                                     Common.xhr.putJSON('/resource-manager/v2/region',cloudService,function(data){
+                                        debugger
                                         if(data && data.error!=true){
                                             Modal.success('保存成功');
                                             setTimeout(function(){Modal.closeAll();

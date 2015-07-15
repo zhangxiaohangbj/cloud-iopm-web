@@ -1,0 +1,172 @@
+<div class="wizard" id="create-defines-wizard" data-title="添加告警方案">
+    <!-- 基本信息 -->
+    <div class="wizard-card" data-cardname="basic">
+        <h3>基本信息</h3>
+        <div class="wizard-card-content col-sm-8">
+            <div class="wizard-input-section">
+                <div class="form-group">
+                    <label for="name" class="control-label col-sm-3"><span>* </span>名称：</label>
+                    <div class="col-sm-5 col-sm">
+                        <input type="text" class="form-control" id="name" name="name"  placeholder="告警方案名称"/>
+                    </div>
+                </div>
+            </div>
+
+            <div class="wizard-input-section">
+                <div class="form-group">
+                    <label for="severity" class="control-label col-sm-3"><span>* </span>告警级别：</label>
+                    <div class="col-sm-5 col-sm">
+                        <select name="severity" id="severity"  class="form-control select select-severity">
+                            {{each data.severity as item i}}
+                            <option value="{{item.id}}">{{item.name}}</option>
+                            {{/each}}
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <div class="wizard-input-section">
+                <div class="form-group">
+                    <label for="resource-type" class="control-label col-sm-3"><span>* </span>资源类型：</label>
+                    <div class="col-sm-5 col-sm">
+                        <select name="resource-type" id="resource-type"  class="form-control select select-reource-type">
+                            {{each data.resourceType as item i}}
+                            <option value="{{item.name}}">{{item.description}}</option>
+                            {{/each}}
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="wizard-input-section">
+                <div class="form-group">
+                    <label for="period" class="control-label col-sm-3"><span>* </span>统计周期：</label>
+                    <div class="col-sm-5 col-sm">
+                        <select name="period" id="period"  class="form-control select select-period">
+                            {{each data.period as item i}}
+                            <option value="{{item.name}}">{{item.name}}</option>
+                            {{/each}}
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <div class="wizard-input-section">
+                <div class="form-group">
+                    <label for="period-count" class="control-label col-sm-3"><span>* </span>周期数：</label>
+                    <div class="col-sm-5 col-sm">
+                        <select name="period-count" id="period-count"  class="form-control select select-period-count">
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                            <option value="4">4</option>
+                            <option value="5">5</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <div class="wizard-input-section">
+                <div class="form-group">
+                    <label for="repeated" class="control-label col-sm-3"><span>* </span>是否重复告警：</label>
+                    <div class="col-sm-5 col-sm">
+                        <select name="repeated" id="repeated"  class="form-control select select-repeated">
+                            <option value="true">是</option>
+                            <option value="false">否</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        <div class="wizard-card-desc col-sm-4">
+            <p>名称规则：1.数字、字母、下划线组成；2.字母开头；3.长度1-15个字符</p>
+        </div>
+
+    </div>
+
+    <!--详细信息 -->
+    <div class="wizard-card" data-cardname="strategy">
+        <h3>告警策略</h3>
+        <div class="wizard-card-content col-sm-8">
+            <div class="wizard-input-section">
+                <div class="form-group">
+                    <label for="meter" class="control-label col-sm-3"><span>* </span>指标：</label>
+                    <div  class="col-sm-5 col-sm">
+                        <select name="meter" id="meter"  class="form-control select select-meter">
+                            {{each data.meter as item i}}
+                                <option value="{{item.id}}">{{item.name}}</option>
+                            {{/each}}
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <div class="wizard-input-section">
+                <div class="form-group">
+                    <label for="comparison-operators" class="control-label col-sm-3"><span>* </span>比较符：</label>
+                    <div class="col-sm-5 col-sm">
+                        <select name="comparison-operators" id="comparison-operators"  class="form-control select select-operators">
+                            <option value="gt">></option>
+                            <option value="lt"><</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <div class="wizard-input-section">
+                <div class="form-group">
+                    <label for="threshold " class="control-label col-sm-3"><span>* </span>阈值：</label>
+                    <div class="col-sm-5 col-sm">
+                        <input type="text" class="form-control" id="threshold " name="threshold " placeholder="阈值"/>
+
+                    </div>
+                </div>
+            </div>
+
+            <div class="wizard-input-section">
+                <div class="form-group">
+                    <label for="comparison-strategy" class="control-label col-sm-3"><span>* </span>比较策略：</label>
+                    <div class="col-sm-5 col-sm">
+                        <select name="comparison-strategy" id="comparison-strategy"  class="form-control select select-operators">
+                            <option value="avg">平均</option>
+                            <option value="sum">求和</option>
+                            <option value="min">最大值</option>
+                            <option value="max">最小值</option>
+                            <option value="count">统计个数</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        <div class="wizard-card-desc col-sm-4">
+            <p>每种资源种类下，可以选择不同的监控指标设置不同的监控方案。</p>
+        </div>
+    </div>
+
+    <div class="wizard-card" data-cardname="notification">
+        <h3>告警通知</h3>
+        <div class="wizard-card-content col-sm-8">
+            <div class="wizard-input-section">
+                <div class="form-group">
+                    <label class="control-label col-sm-2">名称：</label>
+                    <label class="control-label col-sm-2">名称：</label>
+                    <label class="control-label col-sm-4">名称：</label>
+                </div>
+            </div>
+       </div>
+        <div class="wizard-card-desc col-sm-4">
+            <p>为告警方案绑定通知。告警的三种状态：
+                告警时：告警数据满足
+                告警条件，发出告警；
+                数据正常时：有监控数
+                据，但监控数据没有满
+                足告警条件；
+                数据不足时：没有检测
+                到监控数据。</p>
+        </div>
+    </div>
+
+</div>
