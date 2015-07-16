@@ -11,24 +11,11 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 	var bindEvent = function(){
 		//页面渲染完后进行各种事件的绑定
 		//dataTables
-		Common.initDataTable($('#SubnetTable'),{
+		var table = Common.initDataTable($('#SubnetTable'),{
 		      "processing": true,  //加载效果，默认false
 		      "serverSide": true,  //页面在加载时就请求后台，以及每次对 datatable 进行操作时也是请求后台
 		      "ordering": false,   //禁用所有排序
 		      "sAjaxSource":"networking/v2.0/subnets/page/", //ajax源，后端提供的分页接口
-		      "fnServerData": function( sSource, aoData, fnCallback ) {
-		    	    $.ajax( {   
-		    	        "url": sSource + (aoData[3].value/aoData[4].value+1) +"/"+aoData[4].value, 
-		    	        "data":aoData,
-		    	        "dataType": "json",   
-		    	        "success": function(resp) {
-		    	        	resp.data = resp.result;
-		    	        	resp.recordsTotal = resp.totalCount;
-		    	        	resp.recordsFiltered = resp.totalCount;
-		    	            fnCallback(resp);   //fnCallback：服务器返回数据后的处理函数，需要按DataTables期望的格式传入返回数据 
-		    	        }   
-		    	    });   
-		      },
 		      "columns": [
 			        {
 			        	"orderable": false,
@@ -37,6 +24,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 			        {"data": "network_name"},
 			        {"data": {}},
 			        {"data": "cidr"},
+			        {"data": "virtualEnvName"},
 			        {"data": "vdc_name"},
 			        {"data": "ip_version"},
 			        {"data": "gateway_ip"},
@@ -53,7 +41,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 					    }
 					},
 					{
-					    "targets": [5],
+					    "targets": [6],
 					    "render": function(data, type, full) {
 					    	return "IPV"+data;
 					    }
@@ -61,10 +49,12 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
                 ]
 		    },
 			function($tar){
-			$tar.prev().find('.left-col:first').append(
-					'<span class="btn btn-add">创 建</span>'
-				);
-			Common.$pageContent.removeClass("loading");
+		    	var $tbMenu = $tar.prev('.tableMenus');
+		    	$tbMenu.length && $tbMenu.empty().html($('.table-menus').html());
+		    	Common.$pageContent.removeClass("loading");
+		});
+		Common.on('click','.dataTables_filter .btn-query',function(){
+			table.search($('.global-search').val()).draw();
 		});
 		$("[data-toggle='tooltip']").tooltip();
 		
