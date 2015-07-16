@@ -190,13 +190,14 @@
 									<div class="usr clearfix">
 					                  <label class="col-sm-2" for="login-name">用户名: </label>
 					                  <div class="col-sm-9 col-sm">
-					                  	 <input type="text" value="root"  class="form-control" id="login-name">
+					                  	 <input disabled type="text" value="root"  class="form-control" id="login-name">
 					                  </div>
 					                </div>
 					                <div class="pwd clearfix">
 					                  <label  class="col-sm-2" for="login-key">密钥: </label>
 					                  <div data-for="secret-key" class="col-sm-9 col-sm">
 										<select name="key_name"   class="form-control select keypairs">
+										<option>选择一个密钥对</option>
 										</select>			                  
 						                <span class="text-danger" style="line-height:30px;"><a href="javascript:;"> 创建密钥</a></span>
 					                  </div>
@@ -298,9 +299,7 @@
 							<label class="col-sm-6 num-confirm"></label>
 						</div>
 					<p>网络</p><hr>	
-						<div class="form-group">
-							<label class="control-label col-sm-3"></label>
-							<label class="col-sm-6 network-confirm"></label>
+						<div class="network-confirm">
 						</div>
 					<p>访问安全</p><hr>		
 						<div class="form-group">
