@@ -17,29 +17,36 @@
                     </th>
                     <th class="c2">名称</th>
                     <th class="c3">告警策略描述</th>
-                    <th class="c2">资源类型</th>
-                    <th class="c2">报警级别</th>
-                    <th class="c2">统计周期</th>
-                    <th class="c2">创建时间</th>
-                    <th class="c5 sorting_disabled" >操作</th>
+                    <th class="c1">资源类型</th>
+                    <th class="c1">报警级别</th>
+                    <th class="c1">状态</th>
+                    <th class="c3">创建时间</th>
+                    <th class="c2 sorting_disabled" >操作</th>
                 </tr>
                 </thead>
                 <tbody>
                 {{each data as item i}}
                 <tr>
                     <td><label><input type="checkbox"></label></td>
-                    <td><a class="alarm-define-name" href="#monitor/monitor/alarm/{{item.id}}">{{item.name}}</a></td>
-                    <td>{{item.type}}</td>
-                    <td>{{item.id}}</td>
-                    <td>{{item.id}}</td>
-                    <td>{{item.id}}</td>
-                    <td>{{item.id}}</td>
+                    <td><a class="alarm-define-name" href="#monitor/monitor/alarm/detail/{{item.id}}">{{item.name}}</a></td>
+                    <td>{{item.alarmDescription}}</td>
+                    <td>{{item.resourceId}}</td>
+                    <td>{{severity[item.severity]}}</td>
+                    <td>可用</td>
+                    <td>{{item.createdAt}}</td>
                     <td>
-                        <a class="btn-opt pull-left log-info" data-toggle="tooltip" data-act="log" title="日志信息" style="margin: 0 5px;" data="{{item.id}}"><i class="fa fa-file-text"></i></a>
-                        <a class="btn-opt pull-left edit" data-toggle="tooltip" data-act="edit" title="编辑" style="margin: 0 5px;" data="{{item.id}}"><i class="fa fa-edit"></i></a>
                         <a class="btn-opt pull-left delete" data-toggle="tooltip" data-act="delete" title="删除" style="margin: 0 5px;" data="{{item.id}}"><i class="fa fa-trash-o"></i></a>
-                        <a class="btn-opt pull-left synchronize" data-toggle="tooltip" data-act="synchronize" title="同步" style="margin: 0 5px;" data="{{item.connectorId}}"><i class="fa fa-refresh"></i></a>
-                        <a href="#ccenter/env/connector/{{item.id}}" class="btn-opt pull-left connector" data-toggle="tooltip" data-act="connector" title="编辑连接器" style="margin: 0 5px;" data="{{item.id}}"><i class="fa fa-list"></i></a>
+                        <a class="btn-opt pull-left bind" data-toggle="tooltip" data-act="bind-resource" title="绑定资源" style="margin: 0 5px;" data="{{item.id}}"><i class="fa fa-plus-square"></i></a>
+                        <a class="btn-opt pull-left bind" data-toggle="tooltip" data-act="bind-notification" title="绑定通知" style="margin: 0 5px;" data="{{item.id}}"><i class="fa fa-plus-square"></i></a>
+                        <div class="dropdown">
+                            <a class="btn-opt dropdown-toggle" data-toggle="dropdown"  title="更多"  aria-expanded="false" ><i class="fa fa-angle-double-right"></i></a>
+                            <ul class="dropdown-menu" style="right: 0;left: initial;">
+                                <li><a href="javascript:void(0)"  data="{{item.id}}" class="edit-basic"><i class="fa fa-list-alt fa-fw"></i>修改基本信息</a></li>
+                                <li><a href="javascript:void(0)" data="{{item.id}}" class="edit-strategy"><i class="fa fa-file-text fa-fw"></i>修改告警策略</a></li>
+                                <li><a href="javascript:void(0)" class="edit-period" data="{{item.id}}"><i class="fa fa-file-text fa-fw"></i>修改统计周期</a></li>
+                                <li><a href="javascript:void(0)" data="{{item.id}}" class="edit-status"><i class="fa fa-edit fa-fw"></i>修改状态</a></li>
+                            </ul>
+                        </div>
                     </td>
                 </tr>
                 {{/each}}

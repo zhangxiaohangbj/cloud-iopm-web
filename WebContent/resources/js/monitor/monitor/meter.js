@@ -136,7 +136,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
                     rules: {
                         'name': {
                             required: true,
-                            minlength: 4,
+                            minlength: 1,
                             maxlength: 15
                         },
                         'unit': {

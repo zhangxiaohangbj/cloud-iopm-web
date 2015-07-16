@@ -1,0 +1,103 @@
+<div class="page-header">
+    <ol class="breadcrumb minus">
+        <li><a href="#monitor/monitor/alarm" class="reload">告警方案管理</a></li>
+        <li class="active">{{name}}</li>
+        <li class="backlist"><a href="#monitor/monitor/alarm">返回列表</a></li>
+    </ol>
+</div>
+<div class="page-body">
+    <div class="pane">
+        <div class="pane-content">
+            <div class="detail-info">
+
+                <!-- Nav tabs -->
+                <ul class="nav nav-tabs" role="tablist">
+                    <li class="active"  data-for="basic"><a href="javascript:void(0)">基本信息</a></li>
+                    <li data-for="notifications"><a href="javascript:void(0)">绑定通知列表</a></li>
+                    <li data-for="resources"><a href="javascript:void(0)">绑定资源列表</a></li>
+                </ul>
+                <div class="tab-content detail-info-content">
+                    <div  class="tab-pane basic active">
+                        <div class="clearfix">
+                            <div class="row">
+                                <label  class="control-label col-sm-3">ID：</label>
+                                <div class="col-sm-7 col-sm query-info query-volume-name">
+                                    {{data.id}}
+                                </div>
+                            </div>
+                            <div class="row">
+                                <label  class="control-label col-sm-3">名称：</label>
+                                <div class="col-sm-7 col-sm query-info query-volume-name">
+                                    {{data.name}}
+                                </div>
+                            </div>
+                            <div class="row">
+                                <label  class="control-label col-sm-3">告警级别：</label>
+                                <div class="col-sm-7 col-sm query-info query-volume-name">
+                                    {{severity[data.severity]}}
+                                </div>
+                            </div>
+                            <div class="row">
+                                <label class="control-label col-sm-3">告警策略描述：</label>
+                                <div class="col-sm-7 col-sm query-info query-volume-size">
+                                    {{data.alarmDescription}}
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <label class="control-label col-sm-3">资源类型：</label>
+                                <div class="col-sm-7 col-sm query-info query-volume-size">
+                                    {{resourceId}}
+                                </div>
+                            </div>
+                            <div class="row">
+                                <label class="control-label col-sm-3">统计周期：</label>
+                                <div class="col-sm-7 col-sm query-info query-volume-size">
+                                    {{data.periodTime}}
+                                </div>
+                            </div>
+                            <div class="row">
+                                <label class="control-label col-sm-3">统计周期数：</label>
+                                <div class="col-sm-7 col-sm query-info query-volume-size">
+                                    {{data.periodCount}}
+                                </div>
+                            </div>
+                            <div class="row">
+                                <label class="control-label col-sm-3">是否开启：</label>
+                                <div class="col-sm-7 col-sm query-info">
+                                    {{if data.isEnable == true}}
+                                    是
+                                    {{else}}
+                                    否
+                                    {{/if}}
+                                </div>
+                            </div>
+                            <div class="row">
+                                <label class="control-label col-sm-3">是否屏蔽：</label>
+                                <div class="col-sm-7 col-sm query-info">
+                                    {{if data.isShield == true}}
+                                    是
+                                    {{else}}
+                                    否
+                                    {{/if}}
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <label class="control-label col-sm-3">时间约束条件：</label>
+                                <div class="col-sm-7 col-sm query-info query-volume-size">
+                                    {{data.timeConstrain}}
+                                </div>
+                            </div>
+                    </div>
+                </div>
+                <div class="tab-pane notifications">
+
+                </div>
+                <div class="tab-pane resources">
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

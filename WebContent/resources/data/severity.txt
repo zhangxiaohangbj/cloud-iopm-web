@@ -1,16 +1,6 @@
-[
-        {
-            "name" : "ΩÙº±",
-            "id": "critical",
-        },
-        {
-            "name" : "—œ÷ÿ",
-            "id": "major",
-        },{
-            "name" : "¥Œ“™",
-            "id": "minor",
-        },{
-            "name" : "“ª∞„",
-            "id": "common",
-        }
-]
+{
+    "CRITICAL" : "Á¥ßÊÄ•",
+    "MAJOR" : "‰∏•Èáç",
+    "MINOR" : "Ê¨°Ë¶Å",
+    "COMMON" : "‰∏ÄËà¨"
+}

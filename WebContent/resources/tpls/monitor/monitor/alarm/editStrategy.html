@@ -1,0 +1,45 @@
+<form class="form-horizontal" id="editBasic">
+    <div class="form-group">
+        <label for="name" class="control-label col-sm-3">
+            名称：</label>
+        <div class="col-sm-7 col-sm">
+            <input type="text" class="form-control" id="name" value="{{meter}}"/>
+        </div>
+    </div>
+
+
+    <div class="form-group">
+        <label for="compareOperator" class="control-label col-sm-3">
+            比较符：</label>
+        <div class="col-sm-7 col-sm">
+            <select class="form-control select" id="compareOperator" name="compareOperator">
+                {{if operator =="gt"}}
+                <option selected value="gt"> > </option>
+                <option value="lt"> < </option>
+                {{else}}
+                <option selected value="lt"> < </option>
+                <option value="gt"> > </option>
+                {{/if}}
+            </select>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label for="threshold" class="control-label col-sm-3">
+            阈值：</label>
+        <div class="col-sm-7 col-sm">
+            <input type="text" class="form-control" id="threshold" name="threshold" placeholder="{{threshold}}"/>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label for="isEnable" class="control-label col-sm-3">
+            比较策略：</label>
+        <div class="col-sm-7 col-sm">
+            <select class="form-control select" id="isEnable">
+                {{#uiSelectList(strategyList)}}
+            </select>
+        </div>
+    </div>
+
+</form>

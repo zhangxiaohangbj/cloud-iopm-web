@@ -33,6 +33,9 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
     					$tar.prev().find('.left-col:first').append(
 							'功能项【'+name+'】关联的URL列表：<span class="btn btn-add" data="'+id+'" name="'+name+'">关联URL </span>'
 						);
+    					$('.left-col:first').css("width","inherit");
+    					$('.right-col:first').css("width","inherit");
+    					$('.right-col:first').css("float","right");
     				});
     			})
 			}
@@ -204,7 +207,8 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 	 			                    	 if(data){
 	 			                    		 Modal.success('取消成功')
 	 			                			 setTimeout(function(){Modal.closeAll()},2000);
-	 			                    		 obj.parents("tr:first").remove();
+	 			                    		 //obj.parents("tr:first").remove();
+	 			                    		obj.parents("td:first").html('已取消关联');
 	 			                    	 }else{
 	 			                    		 Modal.warning ('取消失败')
 	 			                    	 }
