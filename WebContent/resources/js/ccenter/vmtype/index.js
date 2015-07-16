@@ -185,6 +185,10 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
                                 wizard.updateProgressBar(100);
                                 closeWizard();
                                 Common.router.route();
+                            },function(data){
+                            	Common.xhr.del('compute/v2/'+current_vdc_id+'/flavors/'+flavor_id);
+                            	wizard.submitError();
+            					wizard.reset();
                             })
                         }
                         else{
