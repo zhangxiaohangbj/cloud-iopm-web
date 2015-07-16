@@ -273,12 +273,16 @@ define(['Common','bs/modal','rq/text!tpls/fservice/block/volume/list-opts.html',
 						Modal.error('尚未选择vdc');
 					}
 				},
+				/*data:'/compute/v2/' + current_vdc_id + '/servers/page/1/200',
+				beforeRender: function(data){
+					return {servers:data.result, volName:name};
+				},*/
 				//初始化用户创建的vm列表
 				initUserVms: function(){
-					Common.xhr.ajax('/resources/data/specs.txt',function(data){
+					Common.xhr.ajax('/compute/v2/' + current_vdc_id + '/servers/page/1/200',function(data){
 						var dataArr = [];
-						$.each(data,function(i,item){
-							dataArr.push('<div class="col-sm-9"><label data-id="'+item.name+'"><input name="user-vms" type="radio">'+item.name+'</label></div>')
+						$.each(data.result,function(i,item){
+							dataArr.push('<div class="col-sm-6"><label data-id="'+item.id+'" data-name="'+item.name+'"><input name="user_vms" type="radio">'+item.name+'</label></div>')
 						})
 						$('.vm-list').html(dataArr.join(''));
 						EventsHandler.initRadioBox();
@@ -379,10 +383,11 @@ define(['Common','bs/modal','rq/text!tpls/fservice/block/volume/list-opts.html',
     		    	DataIniter.initUserVms();
     			});
     			var getMountVm = function(){
-    				var data = [];
-    				$('div.vm-list').find('.icheckbox-info').each(function(){
+    				var data = {};
+    				$('div.vm-list').find('.iradio-info').each(function(){
     					if($(this).hasClass('checked')){
-    						data.push($(this).parent().attr('data-id'))
+    						data.id = $(this).parent().attr('data-id');
+    						data.name =  $(this).parent().attr('data-name');
     					}
     				});
     				return data;
@@ -395,7 +400,6 @@ define(['Common','bs/modal','rq/text!tpls/fservice/block/volume/list-opts.html',
     			wizard.cards.confirm.on('selected',function(card){
     				//获取上几步中填写的值
     				var serverData = wizard.serializeObject();
-    				console.log(serverData);
     				if(serverData.availability_zone == "") {
     					serverData.availability_zone = null;
     				}
@@ -407,14 +411,11 @@ define(['Common','bs/modal','rq/text!tpls/fservice/block/volume/list-opts.html',
     				$('.query-volume-ve').text($('.virtual_envir').html());
     				$('.query-volume-desc').text(serverData.description);
     				//挂载磁盘
-    				var vmList = getMountVm();
-    				if(vmList.length){
+    				var attachment = getMountVm();
+    				if(attachment){
     					var dataArr= [];
     					dataArr.push('<div class="wizard-input-section"><div class="form-group">');
-    					$.each(vmList,function(i,item){
-    						
-    						dataArr.push('<label class="control-label col-sm-5">'+item+'</label>');
-    					})
+    					dataArr.push('<label class="control-label col-sm-5">'+attachment.name+'</label>');
     					dataArr.push('</div></div>');
     					$('.query-info-mount').append(dataArr.join(''));
     				}
@@ -422,12 +423,19 @@ define(['Common','bs/modal','rq/text!tpls/fservice/block/volume/list-opts.html',
     			
     			wizard.show();
     			wizard.on("submit", function(wizard) {
-    				var volume = wizard.serializeObject();
-    				if(volume.availability_zone == "") {
-    					volume.availability_zone = null;
+    				var attachInfos = getMountVm(),
+    					formData = wizard.serializeObject();
+    				delete formData.user_vms;
+    				debugger
+    				var postData = {
+    						volume: formData,
+    						volumeAttach: attachInfos.id
     				}
-    				var serverData = {volume:volume};
-    				Common.xhr.postJSON('block-storage/v2/' + current_vdc_id + '/volumes',serverData,function(data){
+    				if(postData.volume.availability_zone == "") {
+    					postData.volume.availability_zone = null;
+    				}
+    				var serverData = {volume:postData};
+    				Common.xhr.postJSON('block-storage/v2/' + current_vdc_id + '/volumes/create',postData,function(data){
     					wizard._submitting = false;
     					wizard.updateProgressBar(100);
     					closeWizard();
