@@ -147,7 +147,8 @@ define('commons/main',
         _webSocket: null,
         _initWebSocket: function(){
         	var that = this;
-        	this._webSocket = this._webSocket || new WebSocket('ws://localhost:8080/cloud-web/websocket');
+        	var host = window.location.host;
+        	this._webSocket = this._webSocket || new WebSocket('ws://'+host+'/cloud-web/websocket');
         	this._webSocket.onerror = this._webSocket.onerror || function(event) {
     			//onError(event)
         		alert('err')
