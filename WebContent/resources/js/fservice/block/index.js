@@ -255,7 +255,6 @@ define(['Common','bs/modal','rq/text!tpls/fservice/block/volume/list-opts.html',
 					}
 				},
 				
-				
 				//初始化配额信息
 				initQuato: function(vdc_id){
 					vdc_id = vdc_id || currentChosenObj.vdc || $('select.tenant_id').find('option:selected').val();
@@ -426,7 +425,6 @@ define(['Common','bs/modal','rq/text!tpls/fservice/block/volume/list-opts.html',
     				var attachInfos = getMountVm(),
     					formData = wizard.serializeObject();
     				delete formData.user_vms;
-    				debugger
     				var postData = {
     						volume: formData,
     						volumeAttach: attachInfos.id
