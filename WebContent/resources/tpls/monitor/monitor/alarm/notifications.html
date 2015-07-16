@@ -1,0 +1,22 @@
+<table class="table table-primary table-striped" id="resourceTable">
+    <thead>
+    <tr>
+        <th class="c15">名称</th>
+        <th class="c0">类型</th>
+        <th class="c25">创建时间</th>
+        <th class="c10">操作</th>
+    </tr>
+    </thead>
+    <tbody>
+    {{each hosts as item i}}
+    <tr data-id="{{item.id}}">
+        <td><a class="host_name" href="javascript:void(0)">{{item.name}}</a></td>
+        <td>物理服务器</td>
+        <td>{{item.createdAt}}</td>
+        <td>
+            <a class="btn-opt" data-toggle="tooltip" title="删除" ><i class="fa fa-trash-o"></i></a>
+        </td>
+    </tr>
+    {{/each}}
+    </tbody>
+</table>

@@ -41,6 +41,7 @@ configurations {
 	all*.exclude group: 'xpp3', module: 'xpp3_min'
 	all*.exclude group: 'tomcat', module: 'jasper-compiler'
 	all*.exclude group: 'tomcat', module: 'jasper-runtime'
+	all*.exclude group: 'javax.websocket', module: 'javax.websocket-api'
 	
 	updater
 }
@@ -68,7 +69,7 @@ dependencies {
 	compile("com.fasterxml.jackson.core:jackson-core:2.3.0")
 	compile("com.fasterxml.jackson.core:jackson-databind:2.3.0")
 	compile("org.springframework:spring-websocket:4.0.1.RELEASE")
-	compile("javax.websocket:javax.websocket-api:1.1")
+//	compile("javax.websocket:javax.websocket-api:1.1")
 	
 	//yfjs-lib
 	compile("com.inspur.iop:yfjs:0.1-SNAPSHOT")

@@ -9,24 +9,11 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 	};
 	
 	var bindEvent = function(){
-		Common.initDataTable($('#floatingipTable'),{
+		var table = Common.initDataTable($('#floatingipTable'),{
 		      "processing": true,  //加载效果，默认false
 		      "serverSide": true,  //页面在加载时就请求后台，以及每次对 datatable 进行操作时也是请求后台
 		      "ordering": false,   //禁用所有排序
 		      "sAjaxSource":"networking/v2.0/floatingips/page/", //ajax源，后端提供的分页接口
-		      "fnServerData": function( sSource, aoData, fnCallback ) {
-		    	    $.ajax( {   
-		    	        "url": sSource + (aoData[3].value/aoData[4].value+1) +"/"+aoData[4].value, 
-		    	        "data":aoData,
-		    	        "dataType": "json",   
-		    	        "success": function(resp) {
-		    	        	resp.data = resp.result;
-		    	        	resp.recordsTotal = resp.totalCount;
-		    	        	resp.recordsFiltered = resp.totalCount;
-		    	            fnCallback(resp);   //fnCallback：服务器返回数据后的处理函数，需要按DataTables期望的格式传入返回数据 
-		    	        }   
-		    	    });   
-		      },
 		      "columns": [
 			        {
 			        	"orderable": false,
@@ -54,11 +41,13 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
                 ]
 		    },
 			function($tar){
-			$tar.prev().find('.left-col:first').append(
-					'<span class="btn btn-add">创 建</span>'
-				);
-			//这个必须添加，不然就是隐藏的效果，看不到页面
-			Common.$pageContent.removeClass("loading");
+		    	var $tbMenu = $tar.prev('.tableMenus');
+		    	$tbMenu.length && $tbMenu.empty().html($('.table-menus').html());
+				//这个必须添加，不然就是隐藏的效果，看不到页面
+				Common.$pageContent.removeClass("loading");
+		});
+		Common.on('click','.dataTables_filter .btn-query',function(){
+			table.search($('.global-search').val()).draw();
 		});
 		$("[data-toggle='tooltip']").tooltip();
 		//维护当前select的值以及云主机数量，为更新配额以及vdc相关的数据用

@@ -1,12 +1,14 @@
 define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3'],function(Common,Modal){
     var hash = Common.hash;
-
+    
     var varlist = hash.split('/');
     var id = varlist[varlist.length-1]
+    
+    var current_vdc_id = Common.cookies.getVdcId();
     Common.requestCSS('css/wizard.css');
 	var init = function(){
 		Common.$pageContent.addClass("loading");
-        Common.xhr.ajax('compute/v2/123/flavors/'+id+'/metadata', function(data){
+        Common.xhr.ajax('compute/v2/'+current_vdc_id+'/flavors/'+id+'/metadata', function(data){
 
             var metadata = data['extra_specs']
            Common.render(true,'tpls/ccenter/vmtype/metadata.html',data,function(){
@@ -218,7 +220,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
                                 }
                             };
                             metadata['extra_specs'][key] = value
-                            Common.xhr.postJSON('compute/v2/123/flavors/'+id+'/metadata',metadata,function(data){
+                            Common.xhr.postJSON('compute/v2/'+current_vdc_id+'/flavors/'+id+'/metadata',metadata,function(data){
                                 if(data){
                                     alert("保存成功");
 
@@ -276,7 +278,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
                                     };
                                     metaData['extra_specs'][key] = value
 
-                                    Common.xhr.postJSON('compute/v2/123/flavors/'+id+'/metadata', metaData, function (data) {
+                                    Common.xhr.postJSON('compute/v2/'+current_vdc_id+'/flavors/'+id+'/metadata', metaData, function (data) {
                                         if (data) {
                                             alert("保存成功");
 
@@ -298,7 +300,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
             deleteMetadata : function(key){
                 Modal.confirm('确定要删除该云主机类型元数据吗?', function(result){
                     if(result) {
-                        Common.xhr.del('compute/v2/123/flavors/'+id+'/metadata/'+key,
+                        Common.xhr.del('compute/v2/'+current_vdc_id+'/flavors/'+id+'/metadata/'+key,
                             function(data){
                                 if(data){
                                     Modal.success('删除成功')

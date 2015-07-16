@@ -23,11 +23,8 @@
 	<div class="form-group">
 		<label for="members" class="control-label col-sm-3">
 	 	成员：</label>
-	 	<div class="col-sm-7 col-sm">
-			<select class="form-control select" name="members" multiple tabindex="4" style="height: auto;">
-				{{each subnets as item i}}
-			 		<option value="{{item.id}}">{{item.name}}</option>
-			 	{{/each}}
+	 	<div class="col-sm-7 col-sm" id="members">
+			<select class="form-control select members" name="members" multiple tabindex="4" style="height: auto;">
 			</select>
 		</div>
 	</div>
