@@ -1,8 +1,9 @@
 define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3'],function(Common,Modal){
 	Common.requestCSS('css/wizard.css');
+	var current_vdc_id = Common.cookies.getVdcId();
 	var init = function(){
 		Common.$pageContent.addClass("loading");
-        Common.xhr.ajax('compute/v2/123/flavors/detail', function(data){
+        Common.xhr.ajax('compute/v2/'+current_vdc_id+'/flavors/detail', function(data){
 
            Common.render(true,'tpls/ccenter/vmtype/list.html',data,function(){
                 bindEvent();
@@ -176,11 +177,11 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
                     };
 
                     var flavor_id = ''
-                    Common.xhr.postJSON('compute/v2/123/flavors/',flavorData,function(data){
+                    Common.xhr.postJSON('compute/v2/'+current_vdc_id+'/flavors/',flavorData,function(data){
                         flavor_id = data['flavor']['id']
                         var chooseList = DataGetter.getChoose('#flavorVdcAccess .list-group-select');
                         if(chooseList.length !=0 ){
-                            Common.xhr.putJSON('compute/v2/123/flavors/'+flavor_id+'/os-flavor-access',chooseList,function(data){
+                            Common.xhr.putJSON('compute/v2/'+current_vdc_id+'/flavors/'+flavor_id+'/os-flavor-access',chooseList,function(data){
                                 wizard.updateProgressBar(100);
                                 closeWizard();
                                 Common.router.route();
@@ -261,7 +262,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 	    var more = {
 		    	//更新flavor
                 updateFlavor : function(id){
-		    		Common.xhr.ajax('compute/v2/123/flavors/'+id,function(data){
+		    		Common.xhr.ajax('compute/v2/'+current_vdc_id+'/flavors/'+id,function(data){
 		    			Common.render('tpls/ccenter/vmtype/edit.html',data,function(html){
 		    				Modal.show({
 			    	            title: '编辑',
@@ -280,7 +281,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
                                                 "swap": $("#editFlavor [name='swap']").val()
                                             }
 			    	        			};
-			    	                	Common.xhr.putJSON('compute/v2/123/flavors/',flavorData,function(data){
+			    	                	Common.xhr.putJSON('compute/v2/'+current_vdc_id+'/flavors/',flavorData,function(data){
 			    	                		if(data){
 			    	                			alert("保存成功");
 			    	                			
@@ -303,7 +304,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
             deleteFlavor : function(id){
                     Modal.confirm('确定要删除该云主机类型吗?', function(result){
                         if(result) {
-                            Common.xhr.del('compute/v2/123/flavors/'+id,
+                            Common.xhr.del('compute/v2/'+current_vdc_id+'/flavors/'+id,
                                 function(data){
                                     if(data){
                                         Modal.success('删除成功')
@@ -320,7 +321,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
                 },
 
             accessFlavor : function(id){
-                Common.xhr.ajax('compute/v2/123/flavors/'+id+"/os-flavor-access",function(data){
+                Common.xhr.ajax('compute/v2/'+current_vdc_id+'/flavors/'+id+"/os-flavor-access",function(data){
                     var unselectedList = [];
                     var selectedList = [];
                     Common.render('tpls/ccenter/vmtype/flavorAccess.html',data,function(html){
@@ -332,7 +333,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
                                 label: '保存',
                                 action: function(dialog) {
                                     var chooseList = DataGetter.getChoose('#flavorVdcAccess .list-group-select');
-                                    Common.xhr.putJSON('compute/v2/123/flavors/'+id+'/os-flavor-access',chooseList,function(data){
+                                    Common.xhr.putJSON('compute/v2/'+current_vdc_id+'/flavors/'+id+'/os-flavor-access',chooseList,function(data){
                                         if(data){
                                             alert("保存成功");
                                             dialog.close();
