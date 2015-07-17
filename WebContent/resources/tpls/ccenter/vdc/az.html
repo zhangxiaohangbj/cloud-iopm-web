@@ -2,11 +2,12 @@
 	<div class="form-group">
 		<label for="select-vdc" class="control-label col-sm-3"><span>*
 		</span>虚拟化环境：</label>
-		<div id="select-vm" class="col-sm-7 col-sm">
-			<select name="select-vdc"
+		<div id="ve_name" class="col-sm-7 col-sm">
+			<!-- <select name="select-vdc"
 				class="form-control select select-ve" disabled="disabled">
 				{{#uiSelectList(veList)}}
-			</select>
+			</select> -->
+			<input type="text" class="form-control" name="ve_name"data-id="{{ve_id}}" value="{{ve_name}}" disabled="disabled">
 		</div>
 	</div>
 	<div>

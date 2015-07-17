@@ -3,7 +3,7 @@
         <label for="name" class="control-label col-sm-3">
             名称：</label>
         <div class="col-sm-7 col-sm">
-            <input type="text" class="form-control" id="name" value="{{meter}}"/>
+            <input type="text" class="form-control" id="name" value="{{meterName}}"/>
         </div>
     </div>
 
@@ -33,10 +33,10 @@
     </div>
 
     <div class="form-group">
-        <label for="isEnable" class="control-label col-sm-3">
+        <label for="strategy" class="control-label col-sm-3">
             比较策略：</label>
         <div class="col-sm-7 col-sm">
-            <select class="form-control select" id="isEnable">
+            <select class="form-control select" id="strategy">
                 {{#uiSelectList(strategyList)}}
             </select>
         </div>
