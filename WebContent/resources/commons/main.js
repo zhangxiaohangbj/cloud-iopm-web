@@ -162,6 +162,7 @@ define('commons/main',
     		};
 
     		this._webSocket.onmessage = this._webSocket.onmessage || function(event) {
+    			debugger
     			var message = JSON.parse(event.data);
     			var method = that._socketListener[message.type+"_"+message.action];
     			if(method && typeof method === 'function'){
@@ -230,7 +231,7 @@ define('commons/main',
             this.resetPageIndex();
             // 初始化cookie工具
             this._cookies();
-           // this._initWebSocket();
+            this._initWebSocket();
             // 取消加载中效果
             $("#loader").loader('destroy');
             return this;

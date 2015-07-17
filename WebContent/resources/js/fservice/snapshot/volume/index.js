@@ -102,20 +102,20 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 		Common.on('click','.dataTables_filter .btn-query',function(){
 			table.search($('.global-search').val()).draw();
 		});
+		
 	    var moreAction = {
     		//删除
     		deleteVolume: function(){
     			Common.on('click','a.delete',function(){
     				var rowdata = $(this).parents("tr:first").data("rowData.dt");
     				var id = rowdata.id;
-    				debugger
 	       	    	 Modal.confirm('确定要删除该快照吗?', function(result){
 	       	             if(result) {
 	       	            	 Common.xhr.del("/block-storage/v2/" + current_vdc_id + "/snapshots/" + id, "",
 	       	                     function(data){
 	       	                    	 if(data){
-	        	                			Modal.success('删除成功')
-	        	                			setTimeout(function(){Modal.closeAll()},3000);
+        	                			Modal.success('删除成功')
+        	                			setTimeout(function(){Modal.closeAll()},3000);
 	       	                    		Common.router.route();
 	       	                    	 }else{
 	       	                    		Modal.success('删除失败')

@@ -132,7 +132,34 @@ define(['Common','bs/modal','rq/text!tpls/fservice/block/volume/list-opts.html',
 					    "targets": [3],
 					    "data": "status",
 					    "render": function(data, type, full) {
-					    	return volumeStatus[data] || "";
+					    	if(data == "in-use"){
+					    		return '<span data="'+data.id+' class="text-success">使用中</span>';
+					    	}else if(data == "available"){
+					    		return '<span data="'+data.id+' class="text-success">可用</span>';
+					    	}else if(data == "creating"){
+					    		return '<span data="'+data.id+' class="text-info">正在创建</span>';
+					    	}else if(data == "deleting"){
+					    		return '<span data="'+data.id+' class="text-danger">正在删除</span>';
+					    	}else if(data == "error"){
+					    		return '<span data="'+data.id+' class="text-danger">错误</span>';
+					    	}else if(data == "error_deleting"){
+					    		return '<span data="'+data.id+' class="text-danger">删除错误</span>';
+					    	}else if(data == "deleted"){
+					    		return '<span data="'+data.id+' class="text-danger">已删除</span>';
+					    	}else if(data == "attaching"){
+					    		return '<span data="'+data.id+' class="text-info">挂载中</span>';
+					    	}else if(data == "backing_up"){
+					    		return '<span data="'+data.id+' class="text-info">正在备份</span>';
+					    	}else if(data == "downloading"){
+					    		return '<span data="'+data.id+' class="text-info">下载中</span>';
+					    	}else if(data == "uploading"){
+					    		return '<span data="'+data.id+' class="text-info">上传中</span>';
+					    	}else if(data == "error_restoring"){
+					    		return '<span data="'+data.id+' class="text-danger">恢复错误</span>';
+					    	}else{
+					    		return '<span data="'+data.id+' class="text-danger">未知</span>';
+					    	}
+					    	//return volumeStatus[data] || "";
 					    }
 					},
 					{
@@ -175,6 +202,30 @@ define(['Common','bs/modal','rq/text!tpls/fservice/block/volume/list-opts.html',
 		Common.on('click','.dataTables_filter .btn-query',function(){
 			table.search($('.global-search').val()).draw();
 		});
+		
+		//websocket
+		var sendMsg = {
+				type: "volume",
+				action: "status"
+			};
+		Common.addWebsocketListener(sendMsg, function(data){
+			var id = data.id;
+			var status = data.status;
+			var operate = $("span[data="+id+"]");
+			if(status=="AVAILABLE"){
+				operate.html("可使用");
+				operate.attr("class","text-success");
+			}
+			if(status=="CREATING"){
+				operate.html("创建中");
+				operate.attr("class","text-warning");
+			}
+			if(status=="ERROR"){
+				operate.html("错误");
+				operate.attr("class","text-warning");
+			}
+		});
+		
 		
 	    var renderData = {};
 	    var azList=[];
