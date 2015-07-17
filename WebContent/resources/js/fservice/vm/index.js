@@ -428,7 +428,14 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 				Common.xhr.get('/networking/v2.0/networks',{"vdcId":vdc_id},function(data){
 					var dataArr = [];
 					if(data){
-						var networks = data.networks;
+						var networks = [];
+						for (var i=0;i<data.networks.length;i++){
+							var network = data.networks[i];
+							if(network["router:external"]==false){
+								networks.push(network);
+							}
+						}
+						
 						require(['js/common/choose'],function(choose){
 							var options = {
 									selector: '#vm-networks',
@@ -530,14 +537,15 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 			//密钥对
 			initKeyPairs: function(){
 				Common.xhr.ajax("/compute/v2/"+current_vdc_id+'/os-keypairs',function(keypairs){
-					var keypairData = []
-					if(keypairs&&keypairs["keypair"]){
-						for(var i=0;i<keypairs["keypair"].length;i++){
-							keypairData[i] = {value:keypairs["keypair"][i].name};
+					var keypairData = [{id:"keypair-select-default",name:"选择一个密钥对"}]
+					if(keypairs&&keypairs["keypairs"]){
+						for(var i=0;i<keypairs["keypairs"].length;i++){
+							keypairData.push({value:keypairs["keypairs"][i]["keypair"].name});
 						}
 					}
 					var html = Common.uiSelect(keypairData);
 			    	$('select.keypairs').html(html);
+			    	$('#keypair-select-default').attr("value","");
 				});
 			},
 			//外部网络
@@ -833,11 +841,13 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
     				//获取上几步中填写的值
     				var serverData = wizard.serializeObject();
     				//取网络相关的数据
+    				var networkStr = "";
     				$('#vm-networks .list-group-select').children().each(function(i,item){
-    					var network_uuid = $(item).find('li:first').attr('data-id');
+    					var network_uuid = $(item).find('li:first').children('span.display_name').text();//attr('data-id');
     					var fixedIp = $(item).find('select.select-fixedip').children('option:selected').val();
-    					$('.network-confirm').text("网络："+network_uuid+"            IP:"+fixedIp)
+    					networkStr = networkStr+'<div class="form-group"><label class="control-label col-sm-3">'+network_uuid+'：</label><label class="col-sm-6">'+fixedIp+"</label></div>"
     				});
+    				$('.network-confirm').html(networkStr);
     				var sgGroupStr = ""
     				var sgGroup = getSecruityGroup();
     				for(var i=0;i<sgGroup.length;i++){
@@ -867,6 +877,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
     			DataIniter.initQuatos();
     			DataIniter.initSecurityGroup();
     			DataIniter.initAvailableNetWorks();
+    			DataIniter.initKeyPairs();
     			
     			//展现wizard，
     			

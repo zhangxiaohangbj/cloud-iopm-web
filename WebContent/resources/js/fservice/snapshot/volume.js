@@ -10,7 +10,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 	};
 	var bindEvent = function(){
 		//dataTables
-		Common.initDataTable($('#SnapShotVolumeTable'),{
+		var table = Common.initDataTable($('#SnapShotVolumeTable'),{
 		      "processing": true,  //加载效果，默认false
 		      "serverSide": true,  //页面在加载时就请求后台，以及每次对 datatable 进行操作时也是请求后台
 		      "ordering": false,   //禁用所有排序
@@ -24,10 +24,11 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 			        {"data": {}},
 			        {"data": "size"},
 			        {"data": "status"},
-			        {"data": "volume_type"},
-			        {"data": {}},
-			        {"data": {}},
-			        {"data": {}},
+			        {"data": "volumeTypeId"},
+			        {"data": "volumeName"},
+			        {"data": "virtualEnvId"},
+			        {"data": "created_at"},
+			        {"data": "description"},
 			        {"data": {}}
 		      ],
 		      /*
@@ -55,7 +56,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 					    "targets": [2],
 					    "data": "size",
 					    "render": function(data, type, full) {
-					      return data+"GB";
+					      return data ? (data+"GB") : '';
 					    }
 					},
 					{
@@ -65,71 +66,42 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 					    	if(data == "in-use"){
 					    		return '<span class="text-success">使用中</span>';
 					    	}else if(data == "available"){
-					    		return '<span class="text-info">可用</span>';
-					    	}else{
+					    		return '<span class="text-success">可用</span>';
+					    	}else if(data == "creating"){
+					    		return '<span class="text-info">正在创建</span>';
+					    	}else if(data == "deleting"){
+					    		return '<span class="text-danger">正在删除</span>';
+					    	}else if(data == "error"){
+					    		return '<span class="text-danger">错误</span>';
+					    	}else if(data == "error_deleting"){
+					    		return '<span class="text-info">删除错误</span>';
+					    	}else if(data == "deleted"){
 					    		return '<span class="text-danger">已删除</span>';
+					    	}else{
+					    		return '<span class="text-danger">未知</span>';
 					    	}
 					    }
 					},
                      {
-                       "targets": [5],
-                       "render": function(data, type, full) {
-                    	   if(data == "1"){
-					    		return '<span class="text-success">是</span>';
-					    	}else{
-					    		return '<span class="text-danger">否</span>';
-					    	}
-                       }
-                     },
-                     {
-                         "targets": [6],
+                         "targets": [9],
                          "render": function(data, type, full) {
-                      	   if(data == "1"){
-  					    		return '<span class="text-success">是</span>';
-  					    	}else{
-  					    		return '<span class="text-danger">否</span>';
-  					    	}
+                        	 var html = '<a href="javascript:void(0)" class="btn-opt createVolume"'+
+                        		 'data-toggle="tooltip" title="创建磁盘"  data="'+data.id+'"><i class="fa fa-tasks"></i></a>'+
+                        		 '<a href="javascript:void(0)" class="btn-opt delete"'+
+                            		 'data-toggle="tooltip" title="删除快照"  data="'+data.id+'"><i class="fa fa-trash"></i></a>';
+                        	 return html;
                          }
-                       },
-                       {
-                           "targets": [7],
-                           "render": function(data, type, full) {
-                        	   if(data == "1"){
-    					    		return '<span class="text-success">是</span>';
-    					    	}else{
-    					    		return '<span class="text-danger">否</span>';
-    					    	}
-                           }
-                         },
-                         {
-                             "targets": [8],
-                             "render": function(data, type, full) {
-                          	   if(data == "1"){
-      					    		return '<span class="text-success">是</span>';
-      					    	}else{
-      					    		return '<span class="text-danger">否</span>';
-      					    	}
-                             }
-                           }
+                       }
                 ]
 		    },
 		    function($tar){
-			//icheck
-		    $('input[type="checkbox"]').iCheck({
-		    	checkboxClass: "icheckbox-info",
-		        radioClass: "iradio-info"
-		    }).on('ifChecked',function(e){
-		    	if(e.target.className == 'selectAll'){
-		    		$('.table-primary').find('input[type=checkbox]').iCheck('check');
-		    	}
-		    }).on('ifUnchecked',function(e){
-		    	if(e.target.className == 'selectAll'){
-		    		$('.table-primary').find('input[type=checkbox]').iCheck('uncheck');
-		    	}
-		    });
-		    Common.$pageContent.removeClass("loading");
+		    	var $tbMenu = $tar.prev('.tableMenus');
+		    	$tbMenu.length && $tbMenu.empty().html($('.table-menus').html());
+		    	Common.$pageContent.removeClass("loading");
 		});
-		
+		Common.on('click','.dataTables_filter .btn-query',function(){
+			table.search($('.global-search').val()).draw();
+		});
 	    var moreAction = {
     		//删除
     		deleteVolume: function(){
@@ -154,7 +126,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 	       	             }
 	       	         });
 	       		})
-    		},
+    		}
 	    };
 	    for(var key in moreAction){
 	    	if(typeof moreAction[key] === 'function'){

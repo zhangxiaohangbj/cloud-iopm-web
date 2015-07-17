@@ -147,7 +147,8 @@ define('commons/main',
         _webSocket: null,
         _initWebSocket: function(){
         	var that = this;
-        	this._webSocket = this._webSocket || new WebSocket('ws://localhost:8080/cloud-web/websocket');
+        	var host = window.location.host;
+        	this._webSocket = this._webSocket || new WebSocket('ws://'+host+'/cloud-web/websocket');
         	this._webSocket.onerror = this._webSocket.onerror || function(event) {
     			//onError(event)
         		alert('err')
@@ -229,7 +230,7 @@ define('commons/main',
             this.resetPageIndex();
             // 初始化cookie工具
             this._cookies();
-            //this._initWebSocket();
+           // this._initWebSocket();
             // 取消加载中效果
             $("#loader").loader('destroy');
             return this;
