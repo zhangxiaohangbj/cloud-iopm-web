@@ -44,6 +44,13 @@ define('js/fservice/security/firewall/rule', ['Common','bs/modal','bs/tooltip','
                 	 }
                  },
                  {
+                	 "targets":[2],
+                	 "render":function(data, type, full){
+                		 if(data == 'UNRECOGNIZED') return '任何';
+                		 return data;
+                	 }
+                 },
+                 {
                 	 "targets":[7],
                 	 "render":function(data, type, full){
                 		 if(data == 'ALLOW') return ' <span class="text-success">允许</span>';
@@ -142,11 +149,11 @@ define('js/fservice/security/firewall/rule', ['Common','bs/modal','bs/tooltip','
 					var $this = $(this);
 					var value = $this.val();
 					if(value == "UNRECOGNIZED"){
-						$("#editFirewallRule [name='source_port']").disabled = true;
-						$("#editFirewallRule [name='destination_port']").disabled = true;
+						$("#editFirewallRule [name='source_port']").prop("disabled", true)
+						$("#editFirewallRule [name='destination_port']").prop("disabled", true)
 					}else{
-						$("#editFirewallRule [name='source_port']").disabled = false;
-						$("#editFirewallRule [name='destination_port']").disabled = false;
+						$("#editFirewallRule [name='source_port']").prop("disabled", false)
+						$("#editFirewallRule [name='destination_port']").prop("disabled", false)
 					}
 				});
 			}
