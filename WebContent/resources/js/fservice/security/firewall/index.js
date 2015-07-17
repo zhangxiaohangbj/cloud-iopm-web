@@ -1,11 +1,11 @@
-define(['Common','bs/modal','js/fservice/vpc/firewall/firewall','js/fservice/vpc/firewall/policy','js/fservice/vpc/firewall/rule','jq/form/wizard','bs/tooltip','jq/form/validator-bs3','bs/switcher'],function(Common, Dialog, firewall, policy, rule){
+define(['Common','bs/modal','js/fservice/security/firewall/firewall','js/fservice/security/firewall/policy','js/fservice/security/firewall/rule','jq/form/wizard','bs/tooltip','jq/form/validator-bs3','bs/switcher'],function(Common, Dialog, firewall, policy, rule){
 	Common.requestCSS('css/wizard.css');
 	var init = function(){
 		Common.$pageContent.addClass("loading");
 		var hashArr = Common.hash.split('/');
 	    var tabActive = hashArr[hashArr.length-1];
 	    
-    	Common.render(true,'tpls/fservice/vpc/firewall/index.html',function(html){
+    	Common.render(true,'tpls/fservice/security/firewall/index.html',function(html){
     		bindEvent(tabActive);
     	});
 	};
@@ -33,13 +33,13 @@ define(['Common','bs/modal','js/fservice/vpc/firewall/firewall','js/fservice/vpc
 			var $this = $(this);
 			if(!$this.hasClass('active')){
 				var data = $this.attr('data-for');
-				window.location.hash='#fservice/vpc/firewall/tab/'+data;
+				window.location.hash='#fservice/security/firewall/tab/'+data;
 			}
 		});
 		function renderFirewall(){
 			var $tab = $('.tab-content').find('div.firewall');
 			Common.showLocalLoading($tab);
-			Common.render(false,'tpls/fservice/vpc/firewall/firewall/list.html',function(html){
+			Common.render(false,'tpls/fservice/security/firewall/firewall/list.html',function(html){
 				$tab.empty().append(html);
 				firewall.bindEvent();
 			});
@@ -48,7 +48,7 @@ define(['Common','bs/modal','js/fservice/vpc/firewall/firewall','js/fservice/vpc
 		function renderPolicy(){
 			var $tab = $('.tab-content').find('div.policy');
 			Common.showLocalLoading($tab);
-			Common.render(false,'tpls/fservice/vpc/firewall/policy/list.html',function(html){
+			Common.render(false,'tpls/fservice/security/firewall/policy/list.html',function(html){
 				$tab.empty().append(html);
 				policy.bindEvent();
 			});
@@ -57,7 +57,7 @@ define(['Common','bs/modal','js/fservice/vpc/firewall/firewall','js/fservice/vpc
 		function renderRule(){
 			var $tab = $('.tab-content').find('div.rule');
 			Common.showLocalLoading($tab);
-			Common.render(false,'tpls/fservice/vpc/firewall/rule/list.html',function(html){
+			Common.render(false,'tpls/fservice/security/firewall/rule/list.html',function(html){
 				$tab.empty().append(html);
 				rule.bindEvent();
 			});

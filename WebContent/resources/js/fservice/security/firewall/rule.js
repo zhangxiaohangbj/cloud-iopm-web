@@ -1,4 +1,4 @@
-define('js/fservice/vpc/firewall/rule', ['Common','bs/modal','bs/tooltip','jq/form/validator-bs3','bs/switcher'],function(Common, Dialog){
+define('js/fservice/security/firewall/rule', ['Common','bs/modal','bs/tooltip','jq/form/validator-bs3','bs/switcher'],function(Common, Dialog){
 	var current_vdc_id = Common.cookies.getVdcId();
 	var bindEvent = function(){
 		//页面渲染完后进行各种事件的绑定
@@ -40,7 +40,7 @@ define('js/fservice/vpc/firewall/rule', ['Common','bs/modal','bs/tooltip','jq/fo
                  {
                 	 "targets":[1],
                 	 "render":function(data, type, full){
-                		 return '<a href="#fservice/vpc/firewall/rule/detail/'+data.id+'" class="rule_name" data="'+data.id+'">'+data.name+"</a>";
+                		 return '<a href="#fservice/security/firewall/rule/detail/'+data.id+'" class="rule_name" data="'+data.id+'">'+data.name+"</a>";
                 	 }
                  },
                  {
@@ -80,7 +80,7 @@ define('js/fservice/vpc/firewall/rule', ['Common','bs/modal','bs/tooltip','jq/fo
 			}
 		);
 		$.validator.addMethod("ip", function(value, element) {
-	    	return this.optional(element) || /^((\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.){3}(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])$/.test(value);
+	    	return this.optional(element) || /^((\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.){3}(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])(\/([0-9]|[1-2]\d|3[0-2])){0,1}$/.test(value);
 	    }, "请填写正确的IP地址");
 		$.validator.addMethod("port", function(value, element) {
 			if(value.indexOf(":") > -1){
@@ -132,13 +132,26 @@ define('js/fservice/vpc/firewall/rule', ['Common','bs/modal','bs/tooltip','jq/fo
 			        }
 			    });
 			},
-			switcher:function(){
+			switcher: function(){
 				$(".col-sm input[type=\"checkbox\"], input[type=\"radio\"]").not("[data-switch-no-init]").switcher();
+			},
+			protocolRule: function(){
+				$("#editFirewallRule [name='protocol']").on('change',function(){
+					var $this = $(this);
+					var value = $this.val();
+					if(value == "UNRECOGNIZED"){
+						$("#editFirewallRule [name='source_port']").disabled = true;
+						$("#editFirewallRule [name='destination_port']").disabled = true;
+					}else{
+						$("#editFirewallRule [name='source_port']").disabled = false;
+						$("#editFirewallRule [name='destination_port']").disabled = false;
+					}
+				});
 			}
 		}
 		//创建规则
-		Common.on("click","#RuleTable_wrapper span.btn-add",function(){
-			Common.render('tpls/fservice/vpc/firewall/rule/add.html','',function(html){
+		Common.on("click","#RuleTable_wrapper span.btn-add", function(){
+			Common.render('tpls/fservice/security/firewall/rule/add.html', '', function(html){
 				Dialog.show({
 				    title: '规则创建',
 				    message: html,
@@ -152,17 +165,17 @@ define('js/fservice/vpc/firewall/rule', ['Common','bs/modal','bs/tooltip','jq/fo
 				        	var ruleData = {
 			        			"firewall_rule": {
 			        				"tenant_id": current_vdc_id,
-		    						"name":  $("#addFirewallRule [name='name']").val(),
-		    						"description":  $("#addFirewallRule [name='description']").val(),
-		    						"protocol":  $("#addFirewallRule [name='protocol']").val(),
-		    						"source_ip_address":  $("#addFirewallRule [name='source_ip_address']").val(),
-		    						"source_port":  $("#addFirewallRule [name='source_port']").val(),
-		    						"destination_ip_address":  $("#addFirewallRule [name='destination_ip_address']").val(),
-		    						"destination_port":  $("#addFirewallRule [name='destination_port']").val(),
-		    						"ip_version":  $("#addFirewallRule [name='ip_version']").val(),
-		    						"shared": $("#addFirewallRule [name='shared']:checked").length? true:false,
-		    						"action": $("#addFirewallRule [name='action']:checked").length? "ALLOW":"DENY",
-    								"enabled": $("#addFirewallRule [name='enabled']:checked").length? true:false
+		    						"name":  $("#editFirewallRule [name='name']").val(),
+		    						"description":  $("#editFirewallRule [name='description']").val(),
+		    						"protocol":  $("#editFirewallRule [name='protocol']").val(),
+		    						"source_ip_address":  $("#editFirewallRule [name='source_ip_address']").val(),
+		    						"source_port":  $("#editFirewallRule [name='source_port']").val(),
+		    						"destination_ip_address":  $("#editFirewallRule [name='destination_ip_address']").val(),
+		    						"destination_port":  $("#editFirewallRule [name='destination_port']").val(),
+		    						"ip_version":  $("#editFirewallRule [name='ip_version']").val(),
+		    						"shared": $("#editFirewallRule [name='shared']:checked").length? true:false,
+		    						"action": $("#editFirewallRule [name='action']:checked").length? "ALLOW":"DENY",
+    								"enabled": $("#editFirewallRule [name='enabled']:checked").length? true:false
 		    						
 			        			}
 				        	};
@@ -178,6 +191,7 @@ define('js/fservice/vpc/firewall/rule', ['Common','bs/modal','bs/tooltip','jq/fo
 			            }
 			        }],
 			        onshown : function(){
+			        	EventsHandler.protocolRule();
 			        	EventsHandler.formValidator();
 			        	EventsHandler.switcher();
 			        }
@@ -188,7 +202,7 @@ define('js/fservice/vpc/firewall/rule', ['Common','bs/modal','bs/tooltip','jq/fo
 		Common.on("click","#RuleTable_wrapper a.editFirewallRule", function(){
 			var id= $(this).parents("tr:first").data("rowData.dt").id;
 			Common.xhr.ajax('/networking/v2.0/fw/firewall_rules/'+id,function(data){
-				Common.render('tpls/fservice/vpc/firewall/rule/edit.html', data.firewall_rule, function(html){
+				Common.render('tpls/fservice/security/firewall/rule/edit.html', data.firewall_rule, function(html){
 					Dialog.show({
 				        title: '编辑规则',
 				        message: html,
@@ -201,16 +215,16 @@ define('js/fservice/vpc/firewall/rule', ['Common','bs/modal','bs/tooltip','jq/fo
 				        		if(!valid) return false;
 				            	var ruleData = {
 				            			"firewall_rule": {
-				    						"name":  $("#addFirewallRule [name='name']").val(),
-				    						"description":  $("#addFirewallRule [name='description']").val(),
-				    						"protocol":  $("#addFirewallRule [name='protocol']").val(),
-				    						"source_ip_address":  $("#addFirewallRule [name='source_ip_address']").val(),
-				    						"source_port":  $("#addFirewallRule [name='source_port']").val(),
-				    						"destination_ip_address":  $("#addFirewallRule [name='destination_ip_address']").val(),
-				    						"destination_port":  $("#addFirewallRule [name='destination_port']").val(),
-				    						"shared": $("#addFirewallRule [name='shared']:checked").length? true:false,
-				    						"action": $("#addFirewallRule [name='action']:checked").length? "ALLOW":"DENY",
-		    								"enabled": $("#addFirewallRule [name='enabled']:checked").length? true:false
+				    						"name":  $("#editFirewallRule [name='name']").val(),
+				    						"description":  $("#editFirewallRule [name='description']").val(),
+				    						"protocol":  $("#editFirewallRule [name='protocol']").val(),
+				    						"source_ip_address":  $("#editFirewallRule [name='source_ip_address']").val(),
+				    						"source_port":  $("#editFirewallRule [name='source_port']").val(),
+				    						"destination_ip_address":  $("#editFirewallRule [name='destination_ip_address']").val(),
+				    						"destination_port":  $("#editFirewallRule [name='destination_port']").val(),
+				    						"shared": $("#editFirewallRule [name='shared']:checked").length? true:false,
+				    						"action": $("#editFirewallRule [name='action']:checked").length? "ALLOW":"DENY",
+		    								"enabled": $("#editFirewallRule [name='enabled']:checked").length? true:false
 				    						
 					        			}
 				            	};
@@ -226,6 +240,7 @@ define('js/fservice/vpc/firewall/rule', ['Common','bs/modal','bs/tooltip','jq/fo
 				            }
 				        }],
 				        onshown : function(){
+				        	EventsHandler.protocolRule();
 				        	EventsHandler.formValidator();
 				        	EventsHandler.switcher();
 				        }

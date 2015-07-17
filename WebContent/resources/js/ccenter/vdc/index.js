@@ -93,11 +93,14 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
                      {
                        "targets": [5],
                        "orderable": false,
-                       "data": {id:"id",name:"name",virtualEnvId:"virtualEnvId"},
+                       "data": {id:"id",name:"name",virtualEnvId:"virtualEnvId",virtualEnvName:"virtualEnvName"},
                        "render": function(data, type, full) {
+                    	   if(data.virtualEnvName == null){
+                    		   data.virtualEnvName ="";
+                    	   }
                          return '<a class="btn-opt members" href="javascript:void(0)" data="'+data.id+'" data-toggle="tooltip" title="成员管理" style="margin: 0;"><i class="fa fa-user fa-fw"></i></a>'
                             +'<a class="btn-opt updateQuota" href="javascript:void(0)" data="'+data.id+'" data-toggle="tooltip" title="配额管理" style="margin: 0;"><i class="fa fa-suitcase fa-fw"></i></a>'
-                            +'<a class="btn-opt vdcAz" href="javascript:void(0)" data="'+data.id+'" data-env="'+data.virtualEnvId+'" data-toggle="tooltip" title="可用分区管理" style="margin: 0;"><i class="fa fa-delicious fa-fw"></i></a>'
+                            +'<a class="btn-opt vdcAz" href="javascript:void(0)" data="'+data.id+'" data-env="'+data.virtualEnvId+'" data-env-name="'+data.virtualEnvName+'" data-toggle="tooltip" title="可用分区管理" style="margin: 0;"><i class="fa fa-delicious fa-fw"></i></a>'
                             +'<a class="btn-opt usage" href="#ccenter/vdc/usage/'+data.id+'" data="'+data.id+'" data-name="'+data.name+'" data-toggle="tooltip" title="使用情况" style="margin: 0;"><i class="fa fa-file-text fa-fw"></i></a>'
                             +'<a class="btn-opt editTenantBasic" href="javascript:void(0)" data="'+data.id+'" data-toggle="tooltip" title="编辑" style="margin: 0;"><i class="fa fa-edit fa-fw"></i></a>'
                             +'<a class="btn-opt deleteTenant" href="javascript:void(0)" data="'+data.id+'" data-name="'+data.name+'" data-toggle="tooltip" title="删除" style="margin: 0;"><i class="fa fa-trash-o fa-fw"></i></a>';
@@ -619,8 +622,9 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 		Common.on("click","#VdcTable a.vdcAz",function(){
 	    	var ve_id =  $(this).attr("data-env");
 	    	var vdc_id = $(this).attr("data");
+	    	var ve_name = $(this).attr("data-env-name");
 	    	//先获取az后，再render
-    		if(!ve_id){
+    		/*if(!ve_id){
     			ve_id = renderData.veList[0].id;//$('select.select-ve').children('option:selected').val();
     		}else{
     			for(var key in renderData.veList){
@@ -629,8 +633,8 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
     					obj.selected = "true";
     				}
     			}
-    		} 
-	    	more.AZ(ve_id,vdc_id);
+    		}*/ 
+	    	more.AZ(ve_id,vdc_id,ve_name);
 	    });
 	    //删除一个vdc
 		
@@ -686,11 +690,13 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 		    		})	
 		    	},
 	  //可用分区管理
-    	AZ : function(ve_id,vdc_id){
+    	AZ : function(ve_id,vdc_id,ve_name){
     		Common.xhr.ajax('/v2/os-availability-zone/virtualEnv/' + ve_id,function(eaz){
     			Common.xhr.ajax('/identity/v2.0/tenants/az/' + vdc_id,function(vaz){
     				var data = {
-    						veList:renderData.veList
+    						//veList:renderData.veList
+    						ve_name:ve_name,
+    						ve_id:ve_id
     				},
     				options = {
 						selector: '#vdcAZ',
@@ -712,7 +718,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
     	    	    	            buttons: [{
     	    	    	                label: '保存',
     	    	    	                action: function(dialog) {
-    	    	    	                	var virtualEnvId = $('select.select-ve').children('option:selected').val();
+    	    	    	                	var virtualEnvId = $("#ve_name [name='ve_name']").val();//$('select.select-ve').children('option:selected').val();
     	    	    	    				var putData={
     	    	    	    							"available_zones":jsonData.azJson("#vdcAZ .list-group-select"),
     	    	    	    							"virtualEnvId":virtualEnvId

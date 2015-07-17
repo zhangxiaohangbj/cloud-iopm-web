@@ -101,6 +101,7 @@ dependencies {
 	runtime("com.inspur.cloud:cloud-image:1.2.0-SNAPSHOT")
 	runtime("com.inspur.cloud:cloud-vdc:1.2.0-SNAPSHOT")
 	runtime("com.inspur.cloud:cloud-am:1.2.0-SNAPSHOT")
+	runtime("com.inspur.cloud:cloud-hardwaremanager:1.2.0-SNAPSHOT")
     runtime("com.inspur.cloud:cloud-monitor:1.2.0-SNAPSHOT")
 	runtime("cglib:cglib-nodep:2.2.2")
 	
