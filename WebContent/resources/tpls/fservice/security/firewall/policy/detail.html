@@ -1,7 +1,7 @@
 <div class="page-header">
 	<ol class="breadcrumb minus">
-		<li class="active">防火墙详情</li>
-		<li class="backlist"><a href="#fservice/vpc/firewall/tab/firewall">返回列表</a></li>
+		<li class="active">策略详情</li>
+		<li class="backlist"><a href="#fservice/security/firewall/tab/policy">返回列表</a></li>
 	</ol>
 </div>
 <div class="page-body">
@@ -15,41 +15,39 @@
 						<div class="row">
 							<label for="name" class="control-label col-sm-3">名称：</label>
 							<div class="col-sm-7 col-sm">
-								{{firewall.name}}
+								{{firewall_policy.name}}
 							</div>
 						</div>
 						<div class="row">
 							<label for="description" class="control-label col-sm-3">描述：</label>
 							<div class="col-sm-7 col-sm">
-								{{firewall.description}}
+								{{firewall_policy.description}}
 							</div>
 						</div>
 						<div class="row">
-							<label for="firewallPolicyName" class="control-label col-sm-3">策略：</label>
+							<label for="firewall_rules" class="control-label col-sm-3">规则：</label>
 							<div class="col-sm-7 col-sm">
-								{{firewall.firewallPolicyName}}
+								{{firewall_policy.firewallRuleNames}}
 							</div>
 						</div>
 						<div class="row">
-							<label for="status" class="control-label col-sm-3">状态：</label>
+							<label for="shared" class="control-label col-sm-3">共享的：</label>
 							<div class="col-sm-7 col-sm">
-								{{firewall.status}} 
-							</div>
-						</div>
-						<div class="row">
-							<label for="audited" class="control-label col-sm-3">管理状态：</label>
-							<div class="col-sm-7 col-sm">
-								{{if firewall.admin_state_up}} 
-									 启用
+								{{if firewall_policy.shared}} 
+									 是
 								{{else}}
-									禁用
+									否
 								{{/if}}
 							</div>
 						</div>
 						<div class="row">
-							<label for="routerNames" class="control-label col-sm-3">路由：</label>
+							<label for="audited" class="control-label col-sm-3">已审计：</label>
 							<div class="col-sm-7 col-sm">
-								{{firewall.routerNames}}
+								{{if firewall_policy.audited}} 
+									 是
+								{{else}}
+									否
+								{{/if}}
 							</div>
 						</div>
 					</div>

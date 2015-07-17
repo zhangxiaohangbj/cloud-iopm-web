@@ -1,7 +1,7 @@
 <div class="page-header">
 	<ol class="breadcrumb minus">
-		<li class="active">策略详情</li>
-		<li class="backlist"><a href="#fservice/vpc/firewall/tab/policy">返回列表</a></li>
+		<li class="active">防火墙详情</li>
+		<li class="backlist"><a href="#fservice/security/firewall/tab/firewall">返回列表</a></li>
 	</ol>
 </div>
 <div class="page-body">
@@ -15,39 +15,41 @@
 						<div class="row">
 							<label for="name" class="control-label col-sm-3">名称：</label>
 							<div class="col-sm-7 col-sm">
-								{{firewall_policy.name}}
+								{{firewall.name}}
 							</div>
 						</div>
 						<div class="row">
 							<label for="description" class="control-label col-sm-3">描述：</label>
 							<div class="col-sm-7 col-sm">
-								{{firewall_policy.description}}
+								{{firewall.description}}
 							</div>
 						</div>
 						<div class="row">
-							<label for="firewall_rules" class="control-label col-sm-3">规则：</label>
+							<label for="firewallPolicyName" class="control-label col-sm-3">策略：</label>
 							<div class="col-sm-7 col-sm">
-								{{firewall_policy.firewallRuleNames}}
+								{{firewall.firewallPolicyName}}
 							</div>
 						</div>
 						<div class="row">
-							<label for="shared" class="control-label col-sm-3">共享的：</label>
+							<label for="status" class="control-label col-sm-3">状态：</label>
 							<div class="col-sm-7 col-sm">
-								{{if firewall_policy.shared}} 
-									 是
+								{{firewall.status}} 
+							</div>
+						</div>
+						<div class="row">
+							<label for="audited" class="control-label col-sm-3">管理状态：</label>
+							<div class="col-sm-7 col-sm">
+								{{if firewall.admin_state_up}} 
+									 启用
 								{{else}}
-									否
+									禁用
 								{{/if}}
 							</div>
 						</div>
 						<div class="row">
-							<label for="audited" class="control-label col-sm-3">已审计：</label>
+							<label for="routerNames" class="control-label col-sm-3">路由：</label>
 							<div class="col-sm-7 col-sm">
-								{{if firewall_policy.audited}} 
-									 是
-								{{else}}
-									否
-								{{/if}}
+								{{firewall.routerNames}}
 							</div>
 						</div>
 					</div>
