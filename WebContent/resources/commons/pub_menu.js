@@ -182,7 +182,7 @@ define('commons/pub_menu', function() {
                             link: '#security/keypair/'
                         },
                         {
-                            text: '<i class="fa fa-dot fa-1"></i>防火墙管理',
+                            text: '<i class="fa fa-dot fa-1"></i>防火墙',
                             link: '#security/firewall/'
                         }
                     ]
