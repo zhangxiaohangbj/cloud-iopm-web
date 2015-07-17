@@ -105,12 +105,13 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 	    var moreAction = {
     		//删除
     		deleteVolume: function(){
-    			Common.on('click','.dropdown-menu a.delete',function(){
+    			Common.on('click','a.delete',function(){
     				var rowdata = $(this).parents("tr:first").data("rowData.dt");
     				var id = rowdata.id;
-	       	    	 Modal.confirm('确定要删除该磁盘吗?', function(result){
+    				debugger
+	       	    	 Modal.confirm('确定要删除该快照吗?', function(result){
 	       	             if(result) {
-	       	            	 Common.xhr.del("/v2/" + current_vdc_id + "/volumes/" + id, "",
+	       	            	 Common.xhr.del("/block-storage/v2/" + current_vdc_id + "/snapshots/" + id, "",
 	       	                     function(data){
 	       	                    	 if(data){
 	        	                			Modal.success('删除成功')

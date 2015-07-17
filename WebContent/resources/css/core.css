@@ -621,6 +621,17 @@ table.dataTable > tbody > tr > td .btn-opt i {
 	font-size:13px;
 	color:#227B9B;
 }
+.dataTables_wrapper .tableInfos > * {
+	text-align: center;
+}
+.dataTables_wrapper .tableInfos .dataTables_info,
+.dataTables_wrapper .tableInfos .dataTables_length,
+.dataTables_wrapper .tableInfos .dataTables_paginate {
+	float: none;
+	display: inline-block;
+	vertical-align: middle;
+	margin: 0 10px;
+}
 .tableMenus .dataTables_filter label {
 	float:left;
 	position: relative;
@@ -636,20 +647,20 @@ table.dataTable > tbody > tr > td .btn-opt i {
 	margin-top: -7px;
 }
 .dataTables_wrapper .tableInfos .dataTables_paginate {
-	float: left;
-	margin: 0;
-	padding-top: 7px;
+	padding-top: 0;
 }
 .tableInfos .dataTables_paginate ul.pagination {
-	float: left;
-	margin: 0 0 0 35px;
+	margin: 0;
 }
 .tableInfos .dataTables_paginate .pagination>li>a,
 .tableInfos .dataTables_paginate .pagination>li>span {
     padding: 0.2em 0.6em;
 }
+.dataTables_wrapper .dataTables_paginate .paginate_button {
+	vertical-align: middle;
+}
 table.dataTable + .row {
-    margin-top: 50px;
+    margin-top: 30px;
 }
 table.dataTable + .row > [class*="col-"] {
     padding: 0 15px 0 20px;
@@ -693,7 +704,6 @@ table.dataTable + .row > [class*="col-"] {
 	font-size:13px;
 }
 .dataTables_wrapper .tableInfos .dataTables_info {
-	float:right;
 	padding-top: 0;
 }
 .dataTables_wrapper span.nums{

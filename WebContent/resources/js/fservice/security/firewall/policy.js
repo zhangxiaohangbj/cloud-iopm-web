@@ -1,4 +1,4 @@
-define('js/fservice/vpc/firewall/policy', ['Common','bs/modal','bs/tooltip','jq/form/validator-bs3','bs/switcher'],function(Common, Dialog){
+define('js/fservice/security/firewall/policy', ['Common','bs/modal','bs/tooltip','jq/form/validator-bs3','bs/switcher'],function(Common, Dialog){
 	var current_vdc_id = Common.cookies.getVdcId();
 	var bindEvent = function(){
 		//页面渲染完后进行各种事件的绑定
@@ -34,7 +34,7 @@ define('js/fservice/vpc/firewall/policy', ['Common','bs/modal','bs/tooltip','jq/
                  {
                 	 "targets":[1],
 	                 "render":function(data, type, full){
-	            		 return '<a href="#fservice/vpc/firewall/policy/detail/'+data.id+'" class="policy_name" data="'+data.id+'">'+data.name+"</a>";
+	            		 return '<a href="#fservice/security/firewall/policy/detail/'+data.id+'" class="policy_name" data="'+data.id+'">'+data.name+"</a>";
 	            	 }
                  },
                  {
@@ -50,10 +50,10 @@ define('js/fservice/vpc/firewall/policy', ['Common','bs/modal','bs/tooltip','jq/
                  {
                 	 "targets": [4],
                 	 "render": function(data, type, full) {
-                		 var html = '<a class="btn-opt editFirewallRule" href="javascript:void(0)" data="'+data.id+'" data-name="'+data.name+'" data-toggle="tooltip" title="编辑策略" style="margin: 0;"><i class="fa fa-edit fa-fw"></i></a>'
+                		 var html = '<a class="btn-opt editPolicy" href="javascript:void(0)" data="'+data.id+'" data-name="'+data.name+'" data-toggle="tooltip" title="编辑策略" style="margin: 0;"><i class="fa fa-edit fa-fw"></i></a>'
                 		 			+'<a class="btn-opt insertRule" href="javascript:void(0)" data="'+data.id+'" data-name="'+data.name+'" data-toggle="tooltip" title="插入规则" style="margin: 0;"><i class="fa fa-indent fa-fw"></i></a>'
                 		 			+'<a class="btn-opt removeRule" href="javascript:void(0)" data="'+data.id+'" data-name="'+data.name+'" data-toggle="tooltip" title="移除规则" style="margin: 0;"><i class="fa fa-outdent fa-fw"></i></a>'
-                         		    +'<a class="btn-opt deleteFirewallRule" href="javascript:void(0)" data="'+data.id+'" data-name="'+data.name+'" data-toggle="tooltip" title="删除策略" style="margin: 0;"><i class="fa fa-trash-o fa-fw"></i></a>';
+                         		    +'<a class="btn-opt deletePolicy" href="javascript:void(0)" data="'+data.id+'" data-name="'+data.name+'" data-toggle="tooltip" title="删除策略" style="margin: 0;"><i class="fa fa-trash-o fa-fw"></i></a>';
                 		 return html;
                 	 }
                  }
@@ -172,7 +172,7 @@ define('js/fservice/vpc/firewall/policy', ['Common','bs/modal','bs/tooltip','jq/
 		
 		//创建策略
 		Common.on("click","#PolicyTable_wrapper span.btn-add",function(){
-			Common.render('tpls/fservice/vpc/firewall/policy/add.html','',function(html){
+			Common.render('tpls/fservice/security/firewall/policy/add.html','',function(html){
 				Dialog.show({
 				    title: '策略创建',
 				    message: html,
@@ -226,7 +226,7 @@ define('js/fservice/vpc/firewall/policy', ['Common','bs/modal','bs/tooltip','jq/
 		Common.on("click","#PolicyTable_wrapper a.editPolicy", function(){
 			var id= $(this).parents("tr:first").data("rowData.dt").id;
 			Common.xhr.ajax('/networking/v2.0/fw/firewall_policies/'+id,function(data){
-				Common.render('tpls/fservice/vpc/firewall/policy/edit.html', data.firewall_policy, function(html){
+				Common.render('tpls/fservice/security/firewall/policy/edit.html', data.firewall_policy, function(html){
 					Dialog.show({
 				        title: '编辑策略',
 				        message: html,
@@ -287,7 +287,7 @@ define('js/fservice/vpc/firewall/policy', ['Common','bs/modal','bs/tooltip','jq/
 		//插入规则
 		Common.on("click","#PolicyTable_wrapper a.insertRule", function(){
 			var id= $(this).parents("tr:first").data("rowData.dt").id;
-			Common.render('tpls/fservice/vpc/firewall/policy/insert_rule.html', function(html){
+			Common.render('tpls/fservice/security/firewall/policy/insert_rule.html', function(html){
 				Dialog.show({
 			        title: '插入规则',
 			        message: html,
@@ -328,7 +328,7 @@ define('js/fservice/vpc/firewall/policy', ['Common','bs/modal','bs/tooltip','jq/
 		//移除规则
 		Common.on("click","#PolicyTable_wrapper a.removeRule", function(){
 			var id= $(this).parents("tr:first").data("rowData.dt").id;
-			Common.render('tpls/fservice/vpc/firewall/policy/remove_rule.html', function(html){
+			Common.render('tpls/fservice/security/firewall/policy/remove_rule.html', function(html){
 				Dialog.show({
 			        title: '移除规则',
 			        message: html,
