@@ -1,0 +1,129 @@
+<div class="wizard" id="create-notification-wizard" data-title="添加通知方案">
+    <!-- 基本信息 -->
+    <div class="wizard-card" data-cardname="basic">
+        <h3>基本信息</h3>
+        <div class="wizard-card-content col-sm-8">
+            <div class="wizard-input-section">
+                <div class="form-group">
+                    <label for="name" class="control-label col-sm-3"><span>* </span>名称：</label>
+                    <div class="col-sm-5 col-sm">
+                        <input type="text" class="form-control" id="name" name="name"  placeholder="通知方案名称"/>
+                    </div>
+                </div>
+            </div>
+
+            <div class="wizard-input-section">
+                <div class="form-group">
+                    <label for="type" class="control-label col-sm-3">类型：</label>
+                    <div class="col-sm-5 col-sm">
+                        <select name="type" id="type"  class="form-control select type">
+                            {{each data.typeList as item i}}
+                            <option value="{{item.id}}">{{item.name}}</option>
+                            {{/each}}
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <div class="wizard-input-section">
+                <div class="form-group">
+                    <label for="description" class="control-label col-sm-3">描述：</label>
+                    <div class="col-sm-5 col-sm">
+                        <textarea rows="9" class="form-control" id="description" name="description"  placeholder="告警方案名称"></textarea>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        <div class="wizard-card-desc col-sm-4">
+            <p>名称规则：1.数字、字母、下划线组成；2.字母开头；3.长度1-15个字符</p>
+        </div>
+
+    </div>
+
+    <!--详细信息 -->
+    <div class="wizard-card" data-cardname="account">
+        <h3>账号及验证</h3>
+        <div class="wizard-card-content col-sm-8">
+            <div id="mail" class="wizard-input-section account hidden">
+                <div class="form-group">
+                    <label for="account-mail" class="control-label col-sm-3"><span>* </span>账号：</label>
+                    <div  class="col-sm-5 col-sm">
+                        <input type="text" class="form-control" id="account-mail" name="account-mail"  placeholder="邮箱账号"/>
+                    </div>
+                </div>
+            </div>
+            <div id="sms" class="wizard-input-section account hidden">
+                <div class="form-group">
+                    <label for="account-sms" class="control-label col-sm-3"><span>* </span>账号：</label>
+                    <div  class="col-sm-5 col-sm">
+                        <input type="text" class="form-control" id="account-sms" name="account-sms"  placeholder="手机号"/>
+                    </div>
+                </div>
+            </div>
+            <div id="url" class="wizard-input-section account hidden">
+                <div class="form-group">
+                    <label for="account-url" class="control-label col-sm-3"><span>* </span>账号：</label>
+                    <div  class="col-sm-5 col-sm">
+                        <input type="text" class="form-control" id="account-url" name="account-url"  placeholder="url链接"/>
+                    </div>
+                </div>
+            </div>
+
+            <div class="wizard-input-section">
+                <div class="form-group">
+                    <label for="account-sign" class="control-label col-sm-3"><span>* </span>获取验证信息：</label>
+                    <div class="col-sm-5 col-sm">
+                        <input type="text" class="form-control" id="account-sign" name="account-sign"  placeholder="验证码"/>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="wizard-card-desc col-sm-4">
+            <p>输入账号，并获取验证码，验证码1分钟内有效。</p>
+        </div>
+    </div>
+
+    <div class="wizard-card" data-cardname="confirm">
+        <h3>确认信息</h3>
+        <div class="wizard-card-content col-sm-8">
+            <div class="wizard-input-section">
+                <div class="form-group">
+                    <label for="name-confirm" class="control-label col-sm-3">名称：</label>
+                    <div class="col-sm-5 col-sm">
+                        <input type="text" class="form-control" id="name-confirm" name="name-confirm" disabled />
+                    </div>
+                </div>
+            </div>
+            <div class="wizard-input-section">
+                <div class="form-group">
+                    <label for="type-confirm" class="control-label col-sm-3">类型：</label>
+                    <div class="col-sm-5 col-sm">
+                        <input type="text" class="form-control" id="type-confirm" name="type-confirm" disabled />
+                    </div>
+                </div>
+            </div>
+            <div class="wizard-input-section">
+                <div class="form-group">
+                    <label for="description-confirm" class="control-label col-sm-3">描述：</label>
+                    <div class="col-sm-5 col-sm">
+                        <textarea rows="9" class="form-control" id="description-confirm" name="description-confirm" disabled />
+                    </div>
+                </div>
+            </div>
+
+            <div class="wizard-input-section">
+                <div class="form-group">
+                    <label for="account-confirm" class="control-label col-sm-3">账号：</label>
+                    <div class="col-sm-5 col-sm">
+                        <input type="text" class="form-control" id="account-confirm" name="account-confirm" disabled />
+                    </div>
+                </div>
+            </div>
+       </div>
+        <div class="wizard-card-desc col-sm-4">
+            <p>确认填写无误，提交方案信息。</p>
+        </div>
+    </div>
+
+</div>
