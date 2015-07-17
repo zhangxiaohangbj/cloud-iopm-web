@@ -3,7 +3,7 @@ define('js/fservice/security/firewall/rule', ['Common','bs/modal','bs/tooltip','
 	var bindEvent = function(){
 		//页面渲染完后进行各种事件的绑定
 		//dataTables
-		Common.initDataTable($('#RuleTable'),{
+		var table = Common.initDataTable($('#RuleTable'),{
 			"processing": true,  //加载效果，默认false
 			"serverSide": true,  //页面在加载时就请求后台，以及每次对 datatable 进行操作时也是请求后台
 			"ordering": false,   //禁用所有排序
@@ -44,6 +44,13 @@ define('js/fservice/security/firewall/rule', ['Common','bs/modal','bs/tooltip','
                 	 }
                  },
                  {
+                	 "targets":[2],
+                	 "render":function(data, type, full){
+                		 if(data == 'UNRECOGNIZED') return '任何';
+                		 return data;
+                	 }
+                 },
+                 {
                 	 "targets":[7],
                 	 "render":function(data, type, full){
                 		 if(data == 'ALLOW') return ' <span class="text-success">允许</span>';
@@ -74,7 +81,9 @@ define('js/fservice/security/firewall/rule', ['Common','bs/modal','bs/tooltip','
                  ]
 			},
 			function($tar){
-				$tar.prev().find('.left-col:first').append('<span class="btn btn-add">创建规则</span>');
+				var $tbMenu = $tar.prev('.tableMenus');
+		    	$tbMenu.length && $tbMenu.empty().html($('.table-menus').html());
+		    	
 				var $tab = $('.tab-content').find('div.policy');
 				Common.hideLocalLoading($tab);
 			}
@@ -140,15 +149,20 @@ define('js/fservice/security/firewall/rule', ['Common','bs/modal','bs/tooltip','
 					var $this = $(this);
 					var value = $this.val();
 					if(value == "UNRECOGNIZED"){
-						$("#editFirewallRule [name='source_port']").disabled = true;
-						$("#editFirewallRule [name='destination_port']").disabled = true;
+						$("#editFirewallRule [name='source_port']").prop("disabled", true)
+						$("#editFirewallRule [name='destination_port']").prop("disabled", true)
 					}else{
-						$("#editFirewallRule [name='source_port']").disabled = false;
-						$("#editFirewallRule [name='destination_port']").disabled = false;
+						$("#editFirewallRule [name='source_port']").prop("disabled", false)
+						$("#editFirewallRule [name='destination_port']").prop("disabled", false)
 					}
 				});
 			}
 		}
+		
+		Common.on('click','.dataTables_filter .btn-query',function(){
+			table.search($('.global-search').val()).draw();
+		});
+		
 		//创建规则
 		Common.on("click","#RuleTable_wrapper span.btn-add", function(){
 			Common.render('tpls/fservice/security/firewall/rule/add.html', '', function(html){

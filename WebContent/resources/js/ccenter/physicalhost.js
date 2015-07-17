@@ -16,44 +16,27 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 		      "processing": true,  //加载效果，默认false
 		      "serverSide": true,  //页面在加载时就请求后台，以及每次对 datatable 进行操作时也是请求后台
 		      "ordering": false,   //禁用所有排序
-		      "sAjaxSource":"identity/v2.0/users/page/", //ajax源，后端提供的分页接口
+		      "sAjaxSource":"computer/v2.1/os-hosts/page/", //ajax源，后端提供的分页接口
 	    	  /*属性 columns 用来配置具体列的属性，包括对应的数据列名,如trueName，是否支持搜索，是否显示，是否支持排序等*/
 		      "columns": [
 			        {
 			        	"orderable": false,
-			        	"defaultContent":"<label><input type='checkbox'></label>"
+			        	"defaultContent":"<label></label>"
 			        },
 			        {"data": "name"},
-			        {"data": "trueName"},
-			        {"data": "phone"},
-			        {"data": "email"},
+			        {"data": "vendor"},
+			        {"data": "availableZoneId"},
+			        {"data": "vcpus"},
+			        {"data": "memoryMb"},
 			        {"data": "status"},
+			        {"data": "virtual_env_id"},
 			        {
 			        	"defaultContent":'<a class="btn-edit" data-toggle="tooltip" title="编辑" href="javascript:void(0)" data-act="stop"><li class="glyphicon glyphicon-edit"></li></a>'
 						+'<a class="btn-delete" data-toggle="tooltip" title="删除" href="javascript:void(0)" style="margin: 0 8px;"><i class="fa fa-trash-o fa-fw"></i></a>'
-						+'<a class="btn-edit-role" data-toggle="tooltip" title="权限设置" href="javascript:void(0)" style="margin: 0 8px;">权限设置</a>'
+						+'<a class="btn-edit-role" data-toggle="tooltip" title="上电" href="javascript:void(0)" style="margin: 0 8px;">上电</a>'
+						+'<a class="btn-edit-role" data-toggle="tooltip" title="下电" href="javascript:void(0)" style="margin: 0 8px;">下电</a>'
 			        }
-		      ],
-		      /*
-		       * columnDefs 属性操作自定义列
-		       * targets ： 表示具体需要操作的目标列，下标从 0 开始
-		       * data: 表示我们需要的某一列数据对应的属性名
-		       * render: 返回需要显示的内容。在此我们可以修改列中样式，增加具体内容
-		       *  属性列表： data，之前属性定义中对应的属性值； type，未知；full,全部数据值可以通过属性列名获取 
-		       * */
-		      "columnDefs": [
-					{
-					    "targets": [5],
-					    "data": "status",
-					    "render": function(data, type, full) {
-					    	if(data == "normal") return "正常";
-					    	if(data == "locked") return "已锁定";
-					    	if(data == "delete") return "已删除";
-					    	if(data == "disabled") return "已禁用";
-					    	if(data == "reset_pwd") return "密码重置";
-					    }
-					}
-                ]
+		      ]
 		    },
 		    function($tar){
 		    	var $tbMenu = $tar.prev('.tableMenus');
@@ -284,7 +267,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 				})
 			},
 			//配额的表单验证
-			user_form:function($form){
+			physicalhost_form:function($form){
 				if(!$form)return null;
 				return $form.validate({
 					errorContainer: "_form",
@@ -404,7 +387,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
     			wizard.on('show',function(){
     				wizard.form.each(function(){
     					//表单校验
-    					EventsHandler.user_form($(this));
+    					EventsHandler.physicalhost_form($(this));
     				})
     				
     			});
@@ -511,7 +494,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 	    	            }],
 	    	            onshown : function(){
 	    	            	EventsHandler.organChoose();
-	    	            	EventsHandler.user_form($(".form-horizontal"));
+	    	            	EventsHandler.physicalhost_form($(".form-horizontal"));
 	    	            }
 	    	        });
 	    		});

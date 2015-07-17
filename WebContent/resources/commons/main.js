@@ -24,7 +24,7 @@ define('commons/main',
     // init dataTable
     if($.fn.dataTable) {
         $.extend(true, $.fn.dataTable.defaults, {
-            "dom": "<'row tableMenus'<'col-sm-6 left-col'><'col-sm-6 right-col'f>>" + "t" + "<'row tableInfos'<'col-sm-4'i><'col-sm-8'lp>>",
+            "dom": "<'row tableMenus'<'col-sm-6 left-col'><'col-sm-6 right-col'f>>" + "t" + "<'row tableInfos'<'col-sm-12'ilp>>",
             "language": {
                 "search": "_INPUT_<i class='fa fa-search'></i>",
                 "lengthMenu": "每页显示 _MENU_ 条",
