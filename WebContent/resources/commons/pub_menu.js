@@ -44,7 +44,7 @@ define('commons/pub_menu', function() {
                     items: [
                         {
                             text: '<i class="fa fa-dot fa-1"></i>服务器',
-                            link: '#'
+                            link: '#physicalhost'
                         },
                         {
                             text: '<i class="fa fa-dot fa-1"></i>存储设备',
