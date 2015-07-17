@@ -15,6 +15,28 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 
     };
 
+    var validatorOptions = {
+        errorContainer: '_form',
+        rules: {
+            'name': {
+                required: true,
+                minlength: 1,
+                maxlength:15,
+                name_cn:true
+            },
+            'thresholds': {
+                required: true,
+                number:true,
+                range:[0,100]
+            },
+            'period-count': {
+                required: true,
+                number:true,
+                range:[1,5]
+            }
+        }
+    }
+
     var bindEvent = function() {
         //页面渲染完后进行各种事件的绑定
         //dataTables
@@ -80,8 +102,16 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
                 })
             },
             getCompareStrategy:function(){
-                Common.xhr.ajax("/virtual-env/type",function(data){
-                    renderData.compareStrategy = data;
+                Common.xhr.ajax("/resources/data/strategy.txt",function(data){
+                    var strategy = [];
+                    for(var item in data){
+                        var tmp = {
+                            id:item,
+                            name:data[item]
+                        }
+                        strategy.push(tmp)
+                    }
+                    renderData.compareStrategy = strategy;
                 })
             }
         };
@@ -89,6 +119,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
         DataIniter.getResourceType();
         DataIniter.getPeriod();
         DataIniter.getSeverity();
+        DataIniter.getCompareStrategy();
 
         //载入后的事件
         $("#alarmDefineTable_wrapper span.btn-add").on("click",function(){
@@ -122,22 +153,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
                 //加载时载入validate
                 wizard.on('show',function(){
                     wizard.form.each(function(){
-                        $(this).validate({
-                            errorContainer: '_form',
-                            rules: {
-                                'name': {
-                                    required: true,
-                                    minlength: 1,
-                                    maxlength:15,
-                                    name_cn:true
-                                },
-                                'thresholds': {
-                                    required: true,
-                                    number:true,
-                                    range:[0,100]
-                                }
-                            }
-                        });
+                        $(this).validate(validatorOptions);
                     })
                 });
                 wizard.cards.strategy.on("selected",function(card){
@@ -174,7 +190,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
                         severity:$("#severity").val(),
                         resourceId:$("#resource-type").val(),
                         periodTime:$("#period option:selected").val(),
-                        periodCount:$("#period-count option:selected").val(),
+                        periodCount:$("#period-count").val(),
                         isRepeated:$("#repeated option:selected").val(),
                         meterId:$("#meter option:selected").val(),
                         alarmCondition:condition,
@@ -202,7 +218,6 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
         //删除
         $("a.delete").on("click",function(){
             var id = $(this).attr("data");
-
             Modal.confirm('确定要删除该告警方案吗?',function(result){
                 if(result) {
                     Common.xhr.del('monitor/v2/alarmDefines/'+id,
@@ -224,8 +239,8 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 
         })
 
-
-
+        //更多编辑
+        //编辑基本信息
         $("ul.dropdown-menu a.edit-basic").on("click",function(){
             var id = $(this).attr("data");
             Common.xhr.ajax('monitor/v2/alarmDefines/'+id,function(alarm){
@@ -236,7 +251,6 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
                     }
                 }
                alarm.severityList =renderData.severity;
-
                 Common.render('tpls/monitor/monitor/alarm/editBasic.html',alarm,function(html){
                     Modal.show({
                         title: '编辑基本信息',
@@ -251,6 +265,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
                             {
                                 label: '保存',
                                 action: function(dialog) {
+
                                     var alarm={
                                         severity:$("#severity option:selected").val(),
                                         isRepeated:$("#isRepeated option:selected").val(),
@@ -263,8 +278,10 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
                                     Common.xhr.putJSON('/monitor/v2/alarmDefines/'+id,alarm,function(data){
                                         if(data && data.error !=true){
                                             Modal.success('保存成功');
-                                            setTimeout(function(){Modal.closeAll()},2000);
+                                            setTimeout(function(){Modal.closeAll();
                                             Common.router.route();
+                                            },2000);
+
                                         }else{
                                             Modal.warning ('保存失败')
                                         }
@@ -276,17 +293,115 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
                 });
             })
         });
-
+        //编辑周期
+        $("ul.dropdown-menu a.edit-period").on("click",function(){
+            var id= $(this).attr("data");
+            Common.xhr.ajax('monitor/v2/alarmDefines/'+id,function(alarm){
+                alarm.period = renderData.period;
+                Common.render('tpls/monitor/monitor/alarm/editPeriod.html',alarm,function(html){
+                    Modal.show({
+                        title: '编辑告警周期',
+                        message: html,
+                        nl2br: false,
+                        buttons: [{
+                            label:'取消',
+                            action:function(dialog){
+                                dialog.close();
+                            }
+                        },
+                            {
+                                label: '保存',
+                                action: function(dialog) {
+                                    var valid = $(".form-horizontal").valid();
+                                    if(!valid) return false;
+                                    var alarm={
+                                        periodTime:$("#periodTime option:selected").val(),
+                                        periodCount:$("#period-count").val()
+                                    }
+                                    Common.xhr.putJSON('/monitor/v2/alarmDefines/'+id,alarm,function(data){
+                                        if(data && data.error !=true){
+                                            Modal.success('保存成功');
+                                            setTimeout(function(){Modal.closeAll();
+                                                Common.router.route();
+                                            },2000);
+                                        }else{
+                                            Modal.warning ('保存失败')
+                                        }
+                                    })
+                                }
+                            }],
+                        onshown : function(){}
+                    });
+                })
+            })
+        })
+        //编辑告警策略
         $("ul.dropdown-menu a.edit-strategy").on("click",function(){
            var id = $(this).attr("data");
             Common.xhr.ajax('monitor/v2/alarmDefines/'+id,function(alarm){
+                var conArr = alarm.alarmCondition.split(":");;
+                var descArr = alarm.alarmDescription.split(/[><]/);
+                //获取条件
+                var curStrategy = {
+                    meterId:conArr[0],
+                    meterName:descArr[0],
+                    operator:conArr[1],
+                    threshold:conArr[2],
+                    strategy:conArr[3]
+                }
                 var strategyList = [];
                 for(var i in renderData.compareStrategy){
-                    if(alarm.severity == renderData.compareStrategy[i].id){
-                        renderData.severity[i].selected = "selected";
+                    var tmp = {
+                        id:renderData.compareStrategy[i].id,
+                        name:renderData.compareStrategy[i].name
                     }
+                    if(conArr[3] == renderData.compareStrategy[i].id){
+                        tmp.selected = "selected";
+                    }
+                    strategyList.push(tmp)
                 }
-                alarm.severityList =renderData.severity;
+                curStrategy.strategyList = strategyList;
+                Common.render('tpls/monitor/monitor/alarm/editStrategy.html',curStrategy,function(html){
+                    Modal.show({
+                        title: '编辑告警策略',
+                        message: html,
+                        nl2br: false,
+                        buttons: [{
+                            label:'取消',
+                            action:function(dialog){
+                                dialog.close();
+                            }
+                        },
+                            {
+                                label: '保存',
+                                action: function(dialog) {
+                                    var alarm={
+                                        alarmCondition:curStrategy.meterId+":"+
+                                            $("#compareOperator option:selected").val()+":"+
+                                            $("#threshold").val()+":"+
+                                            $("#strategy option:selected").val(),
+                                        alarmDescription:curStrategy.meterName+" "+
+                                            $("#compareOperator option:selected").text()+" "+
+                                            $("#threshold").val()+" ("+
+                                            $("#strategy option:selected").text()+")"
+                                    }
+                                    Common.xhr.putJSON('/monitor/v2/alarmDefines/'+id,alarm,function(data){
+                                        if(data && data.error !=true){
+                                            Modal.success('保存成功');
+                                            setTimeout(function(){Modal.closeAll();
+                                                Common.router.route();
+                                            },2000);
+
+                                        }else{
+                                            Modal.warning ('保存失败')
+                                        }
+                                    })
+                                }
+                            }],
+                        onshown : function(){}
+                    });
+                });
+
             })
         });
 

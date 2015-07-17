@@ -45,7 +45,7 @@
                     <div class="col-sm-5 col-sm">
                         <select name="period" id="period"  class="form-control select select-period">
                             {{each data.period as item i}}
-                            <option value="{{item.name}}">{{item.name}}</option>
+                            <option value="{{item}}">{{item}}s</option>
                             {{/each}}
                         </select>
                     </div>
@@ -56,13 +56,7 @@
                 <div class="form-group">
                     <label for="period-count" class="control-label col-sm-3"><span>* </span>周期数：</label>
                     <div class="col-sm-5 col-sm">
-                        <select name="period-count" id="period-count"  class="form-control select select-period-count">
-                            <option value="1">1</option>
-                            <option value="2">2</option>
-                            <option value="3">3</option>
-                            <option value="4">4</option>
-                            <option value="5">5</option>
-                        </select>
+                        <input type="text" class="form-control" id="period-count" name="period-count"  value="1"/>
                     </div>
                 </div>
             </div>
@@ -127,11 +121,9 @@
                     <label for="comparison-strategy" class="control-label col-sm-3"><span>* </span>比较策略：</label>
                     <div class="col-sm-5 col-sm">
                         <select name="comparison-strategy" id="comparison-strategy"  class="form-control select select-operators">
-                            <option value="avg">平均</option>
-                            <option value="sum">求和</option>
-                            <option value="min">最大值</option>
-                            <option value="max">最小值</option>
-                            <option value="count">统计个数</option>
+                            {{each data.compareStrategy as item i}}
+                            <option value="{{item.id}}">{{item.name}}</option>
+                            {{/each}}
                         </select>
                     </div>
                 </div>
