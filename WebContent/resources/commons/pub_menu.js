@@ -137,7 +137,7 @@ define('commons/pub_menu', function() {
                     items: [
                         {
                             text: '<i class="fa fa-dot fa-1"></i>磁盘快照',
-                            link: '#snapshot/volume'
+                            link: '#snapshot/volume/'
                         },
                         {
                             text: '<i class="fa fa-dot fa-1"></i>主机快照',

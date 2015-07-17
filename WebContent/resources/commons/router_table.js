@@ -18,7 +18,7 @@ define('commons/router_table', function() {
         '^#sysmanagement(!.*)?$': "js/sysmanagement/user",
         '^#ccenter/vmtype/metadataList/(.*)$' :"js/ccenter/vmtype/metadata",
         '^#fservice/block/detail/(.*)$' :"js/fservice/block/detail",
-        '^#fservice/snapshot/volume/detail/(.*)$' :"js/fservice/snapshot/detail",
+        '^#fservice/snapshot/volume/detail/(.*)$' :"js/fservice/snapshot/volume/detail",
         '^#fservice/snapshot/vm/detail/(.*)$' :"js/fservice/snapshot/detail",
         '^#ccenter/vdc/usage/(.*)$' :"js/ccenter/vdc/usage",
         '^#fservice/vm/detail/(.*)$' :"js/fservice/vm/detail",
