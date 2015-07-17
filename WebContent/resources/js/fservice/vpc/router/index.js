@@ -336,7 +336,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 					      "sAjaxSource":"networking/v2.0/ports/page/",
 					      "fnServerData": function( sSource, aoData, fnCallback ) {
 					    	  //拼装请求参数
-					    	  aoData.push({"name":"device_owner","value":"network"},{"name":"device_id","value":id});
+					    	  aoData.push({"name":"device_id","value":id});
 					    	    $.ajax( {   
 					    	        "url": sSource + (aoData[3].value/aoData[4].value+1) +"/"+aoData[4].value, 
 					    	        "data":aoData,
@@ -354,7 +354,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 						        	"orderable": false,
 						        	"defaultContent":"<label><input type='checkbox'></label>"
 						        },
-						        {"data": "network_id"},
+						        {"data": "network_name"},
 						        {"data": "fixed_ips"}, //fixed_ips[0].subnet_id
 						        {"data": ""}, //fixed_ips[0].ip_address
 						        {"data": "status"},
