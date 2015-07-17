@@ -12,28 +12,27 @@
 						<th class="c5">
 							<label><input type="checkbox" class="selectAll"></label>
 						</th>
-						<th class="c15">登录账号</th>
-						<th class="c15">姓名</th>
-						<th class="c15">手机号</th>
-						<th class="c20">邮箱</th>
+						<th class="c15">服务器名称</th>
+						<th class="c15">设备提供者</th>
+						<th class="c15">区域</th>
+						<th class="c15">CPU核数</th>
+						<th class="c15">内存(总计)</th>
 						<th class="c15">状态</th>
+						<th class="c15">所属虚拟化环境</th>
 						<th class="c15 sorting_disabled">操作</th>
 					</tr>
 				</thead>
 			</table>
 			<div class="table-menus hide">
-                <div class="col-sm-2 left-col"><span class="btn btn-add">新建用户</span></div>
+                <div class="col-sm-2 left-col"><span class="btn btn-add">接入</span></div>
                 <div class="col-sm-10 right-col">
                     <div class="dataTables_filter">
                         <label>
-                            <input placeholder="登录账号" name="loginName" class="form-control input-sm">
-                        </label>
-                        <label>
-                            <input placeholder="姓名" name="trueName" class="form-control input-sm">
+                            <input placeholder="服务器名称" name="name" class="form-control input-sm">
                         </label>
                          <label>
-                            <select name="status" class="form-control">
-                                <option value="">选择一个状态</option>
+                            <select name="virtualEnvId" class="form-control">
+                                <option value="">选择所属虚拟化环境</option>
 	                            <option value="normal">正常</option>
 	                            <option value="locked">已锁定</option>
 	                            <option value="delete">已删除</option>
@@ -41,8 +40,8 @@
 	                            <option value="reset_pwd">密码重置</option>
                             </select>
                         </label>
-                        <label><input type="search" name="filter" class="form-control input-sm global-search" placeholder="">
-                        <span class="btn btn-query"><i class="fa fa-search"></i></span>
+                        <label style="margin-left: 40px"><input type="hidden" name="filter" class="form-control input-sm global-search" placeholder="">
+                        <span class="btn btn-query" style="border-left: none;"><i class="fa fa-search"></i></span>
                         </label>
                     </div>
                 </div>
