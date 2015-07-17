@@ -174,12 +174,17 @@ define(['Common','bs/modal','jq/form/wizard','jq/form/validator-bs3','bs/tooltip
                         ownerId:Common.cookies.getVdcId()
                     }
                     Common.xhr.postJSON('/monitor/v2/notification',notification,function(data){
+                        debugger
                         if(data && data.error!=true){
                             wizard._submitting = false;
                             wizard.updateProgressBar(100);
                             closeWizard();
                             Modal.success('保存成功');
-                            Common.router.route();
+
+                            setTimeout(function(){
+                                Modal.closeAll();
+                                Common.router.route();
+                            },1000);
                         }else{
                             //Modal.warning ('保存失败')
                         }
@@ -188,113 +193,19 @@ define(['Common','bs/modal','jq/form/wizard','jq/form/validator-bs3','bs/tooltip
             });
         });
         //操作按钮
-        //日志按钮
-        $("a.log-info").on("click",function(){
-            var data = $(this).attr("data");
-            Common.xhr.ajax("/v2/virtual-env/"+data,function(env){
-                var selectData2= {"data":renderData,"virtualEnv":env};
-                Common.render('tpls/ccenter/env/loginfo.html',selectData2,function(html){
-                    Modal.show({
-                        title: '日志信息',
-                        message: html,
-                        nl2br: false,
-                        onshown : ""
-                    });
-                });
-            });
-        });
-        //编辑按钮
-        $("a.edit").on("click",function(){
-            var data = $(this).attr("data");
-            Common.xhr.ajax("/v2/virtual-env/"+data,function(env){
-                var selectData2= {"data":renderData,"virtualEnv":env};
-                Common.render('tpls/ccenter/env/edit.html',selectData2,function(html){
-                    Modal.show({
-                        title: '编辑虚拟化环境',
-                        message: html,
-                        nl2br: false,
-                        buttons: [{
-                            label:'取消',
-                            action:function(dialog){
-                                dialog.close();
-                            }
-                        },
-                            {
-                                label: '保存',
-                                action: function(dialog) {
-                                    var valid = $(".form-horizontal").valid();
-                                    if(!valid) return false;
-                                    var envData ={
-                                        "id":env.id,
-                                        "name": $("#edit-env-name").val(),
-                                        "regionId":  $('#edit-env-region option:selected').val(),
-                                        "refreshCycle":  $('#edit-env-period option:selected').val(),
-                                        "vendor": $("#edit-env-vendor").val()
-                                    }
-                                    Common.xhr.putJSON('/v2/virtual-env',envData,function(data){
-                                        if(data && data.error !=true){
-                                            Modal.success('保存成功');
-                                            setTimeout(function(){Modal.closeAll()},2000);
-                                            Common.router.route();
-                                        }else{
-                                            Modal.warning ('保存失败')
-                                        }
-                                    })
-                                }
-                            }],
-                        onshown : function(){
-                            formValidator($("#editRegion"));
-                        }
-                    });
-                });
-            });
-        });
-
-        //同步按钮
-        $("a.synchronize").on("click",function(){
-            var connector = {
-                "connector_id": $(this).attr("data")
-            }
-            Modal.confirm('执行同步操作！',function(result){
-                if(result) {
-                    Modal.success('同步完成后，需要重新登录才能够看到全部的同步内容')
-                    Common.xhr.putJSON("/cloud/v2.0/connector/synchronize",connector,function(data){
-                        if(data && data.error!=true){
-                            Modal.success('同步成功')
-                            setTimeout(function(){Dialog.closeAll();
-                                Common.router.route();//重新载入
-                            },2000);
-
-                        }else{
-                            Modal.warning ('同步失败')
-                        }
-                    });
-                }else {
-                    Modal.closeAll();
-                }
-            });
-
-        });
-        //编辑 connector
-        //$("a.connector").on("click",function(){
-        //    var envId =  $(this).attr("data")
-        //    Common.render();
-        //});
-
-
+        //删除
         $("a.delete").on("click",function(){
             var id = $(this).attr("data");
-            Modal.confirm('确定要删除该虚拟环境吗?',function(result){
+            Modal.confirm('确定要删除通知方案吗?',function(result){
                 if(result) {
-                    Common.xhr.del("v2/virtual-env/"+id,
+                    Common.xhr.del("/monitor/v2/notification/"+id,
                         function(data){
                             if(data && data.error!=true){
                                 Modal.success('删除成功')
                                 setTimeout(function(){
                                     Modal.closeAll();
                                     Common.router.route();//重新载入
-                                },2000);
-
+                                },1000);
                             }else{
                             }
                         });
