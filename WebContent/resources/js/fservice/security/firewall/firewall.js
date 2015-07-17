@@ -1,4 +1,4 @@
-define('js/fservice/vpc/firewall/firewall', ['Common','bs/modal','bs/tooltip','jq/form/validator-bs3','bs/switcher'],function(Common, Dialog){
+define('js/fservice/security/firewall/firewall', ['Common','bs/modal','bs/tooltip','jq/form/validator-bs3','bs/switcher'],function(Common, Dialog){
 	var current_vdc_id = Common.cookies.getVdcId();
 	var bindEvent = function(){
 		//页面渲染完后进行各种事件的绑定
@@ -36,7 +36,7 @@ define('js/fservice/vpc/firewall/firewall', ['Common','bs/modal','bs/tooltip','j
                  {
                 	 "targets":[1],
                 	 "render":function(data, type, full){
-                		 return '<a href="#fservice/vpc/firewall/firewall/detail/'+data.id+'" class="firewall-name" data="'+data.id+'">'+data.name+"</a>";
+                		 return '<a href="#fservice/security/firewall/firewall/detail/'+data.id+'" class="firewall-name" data="'+data.id+'">'+data.name+"</a>";
                 	 }
                  },
                  {
@@ -94,9 +94,6 @@ define('js/fservice/vpc/firewall/firewall', ['Common','bs/modal','bs/tooltip','j
 			            },
 			            'firewall_policy_id': {
 			                required: true
-			            },
-			            'admin_state_up': {
-			                required: true
 			            }
 			        }
 			    });
@@ -120,7 +117,7 @@ define('js/fservice/vpc/firewall/firewall', ['Common','bs/modal','bs/tooltip','j
 		}
 		
 		Common.on("click","#FirewallTable_wrapper span.btn-add",function(){
-			Common.render('tpls/fservice/vpc/firewall/firewall/add.html','',function(html){
+			Common.render('tpls/fservice/security/firewall/firewall/add.html','',function(html){
 				Dialog.show({
 				    title: '防火墙创建',
 				    message: html,
@@ -174,7 +171,7 @@ define('js/fservice/vpc/firewall/firewall', ['Common','bs/modal','bs/tooltip','j
 		Common.on("click","#FirewallTable_wrapper a.editFirewall", function(){
 			var id= $(this).parents("tr:first").data("rowData.dt").id;
 			Common.xhr.ajax('/networking/v2.0/fw/firewalls/'+id,function(data){
-				Common.render('tpls/fservice/vpc/firewall/firewall/edit.html', data.firewall, function(html){
+				Common.render('tpls/fservice/security/firewall/firewall/edit.html', data.firewall, function(html){
 					Dialog.show({
 				        title: '编辑防火墙',
 				        message: html,

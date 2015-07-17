@@ -165,10 +165,6 @@ define('commons/pub_menu', function() {
                             link: '#vpc/router/'
                         },
                         {
-                            text: '<i class="fa fa-dot fa-1"></i>防火墙管理',
-                            link: '#vpc/firewall/'
-                        },
-                        {
                             text: '<i class="fa fa-dot fa-1"></i>浮动IP管理',
                             link: '#vpc/floatingip'
                         }
@@ -186,8 +182,8 @@ define('commons/pub_menu', function() {
                             link: '#security/keypair/'
                         },
                         {
-                            text: '<i class="fa fa-dot fa-1"></i>防火墙',
-                            link: '#security/firewall'
+                            text: '<i class="fa fa-dot fa-1"></i>防火墙管理',
+                            link: '#security/firewall/'
                         }
                     ]
                 },
