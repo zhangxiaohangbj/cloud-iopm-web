@@ -200,9 +200,9 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 							}
 						});
 						if(vdc_id){
-							memberList.push({"uid":uid,vdcId:vdc_id,"userRoleList":userRoleList});
+							memberList.push({"uid":uid,vdcId:vdc_id,"userRoleList":userRoleList,"name":loginName});
 						}else{
-							memberList.push({"uid":uid,"userRoleList":userRoleList});
+							memberList.push({"uid":uid,"userRoleList":userRoleList,"name":loginName});
 						}
 						
 					});
@@ -606,6 +606,18 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
     							"virtualEnvId":virtualEnvId
     						}
     				};
+    				if(members && members.length > 0){
+                		var list = members;
+                		for(var key in list){
+                			var obj = list[key];
+                			if(obj.userRoleList == null || obj.userRoleList.length <= 0){
+                				Modal.warning ("用户：" +obj.name+ "没有选择角色");
+                				wizard._submitting = false;
+                				//setTimeout(function(){Modal.closeAll()},2000);
+                				return;
+                			}
+                		}
+                	}
     				Common.xhr.postJSON('/identity/v2.0/tenants',vdcData,function(data){
     					wizard._submitting = false;
     					wizard.updateProgressBar(100);
@@ -729,7 +741,8 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
     	    	    	                		if(data){
     	    	    	                			 Modal.success('保存成功')
       				 	                			 setTimeout(function(){Modal.closeAll()},1000);
-      					                    		 Common.router.route();//重新载入
+      					                    		 //Common.router.route();//重新载入
+    	    	    	                			 dialog.close();
     	    	    	                		}else{
     	    	    	                			Modal.warning ('保存失败');
     	    	    	                		}
@@ -892,11 +905,23 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 	    	    	                	var userRolesData= {
 	    	    	                			"memberList":jsonData.userJson("#vdc-users .list-group-select",vdc_id)
 	    	    	                	}
+	    	    	                	if(userRolesData.memberList && userRolesData.memberList.length > 0){
+	    	    	                		var list = userRolesData.memberList;
+	    	    	                		for(var key in list){
+	    	    	                			var obj = list[key];
+	    	    	                			if(obj.userRoleList == null || obj.userRoleList.length <= 0){
+	    	    	                				Modal.warning ("用户：" +obj.name+ "没有选择角色");
+	    	    	                				//setTimeout(function(){Modal.closeAll()},2000);
+	    	    	                				return;
+	    	    	                			}
+	    	    	                		}
+	    	    	                	}
 	    	    	                	Common.xhr.postJSON('/identity/v2.0/tenants/'+vdc_id+'/userroles',userRolesData,function(data){
 	    	    	                		if(data){
 	    	    	                			 Modal.success('保存成功')
 		   		 	                			 setTimeout(function(){Modal.closeAll()},2000);
-		   			                    		 Common.router.route();//重新载入
+		   			                    		 //Common.router.route();//重新载入
+	    	    	                			 dialog.close();
 	    	    	                		}else{
 	    	    	                			 Modal.warning ('保存失败')
 	    	    	                		}
