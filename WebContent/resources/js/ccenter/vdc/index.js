@@ -572,6 +572,8 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
     			});
     			//创建提交数据
     			wizard.on("submit", function(wizard) {
+    				debugger
+    				return false;
     				var vdc = wizard.serializeObject();//获取数据
     				var name = vdc['vdc-name'];//$("#editVdcBasic [name='vdc-name']").val();
     				var description = vdc['description']; //$("#editVdcBasic [name='description']").val();
