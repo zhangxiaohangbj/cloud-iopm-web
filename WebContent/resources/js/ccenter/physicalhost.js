@@ -29,7 +29,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 			        {"data": "vcpus"},
 			        {"data": "memoryMb"},
 			        {"data": "status"},
-			        {"data": "virtual_env_id"},
+			        {"data": "virtualEnvId"},
 			        {
 			        	"defaultContent":'<a class="btn-edit" data-toggle="tooltip" title="编辑" href="javascript:void(0)" data-act="stop"><li class="glyphicon glyphicon-edit"></li></a>'
 						+'<a class="btn-delete" data-toggle="tooltip" title="删除" href="javascript:void(0)" style="margin: 0 8px;"><i class="fa fa-trash-o fa-fw"></i></a>'
@@ -238,7 +238,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 			addAuthority :function(){
 				$(document).off("click","span.addAuthority");
 				$(document).on("click","span.addAuthority",function(){
-					$("#authorityInfo tbody").append('<tr><td><ul class="vdc nav"></ul><span class="btn btn-primary chooseVDC">选择</span></td>'
+					$("#access_bmcInfo tbody").append('<tr><td><ul class="vdc nav"></ul><span class="btn btn-primary chooseVDC">选择</span></td>'
 							+'<td><ul class="role nav"></ul><span class="btn btn-primary chooseRole">选择</span></td>'
 							+'<td><a class="btn-delete" data-toggle="tooltip" title="删除" href="javascript:void(0)" style="margin: 0 8px;">'
 							+'<i class="fa fa-trash-o fa-fw"></i></a></td></tr>');
@@ -315,17 +315,17 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 			
 		}
 		var jsonData = {
-				authorityJson:function(obj){
-					var authorityList = [];
+				access_bmcJson:function(obj){
+					var access_bmcList = [];
 					$(obj+" tbody").find("tr").each(function(i,element){
 						var vdc_id = $(element).find("[name='vdc']").val();
 						if(vdc_id){
 							$(element).find("[name='role']").each(function(){
-								authorityList.push({"scopeId":vdc_id,"roleId":$(this).val(),"scopeType":"tenant"});
+								access_bmcList.push({"scopeId":vdc_id,"roleId":$(this).val(),"scopeType":"tenant"});
 							})
 						}
 					});
-					return authorityList;
+					return access_bmcList;
 				},
 				roleJson:function(obj){
 					var roleList = [];
@@ -344,10 +344,10 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 				}
 		}
 		//增加按钮
-		$(document).off("click","#UserTable_wrapper span.btn-add");
-	    $(document).on("click","#UserTable_wrapper span.btn-add",function(){
+		$(document).off("click","#PhysicalHostTable_wrapper span.btn-add");
+	    $(document).on("click","#PhysicalHostTable_wrapper span.btn-add",function(){
 	    	//需要修改为真实数据源
-			Common.render('tpls/sysmanagement/user/add.html','',function(html){
+			Common.render('tpls/ccenter/physicalhost/add.html','',function(html){
 				$('body').append(html);
 				//wizard show
     			$.fn.wizard.logging = true;
@@ -396,13 +396,13 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
     				//获取上几步中填写的值
 //    				var serverData = wizard.serializeObject()
 //    				$('.name-confirm').text(serverData.name)
-    				$("#editUserBasic input[type='text']").each(function(){
+    				$("#editBasic input[type='text']").each(function(){
 						$("#confirm label[name='"+$(this).attr("name")+"']").html($(this).val());
                 	});
-					$("#editUserBasic select").each(function(){
+					$("#editBasic select").each(function(){
 						$("#confirm label[name='"+$(this).attr("name")+"']").html($(this).find("option:selected").html());
                 	});
-					$("#confirm .table tbody").html($("#authorityInfo tbody").html());
+					$("#confirm .table tbody").html($("#access_bmcInfo tbody").html());
 					$("#confirm .table .chooseVDC").remove();
 					$("#confirm .table .chooseRole").remove();
 					$("#confirm .table a.btn-move").remove();
@@ -428,17 +428,17 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
     			wizard.on("submit", function(wizard) {
     				var postData={
     						"user":{
-	        					"name": $("#editUserBasic [name='name']").val(),
+	        					"name": $("#editBasic [name='name']").val(),
 	        					"OS-KSADM:password": $(" [name='password']").val(),
-	        					"status": $("#editUserBasic [name='status']").val(),
+	        					"status": $("#editBasic [name='status']").val(),
 	        					"phone": $(" [name='phone']").val(),
 	        					"email": $( " [name='email']").val(),
-	        					"trueName": $( "#editUserBasic [name='trueName']").val(),
+	        					"trueName": $( "#editBasic [name='trueName']").val(),
 	        					"organId": $( " [name='organId']").val(),
 	        					"enabled":true
 	            				}
     				};
-    				postData.user.userRoleList = jsonData.authorityJson("#authorityInfo");
+    				postData.user.userRoleList = jsonData.access_bmcJson("#access_bmcInfo");
     				Common.xhr.postJSON('/identity/v2.0/users',postData,function(data){
     					wizard._submitting = false;
     					wizard.updateProgressBar(100);
@@ -449,8 +449,8 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 			});
 	    });
 		//编辑用户信息
-		$(document).off("click","#UserTable_wrapper a.btn-edit");
-		$(document).on("click","#UserTable_wrapper a.btn-edit",function(){
+		$(document).off("click","#PhysicalHostTable_wrapper a.btn-edit");
+		$(document).on("click","#PhysicalHostTable_wrapper a.btn-edit",function(){
 			var rowdata = $(this).parents("tr:first").data("rowData.dt");
 			var id= rowdata.id;
 	    	Common.xhr.ajax('/identity/v2.0/users/'+id,function(data){
@@ -501,8 +501,8 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 	    		});
 			});
 			//删除用户
-			$(document).off("click","#UserTable_wrapper a.btn-delete");
-			$(document).on("click","#UserTable_wrapper a.btn-delete",function(){
+			$(document).off("click","#PhysicalHostTable_wrapper a.btn-delete");
+			$(document).on("click","#PhysicalHostTable_wrapper a.btn-delete",function(){
 				 var id = $(this).parents("tr:first").data("rowData.dt").id;
 		    	 Modal.confirm('确定要删除该用户吗?', function(result){
 		             if(result) {
@@ -534,7 +534,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 		    	            buttons: [{
 		    	                label: '保存',
 		    	                action: function(dialog) {
-		    	                	var serverData = jsonData.roleJson("#authorityInfo");
+		    	                	var serverData = jsonData.roleJson("#access_bmcInfo");
 		    	                	Common.xhr.postJSON('/identity/v2.0/users/tenants/'+id,serverData,function(data){
 		    	                		if(data){
 		    	                			Modal.success('保存成功')

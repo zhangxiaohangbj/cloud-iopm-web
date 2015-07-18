@@ -12,14 +12,14 @@
 }
 -->
 </style>
-<div class="wizard" id="create-user-wizard" data-title="新建用户">
+<div class="wizard" id="create-user-wizard" data-title="添加服务器">
 	<!-- 基本信息 -->
-	<div class="wizard-card" data-cardname="basci" id="editUserBasic">
+	<div class="wizard-card" data-cardname="basci" id="editBasic">
 		<h3>基本信息</h3>
 		<div class="wizard-card-content col-sm-8">
 				<div class="wizard-input-section">
 					<div class="form-group">
-						<label for="name" class="control-label col-sm-2"><span>* </span>账号：</label>
+						<label for="name" class="control-label col-sm-2"><span>* </span>服务器名称：</label>
 						<div class="col-sm-7 col-sm">
 							<input type="text" class="form-control" id="name" name="name">
 						</div>
@@ -28,63 +28,58 @@
 				
 				<div class="wizard-input-section">
 					<div class="form-group">
-						<label for="password" class="control-label col-sm-2"><span>* </span>密码：</label>
+						<label for="unitType" class="control-label col-sm-2"><span>* </span>服务器型号：</label>
 						<div class="col-sm-7 col-sm">
-							<input class="form-control" type="password" name="password" id="password"/>
+							<input class="form-control" type="text" name="unitType" id="unitType"/>
 						</div>
 					</div>
 				</div>
 				<div class="wizard-input-section">
 					<div class="form-group">
-						<label for="password_again" class="control-label col-sm-2"><span>* </span>确认密码：</label>
+						<label for="regionId" class="control-label col-sm-2"><span>* </span>选择区域：</label>
 						<div class="col-sm-7 col-sm">
-							<input class="form-control" type="password" name="password_again"/>
-						</div>
-					</div>
-				</div>
-				<div class="wizard-input-section">
-					<div class="form-group">
-						<label for="status" class="control-label col-sm-2"><span>* </span>状态：</label>
-						<div class="col-sm-7 col-sm">
-							<select class="form-control select" name="status">
-								<option value="normal">正常</option>
-								<option value="locked">已锁定</option>
-								<option value="delete">已删除</option>
-								<option value="disabled">已禁用</option>
+							<select class="form-control select" name="regionId">
+								<option value="jinan">济南</option>
+								<option value="beijing">北京</option>
 							</select>
 						</div>
 					</div>
 				</div>
 				<div class="wizard-input-section">
 					<div class="form-group">
-						<label for="phone" class="control-label col-sm-2">手机号：</label>
+						<label for="virtualEnvId" class="control-label col-sm-2"><span>* </span>选择虚拟化环境：</label>
 						<div class="col-sm-7 col-sm">
-							<input type="text" class="form-control" name="phone">
+							<select class="form-control select" name="virtualEnvId">
+								<option value="v1">虚拟化环境1</option>
+								<option value="v2">虚拟化环境2</option>
+							</select>
 						</div>
 					</div>
 				</div>
 				<div class="wizard-input-section">
 					<div class="form-group">
-						<label for="email" class="control-label col-sm-2">邮箱：</label>
+						<label for="availableZoneId" class="control-label col-sm-2">选择可用分区：</label>
 						<div class="col-sm-7 col-sm">
-							<input type="text" class="form-control" name="email">
+							<select class="form-control select" name="availableZoneId">
+								<option value="az01">可用分区1</option>
+								<option value="az02">可用分区2</option>
+							</select>
 						</div>
 					</div>
 				</div>
 				<div class="wizard-input-section">
 					<div class="form-group">
-						<label for="trueName" class="control-label col-sm-2">姓名：</label>
+						<label for="machineRoom" class="control-label col-sm-2">机房：</label>
 						<div class="col-sm-7 col-sm">
-							<input type="text" class="form-control" name="trueName">
+							<input type="text" class="form-control" name="machineRoom">
 						</div>
 					</div>
 				</div>
 				<div class="wizard-input-section">
 					<div class="form-group">
-						<label for="organName" class="control-label col-sm-2"><span>* </span>所属部门：</label>
+						<label for="rack" class="control-label col-sm-2">机柜：</label>
 						<div class="col-sm-7 col-sm">
-							<input type="hidden" name="organId">
-							<input type="text" class="form-control" name="organName">
+							<input type="text" class="form-control" name="rack">
 						</div>
 					</div>
 				</div>
@@ -93,37 +88,126 @@
 			<p>帮助说明；帮助说明；帮助说明；帮助说明；帮助说明；帮助说明；帮助说明；帮助说明；</p>
 		</div>
 	</div>
-	<div class="wizard-card" data-cardname="authority">
-		<h3>权限信息</h3>
+	<div class="wizard-card" data-cardname="access_bmc">
+		<h3>BMC接入信息</h3>
 		<div class="wizard-card-content col-sm-8">
-			<table class="table table-primary" id="authorityInfo">
-				<thead>
-					<tr>
-						<th class="c30">关联VDC</th>
-						<th class="c60">角色</th>
-						<th class="c10 sorting_disabled"></th>
-					</tr>
-				</thead>
-				<tbody>
-					<tr>
-						<td><ul class="vdc nav"></ul>
-						<span class="btn btn-primary chooseVDC">选择</span></td>
-						<td><ul class="role nav"></ul>
-						<span class="btn btn-primary chooseRole">选择</span></td>
-						<td>
-							<a class="btn-delete" data-toggle="tooltip" title="删除" href="javascript:void(0)" style="margin: 0 8px;"><i class="fa fa-trash-o fa-fw"></i></a>
-						</td>
-					</tr>
-				</tbody>
-			</table>
-			<div style="text-align: center;">
-				<span class="btn btn-primary addAuthority">添加行</span>
+			<div class="wizard-input-section">
+					<div class="form-group">
+						<label for="bmc_protocol_version" class="control-label col-sm-2">协议版本：</label>
+						<div class="col-sm-7 col-sm">
+							<select class="form-control select" name="bmc_protocol_version">
+								<option value="v1">版本1</option>
+								<option value="v2">版本2</option>
+							</select>
+						</div>
+					</div>
+				</div>
+				<div class="wizard-input-section">
+					<div class="form-group">
+						<label for="bmc_ip" class="control-label col-sm-2"><span>* </span>IP地址：</label>
+						<div class="col-sm-7 col-sm">
+							<input type="text" class="form-control" id="bmc_ip" name="bmc_ip">
+						</div>
+					</div>
+				</div>
+				<div class="wizard-input-section">
+					<div class="form-group">
+						<label for="bmc_port" class="control-label col-sm-2"><span>* </span>端口：</label>
+						<div class="col-sm-7 col-sm">
+							<input type="text" class="form-control" id="bmc_port" name="bmc_port">
+						</div>
+					</div>
+				</div>
+				<div class="wizard-input-section">
+					<div class="form-group">
+						<label for="bmc_username" class="control-label col-sm-2"><span>* </span>用户名：</label>
+						<div class="col-sm-7 col-sm">
+							<input type="text" class="form-control" id="bmc_username" name="bmc_username">
+						</div>
+					</div>
+				</div>
+				<div class="wizard-input-section">
+					<div class="form-group">
+						<label for="bmc_password" class="control-label col-sm-2"><span>* </span>密码：</label>
+						<div class="col-sm-7 col-sm">
+							<input class="form-control" type="password" name="bmc_password" id="bmc_password"/>
+						</div>
+					</div>
+				</div>
+				<div class="wizard-input-section">
+					<div class="form-group">
+						<label for="bmc_password_again" class="control-label col-sm-2"><span>* </span>确认密码：</label>
+						<div class="col-sm-7 col-sm">
+							<input class="form-control" type="password" name="bmc_password_again" id='bmc_password_again'/>
+						</div>
+					</div>
+				</div>
 			</div>
+			<div class="wizard-card-desc col-sm-4">
+			<p>帮助说明；帮助说明；帮助说明；帮助说明；帮助说明；帮助说明；帮助说明；帮助说明；</p>
+		</div>
+	</div>
+	<!--  -->
+	<div class="wizard-card" data-cardname="access_bmc">
+		<div class="wizard-card-content col-sm-8">
+				<h3>SSH接入信息</h3>
+				<div class="wizard-input-section">
+					<div class="form-group">
+						<label for="ssh_protocol_version" class="control-label col-sm-2">协议版本：</label>
+						<div class="col-sm-7 col-sm">
+							<select class="form-control select" name="ssh_protocol_version">
+								<option value="v1">版本1</option>
+								<option value="v2">版本2</option>
+							</select>
+						</div>
+					</div>
+				</div>
+				<div class="wizard-input-section">
+					<div class="form-group">
+						<label for="ssh_ip" class="control-label col-sm-2"><span>* </span>IP地址：</label>
+						<div class="col-sm-7 col-sm">
+							<input type="text" class="form-control" id="ssh_ip" name="ssh_ip">
+						</div>
+					</div>
+				</div>
+				<div class="wizard-input-section">
+					<div class="form-group">
+						<label for="ssh_port" class="control-label col-sm-2"><span>* </span>端口：</label>
+						<div class="col-sm-7 col-sm">
+							<input type="text" class="form-control" id="ssh_port" name="ssh_port">
+						</div>
+					</div>
+				</div>
+				<div class="wizard-input-section">
+					<div class="form-group">
+						<label for="ssh_username" class="control-label col-sm-2"><span>* </span>用户名：</label>
+						<div class="col-sm-7 col-sm">
+							<input type="text" class="form-control" id="ssh_username" name="ssh_username">
+						</div>
+					</div>
+				</div>
+				<div class="wizard-input-section">
+					<div class="form-group">
+						<label for="ssh_password" class="control-label col-sm-2"><span>* </span>密码：</label>
+						<div class="col-sm-7 col-sm">
+							<input class="form-control" type="password" name="ssh_password" id="ssh_password"/>
+						</div>
+					</div>
+				</div>
+				<div class="wizard-input-section">
+					<div class="form-group">
+						<label for="ssh_password_again" class="control-label col-sm-2"><span>* </span>确认密码：</label>
+						<div class="col-sm-7 col-sm">
+							<input class="form-control" type="password" name="ssh_password_again" id='ssh_password_again'/>
+						</div>
+					</div>
+				</div>
 		</div>
 		<div class="wizard-card-desc col-sm-4">
 			<p>帮助说明；帮助说明；帮助说明；帮助说明；帮助说明；帮助说明；帮助说明；帮助说明；</p>
 		</div>
 	</div>
+	<!--  -->
 	<div class="wizard-card" data-cardname="confirm" id="confirm">
 		<h3>确认信息</h3>
 		<div class="wizard-card-content col-sm-12" style="border-right: 0;">
