@@ -1,10 +1,15 @@
 <li class="dropdown pull-right opt" >
 	<div class="dropdown">
-	  <button class="btn btn-default dropdown-toggle ellipsis" type="button"  data-toggle="dropdown" aria-expanded="true">{{list[0].name || list[0].id }}<span class="caret"></span>
-	  </button>
+	  {{each list as item i}}
+	  		{{if item.name == '_member_'}}
+	    	<button class="btn btn-default dropdown-toggle ellipsis" type="button"  data-toggle="dropdown" aria-expanded="true">{{item.name }}<span class="caret"></span>
+	        </button>
+	    	{{/if}}
+	    {{/each}}
+	  
 	  <ul class="dropdown-menu dropdown-menu-right" role="menu" >
 	  	{{each list as item i}}
-	  		{{if i == 0}}
+	  		{{if item.name == '_member_'}}
 	    	<li><a in-use="1" href="javascript:void(0);" data-id="{{item.id}}" data-name="{{item.name}}"><i class="fa fa-check fa-fw" style="opacity:1;"></i>{{item.name}}</a></li>
 	    	  {{else}}
 	    	<li><a href="javascript:void(0);"data-id="{{item.id}}" data-name="{{item.name}}"><i class="fa fa-check fa-fw"></i>{{item.name}}</a></li>  

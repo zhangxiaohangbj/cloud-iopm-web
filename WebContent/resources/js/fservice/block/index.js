@@ -274,6 +274,7 @@ define(['Common','bs/modal','rq/text!tpls/fservice/block/volume/list-opts.html',
 					}else{
 						Modal.error('尚未选择所属vdc');
 						dtd.resolve();
+						return false;
 					}
 					return dtd.promise();
 				},
@@ -281,13 +282,9 @@ define(['Common','bs/modal','rq/text!tpls/fservice/block/volume/list-opts.html',
 				initVirtualEnvir: function(){
 					var dtd = $.Deferred();
 					var vdc_id = currentChosenObj.vdc || $('select.tenant_id').children('option:selected').val();
-					Common.xhr.ajax('/resources/data/arrays.txt',function(data){
-						data = {
-								name: 'OpenStack',
-								id: 'virtual_envir_id'
-						}
-						$('.virtual_envir').attr('data-id',data.id).html(data.name);
-						console.log(2);
+					Common.xhr.ajax('/identity/v2.0/tenants/'+vdc_id,function(data){
+						debugger
+						$('.virtual_envir').attr('data-id',data.tenant.virtualEnvId).html(data.tenant.virtualEnvName);
 						dtd.resolve();
 					});
 					return dtd;
@@ -321,12 +318,9 @@ define(['Common','bs/modal','rq/text!tpls/fservice/block/volume/list-opts.html',
 					
 					}else{
 						Modal.error('尚未选择vdc');
+						return false;
 					}
 				},
-				/*data:'/compute/v2/' + current_vdc_id + '/servers/page/1/200',
-				beforeRender: function(data){
-					return {servers:data.result, volName:name};
-				},*/
 				//初始化用户创建的vm列表
 				initUserVms: function(){
 					Common.xhr.ajax('/compute/v2/' + current_vdc_id + '/servers/page/1/200',function(data){
@@ -438,9 +432,10 @@ define(['Common','bs/modal','rq/text!tpls/fservice/block/volume/list-opts.html',
     					if($(this).hasClass('checked')){
     						data.id = $(this).parent().attr('data-id');
     						data.name =  $(this).parent().attr('data-name');
+    						return false;
     					}
     				});
-    				return data;
+    				return data.id ? data : null;
     			}
     			wizard.cards.mount.on('selected',function(card){
 					//获取磁盘名字的值
@@ -462,7 +457,7 @@ define(['Common','bs/modal','rq/text!tpls/fservice/block/volume/list-opts.html',
     				$('.query-volume-desc').text(serverData.description);
     				//挂载磁盘
     				var attachment = getMountVm();
-    				if(attachment){
+    				if(attachment != {}){
     					var dataArr= [];
     					dataArr.push('<div class="wizard-input-section"><div class="form-group">');
     					dataArr.push('<label class="control-label col-sm-5">'+attachment.name+'</label>');
