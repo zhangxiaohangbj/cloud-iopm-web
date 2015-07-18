@@ -283,7 +283,6 @@ define(['Common','bs/modal','rq/text!tpls/fservice/block/volume/list-opts.html',
 					var dtd = $.Deferred();
 					var vdc_id = currentChosenObj.vdc || $('select.tenant_id').children('option:selected').val();
 					Common.xhr.ajax('/identity/v2.0/tenants/'+vdc_id,function(data){
-						debugger
 						$('.virtual_envir').attr('data-id',data.tenant.virtualEnvId).html(data.tenant.virtualEnvName);
 						dtd.resolve();
 					});
