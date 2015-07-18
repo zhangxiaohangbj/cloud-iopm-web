@@ -25,7 +25,8 @@
     <filter-class>com.inspur.cloud.am.AccessFilter</filter-class>
     <init-param>
         <param-name>noCheckLogin</param-name>
-        <param-value>.jpg,.gif,.png,.css,.js,.woff</param-value>
+        <!-- login、logout 无需配置 -->
+        <param-value>.jpg,.gif,.png,.css,.js,.woff,/identity/v2.0/tokens,/identity/v2.0,/identity/v3,/identity,/identity/v3/auth/tokens</param-value>
      </init-param>
 	</filter>
 	<filter-mapping>
