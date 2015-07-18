@@ -7,8 +7,11 @@ define(['Common','bs/modal','jq/form/wizard','jq/form/validator-bs3','bs/tooltip
         //真实请求的数据
         Common.xhr.ajax('/monitor/v2/notification',function(data){
             var serverData= {"data":data};
-            Common.render(true,'tpls/monitor/monitor/notification/index.html',serverData,function(){
-                bindEvent();
+            Common.xhr.ajax("/resources/data/notificationType.txt",function(type){
+                serverData.type = type;
+                Common.render(true,'tpls/monitor/monitor/notification/index.html',serverData,function(){
+                    bindEvent();
+                });
             });
         });
     };
