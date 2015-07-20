@@ -15,17 +15,17 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 		      "processing": true,  //加载效果，默认false
 		      "serverSide": true,  //页面在加载时就请求后台，以及每次对 datatable 进行操作时也是请求后台
 		      "ordering": false,   //禁用所有排序
-		      "sAjaxSource":"networking/v2.0/subnets/page/", //ajax源，后端提供的分页接口
+		      "sAjaxSource":"networking/v2.0/lb/healthmonitors/page/", //ajax源，后端提供的分页接口
 		      "columns": [
 			        {
 			        	"orderable": false,
 			        	"defaultContent":"<label><input type='checkbox'></label>"
 			        },
 			        {"data": {}},
-			        {"data": "name"},
-			        {"data": "ip_version"},
-			        {"data": "ip_version"},
-			        {"data": "ip_version"},
+			        {"data": "delay"},
+			        {"data": "timeout"},
+			        {"data": "max_retries"},
+			        {"data": "type"},
 			        {
 			        	"defaultContent":'<a class="btn-edit pull-left" data-toggle="tooltip" title="编辑" data-act="stop" href="javascript:void(0)"><li class="glyphicon glyphicon-edit"></li></a>'
 							+'<a href="javascript:void(0)" class="deleteMonitor" style="margin: 0 8px;"><i class="fa fa-trash-o fa-fw"></i></a>'
@@ -35,7 +35,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 					{
 					    "targets": [1],
 					    "render": function(data, type, full) {
-					    	return "<a href='#fservice/lbaas/monitor/detail/"+data.id+"'>"+data.name+"</a>";
+					    	return "<a href='#fservice/lbaas/monitor/detail/"+data.id+"'>"+data.type+"</a>";
 					    }
 					}
                 ]
@@ -108,13 +108,13 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 	    	            		if(!valid) return false;
 	    	            		var data = $("#addMonitor").serializeArray();
 	    	                	var serverData = {
-	    	                		"monitor":{
+	    	                		"healthmonitor":{
 	    	                		}
 	    	                	  };
 	    	                	for(var i=0;i<data.length;i++){
-	    	                		serverData.monitor[data[i]["name"]] = data[i]["value"];
+	    	                		serverData.healthmonitor[data[i]["name"]] = data[i]["value"];
 	    						}
-	    	                	Common.xhr.postJSON('/networking/v2.0/subnets',serverData,function(data){
+	    	                	Common.xhr.postJSON('/networking/v2.0/lb/healthmonitors',serverData,function(data){
 	    	                		if(data){
 	    	                			Dialog.success('保存成功')
 	    	                			setTimeout(function(){Dialog.closeAll()},2000);
@@ -142,7 +142,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 	    $(document).off("click","#MonitorTable_wrapper a.btn-edit");
 	    $(document).on("click","#MonitorTable_wrapper a.btn-edit",function(){
 	    	var id = $(this).parents("tr:first").data("rowData.dt").id;
-    		Common.xhr.ajax('/networking/v2.0/subnets',function(data){  //查询监控信息
+    		Common.xhr.ajax('/networking/v2.0/lb/healthmonitors/'+id,function(data){  //查询监控信息
     		Common.render('tpls/fservice/lbaas/monitor/edit.html',data,function(html){
     			Dialog.show({
     	            title: '编辑监控',
@@ -155,13 +155,13 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
     	            		if(!valid) return false;
     	            		var data = $("#addMonitor").serializeArray();
     	                	var serverData = {
-    	                		"monitor":{
+    	                		"healthmonitor":{
     	                		}
     	                	  };
     	                	for(var i=0;i<data.length;i++){
-    	                		serverData.monitor[data[i]["name"]] = data[i]["value"];
+    	                		serverData.healthmonitor[data[i]["name"]] = data[i]["value"];
     						}
-    	                	Common.xhr.putJSON('/networking/v2.0/subnets/'+id,serverData,function(data){
+    	                	Common.xhr.putJSON('/networking/v2.0/lb/healthmonitors/'+id,serverData,function(data){
     	                		if(data){
     	                			Dialog.success('保存成功')
     	                			setTimeout(function(){Dialog.closeAll()},2000);
@@ -186,7 +186,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 	    	 var id = $(this).parents("tr:first").data("rowData.dt").id;
 	    	 Dialog.confirm('确定要删除该监控吗?', function(result){
 	             if(result) {
-	            	 Common.xhr.del('/networking/v2.0/subnets/'+id,
+	            	 Common.xhr.del('/networking/v2.0/lb/healthmonitors/'+id,
 	                     function(data){
 	                    	 if(data){
 	                    		 Dialog.success('删除成功')
