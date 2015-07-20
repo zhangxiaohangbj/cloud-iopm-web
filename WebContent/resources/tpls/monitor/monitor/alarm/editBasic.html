@@ -1,0 +1,66 @@
+<form class="form-horizontal" id="editBasic">
+    <div class="form-group">
+        <label for="name" class="control-label col-sm-3">
+            名称：</label>
+        <div class="col-sm-7 col-sm">
+            <input type="text" class="form-control" id="name" placeholder="{{name}}"/>
+        </div>
+    </div>
+
+
+    <div class="form-group">
+        <label for="severity" class="control-label col-sm-3">
+            告警级别：</label>
+        <div class="col-sm-7 col-sm">
+            <select class="form-control select" id="severity" name="severity">
+                {{#uiSelectList(severityList)}}
+            </select>
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="isRepeated" class="control-label col-sm-3">
+            是否重复告警：</label>
+        <div class="col-sm-7 col-sm">
+            <select class="form-control select" id="isRepeated">
+                {{if isRepeated== true}}
+                <option selected value="true">是</option>
+                <option value="false">否</option>
+                {{else}}
+                <option selected value="false">否</option>
+                <option value="true">是</option>
+                {{/if}}
+            </select>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label for="isEnable" class="control-label col-sm-3">
+            是否启用：</label>
+        <div class="col-sm-7 col-sm">
+            <select class="form-control select" id="isEnable">
+                {{if isEnable== true}}
+                <option selected value="true">是</option>
+                <option value="false">否</option>
+                {{else}}
+                <option selected value="false">否</option>
+                <option value="true">是</option>
+                {{/if}}
+            </select>
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="isShield" class="control-label col-sm-3">
+            是否屏蔽：</label>
+        <div class="col-sm-7 col-sm">
+            <select class="form-control select" id="isShield">
+                {{if isShield== true}}
+                <option selected value="true">是</option>
+                <option value="false">否</option>
+                {{else}}
+                <option selected value="false">否</option>
+                <option value="true">是</option>
+                {{/if}}
+            </select>
+        </div>
+    </div>
+</form>

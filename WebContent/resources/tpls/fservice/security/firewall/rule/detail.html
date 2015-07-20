@@ -1,0 +1,96 @@
+<div class="page-header">
+	<ol class="breadcrumb minus">
+		<li class="active">规则详情</li>
+		<li class="backlist"><a href="#fservice/security/firewall/tab/rule">返回列表</a></li>
+	</ol>
+</div>
+<div class="page-body">
+	<div class="pane">
+		<div class="pane-content">
+			<div class="detail-info">
+				<div class="tab-content">
+					<div class="clearfix">
+						<p><b>基本信息</b></p>
+						<hr>
+						<div class="row">
+							<label for="name" class="control-label col-sm-3">名称：</label>
+							<div class="col-sm-7 col-sm">
+								{{firewall_rule.name}}
+							</div>
+						</div>
+						<div class="row">
+							<label for="description" class="control-label col-sm-3">描述：</label>
+							<div class="col-sm-7 col-sm">
+								{{firewall_rule.description}}
+							</div>
+						</div>
+						<div class="row">
+							<label for="protocol" class="control-label col-sm-3">协议：</label>
+							<div class="col-sm-7 col-sm">
+								{{if firewall_rule.protocol == 'UNRECOGNIZED'}} 
+									任何 
+								{{else}}
+									{{firewall_rule.protocol}}
+								{{/if}}
+							</div>
+						</div>
+						<div class="row">
+							<label for="action" class="control-label col-sm-3">动作：</label>
+							<div class="col-sm-7 col-sm">
+								{{if firewall_rule.action == 'ALLOW'}}
+									允许
+								{{else}}
+									拒绝
+								{{/if}}
+							</div>
+						</div>
+						<div class="row">
+							<label for="source_ip_address" class="control-label col-sm-3">源IP地址/子网：</label>
+							<div class="col-sm-7 col-sm">
+								{{firewall_rule.source_ip_address}}
+							</div>
+						</div>
+						<div class="row">
+							<label for="source_port" class="control-label col-sm-3">源端口/端口范围：</label>
+							<div class="col-sm-7 col-sm">
+								{{firewall_rule.source_port}}
+							</div>
+						</div>
+						<div class="row">
+							<label for="destination_ip_address" class="control-label col-sm-3">目的IP地址/子网：</label>
+							<div class="col-sm-7 col-sm">
+								{{firewall_rule.destination_ip_address}}
+							</div>
+						</div>
+						<div class="row">
+							<label for="destination_port" class="control-label col-sm-3">目的端口/端口范围：</label>
+							<div class="col-sm-7 col-sm">
+								{{firewall_rule.destination_port}}
+							</div>
+						</div>
+						<div class="row">
+							<label for="shared" class="control-label col-sm-3">共享的：</label>
+							<div class="col-sm-7 col-sm">
+								{{if firewall_rule.shared}} 
+									 是
+								{{else}}
+									否
+								{{/if}}
+							</div>
+						</div>
+						<div class="row">
+							<label for="enabled" class="control-label col-sm-3">激活：</label>
+							<div class="col-sm-7 col-sm">
+								{{if firewall_rule.enabled}} 
+									 启用
+								{{else}}
+									禁用
+								{{/if}}
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>		
+		</div>
+	</div>
+</div>

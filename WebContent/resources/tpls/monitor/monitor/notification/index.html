@@ -1,0 +1,52 @@
+<div class="page-header clearfix">
+    <ol class="breadcrumb">
+        <li class="active"><i class="icon-squre-d"></i>通知方案</li>
+    </ol>
+    <p class="description">
+        记录不同类型（mail、sms等）的通知方案，用于告警或其他功能发出通知。
+    </p>
+</div>
+<div class="page-body">
+    <div class="pane">
+        <div class="pane-content">
+            <table class="table table-primary table-striped" id="notificationTable">
+                <thead>
+                <tr>
+                    <th class="c1">
+                        <label><input type="checkbox" class="selectAll"></label>
+                    </th>
+                    <th class="c2">名称</th>
+                    <th class="c5">账号</th>
+                    <th class="c2">类型</th>
+                    <th class="c5">描述</th>
+                    <th class="c4">创建时间</th>
+                    <th class="c3 sorting_disabled" >操作</th>
+                </tr>
+                </thead>
+                <tbody>
+                {{each data as item i}}
+                <tr>
+                    <td><label><input type="checkbox"></label></td>
+                    <td><a class="name" href="javascript:void(0);">{{item.name}}</a></td>
+                    <td>{{item.account}}</td>
+                    <td>{{type[item.type]}}</td>
+                    <td>{{item.description}}</td>
+                    <td>{{item.createdAt}}</td>
+                    <td>
+                        <a class="btn-opt pull-left delete" data-toggle="tooltip" data-act="delete" title="删除" style="margin: 0 5px;" data="{{item.id}}"><i class="fa fa-trash-o"></i></a>
+                        <a class="btn-opt pull-left bind" data-toggle="tooltip" data-act="bind-alarm" title="绑定告警" style="margin: 0 5px;" data="{{item.id}}"><i class="fa fa-plus-square"></i></a>
+                    </td>
+                </tr>
+                {{/each}}
+                </tbody>
+                <tfoot>
+                <tr>
+                    <td>
+                        <span class="text-danger">*</span> 可通过在实例上"<span class="nums">右键</span>"来进行常用操作,"<span class="nums">双击</span>"来编辑基本属性
+                    </td>
+                </tr>
+                </tfoot>
+            </table>
+        </div>
+    </div>
+</div>

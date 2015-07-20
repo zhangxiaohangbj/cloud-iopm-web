@@ -24,7 +24,7 @@ define('commons/main',
     // init dataTable
     if($.fn.dataTable) {
         $.extend(true, $.fn.dataTable.defaults, {
-            "dom": "<'row tableMenus'<'col-sm-6 left-col'><'col-sm-6 right-col'f>>" + "t" + "<'row tableInfos'<'col-sm-4'i><'col-sm-8'lp>>",
+            "dom": "<'row tableMenus'<'col-sm-6 left-col'><'col-sm-6 right-col'f>>" + "t" + "<'row tableInfos'<'col-sm-12'ilp>>",
             "language": {
                 "search": "_INPUT_<i class='fa fa-search'></i>",
                 "lengthMenu": "每页显示 _MENU_ 条",
@@ -146,9 +146,9 @@ define('commons/main',
         _socketListener: this._socketListener || {},
         _webSocket: null,
         _initWebSocket: function(){
-        	debugger;
         	var that = this;
-        	this._webSocket = this._webSocket || new WebSocket('ws://localhost:8089/cloud-web/websocket');
+        	var host = window.location.host;
+        	this._webSocket = this._webSocket || new WebSocket('ws://'+host+'/cloud-web/websocket');
         	this._webSocket.onerror = this._webSocket.onerror || function(event) {
     			//onError(event)
         		alert('err')
@@ -162,6 +162,7 @@ define('commons/main',
     		};
 
     		this._webSocket.onmessage = this._webSocket.onmessage || function(event) {
+    			debugger
     			var message = JSON.parse(event.data);
     			var method = that._socketListener[message.type+"_"+message.action];
     			if(method && typeof method === 'function'){
@@ -172,7 +173,7 @@ define('commons/main',
         isOpen: false,
         msgs : [],
         addWebsocketListener: function(sendMsg, method){
-			debugger
+			//debugger
 			this._socketListener[sendMsg.type+"_"+sendMsg.action] = method;
 			if(this.isOpen){
 				this._webSocket.send(JSON.stringify(sendMsg));
@@ -405,7 +406,7 @@ define('commons/main',
                 	if(th_num < td_num)
                 		$table.find("thead th:last").attr("colspan",td_num-th_num+1);
                 }
-                _options = $.extend(true, {}, _options, {
+                _options = $.extend(true, {}, {
                     'initComplete': function() {
                     	var settings = this.fnSettings();
                         var firstColumn = settings.aoColumns[0];
@@ -487,7 +488,7 @@ define('commons/main',
                         	});
                         }
                     }
-                });
+                }, _options);
                 var tableFlag = true;
                 $.fn.dataTableExt.errMode = function(table, errCode, errText) {
                     tableFlag = false;

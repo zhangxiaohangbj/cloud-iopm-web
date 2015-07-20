@@ -1,0 +1,61 @@
+<style>
+<!--
+.dialog-modal .table-primary > tbody > tr > td, .dialog-modal .table-primary > thead > tr > th{
+	border-right: 1px solid #e4e9ec;
+}
+.nav li:hover{
+	cursor: pointer;
+	background-color: #eee;
+}
+.nav li span{
+	line-height: 27px;
+}
+-->
+</style>
+<form class="form-horizontal" style="overflow: hidden;">
+	<div class="col-sm-9">
+		<table class="table table-primary" id="authorityInfo">
+			<thead>
+				<tr>
+					<th class="c30">关联VDC</th>
+					<th class="c60">角色</th>
+					<th class="c10 sorting_disabled"></th>
+				</tr>
+			</thead>
+			<tbody>
+				{{each list as item i}}
+					<tr>
+						<td>
+							<ul class="vdc nav">
+								<li class="clearfix"><span>{{item.name}}</span>
+								<a class="btn-move pull-right" data-toggle="tooltip" title="移除" href="javascript:void(0)" style="display: inline-block;padding: 5px;">
+								<i class="fa fa-minus-circle "></i></a>
+								<input type="hidden" name="vdc" value="{{item.id}}"/></li>
+							</ul>
+						</td>
+						<td>
+							<ul class="role nav">
+							{{each item.roles as items i}}
+								<li class="clearfix"><span>{{items.name}}</span>
+								<a class="btn-move pull-right" data-toggle="tooltip" title="移除" href="javascript:void(0)" style="display: inline-block;padding: 5px;">
+								<i class="fa fa-minus-circle "></i></a>
+								<input type="hidden" name="role" value="{{items.id}}"/></li>
+							{{/each}}
+							</ul>
+							<span class="btn btn-primary chooseRole">选择</span></td>
+						<td>
+							<a class="btn-delete" data-toggle="tooltip" title="删除" href="javascript:void(0)"><i class="fa fa-trash-o fa-fw"></i></a>
+						</td>
+					</tr>
+				{{/each}}
+				
+			</tbody>
+		</table>
+		<div style="text-align: center;">
+			<span class="btn btn-primary addAuthority">添加行</span>
+		</div>
+		</div>
+	<div class="col-sm-3">
+		<p>帮助说明；帮助说明；帮助说明；帮助说明；帮助说明；帮助说明；帮助说明；帮助说明；</p>
+	</div>
+</form>

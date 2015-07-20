@@ -221,38 +221,54 @@ define(['Common','bs/modal','jq/form/wizard','jq/form/validator-bs3','bs/tooltip
             var namespace = $(this).attr("data");
             Common.xhr.ajax("/v2/metadefs/namespaces/"+namespace+"/resource_types",function(relatedType){
                 var resourceTypeAssociations = relatedType.resource_type_associations;
-                Common.render('tpls/ccenter/metadata/namespace/editBind.html',resourceTypeAssociations,function(html){
-                    Modal.show({
-                        title: '编辑资源绑定',
-                        message: html,
-                        nl2br: false,
-                        buttons: [{
-                            label:'取消',
-                            action:function(dialog){
-                                dialog.close();
-                            }
-                        },
-                            {
-                                label: '确定',
-                                action: function(dialog) {
+                require(['js/common/choose'],function(choose){
+                    Common.render('tpls/ccenter/metadata/namespace/editBind.html',resourceTypeAssociations,function(html){
+                        var options = resourceTypeHandler.getOptionData(resourceTypeAssociations);
+                        options.selector = "#bindType";
+                        options.doneCall = function(html,chooseWrapper) {
+                            chooseWrapper.append(html);
+                            $(options.selector).empty().append(chooseWrapper.find('div:first'));
 
-                                    Common.xhr.putJSON('/v2/metadefs/namespaces/'+name,namespaceMeta,function(data){
-                                        if(data){
-                                            Modal.success('保存成功');
-                                            setTimeout(function(){Modal.closeAll()},2000);
-                                            Common.router.route();
-                                        }else{
-                                            Modal.warning ('保存失败')
+                            Modal.show({
+                                title: '编辑资源绑定',
+                                message: chooseWrapper.html(),
+                                nl2br: false,
+                                buttons: [{
+                                    label: '取消',
+                                    action: function (dialog) {
+                                          dialog.close();
                                         }
-                                    })
-                                }
-                            }],
-                        onshown : function(){
-                            resourceTypeHandler.init(resourceTypeAssociations,"bindType")
-                        }
-                    });
+                                    },
+                                    {
+                                        label: '确定',
+                                        action: function (dialog) {
+                                            var namespaceMeta = {};
 
+                                            Common.xhr.postJSON('/v2/metadefs/namespaces/' + namespace+'/resource_types/update', namespaceMeta, function (data) {
+                                                if (data) {
+                                                    Modal.success('保存成功');
+                                                    setTimeout(function () {
+                                                        Modal.closeAll();
+                                                        Common.router.route();
+                                                    }, 2000);
+
+                                                } else {
+                                                    Modal.warning('保存失败')
+                                                }
+                                            })
+                                        }
+                                    }],
+                                onshown: function () {
+                                    chooseWrapper.remove();
+                                   // resourceTypeHandler.init(resourceTypeAssociations, "bindType")
+                                }
+                            });
+                        }
+                        options.doneData = html;
+                        choose.initChoose(options);
                 });
+
+                })
             })
         })
 

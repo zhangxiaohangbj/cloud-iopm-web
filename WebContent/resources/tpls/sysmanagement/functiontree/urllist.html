@@ -1,7 +1,7 @@
 <style>
 <!--
 .dataTables_length select.input-sm {
-	width: 40%;
+	width: 60px;
 }
 -->
 </style>
@@ -9,25 +9,24 @@
 	<table class="table table-primary table-striped" id="chooseUrlTable">
 		<thead>
 			<tr>
-				<th class="c1">
+				<th class="c2">
 					<label><input type="checkbox" class="selectAll"></label>
 				</th>
-				<th class="c3">URL名称</th>
-				<th class="c4">端点地址</th>
-				<th class="c3">URL地址</th>
-				<th class="c2">method</th>
+				<th class="c25">URL名称</th>
+				<th class="c30">端点地址</th>
+				<th class="c35">URL地址</th>
+				<th class="c10">method</th>
 			</tr>
 		</thead>
-		<tbody>
-		{{each result as item i}}
-			<tr>
-				<td><label><input type="checkbox" value="{{item.id}}"></label></td>
-				<td>{{item.urlName}}</td>
-				<td>{{item.endpoint.url}}</td>
-				<td>{{item.urlAddress}}</td>
-				<td>{{item.method}}</td>
-			</tr>
-	 			{{/each}}
-		</tbody>
 	</table>
+	<div class="table-menus hide">
+         <div class="col-sm-12 right-col">
+             <div class="dataTables_filter">
+                 <input type="hidden" name="functionItemId" value="{{functionItemId}}">
+                 <label><input type="search" name="filter" class="form-control input-sm global-search" placeholder="">
+                 <span class="btn btn-query"><i class="fa fa-search"></i></span>
+                 </label>
+             </div>
+         </div>
+     </div>
 </form>

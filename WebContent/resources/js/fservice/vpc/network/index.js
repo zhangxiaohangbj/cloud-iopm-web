@@ -9,24 +9,11 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 	};
 	
 	var bindEvent = function(){
-		Common.initDataTable($('#networkTable'),{
+		var table = Common.initDataTable($('#networkTable'),{
 		      "processing": true,  //加载效果，默认false
 		      "serverSide": true,  //页面在加载时就请求后台，以及每次对 datatable 进行操作时也是请求后台
 		      "ordering": false,   //禁用所有排序
 		      "sAjaxSource":"networking/v2.0/networks/page/", //ajax源，后端提供的分页接口
-		      "fnServerData": function( sSource, aoData, fnCallback ) {
-		    	    $.ajax( {   
-		    	        "url": sSource + (aoData[3].value/aoData[4].value+1) +"/"+aoData[4].value, 
-		    	        "data":aoData,
-		    	        "dataType": "json",   
-		    	        "success": function(resp) {
-		    	        	resp.data = resp.result;
-		    	        	resp.recordsTotal = resp.totalCount;
-		    	        	resp.recordsFiltered = resp.totalCount;
-		    	            fnCallback(resp);   //fnCallback：服务器返回数据后的处理函数，需要按DataTables期望的格式传入返回数据 
-		    	        }   
-		    	    });   
-		      },
 	    	  /*属性 columns 用来配置具体列的属性，包括对应的数据列名,如trueName，是否支持搜索，是否显示，是否支持排序等*/
 		      "columns": [
 			        {
@@ -34,9 +21,9 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 			        	"defaultContent":"<label><input type='checkbox'></label>"
 			        },
 			        {"data": {}},
-			        {"data": "virtualEnvName"},
+			        {"data": "vdc_name"},
 			        {"data": "router:external"},
-			        {"data": "cidr"},
+//			        {"data": "cidr"},
 			        {"data": "shared"},
 			        {"data": "status"},
 			        {"data": "admin_state_up"},
@@ -67,21 +54,21 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 					    }
 					},
 					{
-					    "targets": [5],
+					    "targets": [4],
 					    "render": function(data, type, full) {
 					    	if(data == true) return "共享";
 					    	else return "非共享";
 					    }
 					},
 					{
-					    "targets": [6],
+					    "targets": [5],
 					    "render": function(data, type, full) {
 					    	if(data == "ACTIVE") return "运行中";
 					    	else return "停止";
 					    }
 					},
 					{
-					    "targets": [7],
+					    "targets": [6],
 					    "render": function(data, type, full) {
 					    	if(data == true) return "可用";
 					    	else return "禁用";
@@ -90,11 +77,13 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
                 ]
 		    },
 			function($tar){
-			$tar.prev().find('.left-col:first').append(
-					'<span class="btn btn-add">创 建</span>'
-				);
-			//这个必须添加，不然就是隐藏的效果，看不到页面
-			Common.$pageContent.removeClass("loading");
+		    	var $tbMenu = $tar.prev('.tableMenus');
+		    	$tbMenu.length && $tbMenu.empty().html($('.table-menus').html());
+				//这个必须添加，不然就是隐藏的效果，看不到页面
+				Common.$pageContent.removeClass("loading");
+		});
+		Common.on('click','.dataTables_filter .btn-query',function(){
+			table.search($('.global-search').val()).draw();
 		});
 		$("[data-toggle='tooltip']").tooltip();
     	//载入默认的数据 inits,创建数据载入类
@@ -118,9 +107,9 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 				},
 		};
 	    //cidr校验
-	    $.validator.addMethod("cidr", function(value, element) {
-	    	return this.optional(element) || /^((\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.){3}(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\/\d{1,2}$/.test(value);
-	    }, "请填写正确的CIDR地址");
+//	    $.validator.addMethod("cidr", function(value, element) {
+//	    	return this.optional(element) || /^((\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.){3}(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\/\d{1,2}$/.test(value);
+//	    }, "请填写正确的CIDR地址");
 		var EventsHandler = {
 	    		//表单校验
 				formValidator: function(){
@@ -131,12 +120,12 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 			            		required: true,
 			                    minlength: 4,
 			                    maxlength:255
-			                },
-			                'cidr': {
-			                    required: true,
-			                    maxlength:64,
-			                    cidr: true
 			                }
+//			                'cidr': {
+//			                    required: true,
+//			                    maxlength:64,
+//			                    cidr: true
+//			                }
 			            }
 			        });
 				},

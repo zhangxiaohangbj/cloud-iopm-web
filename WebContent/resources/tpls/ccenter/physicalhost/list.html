@@ -1,0 +1,51 @@
+<div class="page-header clearfix">
+	<ol class="breadcrumb">
+	  <li class="active"><i class="icon-squre-d"></i>用户</li>
+	</ol>
+</div>
+<div class="page-body">
+	<div class="pane">
+		<div class="pane-content">
+			<table class="table table-primary table-striped" id="PhysicalHostTable">
+				<thead>
+					<tr>
+						<th class="c5">
+							<label></label>
+						</th>
+						<th class="c10">服务器名称</th>
+						<th class="c10">设备提供者</th>
+						<th class="c10">可用分区</th>
+						<th class="c10">CPU核数</th>
+						<th class="c10">内存(总计)</th>
+						<th class="c10">状态</th>
+						<th class="c10">所属虚拟化环境</th>
+						<th class="c15 sorting_disabled">操作</th>
+					</tr>
+				</thead>
+			</table>
+			<div class="table-menus hide">
+                <div class="col-sm-2 left-col"><span class="btn btn-add">接入</span></div>
+                <div class="col-sm-10 right-col">
+                    <div class="dataTables_filter">
+                        <label>
+                            <input placeholder="服务器名称" name="name" class="form-control input-sm">
+                        </label>
+                         <label>
+                            <select name="virtualEnvId" class="form-control">
+                                <option value="">选择所属虚拟化环境</option>
+	                            <option value="normal">正常</option>
+	                            <option value="locked">已锁定</option>
+	                            <option value="delete">已删除</option>
+	                            <option value="disabled">已禁用</option>
+	                            <option value="reset_pwd">密码重置</option>
+                            </select>
+                        </label>
+                        <label style="margin-left: 40px"><input type="hidden" name="filter" class="form-control input-sm global-search" placeholder="">
+                        <span class="btn btn-query" style="border-left: none;"><i class="fa fa-search"></i></span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+		</div>
+	</div>
+</div>

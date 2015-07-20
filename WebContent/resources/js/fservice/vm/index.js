@@ -13,6 +13,78 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 	};
 	
 	var bindEvent = function(){
+		//websocket
+		var sendMsg = {};
+		sendMsg["type"] = "vm";
+		sendMsg["action"] = "status";
+		sendMsg["vdcId"] = current_vdc_id;
+		Common.addWebsocketListener(sendMsg, function(data){
+//			alert(JSON.stringify(data));
+			var id = data.id;
+			var status = data.status;
+			var fixedIps = "";
+			if(data.fixedIps!=null){
+				fixedIps = data.fixedIps.replace(new RegExp(/(,)/g),'<br>');;
+			}			
+			$("span[data="+id+"]").parents("tr:first").children("td.vm_fixed_ips").html(fixedIps);
+			if(status=="ACTIVE"){
+				$("span[data="+id+"]").html("运行中");
+				$("span[data="+id+"]").attr("class","text-success");
+			}
+			if(status=="BUILD"){
+				$("span[data="+id+"]").html("创建中");
+				$("span[data="+id+"]").attr("class","text-warning");
+			}
+			if(status=="BUILDING"){
+				$("span[data="+id+"]").html("创建中");
+				$("span[data="+id+"]").attr("class","text-warning");
+			}
+			if(status=="REBUILD"){
+				$("span[data="+id+"]").html("重建中");
+				$("span[data="+id+"]").attr("class","text-success");
+			}
+			if(status=="SUSPENDED"){
+				$("span[data="+id+"]").html("已挂起");
+				$("span[data="+id+"]").attr("class","text-danger");
+			}
+			if(status=="PAUSED"){
+				$("span[data="+id+"]").html("已暂停");
+				$("span[data="+id+"]").attr("class","text-danger");
+			}
+			if(status=="RESIZE"){
+				$("span[data="+id+"]").html("重建中");
+				$("span[data="+id+"]").attr("class","text-danger");
+			}
+			if(status=="VERIFY_RESIZE"){
+				$("span[data="+id+"]").html("确认重建");
+				$("span[data="+id+"]").attr("class","text-success");
+			}
+			if(status=="REVERT_RESIZE"){
+				$("span[data="+id+"]").html("回退重建");
+				$("span[data="+id+"]").attr("class","text-success");
+			}
+			if(status=="REBOOT"){
+				$("span[data="+id+"]").html("重启中");
+				$("span[data="+id+"]").attr("class","text-warning");
+			}
+			if(status=="HARD_REBOOT"){
+				$("span[data="+id+"]").html("硬重启中");
+				$("span[data="+id+"]").attr("class","text-warning");
+			}
+			if(status=="ERROR"){
+				$("span[data="+id+"]").html("错误");
+				$("span[data="+id+"]").attr("class","text-danger");
+			}
+			if(status=="SHUTOFF"){
+				$("span[data="+id+"]").html("关机");
+				$("span[data="+id+"]").attr("class","text-danger");
+			}
+			if(status=="STOPPED"){
+				$("span[data="+id+"]").html("停止");
+				$("span[data="+id+"]").attr("class","text-danger");
+			}
+		});
+		
 		//页面渲染完后进行各种事件的绑定
 		//dataTables
 		var table =Common.initDataTable($('#VmTable'),
@@ -25,12 +97,12 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 		      "columns": [
 			        {"data": ""},
 			        {"data": {}},
-			        {"data": "fixedIps"},
+			        {"data": "fixedIps","class":"vm_fixed_ips"},
 			        {"data": "floatingIps","class":"vm_floating_ips"},
 			        {"data": "flavor"},
 			        {"data": "availability_zone"},
 			        {"data": "vdcName"},
-			        {"data": "vmState"},
+			        {"data": {}},
 			        {"data": "created_at"},
 			        {"data": {}}
 		      ],
@@ -75,23 +147,23 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 					},	
 					{
 					    "targets": [7],
-					    "data": "vmState",
 					    "render": function(data, type, full) {
-				 			if(data == 'ACTIVE') return ' <span class="text-success">运行中</span>';
-							if(data == 'BUILD') return ' <span class="text-warning">创建中</span>';
-							if(data == 'BUILDING') return ' <span class="text-warning">创建中</span>';
-							if(data == 'REBUILD') return ' <span class="text-success">重建中</span>';
-							if(data == 'SUSPENDED') return ' <span class="text-danger">已挂起</span>';
-							if(data == 'PAUSED') return ' <span class="text-danger">已暂停</span>';
-							if(data == 'RESIZE') return ' <span class="text-danger">重建中</span>';
-							if(data == 'VERIFY_RESIZE') return ' <span class="text-success">确认重建</span>';
-							if(data == 'REVERT_RESIZE') return ' <span class="text-success">回退重建</span>';
-							if(data == 'REBOOT') return ' <span class="text-warning">重启中</span>';
-							if(data == 'HARD_REBOOT') return ' <span class="text-warning">硬重启中</span>';
-							if(data == 'DELETED') return ' <span class="text-danger">已删除</span>';
-							if(data == 'ERROR') return ' <span class="text-danger">错误</span>';
-							if(data == 'SHUTOFF') return ' <span class="text-danger">关机</span>';
-							return '<span class="text-danger">未知</span>';
+				 			if(data.vmState == 'ACTIVE') return ' <span class="text-success" data="'+data.id+'">运行中</span>';
+							if(data.vmState == 'BUILD') return ' <span class="text-warning" data="'+data.id+'">创建中</span>';
+							if(data.vmState == 'BUILDING') return ' <span class="text-warning" data="'+data.id+'">创建中</span>';
+							if(data.vmState == 'REBUILD') return ' <span class="text-success" data="'+data.id+'">重建中</span>';
+							if(data.vmState == 'SUSPENDED') return ' <span class="text-danger" data="'+data.id+'">已挂起</span>';
+							if(data.vmState == 'PAUSED') return ' <span class="text-danger" data="'+data.id+'">已暂停</span>';
+							if(data.vmState == 'RESIZE') return ' <span class="text-danger" data="'+data.id+'">重建中</span>';
+							if(data.vmState == 'VERIFY_RESIZE') return ' <span class="text-success" data="'+data.id+'">确认重建</span>';
+							if(data.vmState == 'REVERT_RESIZE') return ' <span class="text-success" data="'+data.id+'">回退重建</span>';
+							if(data.vmState == 'REBOOT') return ' <span class="text-warning" data="'+data.id+'">重启中</span>';
+							if(data.vmState == 'HARD_REBOOT') return ' <span class="text-warning" data="'+data.id+'">硬重启中</span>';
+							if(data.vmState == 'DELETED') return ' <span class="text-danger" data="'+data.id+'">已删除</span>';
+							if(data.vmState == 'ERROR') return ' <span class="text-danger" data="'+data.id+'">错误</span>';
+							if(data.vmState == 'SHUTOFF') return ' <span class="text-danger" data="'+data.id+'">关机</span>';
+							if(data.vmState == 'STOPPED') return ' <span class="text-danger" data="'+data.id+'">关闭</span>';
+							return '<span class="text-danger" data="'+data.id+'">未知</span>';
 					    }
 					},
                     {
@@ -109,7 +181,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
                        "data": "id",
                        "render": function(data, type, full) {
                     	   var html = '<a href="javascript:void(0)" class="btn-opt createSnapshot" data-toggle="tooltip" title="创建快照" data-act="stop" data="'+data.id+'" style="margin: 0;"><i class="fa fa-camera"></i></a>'
-                    	   if(data.vmState != 'PAUSED' && data.vmState != 'SHUTOFF' && data.vmState != 'SUSPENDED'){
+                    	   if(data.vmState != 'PAUSED' && data.vmState != 'SHUTOFF' && data.vmState != 'SUSPENDED' && data.vmState != 'STOPPED'){
                     		   html = html + 
                     		   '<div class="dropdown">'
 	                    		   +'<a class="btn-opt dropdown-toggle" data-toggle="dropdown" title="更多"  aria-expanded="false" ><i class="fa fa-angle-double-right"></i></a>'
@@ -272,8 +344,6 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 				    	//同步currentChosenObj
 				    	currentChosenObj.az = $('select.availability_zone').children('option:selected');
 					});
-				}else{
-					Modal.error('尚未选择所属vdc');
 				}
 			},
 			//init云主机规格的详细信息popver
@@ -350,8 +420,6 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 							});
 						})
 					})
-				}else{
-					Modal.error('尚未选择vdc');
 				}
 			},
 			//根据vdc可用网络信息
@@ -360,7 +428,14 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 				Common.xhr.get('/networking/v2.0/networks',{"vdcId":vdc_id},function(data){
 					var dataArr = [];
 					if(data){
-						var networks = data.networks;
+						var networks = [];
+						for (var i=0;i<data.networks.length;i++){
+							var network = data.networks[i];
+							if(network["router:external"]==false){
+								networks.push(network);
+							}
+						}
+						
 						require(['js/common/choose'],function(choose){
 							var options = {
 									selector: '#vm-networks',
@@ -462,14 +537,15 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
 			//密钥对
 			initKeyPairs: function(){
 				Common.xhr.ajax("/compute/v2/"+current_vdc_id+'/os-keypairs',function(keypairs){
-					var keypairData = []
-					if(keypairs&&keypairs["keypair"]){
-						for(var i=0;i<keypairs["keypair"].length;i++){
-							keypairData[i] = {value:keypairs["keypair"][i].name};
+					var keypairData = [{id:"keypair-select-default",name:"选择一个密钥对"}]
+					if(keypairs&&keypairs["keypairs"]){
+						for(var i=0;i<keypairs["keypairs"].length;i++){
+							keypairData.push({value:keypairs["keypairs"][i]["keypair"].name});
 						}
 					}
 					var html = Common.uiSelect(keypairData);
 			    	$('select.keypairs').html(html);
+			    	$('#keypair-select-default').attr("value","");
 				});
 			},
 			//外部网络
@@ -765,11 +841,13 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
     				//获取上几步中填写的值
     				var serverData = wizard.serializeObject();
     				//取网络相关的数据
+    				var networkStr = "";
     				$('#vm-networks .list-group-select').children().each(function(i,item){
-    					var network_uuid = $(item).find('li:first').attr('data-id');
+    					var network_uuid = $(item).find('li:first').children('span.display_name').text();//attr('data-id');
     					var fixedIp = $(item).find('select.select-fixedip').children('option:selected').val();
-    					$('.network-confirm').text("网络："+network_uuid+"            IP:"+fixedIp)
+    					networkStr = networkStr+'<div class="form-group"><label class="control-label col-sm-3">'+network_uuid+'：</label><label class="col-sm-6">'+fixedIp+"</label></div>"
     				});
+    				$('.network-confirm').html(networkStr);
     				var sgGroupStr = ""
     				var sgGroup = getSecruityGroup();
     				for(var i=0;i<sgGroup.length;i++){
@@ -799,6 +877,7 @@ define(['Common','bs/modal','jq/form/wizard','bs/tooltip','jq/form/validator-bs3
     			DataIniter.initQuatos();
     			DataIniter.initSecurityGroup();
     			DataIniter.initAvailableNetWorks();
+    			DataIniter.initKeyPairs();
     			
     			//展现wizard，
     			

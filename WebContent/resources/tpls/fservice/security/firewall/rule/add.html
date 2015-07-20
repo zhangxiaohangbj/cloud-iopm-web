@@ -1,0 +1,74 @@
+<form class="form-horizontal" id="editFirewallRule">
+	<input type="hidden" name="ip_version" value="4">
+	<div class="form-group">
+		<label for="name" class="control-label col-sm-3"><span style="color: red;">* </span>名称：</label>
+		<div class="col-sm-7 col-sm">
+			<input type="text" class="form-control" name="name" value="">
+		</div>
+	</div>
+	<div class="form-group">
+		<label for="description" class="control-label col-sm-3">描述：</label>
+		<div class="col-sm-7 col-sm">
+			<input type="text" class="form-control" name="description" value="">
+		</div>
+	</div>
+	<div class="form-group">
+		<label for="protocol" class="control-label col-sm-3"><span style="color: red;">* </span>协议：</label>
+		<div class="col-sm-7 col-sm">
+			<select class="form-control select" name="protocol">
+				<option value="TCP">TCP</option>
+				<option value="UDP">UDP</option>
+				<option value="ICMP">ICMP</option>
+				<option value="UNRECOGNIZED">任何</option>
+			</select>
+		</div>
+	</div>
+	<div class="form-group">
+		<label for="action" class="control-label col-sm-3"><span style="color: red;">* </span>动作：</label>
+		<div class="col-sm-7 col-sm">
+			<p>
+				<input type="checkbox" name="action" checked data-size="small" data-on-text="允许" data-off-text="拒绝">
+			</p>
+		</div>
+	</div>
+	<div class="form-group">
+		<label for="source_ip_address" class="control-label col-sm-3">源IP地址/子网：</label>
+		<div class="col-sm-7 col-sm">
+			<input type="text" class="form-control" name="source_ip_address" value="">
+		</div>
+	</div>
+	<div class="form-group">
+		<label for="source_port" class="control-label col-sm-3">源端口/端口范围：</label>
+		<div class="col-sm-7 col-sm">
+			<input type="text" class="form-control" name="source_port" value="">
+		</div>
+	</div>
+	<div class="form-group">
+		<label for="destination_ip_address" class="control-label col-sm-3">目的IP地址/子网：</label>
+		<div class="col-sm-7 col-sm">
+			<input type="text" class="form-control" name="destination_ip_address" value="">
+		</div>
+	</div>
+	<div class="form-group">
+		<label for="destination_port" class="control-label col-sm-3">目的端口/端口范围：</label>
+		<div class="col-sm-7 col-sm">
+			<input type="text" class="form-control" name="destination_port" value="">
+		</div>
+	</div>
+	<div class="form-group">
+		<label for="shared" class="control-label col-sm-3">共享的：</label>
+		<div class="col-sm-7 col-sm">
+			<p>
+				<input type="checkbox" name="shared" checked data-size="small" data-on-text="是" data-off-text="否">
+			</p>
+		</div>
+	</div>
+	<div class="form-group">
+		<label for="enabled" class="control-label col-sm-3">激活：</label>
+		<div class="col-sm-7 col-sm">
+			<p>
+				<input type="checkbox" name="enabled" checked data-size="small" data-on-text="启用" data-off-text="禁用">
+			</p>
+		</div>
+	</div>
+</form>

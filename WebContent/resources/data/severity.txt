@@ -1,0 +1,6 @@
+{
+    "CRITICAL" : "紧急",
+    "MAJOR" : "严重",
+    "MINOR" : "次要",
+    "COMMON" : "一般"
+}

@@ -243,7 +243,8 @@ define(['Common','bs/modal','jq/form/wizard','jq/form/validator-bs3','bs/tooltip
                     })
                 });
                 wizard.cards.detail.on("selected",function(card){
-                    $("#test-connection-btn").click(function(){
+                    $("#test-connection-btn").off("click").on("click", function(){
+                        debugger;
                         var cur = {
                             type: $('select.select-env-type option:selected').val(),
                             version: $("#env-version").val(),
@@ -251,8 +252,8 @@ define(['Common','bs/modal','jq/form/wizard','jq/form/validator-bs3','bs/tooltip
                             port:$("#connector-port").val(),
                             protocol:$('select.select-protocol option:selected').val(),
                             username:$("#connector-username").val(),
-                            password:$("#connector-password-confirm").val(),
-                            tenantName:Common.cookies.getVdcId()
+                            password:$("#connector-password-confirm").val()
+                           // tenantName:Common.cookies.getVdcId()
                         }
                         validators[1].hideErrors();
                         Modal.loading('测试连接中');
@@ -262,6 +263,7 @@ define(['Common','bs/modal','jq/form/wizard','jq/form/validator-bs3','bs/tooltip
                                 Modal.success("该连接信息可用");
                                 $("#test-connection").val("true");
                             }else{
+                                debugger
                                 Modal.warning("连接信息不可用");
                             }
                         })
@@ -298,7 +300,7 @@ define(['Common','bs/modal','jq/form/wizard','jq/form/validator-bs3','bs/tooltip
                 wizard.on("submit", function(wizard) {
                     //合并数据
                     currentChosenConnector.version="v2.0";
-                    currentChosenConnector.tenantName=Common.cookies.getVdcName();
+                    //currentChosenConnector.tenantName=Common.cookies.getVdcName();
                     currentChosenEnv["connector"] = currentChosenConnector;
                     Common.xhr.postJSON('/v2/virtual-env',currentChosenEnv,function(data){
                         if(data && data.error!=true){
@@ -384,15 +386,18 @@ define(['Common','bs/modal','jq/form/wizard','jq/form/validator-bs3','bs/tooltip
             }
             Modal.confirm('执行同步操作！',function(result){
                 if(result) {
+                    Modal.success('同步完成后，需要重新登录才能够看到全部的同步内容')
                     Common.xhr.putJSON("/cloud/v2.0/connector/synchronize",connector,function(data){
                             if(data && data.error!=true){
                                 Modal.success('同步成功')
-                                setTimeout(function(){Dialog.closeAll()},2000);
-                                Common.router.route();//重新载入
+                                setTimeout(function(){Dialog.closeAll();
+                                    Common.router.route();//重新载入
+                                },2000);
+
                             }else{
                                 Modal.warning ('同步失败')
                             }
-                        });
+                     });
                 }else {
                     Modal.closeAll();
                 }
